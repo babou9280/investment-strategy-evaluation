@@ -1,7 +1,7 @@
 # Evaluation of an Automated Investment Strategy
 
-Author: Ayman BESBAS  
-Date: 2026
+Author : Ayman BESBAS  
+Date : 2026
 
 ## Overview
 
@@ -27,7 +27,7 @@ The comparison between these two stages allows the study of the gap between **th
 
 # Methodology
 
-The evaluation follows a quantitative scorecard approach based on four main dimensions:
+The evaluation follows a quantitative scorecard approach based on four main dimensions :
 
 ### Performance
 - Total return
@@ -73,7 +73,7 @@ The project attempts to answer the following question:
 
 # Full Report
 
-The complete academic report can be found here:
+The complete academic report can be found in the tab :
 
 Évaluation Stratégie - Projet Ayman BESBAS pdf.pdf
 
@@ -83,11 +83,11 @@ The full report is written in French.
 
 # Data
 
-Backtest dataset:
+Backtest dataset :
 
 https://docs.google.com/spreadsheets/d/10MBOxn1x_BtPBNMxfavU_j_BSuzFM4nBvZ-OriIQfhc
 
-Live test dataset:
+Live test dataset :
 
 https://docs.google.com/spreadsheets/d/10dL1sK63Z7Pi0IzyhwFIim7PzLYW-acDXe3JD7qb9tw
 
