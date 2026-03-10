@@ -1,7 +1,7 @@
 # Evaluation of an Automated Investment Strategy
 
 Author : Ayman BESBAS  
-Date : 2026
+Date : 2026, March 10th
 
 ## Overview
 
