@@ -11,6 +11,8 @@ The objective of the project is to evaluate the robustness and real-world feasib
 
 The study focuses on whether the strategy can generate **reproducible and economically exploitable performance once real trading frictions are considered**.
 
+This repository contains the full academic report and data sources for the project.
+
 The analysis is structured around two complementary stages:
 
 • **Backtest (2020 – 2023)**  
@@ -73,8 +75,9 @@ The project attempts to answer the following question:
 
 The complete academic report can be found here:
 
-evaluation_strategy.pdf
+Évaluation Stratégie - Projet Ayman BESBAS pdf.pdf
 
+The full report is written in French.
 ---
 
 # Data
