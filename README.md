@@ -13,7 +13,7 @@ The study focuses on whether the strategy can generate **reproducible and econom
 
 This repository contains the full academic report and data sources for the project.
 
-The analysis is structured around two complementary stages:
+The analysis is structured around two complementary stages :
 
 • **Backtest (2020 – 2023)**  
 Evaluation of the structural behaviour of the strategy using historical data.
