@@ -75,7 +75,7 @@ The project attempts to answer the following question:
 
 The complete academic report can be found in the tab :
 
-Évaluation Stratégie - Projet Ayman BESBAS pdf.pdf
+Évaluation Stratégie - Projet Ayman BESBAS.pdf
 
 The full report is written in French. 
 
