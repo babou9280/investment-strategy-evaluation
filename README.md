@@ -65,7 +65,7 @@ To provide a reference point, the strategy is compared with the **S&P 500 (SPY E
 
 # Main Question of the Study
 
-The project attempts to answer the following question:
+The project attempts to answer the following question :
 
 > Can an automated investment strategy remain profitable and robust once real market frictions such as transaction costs, spreads, slippage and currency conversion are taken into account?
 
