@@ -1,19 +1,19 @@
-# Evaluation of an Automated Investment Strategy
+# An Evaluation of an Automated Investment Strategy
 
 Author : Ayman BESBAS  
 Date : 2026, March 10th
 
 ## Overview
 
-This repository contains the research project **"Evaluation of an Automated Investment Strategy"**.
+This repository contains the research project **"An Evaluation of an Automated Investment Strategy"**.
 
-The objective of the project is to evaluate the robustness and real-world feasibility of an investment strategy based on signals provided by the application *StocksToBuyNowAI*.
+The objective of the project is to evaluate the sustainab and real-world feasibility of an investment strategy based on signals provided by the application *StocksToBuyNowAI*.
 
 The study focuses on whether the strategy can generate **reproducible and economically exploitable performance once real trading frictions are considered**.
 
 This repository contains the full academic report and data sources for the project.
 
-The analysis is structured around two complementary stages :
+The analysis is structured around two stages :
 
 • **Backtest (2020 – 2023)**  
 Evaluation of the structural behaviour of the strategy using historical data.
@@ -27,7 +27,7 @@ The comparison between these two stages allows the study of the gap between **th
 
 # Methodology
 
-The evaluation follows a quantitative scorecard approach based on four main dimensions :
+The evaluation follows a quantitative scorecard approach based on four dimensions :
 
 ### Performance
 - Total return
@@ -67,7 +67,7 @@ To provide a reference point, the strategy is compared with the **S&P 500 (SPY E
 
 The project attempts to answer the following question :
 
-> Can an automated investment strategy remain profitable and robust once real market frictions such as transaction costs, spreads, slippage and currency conversion are taken into account?
+> Can this automated investment strategy remain profitable and robust once real market frictions such as transaction costs, spreads, slippage and currency conversion are taken into account?
 
 ---
 
