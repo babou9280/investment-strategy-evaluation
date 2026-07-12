@@ -68,3 +68,10 @@
 - Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais être transformée en zéro, ignorée ou remplacée par une autre colonne.
 - Justification : un fallback silencieux transforme une erreur de données en résultat quantitatif apparent.
 - Conséquence : les valeurs `missing`, `invalid` et le zéro réel sont distingués ; une dérivation n'est autorisée que lorsqu'elle est non ambiguë et sa provenance doit être conservée.
+
+## D012 - Un modèle distinct et antérieur pour chaque décision
+
+- Statut : active
+- Décision : chaque trade rejoué est évalué avec un modèle construit uniquement à partir des lignes backtest dont la sortie est strictement antérieure à l'entrée de ce trade.
+- Justification : un modèle global ou alimenté par des observations futures transforme le replay en optimisation ex post.
+- Conséquence : les modèles et diagnostics sont conservés par décision ; les dates invalides entraînent un statut d'observation ; les libellés « OOS strict » et « walk-forward » restent interdits tant que le turnover n'est pas lui-même chronologique.
