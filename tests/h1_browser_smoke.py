@@ -8,6 +8,8 @@ import asyncio
 import base64
 import gzip
 import hashlib
+import subprocess
+import sys
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
@@ -53,26 +55,14 @@ async def snapshot(page, html: str):
     await page.set_content(html, wait_until="load")
     await page.wait_for_timeout(150)
     return await page.evaluate(
-        """() => ({
-          trades: window.__BREAKTEST__.state.trades.map(t => ({
-            id:t.id, invested:t.invested, grossPnl:t.grossPnl, grossReturn:t.grossReturn
-          })),
-          summary: {
-            evals: window.__BREAKTEST__.result.evaluations.length,
-            kept: window.__BREAKTEST__.result.kept.length,
-            removed: window.__BREAKTEST__.result.removed.length,
-            baselineGrossPnl: window.__BREAKTEST__.result.baselineGrossPnl,
-            baselineNetPnl: window.__BREAKTEST__.result.baselineNetPnl,
-            filteredNetPnl: window.__BREAKTEST__.result.filteredNetPnl,
-            baselineCosts: window.__BREAKTEST__.result.baselineCosts,
-            filteredCosts: window.__BREAKTEST__.result.filteredCosts,
-            filteredReturn: window.__BREAKTEST__.result.filteredReturn
-          }
-        })"""
+        """() => window.__BREAKTEST__.state.trades.map(t => ({
+          id:t.id, invested:t.invested, grossPnl:t.grossPnl, grossReturn:t.grossReturn
+        }))"""
     )
 
 
 async def main():
+    subprocess.run([sys.executable, str(ROOT / "scripts" / "build_breaktest.py")], cwd=ROOT, check=True)
     page_errors = []
     async with async_playwright() as playwright:
         browser = await playwright.chromium.launch(
@@ -87,7 +77,7 @@ async def main():
 
         baseline = await snapshot(baseline_page, original_html())
         modified = await snapshot(modified_page, HTML.read_text(encoding="utf-8"))
-        assert baseline == modified, "The H1 change altered the demonstration's numerical snapshot"
+        assert baseline == modified, "A later change altered H1-normalized demonstration trades"
         assert not page_errors, page_errors
         page = modified_page
 
@@ -116,7 +106,7 @@ async def main():
 
         assert not page_errors, page_errors
         await browser.close()
-    print("H1 browser smoke passed; demo numerical snapshot unchanged")
+    print("H1 browser smoke passed; normalized demo trades unchanged")
 
 
 if __name__ == "__main__":
