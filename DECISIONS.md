@@ -74,4 +74,11 @@
 - Statut : active
 - Décision : chaque trade rejoué est évalué avec un modèle construit uniquement à partir des lignes backtest dont la sortie est strictement antérieure à l'entrée de ce trade.
 - Justification : un modèle global ou alimenté par des observations futures transforme le replay en optimisation ex post.
-- Conséquence : les modèles et diagnostics sont conservés par décision ; les dates invalides entraînent un statut d'observation ; les libellés « OOS strict » et « walk-forward » restent interdits tant que le turnover n'est pas lui-même chronologique.
+- Conséquence : les modèles et diagnostics sont conservés par décision ; les dates invalides entraînent un statut d'observation.
+
+## D013 - Le budget de turnover est consommé chronologiquement
+
+- Statut : active
+- Décision : le plafond de turnover est appliqué décision après décision sur une fenêtre glissante de 365,25 jours, dans l'ordre des dates d'entrée.
+- Justification : un tri global des opportunités de plusieurs dates selon leur edge utilise implicitement la connaissance des opportunités futures et produit une sélection ex post.
+- Conséquence : une opportunité future ne peut jamais modifier une décision antérieure ; un classement par edge n'est autorisé qu'entre opportunités disponibles à la même date, puis l'identifiant sert de départage déterministe ; les diagnostics de budget sont conservés par décision.
