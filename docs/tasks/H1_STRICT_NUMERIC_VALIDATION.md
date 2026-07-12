@@ -1,6 +1,6 @@
 # H1 — strict numeric validation
 
-Status: implemented and independently validated on `codex/h1-strict-numeric-validation`; pending pull-request review and merge into `breaktest-bootstrap`.
+Status: implemented, independently validated and merged into `breaktest-bootstrap` by pull request `#2` (`380e9e99f5b59387586df4290f32d5b057e2f3bd`).
 
 ## Scope delivered
 
