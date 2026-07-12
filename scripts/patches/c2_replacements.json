@@ -1,0 +1,82 @@
+[
+  {
+    "old": "<span id=\"dataset-count\">40 trades · 20 OOS</span>",
+    "new": "<span id=\"dataset-count\">40 trades · 20 live</span>",
+    "label": "initial dataset sample label"
+  },
+  {
+    "old": "<option value=\"live\" selected>Live — modèle backtest</option><option value=\"backtest\">Backtest walk-forward</option><option value=\"all\">Tout walk-forward</option>",
+    "new": "<option value=\"live\" selected>Live — backtest antérieur</option><option value=\"backtest\">Backtest — modèle antérieur</option><option value=\"all\">Tout — backtest antérieur</option>",
+    "label": "analysis sample options"
+  },
+  {
+    "old": "<span id=\"gate-mode\">LIVE · OOS STRICT</span>",
+    "new": "<span id=\"gate-mode\">LIVE · MODÈLE ANTÉRIEUR</span>",
+    "label": "initial gate mode"
+  },
+  {
+    "old": "<article class=\"chart-card oos-card\"><div class=\"card-heading\"><div><span class=\"eyebrow\">OUT-OF-SAMPLE</span><h3>Backtest vs live, après coûts</h3></div><span class=\"microcopy\">sans ré-optimisation</span></div><div id=\"oos-comparison\" class=\"oos-comparison\"></div></article>",
+    "new": "<article class=\"chart-card oos-card\"><div class=\"card-heading\"><div><span class=\"eyebrow\">TEMPOREL</span><h3>Backtest vs live, modèle antérieur</h3></div><span class=\"microcopy\">turnover encore ex post</span></div><div id=\"oos-comparison\" class=\"oos-comparison\"></div></article>",
+    "label": "temporal comparison heading"
+  },
+  {
+    "old": "<strong id=\"training-count\">20 trades backtest</strong>",
+    "new": "<strong id=\"training-count\">Historique antérieur</strong>",
+    "label": "initial training count"
+  },
+  {
+    "old": "<strong id=\"ledger-analysis-mode\">Live OOS</strong>",
+    "new": "<strong id=\"ledger-analysis-mode\">Live · modèle antérieur</strong>",
+    "label": "initial ledger mode"
+  },
+  {
+    "old": "byId(\"gate-mode\").textContent = result.config.analysisSample === \"live\" ? \"LIVE · OOS STRICT\" : `${result.config.analysisSample.toUpperCase()} · WALK-FORWARD`;",
+    "new": "byId(\"gate-mode\").textContent = result.config.analysisSample === \"live\" ? \"LIVE · MODÈLE ANTÉRIEUR\" : result.config.analysisSample === \"backtest\" ? \"BACKTEST · MODÈLE ANTÉRIEUR\" : \"MIXTE · MODÈLE ANTÉRIEUR\";",
+    "label": "render gate mode"
+  },
+  {
+    "old": "const floors = result.evaluations.map((row) => breakEvenCapital(row.trade, result.model, result.config)).filter(Number.isFinite);",
+    "new": "const floors = result.evaluations.map((row) => breakEvenCapital(row.trade, row.model, result.config)).filter(Number.isFinite);",
+    "label": "cost summary per-decision model"
+  },
+  {
+    "old": "capital: breakEvenCapital(evaluation.trade, result.model, result.config),",
+    "new": "capital: breakEvenCapital(evaluation.trade, evaluation.model, result.config),",
+    "label": "break-even per-decision model"
+  },
+  {
+    "old": "const floor = breakEvenCapital(row.trade, result.model, result.config);",
+    "new": "const floor = breakEvenCapital(row.trade, row.model, result.config);",
+    "label": "ledger per-decision model"
+  },
+  {
+    "old": "byId(\"training-count\").textContent = `${result.model.trainingCount} trades backtest`;",
+    "new": "const training = result.trainingSummary;\n  byId(\"training-count\").textContent = training.min === training.max\n    ? `${training.max} trades backtest antérieurs`\n    : `${training.min}–${training.max} trades backtest antérieurs`;",
+    "label": "training range display"
+  },
+  {
+    "old": "byId(\"ledger-analysis-mode\").textContent = result.config.analysisSample === \"live\" ? \"Live OOS\" : `${result.config.analysisSample} WF`;",
+    "new": "byId(\"ledger-analysis-mode\").textContent = result.config.analysisSample === \"live\" ? \"Live · modèle antérieur\" : result.config.analysisSample === \"backtest\" ? \"Backtest · modèle antérieur\" : \"Mixte · modèle antérieur\";",
+    "label": "ledger temporal mode"
+  },
+  {
+    "old": "byId(\"dataset-count\").textContent = `${state.trades.length} trades · ${live} OOS`;",
+    "new": "byId(\"dataset-count\").textContent = `${state.trades.length} trades · ${live} live`;",
+    "label": "dataset live label"
+  },
+  {
+    "old": "byId(\"confidence-label\").textContent = result.config.confidence <= .5 ? \"edge central\" : `borne basse ${Math.round(result.config.confidence * 100)} %`;",
+    "new": "byId(\"confidence-label\").textContent = result.config.confidence <= .5 ? \"edge central · dernière décision\" : `borne basse ${Math.round(result.config.confidence * 100)} % · dernière décision`;",
+    "label": "strategy model disclosure"
+  },
+  {
+    "old": "<div class=\"oos-cell\"><span>Backtest WF</span>",
+    "new": "<div class=\"oos-cell\"><span>Backtest · modèle antérieur</span>",
+    "label": "backtest comparison label"
+  },
+  {
+    "old": "<div class=\"oos-cell\"><span>Live OOS</span>",
+    "new": "<div class=\"oos-cell\"><span>Live · modèle antérieur</span>",
+    "label": "live comparison label"
+  }
+]
