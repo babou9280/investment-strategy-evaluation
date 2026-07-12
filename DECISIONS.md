@@ -48,3 +48,16 @@
 - Décision : utiliser temporairement la branche `breaktest-bootstrap` du dépôt académique `babou9280/investment-strategy-evaluation` pour la première mission Codex.
 - Justification : préserver `main`, conserver la filiation avec le travail universitaire et éviter de bloquer l'audit sur une opération de création de dépôt.
 - Conséquence : aucune modification Breaktest n'est fusionnée dans `main` avant l'audit ; une migration vers un dépôt produit dédié reste possible après clarification de l'architecture et des besoins de confidentialité.
+
+## D009 - Codex travaille depuis le dépôt, sans dépendance à une pièce jointe ZIP
+
+- Statut : active
+- Décision : les missions Codex Cloud doivent prendre pour source les fichiers versionnés dans le dépôt et la branche associés à l'environnement.
+- Justification : l'interface Codex Cloud actuelle est organisée autour d'un dépôt et d'un environnement ; le transfert d'un ZIP ne doit pas être considéré comme une étape requise ou disponible.
+- Conséquence : toute source nécessaire à une mission de code doit d'abord être matérialisée et vérifiée sur `breaktest-bootstrap`. Les instructions demandant de joindre le pack ZIP sont remplacées.
+
+## D010 - L'audit initial peut précéder la matérialisation GitHub du HTML
+
+- Statut : active
+- Décision : l'audit technique initial exécuté sur le fichier local est recevable parce que le fichier a été identifié par une empreinte SHA-256 enregistrée et que les comportements déclarés ont été réellement exécutés.
+- Conséquence : `docs/TECHNICAL_AUDIT.md` devient la base de travail de la première correction, mais aucune modification de code ne peut être confiée à Codex tant que le fichier canonique correspondant n'est pas présent dans sa branche.
