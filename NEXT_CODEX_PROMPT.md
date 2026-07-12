@@ -1,33 +1,40 @@
-# Mission active — C2 isolation temporelle
+# Prochaine mission — C3 allocation chronologique du turnover
 
-Travaille uniquement sur la branche `codex/c2-temporal-isolation`. Ne modifie et ne fusionne rien dans `main`.
+Travaille uniquement sur une nouvelle branche créée depuis `breaktest-bootstrap`. Ne modifie et ne fusionne rien dans `main`.
 
-Lis d'abord `AGENTS.md`, `PRODUCT.md`, `QUALITY.md`, `STATE.md`, `DECISIONS.md`, `METHODOLOGY.md` et `docs/TECHNICAL_AUDIT.md`.
+Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1/C2.
 
 ## Objectif unique
 
-Corriger C2 : aucune observation future, de même date ou issue d'un échantillon interdit ne doit influencer le modèle utilisé pour une décision rejouée.
+Corriger C3 : le budget de turnover ne doit plus être alloué après un tri global utilisant les opportunités futures.
 
-## Exigences
+## Politique retenue
 
-1. Construire un modèle distinct pour chaque décision.
-2. Autoriser comme entraînement uniquement les lignes `backtest` dont les dates sont valides, cohérentes et dont la sortie est strictement antérieure à l'entrée de la décision.
-3. Exclure la décision elle-même, les lignes live, les observations futures et les sorties de même date.
-4. Classer une décision à date invalide en `observe`, avec un diagnostic explicite et sans entraînement.
-5. Attacher à chaque évaluation son modèle et ses diagnostics de sélection temporelle.
-6. Utiliser le modèle propre à chaque décision pour les calculs de seuil de rentabilité.
-7. Retirer les affirmations « OOS strict », « walk-forward » et « sans ré-optimisation » tant que C3 reste ouvert ; afficher clairement que le turnover est encore ex post.
-8. Ajouter des invariants prouvant que l'ajout d'une observation future ou live interdite ne modifie pas une décision antérieure.
-9. Réexécuter intégralement les tests H1.
-10. Mettre à jour les fichiers canoniques uniquement avec les résultats démontrés.
+- traiter les décisions par date d'entrée croissante ;
+- appliquer un plafond glissant sur les 365,25 jours précédant chaque décision ;
+- à date identique, classer uniquement les opportunités simultanément disponibles par edge prudent, puis edge central et identifiant déterministe ;
+- une décision future ne doit jamais modifier une décision antérieure ;
+- les décisions à date invalide restent `observe` et ne consomment aucun budget ;
+- conserver pour chaque décision le budget disponible, l'utilisation avant/après et le motif d'acceptation ou de refus ;
+- distinguer dans les agrégats le turnover annuel moyen et le pic glissant réellement comparé au plafond.
+
+## Exigences de validation
+
+1. Ajouter un scénario où l'algorithme historique global choisit à tort un meilleur trade futur au détriment d'un trade antérieur.
+2. Prouver qu'après correction, ajouter, supprimer ou modifier une opportunité future ne change jamais les décisions déjà prises.
+3. Tester le renouvellement du budget après 365,25 jours, les décisions de même date, un budget nul et une date invalide.
+4. Réexécuter intégralement les tests H1 et C2.
+5. Vérifier le build déterministe, la syntaxe JavaScript et l'absence de régression de la démonstration hors effets attendus du turnover.
+6. Mettre à jour les fichiers canoniques uniquement avec les résultats démontrés.
 
 ## Hors périmètre
 
-- ne pas corriger C1, C3, C4 ou H2 à H6 ;
+- ne pas corriger C1, C4 ou H2 à H6 ;
+- ne pas simuler encore la réservation du capital entre positions ;
+- ne pas transformer la courbe de capital en mark-to-market ;
 - ne pas refondre l'application ;
-- ne pas modifier l'apparence au-delà des libellés nécessaires à la vérité méthodologique ;
 - ne rien fusionner automatiquement dans `main`.
 
 ## Résultat attendu
 
-Une correction C2 étroite et reproductible, un build déterministe, des tests navigateur anti-look-ahead, les preuves d'exécution et une pull request vers `breaktest-bootstrap`.
+Une allocation du turnover ex ante, chronologique et auditée, des invariants anti-futur reproductibles, une documentation cohérente et une pull request vers `breaktest-bootstrap`.
