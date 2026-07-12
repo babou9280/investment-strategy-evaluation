@@ -24,7 +24,7 @@ Tout repli doit être visible pour l'utilisateur et dans l'audit.
 - un zéro réel reste une observation valide ;
 - la ligne normalisée conserve des indicateurs internes `grossPnlDerived` et `grossReturnDerived`.
 
-La provenance dérivée est désormais conservée dans le moteur, mais son affichage détaillé dans l'audit utilisateur reste à implémenter. La réconciliation lorsque PnL et rendement sont tous deux fournis mais incohérents relève encore du défaut H4.
+La provenance dérivée est conservée dans le moteur, mais son affichage détaillé dans l'audit utilisateur reste à implémenter. La réconciliation lorsque PnL et rendement sont tous deux fournis mais incohérents relève encore du défaut H4.
 
 ## Isolation temporelle du modèle — règle C2
 
@@ -42,7 +42,24 @@ Chaque trade rejoué est évalué avec son propre modèle. L'ensemble d'entraîn
 
 Le champ global `result.model` n'est plus un modèle entraîné sur toute la période : il sert uniquement de référence compatible avec l'interface et correspond à la dernière décision datée du replay. Les calculs de seuil de rentabilité utilisent le modèle propre à chaque ligne.
 
-Cette correction ne rend pas encore toute la chaîne strictement walk-forward : l'allocation du budget de turnover reste ex post et relève de C3. Les libellés utilisateurs doivent donc parler de « modèle antérieur », pas d'« OOS strict » ni de « walk-forward ».
+## Allocation du turnover — règle C3
+
+Le plafond de turnover est appliqué dans l'ordre temporel des décisions :
+
+- les évaluations sont ordonnées par date d'entrée croissante ;
+- une date invalide est placée après les décisions datées, reste en observation et ne consomme aucun budget ;
+- avant chaque date, les unités acceptées dont la date est sortie de la fenêtre glissante sont retirées du budget utilisé ;
+- la fenêtre est fixée à 365,25 jours ;
+- les décisions déjà `remove` ou `observe` avant le contrôle de turnover ne consomment rien ;
+- les opportunités de dates différentes ne sont jamais triées ensemble selon leur edge ;
+- pour une même date, les opportunités simultanément disponibles sont classées par edge prudent, puis edge central, puis identifiant déterministe ;
+- une opportunité est conservée uniquement si ses unités demandées tiennent dans le budget glissant restant ;
+- chaque décision conserve le budget avant, les unités demandées, le budget après, le rang simultané et le motif ;
+- le résultat distingue le pic glissant réellement contraint de la moyenne annuelle descriptive.
+
+L'invariant principal est qu'ajouter, supprimer ou modifier une opportunité future ne peut jamais changer une décision antérieure.
+
+L'isolation temporelle du modèle et l'allocation chronologique du turnover ne suffisent pas encore à prouver l'exécutabilité complète : le capital n'est pas réservé entre positions simultanées et la courbe de capital n'est pas temporelle. Les libellés ne doivent donc pas revendiquer un « walk-forward complet », un « OOS strict » ou un portefeuille financé.
 
 ## Stress tests actuels
 
@@ -56,7 +73,7 @@ Cette correction ne rend pas encore toute la chaîne strictement walk-forward : 
 ## Limites importantes
 
 - le bootstrap ne corrige pas le biais de sélection, la dépendance temporelle ou le changement de régime ;
-- l'isolation temporelle du modèle ne corrige pas l'allocation ex post du turnover ;
+- le turnover chronologique ne corrige pas l'absence de réservation du capital ;
 - un drawdown aux dates de sortie n'est pas un drawdown mark-to-market quotidien ;
 - une CVaR sur peu de trades est instable ;
 - retirer le top N est un stress test ex post, pas une règle de trading ;

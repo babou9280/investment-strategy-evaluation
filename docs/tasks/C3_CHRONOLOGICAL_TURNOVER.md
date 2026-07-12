@@ -1,6 +1,6 @@
 # C3 — allocation chronologique du turnover
 
-Status: implemented and validated on `codex/c3-chronological-turnover-v2`; pending pull-request review and merge into `breaktest-bootstrap`.
+Status: implemented, validated and merged into `breaktest-bootstrap` through pull request `#6`, commit squash `703f259e056189b2250bc5c528bd4a914f26f03c`.
 
 ## Scope delivered
 

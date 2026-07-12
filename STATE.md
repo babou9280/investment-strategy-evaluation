@@ -23,13 +23,15 @@ Le build cumulatif actuel exécute :
 
 1. `scripts/materialize_breaktest.py` pour produire la version H1 ;
 2. `scripts/apply_c2_patch.py` pour appliquer l'isolation temporelle C2 ;
-3. `scripts/build_breaktest.py` comme point d'entrée unique.
+3. `scripts/apply_c3_patch.py` pour appliquer l'allocation chronologique du turnover C3 ;
+4. `scripts/build_breaktest.py` comme point d'entrée unique.
 
 Empreintes :
 
 - source v0.2 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00` ;
 - après H1 : `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c` ;
-- version C2 durcie : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454`.
+- après C2 durci : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454` ;
+- version courante après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets.
 
 ## Fonctionnalités confirmées par exécution
 
@@ -43,57 +45,53 @@ Empreintes :
 - export CSV des décisions ;
 - filtres et recherche dans le ledger ;
 - ouverture et fermeture de la modal méthodologique ;
-- échappement de l'injection HTML testée dans le DOM.
+- échappement de l'injection HTML testée dans le DOM ;
+- modèle d'entraînement antérieur propre à chaque décision ;
+- allocation du turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours.
 
-Ces validations portent sur l'exécution fonctionnelle du dashboard, pas sur l'exactitude générale du moteur quantitatif.
+Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni l'exécutabilité complète du portefeuille.
 
-## Audit technique initial
+## Corrections fusionnées
 
-Le rapport `docs/TECHNICAL_AUDIT.md` a été produit à partir du fichier source vérifié par SHA-256, avec lecture du code, exécution Chromium et jeux CSV synthétiques.
-
-### Défauts critiques encore ouverts
-
-1. absence de contrainte de capital entre positions simultanées ;
-2. allocation du budget de turnover avec connaissance de l'ensemble futur des opportunités ;
-3. courbe de capital qui n'est ni une courbe réalisée aux sorties ni une courbe mark-to-market.
-
-### H1 corrigé, validé et fusionné
+### H1 — validation numérique stricte
 
 La correction H1 est fusionnée dans `breaktest-bootstrap` par la pull request `#2`, commit squash `380e9e99f5b59387586df4290f32d5b057e2f3bd`.
 
-Le moteur distingue une valeur numérique valide, manquante et invalide, refuse les lots ambigus et conserve la provenance des dérivations PnL/rendement.
+Le moteur distingue une valeur numérique valide, manquante et invalide, refuse les lots ambigus et conserve la provenance des dérivations PnL/rendement. Les preuves sont enregistrées dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`.
 
-Les preuves sont enregistrées dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`.
+### C2 — isolation temporelle et par échantillon
 
-### C2 — noyau fusionné, durcissement validé
+Le noyau C2 est fusionné par la pull request `#3`, puis durci par la pull request `#5`, commit squash `0134b3bb7166e2a4720c27ad754512952b3f75de`.
 
-Le noyau C2 est fusionné dans `breaktest-bootstrap` par la pull request `#3`, commit `bdd9d244925bc7097516410fdab3a2d005962ca7`.
+Chaque décision utilise uniquement des lignes backtest valides dont la sortie est strictement antérieure à son entrée. Les lignes live, futures, de même date, invalides et la décision elle-même sont exclues. Les dates calendaires impossibles sont refusées et les lignes partageant un identifiant restent distinguées par identité d'objet.
 
-Il construit un modèle distinct pour chaque décision avec uniquement les lignes backtest dont la sortie est strictement antérieure à l'entrée de la décision. Les lignes live, futures, de même date, invalides et la décision elle-même sont exclues ; les décisions à date invalide sont placées en observation sans entraînement.
+Les preuves sont enregistrées dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 
-Le durcissement `codex/c2-hardening` ajoute :
+### C3 — allocation chronologique du turnover
 
-- validation stricte des dates ISO calendaires ;
-- exclusion de la décision par identité d'objet, afin de conserver une autre ligne portant le même identifiant ;
-- tests de non-régression pour une date impossible et des identifiants dupliqués ;
-- cible déterministe de 138 887 octets, SHA-256 `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454`.
+C3 est fusionné dans `breaktest-bootstrap` par la pull request `#6`, commit squash `703f259e056189b2250bc5c528bd4a914f26f03c`.
 
-Validations exécutées sur la version durcie :
+Les décisions sont traitées par date d'entrée croissante. Le plafond est appliqué aux unités de turnover acceptées pendant les 365,25 jours précédents. Un classement par edge n'est utilisé qu'entre opportunités simultanément disponibles à la même date ; l'identifiant constitue le dernier départage déterministe. Une opportunité future ne peut pas modifier une décision antérieure.
 
-- `python3 scripts/build_breaktest.py` : réussite ;
-- `node tests/h1_strict_numeric_validation.test.js` : réussite ;
-- `python3 tests/h1_browser_smoke.py` : réussite ;
-- `python3 tests/c2_temporal_isolation.py` : réussite ;
-- JavaScript extrait : syntaxe validée avec `node --check` ;
-- ajout d'observations futures ou live interdites : aucune modification de la décision antérieure testée ;
-- date calendaire impossible : exclue ou placée en observation selon son rôle ;
-- identifiants dupliqués : aucune exclusion erronée de l'historique admissible ;
-- libellés trompeurs OOS/walk-forward retirés ;
-- limitation `turnover encore ex post` affichée.
+Chaque évaluation conserve le budget avant et après, les unités demandées, le rang à date identique et le motif. Le pic glissant contraint est distingué de la moyenne annuelle descriptive.
 
-Le détail est enregistré dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
+Validations versionnées :
 
-### Défauts élevés encore ouverts
+- `python3 scripts/build_breaktest.py` : réussite et empreinte C3 conforme ;
+- suites H1, C2 et C3 : réussite ;
+- test Chromium C3 : réussite ;
+- JavaScript construit : syntaxe validée avec `node --check` ;
+- invariance des décisions antérieures face à l'ajout ou à la modification d'opportunités futures ;
+- renouvellement de la fenêtre, égalités de date, budget nul, date invalide et décision préfiltrée couverts.
+
+Le détail est enregistré dans `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
+
+## Défauts critiques encore ouverts
+
+1. **C1 — absence de réservation du capital entre positions simultanées** : plusieurs positions qui se chevauchent peuvent encore dépasser ensemble le capital déclaré ;
+2. **C4 — courbe de capital non temporelle** : le PnL est encore affecté selon l'entrée et la courbe n'est ni une trésorerie réalisée aux sorties ni une valeur mark-to-market.
+
+## Défauts élevés encore ouverts
 
 1. champs de PnL net/full-cost du journal ignorés ;
 2. prix en euros reconvertis comme une devise étrangère ;
@@ -104,27 +102,29 @@ Le détail est enregistré dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 ## Ce qui n'est pas encore considéré comme validé
 
 - exactitude de chaque formule ;
-- conformité des calculs aux rapports sources ;
-- simulation d'un portefeuille réellement financé ;
-- allocation strictement chronologique du turnover ;
+- conformité complète des calculs aux journaux et rapports sources ;
+- portefeuille réellement financé entre positions simultanées ;
 - courbe de capital réalisée ou mark-to-market ;
 - robustesse de l'import sur une couverture large de formats ;
 - sécurité exhaustive du parsing et des exports ;
 - compatibilité complète Safari, iPad, mobile et navigateurs ;
-- reproductibilité du Breaktest Score ;
-- cohérence complète entre produit, deck et chiffres ;
+- reproductibilité et calibration définitive du Breaktest Score ;
+- cohérence complète entre produit, deck, guide et chiffres ;
 - valeur commerciale réelle et disposition à payer.
 
-## Hébergement GitHub initial
+## Hébergement GitHub
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
 - branche de référence isolée : `breaktest-bootstrap` ;
-- branche de durcissement C2 : `codex/c2-hardening` ;
+- branche C1 préparée : `codex/c1-capital-reservation` ;
 - la branche `main` et le projet universitaire d'origine restent inchangés ;
 - les PDF restent locaux et ne sont pas nécessaires aux corrections de code actuellement ciblées.
 
 ## Prochaine exécution autorisée
 
-1. auditer et fusionner le durcissement C2 uniquement vers `breaktest-bootstrap` ;
-2. ouvrir ensuite une branche isolée pour C3 — allocation chronologique du turnover ;
-3. ne rien fusionner dans `main`.
+1. repartir du dernier `breaktest-bootstrap` documenté ;
+2. actualiser la branche C1 sur cette base ;
+3. corriger uniquement la réservation du capital entre positions simultanées ;
+4. réexécuter intégralement H1, C2 et C3 et ajouter les invariants C1 ;
+5. auditer la pull request avant toute fusion dans `breaktest-bootstrap` ;
+6. ne rien fusionner dans `main`.

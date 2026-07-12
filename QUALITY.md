@@ -52,8 +52,22 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - une observation future, de même date ou issue d'un échantillon interdit ne doit jamais modifier une décision antérieure ;
 - une ligne live ne peut pas entraîner le modèle de référence backtest ;
 - une décision dont la date d'entrée est absente ou invalide doit être placée en observation avec un diagnostic explicite ;
-- le modèle, la profondeur d'entraînement et les exclusions doivent rester attachés à chaque décision afin d'être auditables ;
-- toute mention « OOS strict » ou « walk-forward » est interdite tant que l'ensemble de la chaîne, notamment l'allocation du turnover, n'est pas lui-même strictement chronologique.
+- le modèle, la profondeur d'entraînement et les exclusions doivent rester attachés à chaque décision afin d'être auditables.
+
+## Allocation chronologique du turnover
+
+- les décisions sont traitées par date d'entrée croissante ;
+- le budget consommé avant une décision ne dépend que des décisions antérieures encore présentes dans la fenêtre glissante ;
+- une opportunité future ne doit jamais modifier le statut ou les diagnostics d'une décision antérieure ;
+- le plafond s'applique sur les 365,25 jours précédant chaque décision ;
+- un classement par edge n'est autorisé qu'entre opportunités disponibles à la même date ;
+- les égalités restantes sont résolues par une règle déterministe documentée ;
+- une date invalide, une décision déjà retirée ou une décision en observation ne consomme aucun budget ;
+- le budget avant et après, les unités demandées, le rang simultané et le motif doivent être conservés par décision ;
+- le pic glissant réellement contraint doit être distingué de la moyenne annuelle descriptive ;
+- tout retour à un tri global des opportunités de plusieurs dates selon leur edge est interdit.
+
+Les expressions « OOS strict », « walk-forward complet » ou « portefeuille exécutable » restent interdites tant que la réservation du capital entre positions et la courbe temporelle du portefeuille ne sont pas elles aussi validées.
 
 ## Qualité quantitative
 

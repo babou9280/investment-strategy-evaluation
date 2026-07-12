@@ -20,6 +20,7 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - performance dominée par un petit nombre de trades ;
 - divergence entre backtest et live-test ;
 - fuite temporelle entre historique d'entraînement et décisions rejouées ;
+- allocation rétrospective du budget de turnover ;
 - journal incohérent avec le résultat publié ;
 - faible profondeur d'échantillon ;
 - résultats difficiles à expliquer et à partager.
@@ -44,7 +45,9 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - analyse des trades conservés ou retirés ;
 - exports locaux.
 
-La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur. Elle ne doit toutefois pas être présentée comme entièrement walk-forward tant que l'allocation du turnover et la simulation de capital ne sont pas elles aussi chronologiques.
+La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur et applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours. Une opportunité future ne peut plus évincer une décision antérieure par un tri global ex post.
+
+Cette chaîne ne doit toutefois pas être présentée comme un portefeuille entièrement exécutable ou un walk-forward complet : le capital n'est pas encore réservé entre positions simultanées et la courbe affichée n'est pas encore une courbe réalisée ou mark-to-market.
 
 ## Différenciation
 
