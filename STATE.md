@@ -76,14 +76,25 @@ Le rapport `docs/TECHNICAL_AUDIT.md` a été produit à partir du fichier local 
 ## Hébergement GitHub initial
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
-- branche isolée : `breaktest-bootstrap` ;
+- branche de référence isolée : `breaktest-bootstrap` ;
 - la branche `main` et le projet universitaire d'origine restent inchangés ;
-- les documents canoniques, les instructions de travail, le manifeste des sources et l'audit initial sont présents sur la branche ;
-- le prototype HTML et les PDF restent dans le pack local tant que leur présence dans GitHub n'a pas été vérifiée explicitement ;
-- le workflow ne dépend plus d'une pièce jointe ZIP dans Codex Cloud : Codex doit travailler à partir des fichiers présents dans le dépôt associé à son environnement.
+- les documents canoniques, les instructions, l'audit initial et une copie reproductible du HTML audité sont présents sur `breaktest-bootstrap` ;
+- la copie HTML est stockée en sept fragments vérifiés dans `app/.bundle/` et reconstruite par `scripts/materialize_breaktest.py` ;
+- le script contrôle 7 fragments, 41 356 caractères encodés, 132 899 octets décodés et le SHA-256 canonique avant d'écrire `app/Breaktest_Studio.html` ;
+- les PDF restent locaux et ne sont pas nécessaires à la première correction H1 ;
+- le workflow Codex utilise le dépôt et ne dépend d'aucune pièce jointe ZIP.
+
+## Première correction en cours
+
+- branche de travail : `codex/h1-strict-numeric-validation` ;
+- pull request brouillon : `#2` vers `breaktest-bootstrap` ;
+- périmètre : uniquement H1, validation stricte des données numériques ;
+- la commande `@codex` a été acceptée par le connecteur Codex ;
+- aucun résultat, test ou correctif Codex n'est encore déclaré validé tant que la branche n'a pas reçu les modifications et preuves attendues.
 
 ## Prochaine exécution autorisée
 
-1. matérialiser `app/Breaktest_Studio.html` sur `breaktest-bootstrap` avec contrôle de son SHA-256 ;
-2. confier à Codex la première correction étroite : validation stricte des champs numériques et tests de non-régression associés ;
-3. ne pas refactorer l'architecture ni fusionner dans `main` avant revue des résultats.
+1. Codex matérialise et vérifie le HTML canonique sur sa branche de travail ;
+2. Codex corrige uniquement H1 et exécute les tests de non-régression ;
+3. les changements sont audités avant toute fusion dans `breaktest-bootstrap` ;
+4. aucune fusion dans `main`.
