@@ -108,7 +108,7 @@ SCENARIO = r"""
       training: document.getElementById("training-count").textContent,
       bodyHasStrictOos: document.body.textContent.includes("OOS STRICT"),
       bodyHasOosLabel: /\bOOS\b/.test(document.body.textContent),
-      bodyHasTurnoverDisclosure: document.body.textContent.includes("turnover encore ex post"),
+      bodyHasTruthfulTurnoverDisclosure: document.body.textContent.includes("turnover encore ex post") || document.body.textContent.includes("turnover glissant 365 j"),
     },
   };
 }
@@ -170,7 +170,7 @@ async def main():
     assert labels["ledger"] == "Live · modèle antérieur", labels
     assert labels["bodyHasStrictOos"] is False, labels
     assert labels["bodyHasOosLabel"] is False, labels
-    assert labels["bodyHasTurnoverDisclosure"] is True, labels
+    assert labels["bodyHasTruthfulTurnoverDisclosure"] is True, labels
     print("C2 temporal isolation tests passed")
 
 

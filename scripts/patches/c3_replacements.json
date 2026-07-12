@@ -1,0 +1,32 @@
+[
+  {
+    "old": "  const keptTurnoverAnnual = turnover.years > 0 ? turnover.usedUnits / turnover.years : 0;",
+    "new": "  const keptTurnoverAverageAnnual = turnover.years > 0 ? turnover.totalAcceptedUnits / turnover.years : 0;\n  const keptTurnoverPeakAnnual = turnover.peakRollingUnits;\n  const keptTurnoverAnnual = keptTurnoverPeakAnnual;",
+    "label": "turnover aggregate metrics"
+  },
+  {
+    "old": "    keptTurnoverAnnual,\n    turnoverCapAnnual: cfg.turnoverCapAnnual,",
+    "new": "    keptTurnoverAnnual,\n    keptTurnoverAverageAnnual,\n    keptTurnoverPeakAnnual,\n    turnoverWindowDays: turnover.windowDays,\n    turnoverCapAnnual: cfg.turnoverCapAnnual,",
+    "label": "turnover result fields"
+  },
+  {
+    "old": "<div class=\"mini-stat-row\"><div><span>Turnover gardé</span><strong id=\"mini-turnover\">324 %</strong></div><div><span>Budget</span><strong id=\"mini-budget\">600 %</strong></div></div>",
+    "new": "<div class=\"mini-stat-row\"><div><span>Pic turnover 365 j</span><strong id=\"mini-turnover\">324 %</strong></div><div><span>Plafond glissant</span><strong id=\"mini-budget\">600 %</strong></div></div>",
+    "label": "capital turnover labels"
+  },
+  {
+    "old": "<span class=\"microcopy\">turnover encore ex post</span>",
+    "new": "<span class=\"microcopy\">turnover glissant 365 j</span>",
+    "label": "temporal turnover disclosure"
+  },
+  {
+    "old": "byId(\"turnover-filtered\").textContent = `${fmtPct(result.keptTurnoverAnnual, false, 0)} après filtre`;",
+    "new": "byId(\"turnover-filtered\").textContent = `${fmtPct(result.keptTurnoverPeakAnnual, false, 0)} pic glissant · ${fmtPct(result.keptTurnoverAverageAnnual, false, 0)} moyen`;",
+    "label": "turnover filtered disclosure"
+  },
+  {
+    "old": "[\"Turnover\", backtest.keptTurnoverAnnual, live.keptTurnoverAnnual],",
+    "new": "[\"Pic turnover 365 j\", backtest.keptTurnoverPeakAnnual, live.keptTurnoverPeakAnnual],",
+    "label": "turnover comparison label"
+  }
+]
