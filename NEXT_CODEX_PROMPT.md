@@ -1,19 +1,26 @@
-# Première mission à donner à Codex
+# Prochaine mission à donner à Codex
 
-Ne pas lancer cette mission avant d'avoir ouvert ce dossier dans Codex sur ordinateur ou de l'avoir placé dans un dépôt GitHub accessible à Codex web.
+Ne pas lancer cette mission tant que `app/Breaktest_Studio.html` n'est pas présent sur la branche `breaktest-bootstrap` et que son SHA-256 n'a pas été vérifié comme égal à :
+
+`5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
 
 ```text
-Lis AGENTS.md et tous les documents canoniques avant toute modification.
+Travaille uniquement sur la branche breaktest-bootstrap. Ne modifie et ne fusionne rien dans main.
 
-Objectif : effectuer un audit technique en lecture seule de app/Breaktest_Studio.html.
+Lis d'abord AGENTS.md, PRODUCT.md, QUALITY.md, STATE.md, DECISIONS.md, METHODOLOGY.md et docs/TECHNICAL_AUDIT.md.
 
-1. Inventorie l'architecture du fichier, les données embarquées, les fonctions, les formules, les fallbacks et les exports.
-2. Identifie les fonctions qui sont réellement interactives et celles qui pourraient être seulement démonstratives.
-3. Repère les risques d'erreur quantitative, de parsing CSV, de sécurité côté navigateur, de divergence documentaire et de maintenance.
-4. Compare l'implémentation aux exigences de PRODUCT.md, QUALITY.md et METHODOLOGY.md.
-5. Ne modifie aucun fichier pendant cette première passe.
-6. Produis docs/TECHNICAL_AUDIT.md avec les défauts classés par gravité, leur preuve, leur impact, une méthode de reproduction et le plan de correction recommandé.
-7. Actualise STATE.md uniquement pour ajouter les constats démontrés par l'audit.
+Objectif unique : corriger le défaut H1 de l'audit — les rendements numériques invalides ou absents ne doivent plus être transformés silencieusement en zéro.
 
-Ne prétends pas avoir testé un comportement qui n'a pas été exécuté. Termine en recommandant une première correction étroite, testable et à fort impact.
+Exigences :
+1. Identifie précisément les chemins de normalisation concernés, notamment numeric, normalizeTrade et normalizeTrades.
+2. Distingue explicitement : valeur numérique valide, valeur manquante et valeur invalide.
+3. Refuse un import lorsqu'un rendement ou un PnL obligatoire ne permet pas un calcul non ambigu.
+4. N'utilise aucun fallback silencieux à zéro pour une donnée source obligatoire.
+5. Ajoute des tests de non-régression couvrant au minimum : chaîne non numérique, cellule vide, NaN, Infinity, rendement absent avec PnL calculable, rendement et PnL tous deux absents.
+6. Préserve le fonctionnement nominal du jeu de démonstration et de l'import CSV valide.
+7. Exécute réellement les tests et consigne leurs commandes et résultats.
+8. Mets à jour STATE.md, QUALITY.md et docs/TECHNICAL_AUDIT.md uniquement avec les constats démontrés.
+9. Ne refactore pas l'application, ne corrige pas les autres défauts et ne change pas l'apparence.
+
+Résultat attendu : une correction étroite, une suite de tests reproductible, un résumé des fichiers modifiés et les preuves d'exécution.
 ```
