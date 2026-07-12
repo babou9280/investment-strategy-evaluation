@@ -30,7 +30,6 @@ Prototype local-first 0.1, consolidé le 12 juillet 2026.
 - modal méthodologique ;
 - calculs et affichages locaux en JavaScript.
 
-
 ## Vérifications utilisateur réalisées le 12 juillet 2026
 
 - `app/Breaktest_Studio.html` s'ouvre sur iPad dans un navigateur compatible.
@@ -77,10 +76,10 @@ Réaliser un audit reproductible du fichier canonique :
 - Dépôt utilisé pour l'amorçage : `babou9280/investment-strategy-evaluation`.
 - Branche isolée : `breaktest-bootstrap`.
 - La branche `main` et le projet universitaire d'origine restent inchangés.
-- Le code canonique, les documents canoniques et les instructions Codex sont placés sur la branche d'amorçage pour permettre le premier audit.
-- Les PDF et autres binaires du pack local ne sont pas requis pour la première passe de l'audit HTML et restent, à ce stade, dans le pack local vérifié par manifeste.
+- Les six documents canoniques, `AGENTS.md`, le workflow, le prompt d'audit et le manifeste d'intégrité des sources binaires sont présents sur la branche d'amorçage.
+- Le prototype HTML et les PDF restent dans le pack local tant qu'ils n'ont pas été transférés à Codex ; ils ne doivent pas être considérés comme présents dans GitHub avant vérification explicite.
 - Cet hébergement est réversible : le produit pourra être transféré vers un dépôt dédié sans modifier l'historique universitaire de `main`.
 
 ## Prochaine exécution autorisée
 
-Lancer dans Codex, sur `breaktest-bootstrap`, l'audit technique en lecture seule défini dans `NEXT_CODEX_PROMPT.md`. Aucune refonte n'est autorisée avant restitution de cet audit.
+Transférer le pack local à Codex sur `breaktest-bootstrap`, puis lancer l'audit technique en lecture seule défini dans `NEXT_CODEX_PROMPT.md`. Aucune refonte n'est autorisée avant restitution de cet audit.
