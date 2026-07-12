@@ -1,25 +1,26 @@
-# Breaktest - commencer ici
+# Breaktest — point d'entrée
 
-Ce dossier est la première version organisée du projet.
+Ce dépôt contient le projet universitaire d'origine sur `main` et un amorçage isolé de Breaktest sur la branche `breaktest-bootstrap`.
 
-## Ce que tu dois faire maintenant
+## Ordre de lecture obligatoire
 
-Sur iPad, tu n'as rien à programmer et tu n'as pas à chercher `AGENTS.md` dans une application.
-Le fichier existe déjà dans ce dossier pour une utilisation future par Codex.
+1. `AGENTS.md`
+2. `PRODUCT.md`
+3. `QUALITY.md`
+4. `STATE.md`
+5. `DECISIONS.md`
+6. `METHODOLOGY.md`
+7. `docs/TECHNICAL_AUDIT.md`
+8. `NEXT_CODEX_PROMPT.md`
 
-Pour voir le prototype actuel :
+## État réel
 
-1. ouvre le dossier `app` ;
-2. ouvre `Breaktest_Studio.html` dans Safari ou un navigateur récent ;
-3. teste les vues, curseurs, import CSV et exports disponibles.
+- Le prototype local a été exécuté et audité initialement.
+- L'audit est versionné dans `docs/TECHNICAL_AUDIT.md`.
+- Le fichier canonique attendu est `app/Breaktest_Studio.html`.
+- Son SHA-256 attendu est `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`.
+- Tant que ce fichier n'est pas présent et vérifié sur `breaktest-bootstrap`, Codex ne doit effectuer aucune modification de code.
+- Le workflow Codex ne dépend pas d'une pièce jointe ZIP : l'environnement doit utiliser les fichiers du dépôt.
+- La branche `main` ne doit pas recevoir de modification Breaktest.
 
-## À quoi servent les fichiers Markdown
-
-- `PRODUCT.md` : décrit ce qu'est Breaktest aujourd'hui ;
-- `QUALITY.md` : définit le niveau de qualité exigé ;
-- `STATE.md` : dit ce qui existe, ce qui est vérifié et ce qui reste à faire ;
-- `DECISIONS.md` : conserve les décisions durables ;
-- `METHODOLOGY.md` : conserve les méthodes et limites quantitatives ;
-- `AGENTS.md` : donne des instructions permanentes à Codex lorsqu'un ordinateur ou un dépôt sera utilisé.
-
-Tu n'es pas censé maintenir ces fichiers à la main. ChatGPT et Codex devront les actualiser lorsque le projet évolue.
+La prochaine mission autorisée est décrite exactement dans `NEXT_CODEX_PROMPT.md`.
