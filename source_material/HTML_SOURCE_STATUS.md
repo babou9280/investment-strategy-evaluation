@@ -2,16 +2,18 @@
 
 ## Fichier attendu
 
-- Chemin cible : `app/Breaktest_Studio.html`
-- Taille attendue : 132 899 octets
-- SHA-256 attendu : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
+- Chemin matérialisé : `app/Breaktest_Studio.html`
+- Taille : 132 899 octets
+- SHA-256 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
 
 ## État au 12 juillet 2026
 
-Le fichier a été lu, exécuté et audité depuis le pack local v0.2. Il n'est toutefois pas encore matérialisé dans la branche GitHub `breaktest-bootstrap`.
+Le fichier a été lu, exécuté et audité depuis le pack local v0.2.
 
-Les documents visibles à la racine de la branche ne constituent pas le pack complet : ils couvrent la gouvernance, la méthodologie et l'audit, mais pas encore le fichier exécutable canonique.
+Une copie reproductible de cette source est maintenant versionnée dans `app/.bundle/payload.part001` à `payload.part007`. L'intégrité de chacun des sept fragments a été vérifiée après son transfert GitHub. `scripts/materialize_breaktest.py` reconstruit le HTML et refuse toute différence de nombre de fragments, de longueur, de taille décodée ou de SHA-256.
+
+Le fichier HTML matérialisé n'est pas conservé en double dans la branche d'amorçage : Codex doit exécuter le script sur sa branche de travail, puis versionner le résultat avec la correction testée.
 
 ## Règle
 
-Aucune mission Codex modifiant le produit ne doit commencer tant que le fichier cible n'est pas présent sur la branche et que son empreinte n'a pas été vérifiée.
+Aucune modification quantitative ne peut être considérée comme portant sur la source auditée avant exécution réussie du script et vérification de l'empreinte attendue.
