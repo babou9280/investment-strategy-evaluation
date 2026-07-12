@@ -42,6 +42,9 @@ Demander une validation seulement pour une décision stratégique, coûteuse, ir
 - Toute correction de bug doit ajouter un test de non-régression lorsqu'il est pertinent.
 - Séparer filtrage ex ante et analyse ex post.
 - Ne jamais retirer des perdants rétrospectivement pour améliorer artificiellement une stratégie.
+- Pour toute décision rejouée, interdire qu'une observation future, de même date ou issue d'un échantillon non autorisé influence son modèle.
+- Conserver la provenance du modèle et la profondeur d'entraînement au niveau de chaque décision.
+- Ne pas employer les termes « OOS strict » ou « walk-forward » tant que l'intégralité de la chaîne de décision n'est pas chronologique et couverte par des invariants anti-look-ahead.
 - Préserver la cohérence entre code, produit, méthodologie, deck et guide.
 
 ## Fichier canonique actuel

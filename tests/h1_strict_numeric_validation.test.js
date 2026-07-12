@@ -8,7 +8,7 @@ const vm = require('node:vm');
 const { execFileSync } = require('node:child_process');
 
 const root = path.resolve(__dirname, '..');
-execFileSync('python3', [path.join(root, 'scripts/materialize_breaktest.py')], { stdio: 'inherit' });
+execFileSync('python3', [path.join(root, 'scripts/build_breaktest.py')], { stdio: 'inherit' });
 const htmlPath = path.join(root, 'app/Breaktest_Studio.html');
 const html = fs.readFileSync(htmlPath, 'utf8');
 

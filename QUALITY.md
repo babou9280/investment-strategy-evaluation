@@ -45,6 +45,16 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - la provenance dérivée doit être conservée pour permettre son audit ;
 - une ligne invalide ne doit pas être supprimée silencieusement : le lot est refusé et l'erreur est signalée.
 
+## Isolation temporelle des modèles
+
+- chaque décision doit être évaluée avec un modèle construit uniquement à partir des observations autorisées et disponibles avant cette décision ;
+- une observation d'entraînement n'est admissible que si ses dates d'entrée et de sortie sont valides, cohérentes et si sa sortie est strictement antérieure à l'entrée de la décision ;
+- une observation future, de même date ou issue d'un échantillon interdit ne doit jamais modifier une décision antérieure ;
+- une ligne live ne peut pas entraîner le modèle de référence backtest ;
+- une décision dont la date d'entrée est absente ou invalide doit être placée en observation avec un diagnostic explicite ;
+- le modèle, la profondeur d'entraînement et les exclusions doivent rester attachés à chaque décision afin d'être auditables ;
+- toute mention « OOS strict » ou « walk-forward » est interdite tant que l'ensemble de la chaîne, notamment l'allocation du turnover, n'est pas lui-même strictement chronologique.
+
 ## Qualité quantitative
 
 - documenter les formules importantes ;

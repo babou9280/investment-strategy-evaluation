@@ -8,7 +8,7 @@ Breaktest est une couche de contrôle qualité pour les backtests et journaux de
 
 > Importer. Stresser. Vérifier ce qui reste.
 
-Breaktest ne vend pas une promesse de surperformance. Il aide à déterminer si une performance historique résiste aux coûts, aux gagnants extrêmes, au hors-échantillon et aux incohérences de données.
+Breaktest ne vend pas une promesse de surperformance. Il aide à déterminer si une performance historique résiste aux coûts, aux gagnants extrêmes, à une séparation temporelle entre historique et décisions, et aux incohérences de données.
 
 ## Utilisateur cible provisoire
 
@@ -19,6 +19,7 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - coûts, spreads, slippage et frais fixes sous-estimés ;
 - performance dominée par un petit nombre de trades ;
 - divergence entre backtest et live-test ;
+- fuite temporelle entre historique d'entraînement et décisions rejouées ;
 - journal incohérent avec le résultat publié ;
 - faible profondeur d'échantillon ;
 - résultats difficiles à expliquer et à partager.
@@ -42,6 +43,8 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - scénarios et presets de coûts ;
 - analyse des trades conservés ou retirés ;
 - exports locaux.
+
+La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur. Elle ne doit toutefois pas être présentée comme entièrement walk-forward tant que l'allocation du turnover et la simulation de capital ne sont pas elles aussi chronologiques.
 
 ## Différenciation
 
