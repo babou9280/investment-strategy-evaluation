@@ -2,11 +2,11 @@
 
 ## Version
 
-Prototype local-first 0.1, consolidé le 12 juillet 2026.
+Prototype local-first 0.1, consolidé et audité initialement le 12 juillet 2026.
 
 ## Matériel existant
 
-- un prototype HTML autonome d'environ 130 Ko ;
+- un prototype HTML autonome de 132 899 octets ;
 - quatre fichiers de lancement qui contiennent le même code et diffèrent seulement par le titre et la vue initiale : Capital Fit, Cost X-Ray, Evidence Lab et Trade Gate ;
 - un pitch deck ;
 - un product blueprint ;
@@ -17,69 +17,73 @@ Prototype local-first 0.1, consolidé le 12 juillet 2026.
 
 ## Consolidation réalisée
 
-`app/Breaktest_Studio.html` devient le fichier canonique provisoire. Les quatre variantes originales sont conservées dans `source_material/` à titre d'archive.
+`app/Breaktest_Studio.html` est le fichier canonique provisoire. Les quatre variantes originales sont conservées dans le pack local dans `source_material/` à titre d'archive.
 
-## Ce qui paraît implémenté dans le HTML
+L'empreinte du fichier canonique audité est :
 
-- navigation entre plusieurs vues ;
-- modification du capital ;
+`5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
+
+## Fonctionnalités confirmées par exécution
+
+- chargement local sans erreur JavaScript observée ;
+- navigation entre les quatre vues ;
+- modification du capital et recalcul visible ;
 - presets de courtier et paramètres de coûts ;
-- import CSV ;
-- export des décisions ;
+- réinitialisation du jeu de démonstration ;
+- import CSV nominal ;
+- refus d'un import incomplet avec conservation de l'état précédent ;
+- export CSV des décisions ;
 - filtres et recherche dans le ledger ;
-- modal méthodologique ;
-- calculs et affichages locaux en JavaScript.
+- ouverture et fermeture de la modal méthodologique ;
+- échappement de l'injection HTML testée dans le DOM.
 
-## Vérifications utilisateur réalisées le 12 juillet 2026
+Ces validations portent sur l'exécution fonctionnelle du dashboard, pas sur l'exactitude générale du moteur quantitatif.
 
-- `app/Breaktest_Studio.html` s'ouvre sur iPad dans un navigateur compatible.
-- Les vues et les contrôles de capital sont interactifs.
-- Les indicateurs affichés se recalculent lorsque le capital change.
-- Cette vérification confirme l'interactivité de base, pas l'exactitude quantitative des formules.
+## Audit technique initial
+
+Le rapport `docs/TECHNICAL_AUDIT.md` a été produit à partir du fichier local vérifié par SHA-256, avec lecture du code, exécution Chromium et jeux CSV synthétiques.
+
+### Défauts critiques démontrés
+
+1. absence de contrainte de capital entre positions simultanées ;
+2. fuite temporelle et contamination possible des échantillons ;
+3. allocation du budget de turnover avec connaissance de l'ensemble futur des opportunités ;
+4. courbe de capital qui n'est ni une courbe réalisée aux sorties ni une courbe mark-to-market.
+
+### Défauts élevés démontrés
+
+1. rendements invalides ou absents convertis silencieusement en zéro ;
+2. champs de PnL net/full-cost du journal ignorés ;
+3. prix en euros reconvertis comme une devise étrangère ;
+4. absence de réconciliation PnL / rendement / nominal ;
+5. risque d'injection de formule dans l'export CSV ;
+6. coût algorithmique élevé sur les imports moyens.
 
 ## Ce qui n'est pas encore considéré comme validé
 
 - exactitude de chaque formule ;
 - conformité des calculs aux rapports sources ;
-- comportement de l'import sur des fichiers variés ;
-- robustesse des exports ;
-- tests automatiques ;
-- compatibilité complète iPad, mobile et navigateurs ;
-- absence de bugs silencieux ;
-- sécurité du parsing CSV ;
-- cohérence de toutes les métriques ;
+- simulation d'un portefeuille réellement financé ;
+- caractère strictement OOS ou walk-forward ;
+- robustesse de l'import sur des fichiers variés ;
+- sécurité exhaustive du parsing et des exports ;
+- tests automatiques intégrés au dépôt ;
+- compatibilité complète Safari, iPad, mobile et navigateurs ;
 - reproductibilité du Breaktest Score ;
-- cohérence entre produit, deck et chiffres ;
+- cohérence complète entre produit, deck et chiffres ;
 - valeur commerciale réelle et disposition à payer.
 
-## Risques immédiats
+## Hébergement GitHub initial
 
-1. Le prototype est un fichier HTML monolithique, difficile à tester et maintenir.
-2. Les quatre fichiers de lancement peuvent créer des divergences futures alors qu'ils dupliquent la même application.
-3. L'interface peut donner une impression de maturité supérieure au niveau de validation technique réel.
-4. Les métriques au niveau des trades peuvent être confondues avec des métriques temporelles classiques.
-5. Les chiffres de démonstration doivent rester clairement séparés de résultats commerciaux ou prédictifs.
-
-## Prochaine étape recommandée
-
-Réaliser un audit reproductible du fichier canonique :
-
-1. inventorier les fonctions et formules ;
-2. construire des jeux de données de référence ;
-3. vérifier les résultats manuellement ;
-4. ajouter une première suite de tests ;
-5. corriger les défauts bloquants ;
-6. seulement ensuite refactorer l'architecture.
-
-## Hébergement GitHub initial — 12 juillet 2026
-
-- Dépôt utilisé pour l'amorçage : `babou9280/investment-strategy-evaluation`.
-- Branche isolée : `breaktest-bootstrap`.
-- La branche `main` et le projet universitaire d'origine restent inchangés.
-- Les six documents canoniques, `AGENTS.md`, le workflow, le prompt d'audit et le manifeste d'intégrité des sources binaires sont présents sur la branche d'amorçage.
-- Le prototype HTML et les PDF restent dans le pack local tant qu'ils n'ont pas été transférés à Codex ; ils ne doivent pas être considérés comme présents dans GitHub avant vérification explicite.
-- Cet hébergement est réversible : le produit pourra être transféré vers un dépôt dédié sans modifier l'historique universitaire de `main`.
+- dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
+- branche isolée : `breaktest-bootstrap` ;
+- la branche `main` et le projet universitaire d'origine restent inchangés ;
+- les documents canoniques, les instructions de travail, le manifeste des sources et l'audit initial sont présents sur la branche ;
+- le prototype HTML et les PDF restent dans le pack local tant que leur présence dans GitHub n'a pas été vérifiée explicitement ;
+- le workflow ne dépend plus d'une pièce jointe ZIP dans Codex Cloud : Codex doit travailler à partir des fichiers présents dans le dépôt associé à son environnement.
 
 ## Prochaine exécution autorisée
 
-Transférer le pack local à Codex sur `breaktest-bootstrap`, puis lancer l'audit technique en lecture seule défini dans `NEXT_CODEX_PROMPT.md`. Aucune refonte n'est autorisée avant restitution de cet audit.
+1. matérialiser `app/Breaktest_Studio.html` sur `breaktest-bootstrap` avec contrôle de son SHA-256 ;
+2. confier à Codex la première correction étroite : validation stricte des champs numériques et tests de non-régression associés ;
+3. ne pas refactorer l'architecture ni fusionner dans `main` avant revue des résultats.
