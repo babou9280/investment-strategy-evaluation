@@ -11,21 +11,21 @@
 
 Le prototype est une application locale réellement interactive, sans dépendance réseau ni bibliothèque externe. Le chargement, la navigation, les contrôles de capital et de coûts, l'import CSV, la recherche du ledger, la fenêtre méthodologique et l'export CSV ont été exécutés avec succès dans Chromium.
 
-Cette interactivité ne valide pas encore la proposition quantitative. Quatre défauts structurels empêchent de présenter le moteur comme un contrôle fiable de l'exécutabilité d'une stratégie :
+Cette interactivité ne valide pas encore la proposition quantitative. Quatre défauts structurels ont été démontrés dans la source initiale :
 
 1. le capital disponible et les positions simultanées ne sont pas simulés ;
-2. les modèles et le budget de turnover peuvent utiliser une information future ou une vue globale de la période ;
-3. les données invalides pouvaient être transformées silencieusement en rendement nul dans la source auditée ;
+2. le modèle et le budget de turnover pouvaient utiliser une information future ou une vue globale de la période ;
+3. les données invalides pouvaient être transformées silencieusement en rendement nul ;
 4. les PnL nets/full-cost fournis par le journal sont ignorés alors que la méthodologie les décrit comme bases de résultat.
 
-Le produit est donc, à ce stade, une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé. La correction H1 réduit le risque d'entrée corrompue mais ne résout aucun des défauts structurels C1 à C4.
+H1 est corrigé et fusionné. C2 est corrigé et validé sur la branche candidate. Le produit reste une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé, car C1, C3, C4 et H2 à H6 restent ouverts.
 
 ## 2. Vérifications réellement exécutées
 
 | Contrôle | Résultat |
 |---|---|
 | Chargement initial | réussi, aucune erreur JavaScript ni message console |
-| Jeu de démonstration | 40 trades, dont 20 live/OOS |
+| Jeu de démonstration | 40 trades, dont 20 live |
 | Navigation | les quatre vues s'activent réellement |
 | Capital | passage de 1 000 € à 2 500 € et recalcul observé |
 | Preset `stress` | paramètres de coûts appliqués |
@@ -42,7 +42,7 @@ Ces contrôles ne prouvent pas la compatibilité Safari/iPad complète. L'ouvert
 
 ## 3. Inventaire de l'architecture
 
-Le fichier contient :
+Le fichier source contient :
 
 - HTML, CSS et JavaScript dans un document unique ;
 - 40 trades de démonstration embarqués ;
@@ -66,19 +66,30 @@ Chaque trade est dimensionné à partir du même capital initial. Il n'existe ni
 
 **Impact :** Capital Fit peut déclarer exécutables des trades incompatibles avec le capital disponible.
 
-### C2 — Fuite temporelle et contamination des échantillons
+### C2 — Fuite temporelle et contamination des échantillons — corrigé sur la branche candidate
 
-En mode live, le modèle peut utiliser des trades backtest terminés après la date du trade live. Dans d'autres modes, des lignes d'un échantillon différent peuvent influencer le prior si leurs dates satisfont le filtre.
+Dans la source initiale, un modèle pouvait utiliser des trades backtest terminés après la décision évaluée et des lignes d'un échantillon non autorisé.
 
-**Preuve exécutée :** un trade live daté de 2024 a été évalué avec cinq trades backtest datés de 2025.
+**Preuve initiale :** un trade live daté de 2024 a été évalué avec cinq trades backtest datés de 2025.
 
-**Impact :** les mentions « OOS strict » et « walk-forward » ne sont pas garanties par le moteur.
+**Correction C2 vérifiée :** chaque décision possède désormais son propre modèle ; seules les lignes backtest à dates valides dont la sortie est strictement antérieure à l'entrée de la décision sont admissibles ; les lignes live, futures, de même date, invalides et la décision elle-même sont exclues ; une décision à date invalide est placée en observation sans entraînement.
+
+**Preuves exécutées :**
+
+- build cumulatif H1 + C2 produit 138 406 octets, SHA-256 `b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4` ;
+- l'ajout d'un backtest futur extrême ou d'une ligne live interdite ne modifie ni la profondeur d'entraînement, ni la moyenne postérieure, ni l'edge prudent, ni le statut pré-turnover d'une décision antérieure ;
+- la règle est appliquée en mode live comme en mode backtest ;
+- les décisions à date invalide sont observées avec un diagnostic explicite ;
+- les libellés `OOS strict`, `OOS`, `walk-forward` et `sans ré-optimisation` sont retirés ; l'interface indique que le turnover reste ex post ;
+- les tests H1 passent encore et les 40 trades normalisés de démonstration sont inchangés.
+
+Le détail est consigné dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 
 ### C3 — Budget de turnover alloué avec connaissance de l'avenir
 
-Les candidats de toute la période sont triés par edge prudent avant consommation du budget, au lieu d'être traités chronologiquement.
+Les candidats de toute la période sont encore triés par edge prudent avant consommation du budget, au lieu d'être traités chronologiquement.
 
-**Impact :** la sélection bénéficie d'une optimisation ex post et ne représente pas une politique exécutable en temps réel.
+**Impact :** la sélection bénéficie d'une optimisation ex post et ne représente pas une politique exécutable en temps réel. Pour cette raison, la version candidate C2 parle de « modèle antérieur » et affiche « turnover encore ex post » au lieu de revendiquer un walk-forward complet.
 
 ### C4 — Courbe de capital non temporelle
 
@@ -88,23 +99,13 @@ Le PnL complet des trades est ajouté selon leur date d'entrée, sans tenir comp
 
 ## 5. Défauts élevés
 
-### H1 — Rendements invalides ou absents transformés silencieusement en zéro — corrigé sur la branche candidate
+### H1 — Rendements invalides ou absents transformés silencieusement en zéro — corrigé et fusionné
 
-Dans la source auditée, `numeric` utilisait un fallback à zéro. Une valeur non numérique ou absente pouvait survivre à la normalisation comme rendement nul, sans être signalée par l'audit de données.
+Dans la source auditée, `numeric` utilisait un fallback à zéro. Une valeur non numérique ou absente pouvait survivre à la normalisation comme rendement nul.
 
-**Impact initial :** une donnée invalide était transformée en performance réelle, contrairement à `QUALITY.md` et `AGENTS.md`.
+La version fusionnée distingue `valid`, `missing` et `invalid`, refuse les valeurs explicitement invalides, exige un nominal valide et au moins un PnL ou rendement brut valide, n'autorise que les dérivations non ambiguës et refuse le lot complet au lieu de supprimer silencieusement les lignes invalides.
 
-**Correction H1 vérifiée :** la version candidate distingue `valid`, `missing` et `invalid`; refuse une valeur explicitement invalide ; exige un nominal valide et au moins un PnL ou rendement brut valide ; ne dérive le champ manquant que lorsque le calcul est non ambigu ; conserve `grossPnlDerived` et `grossReturnDerived` ; refuse le lot complet au lieu de supprimer silencieusement les lignes invalides.
-
-**Preuves exécutées :**
-
-- source pré-H1 reconstruite avec le SHA-256 attendu ;
-- cible H1 produite à 135 754 octets avec le SHA-256 `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c` ;
-- suite Node couvrant chaîne non numérique, vide, `NaN`, `Infinity`, dérivations, zéro réel et rejet de lot : réussie ;
-- test Chromium : import nominal accepté, import invalide refusé et état précédent conservé ;
-- snapshot numérique des 40 trades de démonstration : inchangé.
-
-Le détail est consigné dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`. La provenance dérivée n'est pas encore affichée ligne par ligne dans l'interface et H4 reste ouvert.
+Les preuves sont consignées dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`.
 
 ### H2 — Les bases nettes du journal sont ignorées
 
@@ -151,14 +152,16 @@ Le rendu complet est plus coûteux. L'interface peut donc se bloquer sur des CSV
 - import nominal et refus d'un import incomplet ;
 - export CSV ;
 - échappement de l'injection HTML testée dans le DOM ;
-- présence reproductible des défauts décrits ci-dessus ;
-- correction H1 sur la branche candidate et absence de modification du snapshot numérique de démonstration.
+- correction H1 et non-régression de la normalisation ;
+- isolation temporelle et par échantillon du modèle sur la branche candidate C2 ;
+- invariance d'une décision antérieure à l'ajout d'observations futures ou live interdites.
 
 ### Non validé
 
 - exactitude de toutes les formules ;
 - simulation de portefeuille financé ;
-- caractère strictement OOS/walk-forward ;
+- allocation chronologique du turnover ;
+- courbe de capital réalisée ou mark-to-market ;
 - cohérence avec les journaux et rapports sources ;
 - robustesse Safari/iPad complète ;
 - sécurité exhaustive du parsing et des exports ;
@@ -166,8 +169,8 @@ Le rendu complet est plus coûteux. L'interface peut donc se bloquer sur des CSV
 
 ## 7. Prochaine correction recommandée
 
-Corriger ensuite **C2 — isolation temporelle et par échantillon** avant de conserver les libellés « OOS strict » et « walk-forward ».
+Corriger ensuite **C3 — allocation chronologique du budget de turnover**.
 
-Pour chaque décision, l'ensemble d'entraînement doit être construit avec une politique explicite et testable : observations appartenant à l'échantillon autorisé, date de sortie strictement antérieure à la date d'entrée de la décision, aucune observation live dans un modèle entraîné sur le backtest et aucun recours à une observation future. Les dates manquantes ou invalides doivent être exclues avec un diagnostic, pas ordonnées artificiellement à l'époque zéro.
+Les décisions doivent être traitées dans l'ordre temporel, sans tri global par edge futur. À une date donnée, seules les informations disponibles à cette date peuvent déterminer si le budget annuel ou glissant autorise le trade. La politique de renouvellement du budget, les égalités de date et les dates invalides doivent être explicites et testées.
 
-Cette correction doit ajouter des invariants anti-look-ahead et démontrer que l'ajout d'une observation future ou d'un échantillon interdit ne modifie jamais une décision antérieure. Elle ne corrigera pas encore C1, C3 ou C4.
+L'invariant principal sera : ajouter, supprimer ou modifier une opportunité future ne doit jamais changer une décision antérieure. Cette correction ne simulera pas encore la réservation du capital entre positions simultanées, qui relève de C1, ni la courbe de capital, qui relève de C4.
