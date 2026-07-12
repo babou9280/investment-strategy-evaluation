@@ -1,6 +1,6 @@
 # C2 — isolation temporelle et par échantillon
 
-Status: implemented and validated on `codex/c2-temporal-isolation`; pending pull-request review and merge into `breaktest-bootstrap`.
+Status: core implementation merged by pull request `#3`; strict calendar-date and duplicate-identifier hardening validated on `codex/c2-hardening`, pending final review and merge.
 
 ## Scope delivered
 
@@ -8,6 +8,8 @@ Status: implemented and validated on `codex/c2-temporal-isolation`; pending pull
 - strict `training exit < decision entry` rule ;
 - backtest-only training source ;
 - exclusion of self, live rows, future rows, same-date exits and invalid training dates ;
+- strict rejection of impossible ISO calendar dates ;
+- object-identity self-exclusion that preserves distinct rows sharing an identifier ;
 - explicit observation state for decisions with invalid entry dates ;
 - per-decision model and temporal diagnostics ;
 - per-decision model use in break-even calculations ;
