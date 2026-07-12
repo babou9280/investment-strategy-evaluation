@@ -1,0 +1,1 @@
+Temporary transfer note: the audited HTML source is reproducibly versioned via `app/.bundle/payload.part001` through `payload.part007` and `scripts/materialize_breaktest.py`. See `source_material/BUNDLE_INTEGRITY.md`.
