@@ -61,3 +61,10 @@
 - Statut : active
 - Décision : l'audit technique initial exécuté sur le fichier local est recevable parce que le fichier a été identifié par une empreinte SHA-256 enregistrée et que les comportements déclarés ont été réellement exécutés.
 - Conséquence : `docs/TECHNICAL_AUDIT.md` devient la base de travail de la première correction, mais aucune modification de code ne peut être confiée à Codex tant que le fichier canonique correspondant n'est pas présent dans sa branche.
+
+## D011 - Les données numériques source échouent fermement
+
+- Statut : active
+- Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais être transformée en zéro, ignorée ou remplacée par une autre colonne.
+- Justification : un fallback silencieux transforme une erreur de données en résultat quantitatif apparent.
+- Conséquence : les valeurs `missing`, `invalid` et le zéro réel sont distingués ; une dérivation n'est autorisée que lorsqu'elle est non ambiguë et sa provenance doit être conservée.
