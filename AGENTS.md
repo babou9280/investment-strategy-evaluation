@@ -44,7 +44,11 @@ Demander une validation seulement pour une décision stratégique, coûteuse, ir
 - Ne jamais retirer des perdants rétrospectivement pour améliorer artificiellement une stratégie.
 - Pour toute décision rejouée, interdire qu'une observation future, de même date ou issue d'un échantillon non autorisé influence son modèle.
 - Conserver la provenance du modèle et la profondeur d'entraînement au niveau de chaque décision.
-- Ne pas employer les termes « OOS strict » ou « walk-forward » tant que l'intégralité de la chaîne de décision n'est pas chronologique et couverte par des invariants anti-look-ahead.
+- Consommer le budget de turnover dans l'ordre des dates d'entrée ; ne jamais classer globalement des opportunités de dates différentes selon leur edge avant allocation.
+- Autoriser un classement par edge uniquement entre opportunités simultanément disponibles à la même date, avec un dernier départage déterministe.
+- Garantir par test que l'ajout, la suppression ou la modification d'une opportunité future ne change pas une décision antérieure.
+- Conserver les diagnostics de turnover au niveau de chaque décision : budget avant, unités demandées, budget après, rang simultané et motif.
+- Ne pas employer les termes « OOS strict », « walk-forward complet » ou « portefeuille exécutable » tant que la réservation du capital et la courbe temporelle du portefeuille ne sont pas validées.
 - Préserver la cohérence entre code, produit, méthodologie, deck et guide.
 
 ## Fichier canonique actuel
