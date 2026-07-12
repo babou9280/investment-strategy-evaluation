@@ -26,7 +26,7 @@ function temporalTrainingSet(trades, decisionTrade) {
   const eligible = [];
   for (const candidate of trades) {
     if (candidate.sample !== "backtest") continue;
-    if (candidate.id === decisionTrade.id) {
+    if (candidate === decisionTrade) {
       diagnostics.excludedSelf += 1;
       continue;
     }

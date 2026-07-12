@@ -21,6 +21,7 @@ SCENARIO = r"""
     row("future", "backtest", "2025-01-01", "2025-01-02", 9.00),
     row("same", "backtest", "2024-01-01", "2024-01-10", 8.00),
     row("bad-exit", "backtest", "2023-02-01", "not-a-date", 7.00),
+    row("bad-calendar", "backtest", "2023-02-30", "2023-03-01", 6.50),
     row("prior-live", "live", "2023-01-01", "2023-01-02", 6.00),
     row("target", "live", "2024-01-10", "2024-01-11", 0.02),
   ];
@@ -60,7 +61,7 @@ SCENARIO = r"""
 
   const invalidRows = [
     row("past", "backtest", "2023-01-01", "2023-01-02", 0.10),
-    row("invalid-target", "live", "bad-date", "2024-01-11", 0.02),
+    row("invalid-target", "live", "2024-02-30", "2024-03-01", 0.02),
   ];
   const invalidResult = evaluatePortfolio(normalizeTrades(invalidRows), cfg);
   const invalid = invalidResult.evaluations.find((item) => item.trade.id === "invalid-target");
@@ -73,6 +74,13 @@ SCENARIO = r"""
   ];
   const backtestResult = evaluatePortfolio(normalizeTrades(backtestRows), { ...cfg, analysisSample: "backtest" });
   const backtestTarget = backtestResult.evaluations.find((item) => item.trade.id === "target-bt");
+
+  const duplicateRows = [
+    row("duplicate", "backtest", "2022-01-01", "2022-12-31", 0.11),
+    row("duplicate", "live", "2024-01-10", "2024-01-11", 0.02),
+  ];
+  const duplicateResult = evaluatePortfolio(normalizeTrades(duplicateRows), cfg);
+  const duplicateTarget = duplicateResult.evaluations.find((item) => item.trade.sample === "live");
 
   return {
     baseline,
@@ -88,6 +96,11 @@ SCENARIO = r"""
       trainingCount: backtestTarget.model.trainingCount,
       posteriorMean: backtestTarget.edge.posteriorMean,
       diagnostics: backtestTarget.trainingDiagnostics,
+    },
+    duplicateId: {
+      trainingCount: duplicateTarget.model.trainingCount,
+      posteriorMean: duplicateTarget.edge.posteriorMean,
+      diagnostics: duplicateTarget.trainingDiagnostics,
     },
     labels: {
       gate: document.getElementById("gate-mode").textContent,
@@ -123,10 +136,10 @@ async def main():
     assert abs(baseline["posteriorMean"] - 0.10) < 1e-12, baseline
     assert baseline["diagnostics"] == {
         "decisionEntryValid": True,
-        "consideredBacktest": 4,
+        "consideredBacktest": 5,
         "eligibleCount": 1,
         "excludedSelf": 0,
-        "excludedInvalidTrainingDates": 1,
+        "excludedInvalidTrainingDates": 2,
         "excludedFutureOrSame": 2,
     }, baseline["diagnostics"]
     assert contaminated["trainingCount"] == baseline["trainingCount"]
@@ -146,6 +159,11 @@ async def main():
     assert abs(backtest["posteriorMean"] - 0.12) < 1e-12, backtest
     assert backtest["diagnostics"]["excludedSelf"] == 1, backtest
     assert backtest["diagnostics"]["excludedFutureOrSame"] == 1, backtest
+
+    duplicate = result["duplicateId"]
+    assert duplicate["trainingCount"] == 1, duplicate
+    assert abs(duplicate["posteriorMean"] - 0.11) < 1e-12, duplicate
+    assert duplicate["diagnostics"]["excludedSelf"] == 0, duplicate
 
     labels = result["labels"]
     assert labels["gate"] == "LIVE · MODÈLE ANTÉRIEUR", labels

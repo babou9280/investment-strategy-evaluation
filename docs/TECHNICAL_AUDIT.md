@@ -18,7 +18,7 @@ Cette interactivité ne valide pas encore la proposition quantitative. Quatre d�
 3. les données invalides pouvaient être transformées silencieusement en rendement nul ;
 4. les PnL nets/full-cost fournis par le journal sont ignorés alors que la méthodologie les décrit comme bases de résultat.
 
-H1 est corrigé et fusionné. C2 est corrigé et validé sur la branche candidate. Le produit reste une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé, car C1, C3, C4 et H2 à H6 restent ouverts.
+H1 est corrigé et fusionné. Le noyau C2 est fusionné et son durcissement est validé sur une branche dédiée. Le produit reste une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé, car C1, C3, C4 et H2 à H6 restent ouverts.
 
 ## 2. Vérifications réellement exécutées
 
@@ -66,20 +66,27 @@ Chaque trade est dimensionné à partir du même capital initial. Il n'existe ni
 
 **Impact :** Capital Fit peut déclarer exécutables des trades incompatibles avec le capital disponible.
 
-### C2 — Fuite temporelle et contamination des échantillons — corrigé sur la branche candidate
+### C2 — Fuite temporelle et contamination des échantillons — noyau fusionné, durcissement validé
 
 Dans la source initiale, un modèle pouvait utiliser des trades backtest terminés après la décision évaluée et des lignes d'un échantillon non autorisé.
 
 **Preuve initiale :** un trade live daté de 2024 a été évalué avec cinq trades backtest datés de 2025.
 
-**Correction C2 vérifiée :** chaque décision possède désormais son propre modèle ; seules les lignes backtest à dates valides dont la sortie est strictement antérieure à l'entrée de la décision sont admissibles ; les lignes live, futures, de même date, invalides et la décision elle-même sont exclues ; une décision à date invalide est placée en observation sans entraînement.
+Le noyau C2 est fusionné par la pull request `#3`. Chaque décision possède son propre modèle ; seules les lignes backtest dont la sortie est strictement antérieure à l'entrée de la décision sont admissibles ; les lignes live, futures, de même date, invalides et la décision elle-même sont exclues. Une décision à date invalide est placée en observation sans entraînement.
 
-**Preuves exécutées :**
+Le durcissement `codex/c2-hardening` ajoute :
 
-- build cumulatif H1 + C2 produit 138 406 octets, SHA-256 `b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4` ;
+- validation stricte des dates ISO calendaires, afin que `2024-02-30` ne soit pas normalisé silencieusement ;
+- exclusion de la décision par identité d'objet, sans supprimer une autre observation partageant son identifiant ;
+- tests ciblés de ces deux cas.
+
+**Preuves exécutées sur la version durcie :**
+
+- build cumulatif H1 + C2 produit 138 887 octets, SHA-256 `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454` ;
 - l'ajout d'un backtest futur extrême ou d'une ligne live interdite ne modifie ni la profondeur d'entraînement, ni la moyenne postérieure, ni l'edge prudent, ni le statut pré-turnover d'une décision antérieure ;
 - la règle est appliquée en mode live comme en mode backtest ;
-- les décisions à date invalide sont observées avec un diagnostic explicite ;
+- une date calendaire impossible est exclue du modèle ou place la décision en observation ;
+- deux lignes partageant le même identifiant restent distinguées correctement ;
 - les libellés `OOS strict`, `OOS`, `walk-forward` et `sans ré-optimisation` sont retirés ; l'interface indique que le turnover reste ex post ;
 - les tests H1 passent encore et les 40 trades normalisés de démonstration sont inchangés.
 
@@ -89,7 +96,7 @@ Le détail est consigné dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 
 Les candidats de toute la période sont encore triés par edge prudent avant consommation du budget, au lieu d'être traités chronologiquement.
 
-**Impact :** la sélection bénéficie d'une optimisation ex post et ne représente pas une politique exécutable en temps réel. Pour cette raison, la version candidate C2 parle de « modèle antérieur » et affiche « turnover encore ex post » au lieu de revendiquer un walk-forward complet.
+**Impact :** la sélection bénéficie d'une optimisation ex post et ne représente pas une politique exécutable en temps réel. Pour cette raison, l'interface parle de « modèle antérieur » et affiche « turnover encore ex post » au lieu de revendiquer un walk-forward complet.
 
 ### C4 — Courbe de capital non temporelle
 
@@ -153,7 +160,8 @@ Le rendu complet est plus coûteux. L'interface peut donc se bloquer sur des CSV
 - export CSV ;
 - échappement de l'injection HTML testée dans le DOM ;
 - correction H1 et non-régression de la normalisation ;
-- isolation temporelle et par échantillon du modèle sur la branche candidate C2 ;
+- isolation temporelle et par échantillon du modèle ;
+- validation calendaire stricte des dates utilisées par le replay sur la branche de durcissement ;
 - invariance d'une décision antérieure à l'ajout d'observations futures ou live interdites.
 
 ### Non validé

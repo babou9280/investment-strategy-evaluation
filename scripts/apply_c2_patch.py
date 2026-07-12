@@ -9,8 +9,8 @@ TARGET = ROOT / "app" / "Breaktest_Studio.html"
 PATCH = ROOT / "scripts" / "patches" / "c2_portfolio.js"
 REPLACEMENTS = ROOT / "scripts" / "patches" / "c2_replacements.json"
 H1_SHA256 = "f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c"
-C2_SHA256 = "b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4"
-C2_SIZE = 138_406
+C2_SHA256 = "e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454"
+C2_SIZE = 138_887
 BLOCK_START = "function selectReplayTrades(trades, sample) {"
 BLOCK_END = "function breakEvenCapital(trade, model, config = {}, maximum = 10_000_000) {"
 
