@@ -1,9 +1,10 @@
 # Validation C2 — isolation temporelle et par échantillon
 
 - Date : 12 juillet 2026
-- Branche : `codex/c2-temporal-isolation`
+- Branche initiale : `codex/c2-temporal-isolation`
+- Durcissement : `codex/c2-hardening`
 - Entrée H1 : 135 754 octets, SHA-256 `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c`
-- HTML après C2 : 138 406 octets, SHA-256 `b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4`
+- HTML après C2 durci : 138 887 octets, SHA-256 `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454`
 
 ## Comportement corrigé
 
@@ -11,8 +12,8 @@ Pour chaque décision rejouée :
 
 - le modèle est construit séparément ;
 - seules les lignes `backtest` peuvent appartenir à l'entraînement ;
-- la décision elle-même est exclue ;
-- les dates d'entrée et de sortie d'entraînement doivent être valides et cohérentes ;
+- la décision elle-même est exclue par identité d'objet, sans supprimer à tort une autre ligne portant le même identifiant ;
+- les dates ISO d'entrée et de sortie d'entraînement doivent représenter des dates calendaires réelles et cohérentes ;
 - la sortie d'entraînement doit être strictement antérieure à l'entrée de la décision ;
 - les sorties de même date, observations futures et lignes live sont exclues ;
 - une décision à date d'entrée invalide est classée `observe`, sans entraînement ;
@@ -26,7 +27,7 @@ Pour chaque décision rejouée :
 ```text
 python3 scripts/build_breaktest.py
 Materialized app/Breaktest_Studio.html (135754 bytes, source_sha256=5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00, target_sha256=f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c)
-Applied C2 to app/Breaktest_Studio.html (138406 bytes, sha256=b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4)
+Applied C2 to app/Breaktest_Studio.html (138887 bytes, sha256=e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454)
 ```
 
 Le pipeline échoue si la source H1, les marqueurs de transformation, la taille finale ou l'empreinte C2 divergent.
@@ -53,10 +54,11 @@ C2 temporal isolation tests passed
 Les scénarios exécutés démontrent :
 
 - un seul backtest passé admissible pour une décision live donnée ;
-- exclusion d'un backtest futur, d'une sortie le jour de la décision, d'une date de sortie invalide et d'une ligne live antérieure ;
+- exclusion d'un backtest futur, d'une sortie le jour de la décision, d'une date de sortie non parsable, d'une date calendaire impossible et d'une ligne live antérieure ;
 - invariance du nombre d'entraînement, de la moyenne postérieure, de l'edge prudent et du statut pré-turnover après ajout d'une observation future extrême et d'une ligne live interdite ;
 - application de la même règle temporelle en mode backtest ;
-- décision à date invalide placée en observation, sans entraînement et triée après les décisions datées ;
+- décision à date calendaire invalide placée en observation, sans entraînement et triée après les décisions datées ;
+- conservation d'une ligne backtest admissible lorsqu'elle partage son identifiant avec la décision live ;
 - disparition des affirmations utilisateurs `OOS STRICT`, `OOS`, `walk-forward` et présence de la mention `turnover encore ex post`.
 
 ### Vérification syntaxique
