@@ -23,7 +23,7 @@ Empreinte de la source pré-correction :
 
 `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
 
-Empreinte de la version candidate après correction H1 :
+Empreinte de la version courante après correction H1 :
 
 `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c`
 
@@ -54,9 +54,11 @@ Le rapport `docs/TECHNICAL_AUDIT.md` a été produit à partir du fichier source
 3. allocation du budget de turnover avec connaissance de l'ensemble futur des opportunités ;
 4. courbe de capital qui n'est ni une courbe réalisée aux sorties ni une courbe mark-to-market.
 
-### Défaut H1 corrigé et vérifié sur la branche candidate
+### Défaut H1 corrigé, validé et fusionné
 
-La branche `codex/h1-strict-numeric-validation` distingue désormais une valeur numérique valide, manquante et invalide. Elle refuse le lot lorsqu'une valeur explicitement fournie est invalide ou lorsque PnL et rendement bruts sont tous deux absents. Un champ manquant peut être dérivé uniquement à partir de l'autre champ et d'un nominal valides ; la provenance dérivée est conservée.
+La correction H1 est fusionnée dans `breaktest-bootstrap` par la pull request `#2`, commit squash `380e9e99f5b59387586df4290f32d5b057e2f3bd`.
+
+Le moteur distingue désormais une valeur numérique valide, manquante et invalide. Il refuse le lot lorsqu'une valeur explicitement fournie est invalide ou lorsque PnL et rendement bruts sont tous deux absents. Un champ manquant peut être dérivé uniquement à partir de l'autre champ et d'un nominal valides ; la provenance dérivée est conservée.
 
 Validations exécutées :
 
@@ -95,14 +97,13 @@ Le détail reproductible est enregistré dans `docs/validation/H1_STRICT_NUMERIC
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
 - branche de référence isolée : `breaktest-bootstrap` ;
-- branche de correction : `codex/h1-strict-numeric-validation` ;
-- pull request brouillon : `#2` vers `breaktest-bootstrap` ;
 - la branche `main` et le projet universitaire d'origine restent inchangés ;
 - les PDF restent locaux et ne sont pas nécessaires aux corrections de code actuellement ciblées.
 
 ## Prochaine exécution autorisée
 
-1. auditer le diff réel de la pull request H1 et les fichiers versionnés ;
-2. fusionner dans `breaktest-bootstrap` uniquement si les preuves et le périmètre sont conformes ;
-3. ouvrir ensuite une branche isolée pour C2 — isolation temporelle et par échantillon ;
-4. ne rien fusionner dans `main`.
+1. ouvrir une branche isolée pour C2 — isolation temporelle et par échantillon ;
+2. corriger uniquement C2 avec des invariants anti-look-ahead ;
+3. réexécuter intégralement les tests H1 ;
+4. auditer la nouvelle pull request avant toute fusion dans `breaktest-bootstrap` ;
+5. ne rien fusionner dans `main`.
