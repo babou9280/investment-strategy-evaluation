@@ -1,5 +1,10 @@
 [
   {
+    "old": "function validDate(value) {\n  const time = Date.parse(value);\n  return Number.isFinite(time) ? time : null;\n}",
+    "new": "function validDate(value) {\n  const text = String(value ?? \"\").trim();\n  const calendar = /^(\\d{4})-(\\d{2})-(\\d{2})(?=$|T)/.exec(text);\n  if (!calendar) return null;\n  const year = Number(calendar[1]);\n  const month = Number(calendar[2]);\n  const day = Number(calendar[3]);\n  const calendarTime = Date.UTC(year, month - 1, day);\n  const calendarDate = new Date(calendarTime);\n  if (calendarDate.getUTCFullYear() !== year || calendarDate.getUTCMonth() !== month - 1 || calendarDate.getUTCDate() !== day) return null;\n  const time = Date.parse(text);\n  return Number.isFinite(time) ? time : null;\n}",
+    "label": "strict ISO calendar date parser"
+  },
+  {
     "old": "<span id=\"dataset-count\">40 trades · 20 OOS</span>",
     "new": "<span id=\"dataset-count\">40 trades · 20 live</span>",
     "label": "initial dataset sample label"
