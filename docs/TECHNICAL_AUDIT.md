@@ -15,10 +15,10 @@ Cette interactivité ne valide pas encore la proposition quantitative. Quatre d�
 
 1. le capital disponible et les positions simultanées ne sont pas simulés ;
 2. les modèles et le budget de turnover peuvent utiliser une information future ou une vue globale de la période ;
-3. les données invalides peuvent être transformées silencieusement en rendement nul ;
+3. les données invalides pouvaient être transformées silencieusement en rendement nul dans la source auditée ;
 4. les PnL nets/full-cost fournis par le journal sont ignorés alors que la méthodologie les décrit comme bases de résultat.
 
-Le produit est donc, à ce stade, une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé.
+Le produit est donc, à ce stade, une **démonstration fonctionnelle de dashboard**, pas encore un moteur quantitatif validé. La correction H1 réduit le risque d'entrée corrompue mais ne résout aucun des défauts structurels C1 à C4.
 
 ## 2. Vérifications réellement exécutées
 
@@ -46,7 +46,7 @@ Le fichier contient :
 
 - HTML, CSS et JavaScript dans un document unique ;
 - 40 trades de démonstration embarqués ;
-- 71 fonctions JavaScript déclarées ;
+- 71 fonctions JavaScript déclarées dans la source auditée ;
 - 89 identifiants DOM uniques ;
 - 19 boutons, 18 champs `input`, 3 sélecteurs et 3 graphiques SVG ;
 - aucune requête réseau, aucun backend, aucun stockage local et aucune dépendance externe ;
@@ -88,11 +88,23 @@ Le PnL complet des trades est ajouté selon leur date d'entrée, sans tenir comp
 
 ## 5. Défauts élevés
 
-### H1 — Les rendements invalides ou absents deviennent silencieusement zéro
+### H1 — Rendements invalides ou absents transformés silencieusement en zéro — corrigé sur la branche candidate
 
-`numeric` utilise un fallback à zéro. Une valeur non numérique ou absente peut survivre à la normalisation comme rendement nul, sans être signalée par l'audit de données.
+Dans la source auditée, `numeric` utilisait un fallback à zéro. Une valeur non numérique ou absente pouvait survivre à la normalisation comme rendement nul, sans être signalée par l'audit de données.
 
-**Impact :** une donnée invalide est transformée en performance réelle, contrairement à `QUALITY.md` et `AGENTS.md`.
+**Impact initial :** une donnée invalide était transformée en performance réelle, contrairement à `QUALITY.md` et `AGENTS.md`.
+
+**Correction H1 vérifiée :** la version candidate distingue `valid`, `missing` et `invalid`; refuse une valeur explicitement invalide ; exige un nominal valide et au moins un PnL ou rendement brut valide ; ne dérive le champ manquant que lorsque le calcul est non ambigu ; conserve `grossPnlDerived` et `grossReturnDerived` ; refuse le lot complet au lieu de supprimer silencieusement les lignes invalides.
+
+**Preuves exécutées :**
+
+- source pré-H1 reconstruite avec le SHA-256 attendu ;
+- cible H1 produite à 135 754 octets avec le SHA-256 `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c` ;
+- suite Node couvrant chaîne non numérique, vide, `NaN`, `Infinity`, dérivations, zéro réel et rejet de lot : réussie ;
+- test Chromium : import nominal accepté, import invalide refusé et état précédent conservé ;
+- snapshot numérique des 40 trades de démonstration : inchangé.
+
+Le détail est consigné dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`. La provenance dérivée n'est pas encore affichée ligne par ligne dans l'interface et H4 reste ouvert.
 
 ### H2 — Les bases nettes du journal sont ignorées
 
@@ -139,7 +151,8 @@ Le rendu complet est plus coûteux. L'interface peut donc se bloquer sur des CSV
 - import nominal et refus d'un import incomplet ;
 - export CSV ;
 - échappement de l'injection HTML testée dans le DOM ;
-- présence reproductible des défauts décrits ci-dessus.
+- présence reproductible des défauts décrits ci-dessus ;
+- correction H1 sur la branche candidate et absence de modification du snapshot numérique de démonstration.
 
 ### Non validé
 
@@ -151,8 +164,10 @@ Le rendu complet est plus coûteux. L'interface peut donc se bloquer sur des CSV
 - sécurité exhaustive du parsing et des exports ;
 - valeur commerciale et disposition à payer.
 
-## 7. Première correction recommandée
+## 7. Prochaine correction recommandée
 
-Corriger d'abord **H1 — validation stricte des données numériques** : distinguer valeur présente et valide, valeur manquante et valeur invalide ; refuser l'import lorsque les champs obligatoires ne permettent pas un calcul non ambigu ; ajouter des tests de non-régression pour les valeurs vides, non numériques, infinies et incohérentes.
+Corriger ensuite **C2 — isolation temporelle et par échantillon** avant de conserver les libellés « OOS strict » et « walk-forward ».
 
-Cette correction est étroite, testable et empêche immédiatement que des données corrompues soient présentées comme des rendements nuls. Elle ne doit pas être confondue avec la correction structurelle ultérieure de la simulation de capital.
+Pour chaque décision, l'ensemble d'entraînement doit être construit avec une politique explicite et testable : observations appartenant à l'échantillon autorisé, date de sortie strictement antérieure à la date d'entrée de la décision, aucune observation live dans un modèle entraîné sur le backtest et aucun recours à une observation future. Les dates manquantes ou invalides doivent être exclues avec un diagnostic, pas ordonnées artificiellement à l'époque zéro.
+
+Cette correction doit ajouter des invariants anti-look-ahead et démontrer que l'ajout d'une observation future ou d'un échantillon interdit ne modifie jamais une décision antérieure. Elle ne corrigera pas encore C1, C3 ou C4.
