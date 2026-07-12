@@ -31,8 +31,9 @@ La provenance dérivée est désormais conservée dans le moteur, mais son affic
 Chaque trade rejoué est évalué avec son propre modèle. L'ensemble d'entraînement autorisé est défini comme suit :
 
 - seules les lignes `backtest` peuvent entraîner le modèle ;
-- la ligne de décision elle-même est exclue ;
-- les dates d'entrée et de sortie de la ligne d'entraînement doivent être valides et respecter `entrée ≤ sortie` ;
+- la ligne de décision elle-même est exclue par identité de ligne, pas par identifiant textuel ;
+- les dates doivent commencer par une date ISO `YYYY-MM-DD` représentant un jour calendaire réel ;
+- les dates d'entrée et de sortie de la ligne d'entraînement doivent respecter `entrée ≤ sortie` ;
 - la sortie de la ligne d'entraînement doit être strictement antérieure à l'entrée de la décision ;
 - une sortie le même jour que l'entrée de la décision est exclue ;
 - les lignes futures et toutes les lignes live sont exclues de l'entraînement ;
