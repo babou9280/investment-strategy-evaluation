@@ -29,7 +29,7 @@ Empreintes :
 
 - source v0.2 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00` ;
 - après H1 : `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c` ;
-- candidate après C2 : `b82dc786fc3a0669792744e77be34c49b744e89502138c56cd97b73187fc64f4`.
+- version C2 durcie : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454`.
 
 ## Fonctionnalités confirmées par exécution
 
@@ -65,28 +65,29 @@ Le moteur distingue une valeur numérique valide, manquante et invalide, refuse 
 
 Les preuves sont enregistrées dans `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`.
 
-### C2 corrigé et validé sur la branche candidate
+### C2 — noyau fusionné, durcissement validé
 
-La branche `codex/c2-temporal-isolation` construit un modèle distinct pour chaque décision avec uniquement les lignes backtest valides dont la sortie est strictement antérieure à l'entrée de la décision.
+Le noyau C2 est fusionné dans `breaktest-bootstrap` par la pull request `#3`, commit `bdd9d244925bc7097516410fdab3a2d005962ca7`.
 
-Sont exclus :
+Il construit un modèle distinct pour chaque décision avec uniquement les lignes backtest dont la sortie est strictement antérieure à l'entrée de la décision. Les lignes live, futures, de même date, invalides et la décision elle-même sont exclues ; les décisions à date invalide sont placées en observation sans entraînement.
 
-- la décision elle-même ;
-- les lignes live ;
-- les observations futures ;
-- les sorties de même date ;
-- les lignes d'entraînement à dates invalides ou incohérentes.
+Le durcissement `codex/c2-hardening` ajoute :
 
-Une décision à date invalide est placée en observation sans entraînement. Le modèle et les diagnostics sont conservés par évaluation. Les seuils de rentabilité utilisent le modèle propre à chaque décision.
+- validation stricte des dates ISO calendaires ;
+- exclusion de la décision par identité d'objet, afin de conserver une autre ligne portant le même identifiant ;
+- tests de non-régression pour une date impossible et des identifiants dupliqués ;
+- cible déterministe de 138 887 octets, SHA-256 `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454`.
 
-Validations exécutées :
+Validations exécutées sur la version durcie :
 
-- `python3 scripts/build_breaktest.py` : réussite, empreinte C2 conforme ;
+- `python3 scripts/build_breaktest.py` : réussite ;
 - `node tests/h1_strict_numeric_validation.test.js` : réussite ;
 - `python3 tests/h1_browser_smoke.py` : réussite ;
 - `python3 tests/c2_temporal_isolation.py` : réussite ;
 - JavaScript extrait : syntaxe validée avec `node --check` ;
 - ajout d'observations futures ou live interdites : aucune modification de la décision antérieure testée ;
+- date calendaire impossible : exclue ou placée en observation selon son rôle ;
+- identifiants dupliqués : aucune exclusion erronée de l'historique admissible ;
 - libellés trompeurs OOS/walk-forward retirés ;
 - limitation `turnover encore ex post` affichée.
 
@@ -118,13 +119,12 @@ Le détail est enregistré dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
 - branche de référence isolée : `breaktest-bootstrap` ;
-- branche C2 : `codex/c2-temporal-isolation` ;
+- branche de durcissement C2 : `codex/c2-hardening` ;
 - la branche `main` et le projet universitaire d'origine restent inchangés ;
 - les PDF restent locaux et ne sont pas nécessaires aux corrections de code actuellement ciblées.
 
 ## Prochaine exécution autorisée
 
-1. ouvrir et auditer la pull request C2 vers `breaktest-bootstrap` ;
-2. fusionner C2 uniquement si le diff et les preuves sont conformes ;
-3. ouvrir ensuite une branche isolée pour C3 — allocation chronologique du turnover ;
-4. ne rien fusionner dans `main`.
+1. auditer et fusionner le durcissement C2 uniquement vers `breaktest-bootstrap` ;
+2. ouvrir ensuite une branche isolée pour C3 — allocation chronologique du turnover ;
+3. ne rien fusionner dans `main`.
