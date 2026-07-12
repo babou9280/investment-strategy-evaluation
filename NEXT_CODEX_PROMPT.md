@@ -1,40 +1,51 @@
-# Prochaine mission — C3 allocation chronologique du turnover
+# Prochaine mission — C1 réservation du capital simultané
 
-Travaille uniquement sur une nouvelle branche créée depuis `breaktest-bootstrap`. Ne modifie et ne fusionne rien dans `main`.
+Travaille uniquement sur une nouvelle branche créée depuis le dernier `breaktest-bootstrap`. Ne modifie et ne fusionne rien dans `main`.
 
-Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1/C2.
+Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1, C2 et C3.
 
 ## Objectif unique
 
-Corriger C3 : le budget de turnover ne doit plus être alloué après un tri global utilisant les opportunités futures.
+Corriger C1 : les positions qui se chevauchent ne doivent jamais réserver simultanément plus de capital que le portefeuille n'en possède.
 
 ## Politique retenue
 
-- traiter les décisions par date d'entrée croissante ;
-- appliquer un plafond glissant sur les 365,25 jours précédant chaque décision ;
-- à date identique, classer uniquement les opportunités simultanément disponibles par edge prudent, puis edge central et identifiant déterministe ;
-- une décision future ne doit jamais modifier une décision antérieure ;
-- les décisions à date invalide restent `observe` et ne consomment aucun budget ;
-- conserver pour chaque décision le budget disponible, l'utilisation avant/après et le motif d'acceptation ou de refus ;
-- distinguer dans les agrégats le turnover annuel moyen et le pic glissant réellement comparé au plafond.
+1. Traiter les décisions d'entrée chronologiquement, en conservant l'ordre déterministe déjà établi.
+2. Avant chaque groupe d'entrées, libérer le capital des positions dont la sortie est antérieure ou égale à cet instant. Une position sortie à une date peut donc financer une entrée de la même date.
+3. Réserver le nominal effectivement dimensionné uniquement pour une décision déjà `keep` après H1, C2 et C3.
+4. Ne jamais redimensionner implicitement un trade pour le faire entrer dans le capital disponible.
+5. Si le capital libre est insuffisant, classer la décision `remove` avec un motif explicite de financement insuffisant.
+6. Une décision déjà `remove` ou `observe` ne réserve rien.
+7. Une date d'entrée ou de sortie invalide place la décision en `observe`, sans réservation et avec un diagnostic explicite.
+8. Le PnL ne modifie pas le capital disponible avant la sortie. Pour C1, libérer uniquement le nominal réservé ; la courbe réalisée ou mark-to-market relève de C4.
+9. Conserver par décision : capital initial, capital réservé avant, capital libre avant, nominal demandé, décision de financement, capital réservé après, capital libre après, date de libération et motif.
+10. Exposer au minimum : pic de capital réservé, minimum de capital libre et nombre de refus pour financement.
 
-## Exigences de validation
+## Tests obligatoires
 
-1. Ajouter un scénario où l'algorithme historique global choisit à tort un meilleur trade futur au détriment d'un trade antérieur.
-2. Prouver qu'après correction, ajouter, supprimer ou modifier une opportunité future ne change jamais les décisions déjà prises.
-3. Tester le renouvellement du budget après 365,25 jours, les décisions de même date, un budget nul et une date invalide.
-4. Réexécuter intégralement les tests H1 et C2.
-5. Vérifier le build déterministe, la syntaxe JavaScript et l'absence de régression de la démonstration hors effets attendus du turnover.
-6. Mettre à jour les fichiers canoniques uniquement avec les résultats démontrés.
+- deux positions simultanées de 700 € avec 1 000 € : une seule financée ;
+- deux positions non chevauchantes de 700 € avec 1 000 € : les deux financées ;
+- sortie et entrée le même jour : capital libéré avant l'entrée ;
+- capital exactement suffisant ;
+- capital nul ;
+- date d'entrée invalide ;
+- date de sortie invalide ;
+- décision préfiltrée : aucune réservation ;
+- ajout ou modification d'une opportunité future : aucune modification d'une décision antérieure ;
+- PnL futur extrême : aucune modification du capital libre avant la sortie ;
+- réexécution intégrale des suites H1, C2 et C3 ;
+- build déterministe, lancement Chromium et `node --check` sur le JavaScript construit.
 
-## Hors périmètre
+## Documentation et limites
 
-- ne pas corriger C1, C4 ou H2 à H6 ;
-- ne pas simuler encore la réservation du capital entre positions ;
-- ne pas transformer la courbe de capital en mark-to-market ;
+- créer `docs/validation/C1_CAPITAL_RESERVATION.md` avec les commandes et résultats exacts ;
+- ajouter une règle permanente empêchant le retour d'un surfinancement simultané ;
+- mettre à jour les fichiers canoniques uniquement avec les résultats démontrés ;
+- C4 et H2 à H6 restent ouverts ;
+- ne pas simuler de mark-to-market, appels de marge, levier, intérêts ou réinvestissement automatique du PnL ;
 - ne pas refondre l'application ;
-- ne rien fusionner automatiquement dans `main`.
+- ne rien fusionner automatiquement.
 
 ## Résultat attendu
 
-Une allocation du turnover ex ante, chronologique et auditée, des invariants anti-futur reproductibles, une documentation cohérente et une pull request vers `breaktest-bootstrap`.
+Une simulation de réservation du nominal strictement chronologique et auditée, des invariants de financement reproductibles, la non-régression intégrale de H1/C2/C3 et une pull request vers `breaktest-bootstrap`.
