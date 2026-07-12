@@ -14,6 +14,18 @@ Le prototype travaille principalement au niveau des trades et des PnL fournis. L
 
 Tout repli doit être visible pour l'utilisateur et dans l'audit.
 
+## Normalisation numérique de la base brute — règle H1
+
+- le nominal investi doit être présent, fini et strictement positif ;
+- au moins un des champs `gross_pnl_eur` ou `gross_return` doit être présent et numériquement valide ;
+- une valeur explicitement fournie mais non numérique, `NaN` ou infinie entraîne le refus du lot ;
+- lorsque le rendement manque mais que le PnL brut et le nominal sont valides, le rendement est dérivé par `PnL / nominal` ;
+- lorsque le PnL brut manque mais que le rendement et le nominal sont valides, le PnL est dérivé par `rendement × nominal` ;
+- un zéro réel reste une observation valide ;
+- la ligne normalisée conserve des indicateurs internes `grossPnlDerived` et `grossReturnDerived`.
+
+La provenance dérivée est désormais conservée dans le moteur, mais son affichage détaillé dans l'audit utilisateur reste à implémenter. La réconciliation lorsque PnL et rendement sont tous deux fournis mais incohérents relève encore du défaut H4.
+
 ## Stress tests actuels
 
 - augmentation des coûts ;

@@ -36,6 +36,15 @@ Toujours distinguer :
 
 Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou une intégration fonctionnelle.
 
+## Validation stricte des données numériques source
+
+- une donnée source numérique obligatoire est classée comme `valid`, `missing` ou `invalid` avant tout calcul ;
+- un zéro numérique réel est une valeur valide et ne doit jamais être confondu avec une absence ;
+- une valeur explicitement fournie mais invalide ne peut pas être remplacée par un fallback ou une dérivation ;
+- lorsqu'un seul des deux champs brut PnL/rendement manque, il peut être dérivé uniquement à partir de l'autre champ et d'un nominal tous deux valides ;
+- la provenance dérivée doit être conservée pour permettre son audit ;
+- une ligne invalide ne doit pas être supprimée silencieusement : le lot est refusé et l'erreur est signalée.
+
 ## Qualité quantitative
 
 - documenter les formules importantes ;
