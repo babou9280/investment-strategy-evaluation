@@ -1,0 +1,190 @@
+{
+  "schema_version": "1.0",
+  "status": "synthetic_only",
+  "scenarios": [
+    {
+      "id": "fixed_cost_dominated",
+      "question": "Que se passe-t-il lorsque la commission fixe domine un petit ordre ?",
+      "inputs": {
+        "capitalEur": 2000,
+        "orderNotionalEur": 100,
+        "sideCount": 2,
+        "monthlyOperations": 4,
+        "commissionPerSideEur": 1,
+        "fxRatePerSide": 0,
+        "spreadTotalRate": 0,
+        "slippageTotalRate": 0,
+        "grossEdgeRate": 0.03,
+        "retentionTargetRate": 0.5,
+        "annualDragBudgetRate": 0.03,
+        "targetNetRate": 0.01,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "fixedCostEur": 2,
+        "variableFloorRate": 0,
+        "totalCostEur": 2,
+        "breakEvenGrossRate": 0.02,
+        "netEdgeRate": 0.01,
+        "edgeRetainedRate": 0.3333333333333333,
+        "minimumOrderForPositiveNet": 66.66666666666667,
+        "minimumOrderForRetention": 133.33333333333334,
+        "annualCostEur": 96,
+        "maxMonthlyOperationsUnderBudget": 2.5,
+        "requiredGrossRateForTargetNet": 0.03,
+        "primaryState": "edge_partially_retained"
+      }
+    },
+    {
+      "id": "variable_floor_dominated",
+      "question": "Que reste-t-il lorsque les frictions sont entièrement proportionnelles ?",
+      "inputs": {
+        "capitalEur": 10000,
+        "orderNotionalEur": 5000,
+        "sideCount": 2,
+        "monthlyOperations": 2,
+        "commissionPerSideEur": 0,
+        "fxRatePerSide": 0.0025,
+        "spreadTotalRate": 0.001,
+        "slippageTotalRate": 0.001,
+        "grossEdgeRate": 0.008,
+        "retentionTargetRate": 0.1,
+        "annualDragBudgetRate": 0.01,
+        "targetNetRate": 0.002,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "fixedCostEur": 0,
+        "variableFloorRate": 0.007,
+        "totalCostEur": 35,
+        "breakEvenGrossRate": 0.007,
+        "netEdgeRate": 0.001,
+        "edgeRetainedRate": 0.125,
+        "minimumOrderForPositiveNet": 0,
+        "minimumOrderForPositiveNetBoundary": "no_positive_minimum_from_fixed_costs",
+        "minimumOrderForRetention": 0,
+        "minimumOrderForRetentionBoundary": "no_positive_minimum_from_fixed_costs",
+        "annualCostEur": 840,
+        "maxMonthlyOperationsUnderBudget": 0.23809523809523808,
+        "requiredGrossRateForTargetNet": 0.009,
+        "primaryState": "retention_target_met"
+      }
+    },
+    {
+      "id": "gross_edge_fully_absorbed",
+      "question": "Comment le produit représente-t-il un avantage brut inférieur au seuil ?",
+      "inputs": {
+        "capitalEur": 5000,
+        "orderNotionalEur": 500,
+        "sideCount": 2,
+        "monthlyOperations": 4,
+        "commissionPerSideEur": 1,
+        "fxRatePerSide": 0.0025,
+        "spreadTotalRate": 0.001,
+        "slippageTotalRate": 0.001,
+        "grossEdgeRate": 0.01,
+        "retentionTargetRate": 0.5,
+        "annualDragBudgetRate": 0.03,
+        "targetNetRate": 0.01,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "breakEvenGrossRate": 0.011,
+        "netEdgeRate": -0.001,
+        "netEdgeEur": -0.5,
+        "edgeAbsorptionRate": 1.1,
+        "edgeRetainedRate": -0.1,
+        "minimumOrderForPositiveNet": 666.6666666666666,
+        "minimumOrderForRetentionReason": "structurally_unreachable",
+        "primaryState": "edge_fully_absorbed"
+      }
+    },
+    {
+      "id": "gross_edge_below_variable_floor",
+      "question": "Une taille supérieure peut-elle résoudre un avantage brut sous le plancher variable ?",
+      "inputs": {
+        "capitalEur": 5000,
+        "orderNotionalEur": 500,
+        "sideCount": 2,
+        "monthlyOperations": 4,
+        "commissionPerSideEur": 1,
+        "fxRatePerSide": 0.0025,
+        "spreadTotalRate": 0.001,
+        "slippageTotalRate": 0.001,
+        "grossEdgeRate": 0.006,
+        "retentionTargetRate": 0.5,
+        "annualDragBudgetRate": 0.03,
+        "targetNetRate": 0.01,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "variableFloorRate": 0.007,
+        "breakEvenGrossRate": 0.011,
+        "netEdgeRate": -0.005,
+        "edgeRetainedRate": -0.8333333333333334,
+        "minimumOrderForPositiveNetReason": "structurally_unreachable",
+        "minimumOrderForRetentionReason": "structurally_unreachable",
+        "primaryState": "edge_fully_absorbed"
+      }
+    },
+    {
+      "id": "annual_friction_budget",
+      "question": "Quelle fréquence arithmétique reste sous un budget annuel donné ?",
+      "inputs": {
+        "capitalEur": 10000,
+        "orderNotionalEur": 1000,
+        "sideCount": 2,
+        "monthlyOperations": 10,
+        "commissionPerSideEur": 1,
+        "fxRatePerSide": 0,
+        "spreadTotalRate": 0.0005,
+        "slippageTotalRate": 0.0005,
+        "grossEdgeRate": 0.02,
+        "retentionTargetRate": 0.5,
+        "annualDragBudgetRate": 0.02,
+        "targetNetRate": 0.01,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "fixedCostEur": 2,
+        "variableFloorRate": 0.001,
+        "totalCostEur": 3,
+        "breakEvenGrossRate": 0.003,
+        "netEdgeRate": 0.017,
+        "edgeRetainedRate": 0.85,
+        "annualCostEur": 360,
+        "annualDragToCapitalRate": 0.036,
+        "maxMonthlyOperationsUnderBudget": 5.555555555555555,
+        "requiredGrossRateForTargetNet": 0.013,
+        "primaryState": "retention_target_met"
+      }
+    },
+    {
+      "id": "threshold_and_target_net_without_edge",
+      "question": "Quel brut est requis pour une marge nette cible sans fournir d'avantage attendu ?",
+      "inputs": {
+        "capitalEur": null,
+        "orderNotionalEur": 1000,
+        "sideCount": 1,
+        "monthlyOperations": 0,
+        "commissionPerSideEur": 0.5,
+        "fxRatePerSide": 0.001,
+        "spreadTotalRate": 0.0005,
+        "slippageTotalRate": 0.0005,
+        "grossEdgeRate": null,
+        "retentionTargetRate": null,
+        "annualDragBudgetRate": null,
+        "targetNetRate": 0.01,
+        "provenance": "synthetic_demo"
+      },
+      "expected": {
+        "fixedCostEur": 0.5,
+        "variableFloorRate": 0.002,
+        "totalCostEur": 2.5,
+        "breakEvenGrossRate": 0.0025,
+        "requiredGrossRateForTargetNet": 0.0125,
+        "primaryState": "threshold_only"
+      }
+    }
+  ]
+}
