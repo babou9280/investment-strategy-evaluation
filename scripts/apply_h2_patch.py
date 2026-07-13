@@ -8,8 +8,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "app" / "Breaktest_Studio.html"
 PATCH_DIR = ROOT / "scripts" / "patches"
 C4_SHA256 = "ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af"
-H2_SHA256 = "8a6369662b1f97a1b6f4b395a58dffda4336441c02ef26f6b8ad8295cf1641a6"
-H2_SIZE = 166_729
+H2_SHA256 = "a5d6c978e4c10a5179ba94d7216f86ea8c522207bbf78ef1bc6fa91d08ee6e52"
+H2_SIZE = 166_816
 
 
 def digest(payload: bytes) -> str:
