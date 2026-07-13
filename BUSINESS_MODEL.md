@@ -2,8 +2,9 @@
 
 - Statut : hypothèses à tester
 - Direction : Breaktest Capital Efficiency
+- Extension stratégique : Breaktest Cost Gate, non implémentée
 - Date initiale : 13 juillet 2026
-- Dernier raffinement : 13 juillet 2026
+- Dernier raffinement : 14 juillet 2026
 
 ## 1. Principe
 
@@ -15,7 +16,8 @@ La séquence économique envisagée devient :
 2. Edge Survival et contraintes inverses pour démontrer la valeur ;
 3. suivi réel des coûts et de la marge après import ;
 4. historique, réconciliation et Evidence Ledger comme premier produit payant ;
-5. benchmarks, données, API et partenariats uniquement après volume et conformité.
+5. contrôle pré-trade Cost Gate après validation du noyau, de la faisabilité du capital et de la qualité des données ;
+6. benchmarks, données, API et partenariats uniquement après volume et conformité.
 
 Le produit ne doit pas devenir une friction supérieure aux coûts ou aux erreurs de décision qu'il aide à comprendre.
 
@@ -35,7 +37,8 @@ Exemples :
 - taille frontière conditionnelle ;
 - cas structurellement impossible ;
 - fréquence frontière sous budget ;
-- écart entre coût attendu et coût observé, après import futur.
+- écart entre coût attendu et coût observé, après import futur ;
+- cohérence pré-trade d'un scénario avec le capital libre et les données disponibles, après validation de Cost Gate.
 
 Une sortie n'a de valeur commerciale que si elle éclaire une décision, évite un calcul manuel, révèle un coût supérieur au prix du produit ou justifie un suivi répété.
 
@@ -46,6 +49,7 @@ Une sortie n'a de valeur commerciale que si elle éclaire une décision, évite 
 | Capital inférieur à 2 000 EUR | Comprendre le seuil imposé par les petits ordres | Seuil et démonstrations gratuits | Acquisition et éducation |
 | Investisseur autonome, 2 000 à 50 000 EUR | Savoir si son avantage brut survit et suivre sa marge nette | Capital Efficiency Pro | Cœur payant initial |
 | Trader actif ou multi-comptes | Import, réconciliation, budgets et comparaisons | Active annuel | Panier moyen supérieur |
+| Utilisateur pré-trade récurrent | Vérifier coût, capital libre, taille et liquidité avant ordre | Cost Gate, après validation | Rétention et valeur décisionnelle potentielle |
 | Créateur, enseignant ou communauté | Simulations et rapports pédagogiques auditables | Widget ou licence partenaire | Distribution |
 | Média, fintech ou courtier | Calculs inverses, preuves et benchmarks | API/B2B plus tard | Expansion |
 
@@ -122,6 +126,19 @@ Hypothèse : **99 à 199 EUR par an**, uniquement après preuve de demande.
 - rapports avancés ;
 - comparaison de périodes et méthodes.
 
+### Cost Gate — hypothèse future distincte
+
+Aucun prix n'est fixé. Une offre Cost Gate ne pourra être testée qu'après preuve que :
+
+- l'analyse pré-trade améliore une décision réelle ;
+- les utilisateurs reviennent avant des ordres réels ;
+- le Data Quality Gate fonctionne ;
+- le coût des données reste inférieur à la valeur créée ;
+- le vocabulaire et le comportement restent dans le périmètre juridique validé ;
+- le taux de faux blocage et de faux sentiment de sécurité est acceptable.
+
+Le modèle possible peut être inclus dans Active, facturé en option ou distribué en B2B. Aucune option n'est privilégiée avant preuve d'usage.
+
 ## 5. Pourquoi une tarification annuelle
 
 - le problème peut ne pas justifier un prélèvement mensuel visible ;
@@ -141,6 +158,14 @@ Avant de tester un abonnement, Breaktest doit vérifier :
 3. cette information éclaire une décision réelle ;
 4. l'utilisateur souhaite répéter l'analyse ou importer un historique ;
 5. la valeur économique ou le temps économisé dépasse le prix envisagé.
+
+Avant de tarifer Cost Gate, il faut en plus vérifier :
+
+6. que l'utilisateur l'ouvre naturellement avant une opération ;
+7. qu'il comprend la différence entre donnée stale, donnée manquante et contrainte économique ;
+8. que le résultat ne crée pas un faux sentiment de validation ;
+9. que la donnée et le support n'annulent pas la marge brute ;
+10. que la fréquence d'usage n'exige pas une infrastructure disproportionnée.
 
 Aucun prix ne doit être interprété comme validé tant qu'un paiement réel et un usage réel ne coexistent pas.
 
@@ -174,9 +199,11 @@ Ces scénarios excluent TVA, remboursements, frais de paiement, support, acquisi
 - nettoyage et support d'import ;
 - sécurité et conformité ;
 - données de spread ou d'exécution ;
+- données temps réel, profondeur, licences et redondance de flux pour Cost Gate ;
 - acquisition payante ;
 - remboursement et administration des abonnements ;
-- expertise humaine pour les cas non standardisables.
+- expertise humaine pour les cas non standardisables ;
+- surveillance, incidents et communication en cas de donnée stale ou de diagnostic erroné.
 
 Hypothèse de marge brute logicielle à terme : potentiellement élevée, uniquement si la majorité des imports, mises à jour et diagnostics est automatisée. Cette marge n'est pas validée.
 
@@ -199,7 +226,8 @@ Autorisation uniquement si :
 - contraintes inverses ;
 - budgets de friction ;
 - décomposition et provenance ;
-- rapports intégrables.
+- rapports intégrables ;
+- Data Quality Gate et contrôles Cost Gate seulement après validation.
 
 ### Données et benchmarks
 
@@ -223,9 +251,10 @@ Un abonnement grand public seul possède un plafond exigeant. Le scénario de gr
 1. audience grand public ;
 2. historique et rétention ;
 3. données consenties et benchmarks ;
-4. API intégrée ;
-5. distribution par partenaires ;
-6. éventuellement marketplace ou infrastructure transactionnelle légalement encadrée.
+4. Cost Gate utile et récurrent, si validé ;
+5. API intégrée ;
+6. distribution par partenaires ;
+7. éventuellement marketplace ou infrastructure transactionnelle légalement encadrée.
 
 Le moteur Capital Efficiency peut devenir une brique distribuable, mais cela reste une option extrêmement incertaine. Cette perspective ne justifie aucune construction prématurée.
 
@@ -233,12 +262,13 @@ Le moteur Capital Efficiency peut devenir une brique distribuable, mais cela res
 
 - Ne pas augmenter le prix avant d'avoir livré une valeur mesurée.
 - Ne pas ajouter une offre B2B avant usages récurrents comparables.
-- Ne pas acheter de données avant demande explicite.
+- Ne pas acheter de données avant demande explicite et modèle de rentabilité.
 - Ne pas construire de connexion courtier avant demande répétée et modèle de sécurité.
 - Ne pas activer l'affiliation avant une politique de neutralité publique.
 - Suspendre le modèle payant si l'information produite vaut généralement moins que son prix.
 - Pénaliser toute offre exigeant un support humain non scalable.
 - Préférer un produit ponctuel si l'usage répété n'existe pas, plutôt que fabriquer artificiellement un abonnement.
+- Ne pas monétiser Cost Gate tant que la qualité des données, la responsabilité et le cadre juridique ne sont pas soutenables.
 
 ## 12. Indicateurs économiques de validation
 
@@ -255,6 +285,19 @@ Le moteur Capital Efficiency peut devenir une brique distribuable, mais cela res
 - valeur ou temps économisé par rapport au prix payé ;
 - proportion d'utilisateurs dont le résultat éclaire une décision réelle.
 
-La métrique initiale principale devient :
+Pour Cost Gate, ajouter seulement lors du test correspondant :
+
+- usage volontaire avant une opération ;
+- délai entre analyse et décision ;
+- proportion de diagnostics limités par la qualité des données ;
+- modification réelle du nominal, du timing ou du type d'ordre, sans qualifier ce changement de bon ;
+- abandon causé par une saisie trop lourde ;
+- coût de données par utilisateur actif ;
+- confusion avec une recommandation ;
+- répétition d'usage pré-trade.
+
+La métrique initiale principale reste :
 
 > nombre d'utilisateurs qualifiés qui comprennent une contrainte économique nouvelle, reviennent et paient pour suivre leur Capital Efficiency.
+
+Cost Gate ne remplacera cette métrique qu'après preuve qu'un contrôle pré-trade récurrent apporte davantage de valeur et possède une économie viable.
