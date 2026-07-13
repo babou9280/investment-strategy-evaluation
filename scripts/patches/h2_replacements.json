@@ -1,0 +1,37 @@
+[
+  {
+    "old": "  analysisSample: \"live\",\n});",
+    "new": "  analysisSample: \"live\",\n  resultBasis: \"simulated\",\n});",
+    "label": "default result basis"
+  },
+  {
+    "old": "            <div class=\"field-stack\"><label for=\"analysis-sample\">Échantillon rejoué</label><select id=\"analysis-sample\"><option value=\"live\" selected>Live — backtest antérieur</option><option value=\"backtest\">Backtest — modèle antérieur</option><option value=\"all\">Tout — backtest antérieur</option></select></div>",
+    "new": "            <div class=\"field-stack\"><label for=\"analysis-sample\">Échantillon rejoué</label><select id=\"analysis-sample\"><option value=\"live\" selected>Live — backtest antérieur</option><option value=\"backtest\">Backtest — modèle antérieur</option><option value=\"all\">Tout — backtest antérieur</option></select></div>\n            <div class=\"field-stack\"><label for=\"result-basis\">Base de résultat</label><select id=\"result-basis\"><option value=\"simulated\" selected>Simulé par Breaktest</option><option value=\"gross_observed\">Brut observé</option><option value=\"fixed_net_observed\">Net fixe observé</option><option value=\"full_cost_observed\">Full-cost observé</option></select></div>",
+    "label": "result basis control"
+  },
+  {
+    "old": "<article class=\"kpi-card\"><span>P&amp;L net filtré</span><strong id=\"kpi-filtered-pnl\">+7,57 €</strong><small id=\"kpi-filtered-return\">+0,76 % du capital</small></article>",
+    "new": "<article class=\"kpi-card\"><span>P&amp;L sélectionné filtré</span><strong id=\"kpi-filtered-pnl\">+7,57 €</strong><small id=\"kpi-filtered-return\">Simulé · +0,76 % du capital</small></article>",
+    "label": "KPI label"
+  },
+  {
+    "old": "<th>Résultat observé</th>",
+    "new": "<th>Résultat retenu</th>",
+    "label": "ledger result header"
+  },
+  {
+    "old": "    analysisSample: byId(\"analysis-sample\").value,\n  };",
+    "new": "    analysisSample: byId(\"analysis-sample\").value,\n    resultBasis: normalizedResultBasis(byId(\"result-basis\").value),\n  };",
+    "label": "current config basis"
+  },
+  {
+    "old": "  const configInputs = [\"fixed-fee\", \"min-commission\", \"spread-bps\", \"slippage-bps\", \"confidence-select\", \"turnover-cap\", \"fractional-toggle\", \"reference-capital\", \"max-position\", \"commission-bps\", \"fx-bps\", \"min-edge\", \"fx-rate\", \"prior-strength\", \"analysis-sample\", \"impact-toggle\"];",
+    "new": "  const configInputs = [\"fixed-fee\", \"min-commission\", \"spread-bps\", \"slippage-bps\", \"confidence-select\", \"turnover-cap\", \"fractional-toggle\", \"reference-capital\", \"max-position\", \"commission-bps\", \"fx-bps\", \"min-edge\", \"fx-rate\", \"prior-strength\", \"analysis-sample\", \"result-basis\", \"impact-toggle\"];",
+    "label": "config event list"
+  },
+  {
+    "old": "    byId(\"analysis-sample\").value = \"live\";\n    byId(\"impact-toggle\").checked = false;",
+    "new": "    byId(\"analysis-sample\").value = \"live\";\n    byId(\"result-basis\").value = \"simulated\";\n    byId(\"impact-toggle\").checked = false;",
+    "label": "reset basis"
+  }
+]
