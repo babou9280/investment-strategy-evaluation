@@ -5,6 +5,8 @@
   const resultsEl = document.getElementById('results');
   const errorSummary = document.getElementById('error-summary');
   const live = document.getElementById('result-live');
+  const constraintMode = document.getElementById('constraintMode');
+  const submitButton = document.getElementById('submit-analysis');
   let provenance = 'user_assumption';
 
   const fields = {
@@ -52,6 +54,7 @@
 
   function readInput() {
     const side = form.querySelector('input[name="sideCount"]:checked');
+    const mode = constraintMode.value;
     return {
       capitalEur: parseFrenchNumber(fields.capitalEur.value, true),
       orderNotionalEur: parseFrenchNumber(fields.orderNotionalEur.value, false),
@@ -62,11 +65,22 @@
       spreadTotalRate: parseFrenchNumber(fields.spreadTotalPercent.value, false) / 100,
       slippageTotalRate: parseFrenchNumber(fields.slippageTotalPercent.value, false) / 100,
       grossEdgeRate: nullablePercent(fields.grossEdgePercent.value),
-      retentionTargetRate: nullablePercent(fields.retentionTargetPercent.value),
-      annualDragBudgetRate: nullablePercent(fields.annualDragBudgetPercent.value),
-      targetNetRate: nullablePercent(fields.targetNetPercent.value),
+      retentionTargetRate: mode === 'retention' ? nullablePercent(fields.retentionTargetPercent.value) : null,
+      annualDragBudgetRate: mode === 'budget' ? nullablePercent(fields.annualDragBudgetPercent.value) : null,
+      targetNetRate: mode === 'targetNet' ? nullablePercent(fields.targetNetPercent.value) : null,
       provenance
     };
+  }
+
+  function updateConstraintVisibility() {
+    document.querySelectorAll('.constraint-option').forEach(function (element) {
+      element.hidden = element.dataset.constraint !== constraintMode.value;
+    });
+  }
+
+  function updateSubmitLabel() {
+    const gross = nullablePercent(fields.grossEdgePercent.value);
+    submitButton.textContent = gross == null ? 'Calculer le seuil brut' : 'Mesurer ce qui reste du rendement brut';
   }
 
   function clearErrors() {
@@ -104,19 +118,31 @@
         if (!firstFocusable) firstFocusable = input;
       }
     });
-    if (firstFocusable) firstFocusable.focus();
+    if (firstFocusable) {
+      const containingDetails = firstFocusable.closest('details');
+      if (containingDetails) containingDetails.open = true;
+      firstFocusable.focus();
+    }
   }
 
   function fmtEur(value) {
     if (!Number.isFinite(value)) return 'Indisponible';
     const safe = Object.is(value, -0) ? 0 : value;
-    return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', minimumFractionDigits: Math.abs(safe) < 0.01 && safe !== 0 ? 4 : 2, maximumFractionDigits: Math.abs(safe) < 0.01 && safe !== 0 ? 4 : 2 }).format(safe);
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'currency', currency: 'EUR',
+      minimumFractionDigits: Math.abs(safe) < 0.01 && safe !== 0 ? 4 : 2,
+      maximumFractionDigits: Math.abs(safe) < 0.01 && safe !== 0 ? 4 : 2
+    }).format(safe);
   }
 
   function fmtPct(value, digits) {
     if (!Number.isFinite(value)) return 'Indisponible';
     const safe = Object.is(value, -0) ? 0 : value;
-    return new Intl.NumberFormat('fr-FR', { style: 'percent', minimumFractionDigits: digits == null ? 2 : digits, maximumFractionDigits: digits == null ? 2 : digits }).format(safe);
+    return new Intl.NumberFormat('fr-FR', {
+      style: 'percent',
+      minimumFractionDigits: digits == null ? 2 : digits,
+      maximumFractionDigits: digits == null ? 2 : digits
+    }).format(safe);
   }
 
   function fmtNumber(value, digits) {
@@ -135,12 +161,12 @@
 
   function reasonCopy(reason) {
     const copy = {
-      gross_edge_missing: 'Ajoute un avantage brut explicite pour calculer cette contrainte.',
-      retention_target_missing: 'Ajoute une part cible d’avantage conservé.',
+      gross_edge_missing: 'Ajoute un rendement brut explicite pour calculer cette contrainte.',
+      retention_target_missing: 'Ajoute la part du rendement brut que tu souhaites conserver.',
       budget_missing: 'Ajoute un budget annuel de friction.',
-      capital_missing: 'Ajoute un capital de référence.',
+      capital_missing: 'Ajoute le capital de référence dans « impact annuel ».',
       target_net_missing: 'Ajoute une marge nette cible.',
-      gross_edge_non_positive: 'Ce ratio exige un avantage brut strictement positif.',
+      gross_edge_non_positive: 'Ce ratio exige un rendement brut strictement positif.',
       variable_floor_zero: 'Aucun plancher variable n’est présent.',
       total_cost_zero: 'Le coût total est nul.'
     };
@@ -158,7 +184,7 @@
     if (item && item.status === 'available') {
       if (item.boundary === 'no_positive_minimum_from_fixed_costs' && item.value === 0) {
         strong.textContent = 'Aucun minimum positif imposé';
-        p.textContent = 'Les coûts fixes sont nuls : toute taille strictement positive satisfait la composante fixe, sous réserve de la condition variable affichée.';
+        p.textContent = 'Les coûts fixes sont nuls : toute taille strictement positive satisfait la composante fixe, sous réserve du plancher variable.';
       } else {
         strong.textContent = formatter(item.value);
         p.textContent = description;
@@ -167,7 +193,7 @@
       article.classList.add(item && item.reason === 'structurally_unreachable' ? 'unreachable' : 'unavailable');
       if (item && item.reason === 'structurally_unreachable') {
         strong.textContent = 'Impossible sous ces hypothèses';
-        p.textContent = 'Le plancher variable empêche cette contrainte d’être satisfaite, quelle que soit la taille d’ordre.';
+        p.textContent = 'Le plancher variable empêche cette condition d’être satisfaite, quelle que soit la taille de l’ordre.';
       } else if (item && item.reason === 'unbounded_within_model') {
         strong.textContent = 'Non bornée dans ce modèle';
         p.textContent = 'Aucune friction n’est saisie ; le modèle ne produit donc pas de frontière de fréquence.';
@@ -190,28 +216,46 @@
     const note = document.createElement('span');
 
     if (result.inputs.G == null) {
-      setText('primary-title', 'Le seuil avant toute marge nette');
+      setText('primary-title', 'Le rendement brut à atteindre avant toute marge');
       kicker.textContent = 'SEUIL BRUT DE COUVERTURE';
       strong.textContent = fmtPct(r.breakEvenGrossRate.value);
-      note.textContent = 'Rendement brut nécessaire par opération pour couvrir les frictions saisies.';
-      setText('primary-explanation', `Le seuil comprend ${fmtPct(r.variableFloorRate.value)} de plancher variable, auquel s’ajoute un coût fixe diluable avec la taille d’ordre.`);
+      note.textContent = 'par opération pour seulement couvrir les frictions saisies.';
+      setText('primary-explanation', `Sur ce seuil, ${fmtPct(r.variableFloorRate.value)} provient de coûts proportionnels qui ne diminuent pas lorsque l’ordre grossit.`);
     } else if (result.inputs.G > 0) {
-      setText('primary-title', 'La part de l’avantage qui subsiste');
-      kicker.textContent = 'AVANTAGE BRUT CONSERVÉ';
+      setText('primary-title', 'La part du rendement brut qui subsiste');
+      kicker.textContent = 'RENDEMENT BRUT CONSERVÉ';
       strong.textContent = availableValue(r.edgeRetainedRate, value => fmtPct(value, 1));
       note.textContent = `${fmtPct(r.netEdgeRate.value)} de marge nette, soit ${fmtEur(r.netEdgeEur.value)} par opération dans ce scénario.`;
       const stateCopy = r.netEdgeRate.value <= 0
-        ? 'Les frictions absorbent entièrement l’avantage brut saisi.'
-        : `Les frictions absorbent ${fmtPct(r.edgeAbsorptionRate.value, 1)} de l’avantage brut saisi.`;
+        ? 'Les frictions absorbent entièrement le rendement brut saisi.'
+        : `Les frictions absorbent ${fmtPct(r.edgeAbsorptionRate.value, 1)} du rendement brut saisi.`;
       setText('primary-explanation', stateCopy);
     } else {
-      setText('primary-title', 'Marge nette sous avantage non positif');
+      setText('primary-title', 'La marge après un rendement brut non positif');
       kicker.textContent = 'MARGE NETTE';
       strong.textContent = fmtPct(r.netEdgeRate.value);
-      note.textContent = `${fmtEur(r.netEdgeEur.value)} par opération. Les ratios de rétention sont indisponibles lorsque l’avantage brut n’est pas positif.`;
-      setText('primary-explanation', 'Le produit conserve la valeur négative ou nulle telle qu’elle a été saisie et n’invente aucun ratio favorable.');
+      note.textContent = `${fmtEur(r.netEdgeEur.value)} par opération. Les ratios de part conservée ne sont pas définis lorsque le brut n’est pas positif.`;
+      setText('primary-explanation', 'Breaktest conserve la valeur nulle ou négative telle qu’elle a été saisie et n’invente aucun ratio favorable.');
     }
     primary.append(kicker, strong, note);
+  }
+
+  function selectedConstraint(result) {
+    const r = result.results;
+    const mode = constraintMode.value;
+    if (mode === 'positive') {
+      return constraintCard('Taille frontière pour une marge nette positive', r.minimumOrderForPositiveNet, fmtEur, 'Le montant doit être strictement supérieur à cette frontière mathématique lorsque des coûts fixes existent.');
+    }
+    if (mode === 'retention') {
+      return constraintCard('Taille frontière pour conserver la part choisie', r.minimumOrderForRetention, fmtEur, 'Montant correspondant à la part de rendement brut conservée que tu as saisie.');
+    }
+    if (mode === 'budget') {
+      return constraintCard('Fréquence frontière sous le budget annuel', r.maxMonthlyOperationsUnderBudget, value => `${fmtNumber(value, 2)} / mois`, 'Frontière arithmétique sous le budget de friction saisi.');
+    }
+    if (mode === 'targetNet') {
+      return constraintCard('Rendement brut requis pour la marge nette cible', r.requiredGrossRateForTargetNet, value => fmtPct(value), 'Somme de la marge nette cible et du seuil de couverture du scénario.');
+    }
+    return null;
   }
 
   function render(result) {
@@ -222,13 +266,13 @@
     setText('variable-floor-value', fmtPct(r.variableFloorRate.value));
     setText('fixed-cost-value', fmtEur(r.fixedCostEur.value));
     setText('total-cost-value', fmtEur(r.totalCostEur.value));
-    setText('result-provenance', r.provenance === 'synthetic_demo' ? 'Scénario synthétique' : 'Hypothèses utilisateur');
+    setText('result-provenance', r.provenance === 'synthetic_demo' ? 'Exemple synthétique' : 'Hypothèses utilisateur');
 
     const edgeSection = document.getElementById('edge-section');
     edgeSection.hidden = result.inputs.G == null;
     if (result.inputs.G != null) {
       setText('retained-edge-value', availableValue(r.edgeRetainedRate, value => fmtPct(value, 1)));
-      setText('retained-edge-note', r.edgeRetainedRate.status === 'available' ? 'peut être négative si les frictions dépassent le brut' : reasonCopy(r.edgeRetainedRate.reason));
+      setText('retained-edge-note', r.edgeRetainedRate.status === 'available' ? 'peut devenir négative si les frictions dépassent le brut' : reasonCopy(r.edgeRetainedRate.reason));
       setText('net-edge-value', fmtPct(r.netEdgeRate.value));
       setText('net-edge-eur', `${fmtEur(r.netEdgeEur.value)} par opération`);
       setText('absorbed-edge-value', availableValue(r.edgeAbsorptionRate, value => fmtPct(value, 1)));
@@ -236,14 +280,12 @@
       setText('gross-edge-eur', `${fmtEur(r.grossEdgeEur.value)} par opération`);
     }
 
+    const constraintSection = document.getElementById('constraint-section');
     const constraints = document.getElementById('constraints-grid');
     constraints.innerHTML = '';
-    constraints.append(
-      constraintCard('Taille frontière pour une marge nette positive', r.minimumOrderForPositiveNet, fmtEur, 'Le montant doit être strictement supérieur à cette frontière mathématique.'),
-      constraintCard('Taille frontière pour la rétention cible', r.minimumOrderForRetention, fmtEur, 'Montant correspondant à la part cible d’avantage conservé saisie.'),
-      constraintCard('Fréquence frontière sous budget annuel', r.maxMonthlyOperationsUnderBudget, value => `${fmtNumber(value, 2)} / mois`, 'Frontière arithmétique sous le budget de friction saisi.'),
-      constraintCard('Brut requis pour la marge nette cible', r.requiredGrossRateForTargetNet, value => fmtPct(value), 'Somme de la cible nette et du seuil de couverture du scénario.')
-    );
+    const card = selectedConstraint(result);
+    constraintSection.hidden = !card;
+    if (card) constraints.appendChild(card);
 
     const fixedShare = r.fixedCostShare.status === 'available' ? r.fixedCostShare.value : 0;
     const variableShare = r.variableCostShare.status === 'available' ? r.variableCostShare.value : 0;
@@ -252,7 +294,7 @@
     document.getElementById('fixed-share-bar').style.width = `${Math.max(0, Math.min(100, fixedShare * 100))}%`;
     document.getElementById('variable-share-bar').style.width = `${Math.max(0, Math.min(100, variableShare * 100))}%`;
     setText('equal-order-note', r.fixedVariableEqualOrder.status === 'available'
-      ? `À ${fmtEur(r.fixedVariableEqualOrder.value)} de nominal, le coût fixe et le coût variable sont égaux selon le modèle.`
+      ? `À ${fmtEur(r.fixedVariableEqualOrder.value)} de montant, coût fixe et coût variable sont égaux selon le modèle.`
       : reasonCopy(r.fixedVariableEqualOrder.reason));
 
     const chart = document.getElementById('sensitivity-chart');
@@ -308,19 +350,29 @@
     fields.slippageTotalPercent.value = '0,10';
     fields.grossEdgePercent.value = '2,00';
     fields.retentionTargetPercent.value = '50';
-    fields.annualDragBudgetPercent.value = '3,00';
-    fields.targetNetPercent.value = '1,00';
+    fields.annualDragBudgetPercent.value = '';
+    fields.targetNetPercent.value = '';
+    constraintMode.value = 'retention';
     form.querySelector('input[name="sideCount"][value="2"]').checked = true;
+    document.getElementById('annual-details').open = true;
+    document.getElementById('edge-details').open = true;
+    document.getElementById('constraint-details').open = true;
+    updateConstraintVisibility();
+    updateSubmitLabel();
     provenance = 'synthetic_demo';
     document.getElementById('provenance-banner').innerHTML = 'Provenance actuelle : <strong>démonstration synthétique</strong>. Aucune donnée réelle ni tarif de courtier.';
     run();
   });
 
+  constraintMode.addEventListener('change', updateConstraintVisibility);
   form.addEventListener('input', function (event) {
+    updateSubmitLabel();
     if (event.isTrusted && provenance === 'synthetic_demo') {
       provenance = 'user_assumption';
       document.getElementById('provenance-banner').innerHTML = 'Provenance actuelle : <strong>hypothèses utilisateur</strong>.';
     }
   });
   form.addEventListener('submit', run);
+  updateConstraintVisibility();
+  updateSubmitLabel();
 })();
