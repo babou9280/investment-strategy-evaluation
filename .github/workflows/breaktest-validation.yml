@@ -50,19 +50,6 @@ jobs:
           set -o pipefail
           python3 scripts/build_breaktest.py 2>&1 | tee build.log
 
-      - name: Temporary C1 context inspection
-        if: ${{ hashFiles('scripts/inspect_c1_context.py') != '' }}
-        run: python3 scripts/inspect_c1_context.py > c1_context.txt
-
-      - name: Upload temporary C1 context
-        if: ${{ hashFiles('c1_context.txt') != '' }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: c1-context
-          path: c1_context.txt
-          if-no-files-found: error
-          retention-days: 1
-
       - name: Strict numeric validation H1
         run: |
           set -o pipefail
@@ -77,6 +64,9 @@ jobs:
             python3 tests/c3_chronological_turnover.py
             if [ -f tests/c1_capital_reservation.py ]; then
               python3 tests/c1_capital_reservation.py
+            fi
+            if [ -f tests/c4_realized_equity_curve.py ]; then
+              python3 tests/c4_realized_equity_curve.py
             fi
           } 2>&1 | tee browser-tests.log
 
