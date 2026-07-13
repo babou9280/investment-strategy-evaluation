@@ -37,6 +37,11 @@
     rangeIntro.textContent = 'Les trois valeurs doivent décrire la même moyenne brute par opération complète, avant coûts. Elles servent à tester la sensibilité de la conclusion, pas à produire une probabilité ou un intervalle de confiance.';
   }
 
+  const disclaimer = document.querySelector('.disclaimer');
+  if (disclaimer) {
+    disclaimer.textContent = 'Ce diagnostic teste uniquement la survie face aux frictions saisies. Il ne valide ni l’existence ou la persistance de l’avantage, ni le risque, ni la faisabilité du capital, ni le rendement futur. Il ne constitue pas un conseil en investissement.';
+  }
+
   function invalidateRenderedResult(event) {
     if (!event.isTrusted || results.hidden) return;
     results.hidden = true;
