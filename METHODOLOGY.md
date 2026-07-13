@@ -2,7 +2,7 @@
 
 ## Nature des calculs
 
-Le prototype travaille principalement au niveau des trades et des PnL fournis. Les métriques calculées à ce niveau ne doivent pas être présentées comme des métriques calendaires quotidiennes.
+Le prototype travaille principalement au niveau des trades et des PnL fournis. La courbe C4 est calendaire aux seules dates de sortie : elle ne constitue pas une valorisation quotidienne des positions ouvertes.
 
 ## Bases de résultat
 
@@ -12,7 +12,7 @@ Le prototype travaille principalement au niveau des trades et des PnL fournis. L
 - Coûts additionnels : allocation multipliée par un taux en points de base.
 - Frais fixes : montant additionnel par ligne.
 
-Tout repli doit être visible pour l'utilisateur et dans l'audit.
+Tout repli doit être visible pour l'utilisateur et dans l'audit. La normalisation effective des bases nettes du journal relève encore de H2.
 
 ## Normalisation numérique de la base brute — règle H1
 
@@ -24,7 +24,7 @@ Tout repli doit être visible pour l'utilisateur et dans l'audit.
 - un zéro réel reste une observation valide ;
 - la ligne normalisée conserve des indicateurs internes `grossPnlDerived` et `grossReturnDerived`.
 
-La provenance dérivée est conservée dans le moteur, mais son affichage détaillé dans l'audit utilisateur reste à implémenter. La réconciliation lorsque PnL et rendement sont tous deux fournis mais incohérents relève encore du défaut H4.
+La provenance dérivée est conservée dans le moteur, mais son affichage détaillé dans l'audit utilisateur reste à implémenter. La réconciliation lorsque PnL et rendement sont tous deux fournis mais incohérents relève encore de H4.
 
 ## Isolation temporelle du modèle — règle C2
 
@@ -64,20 +64,36 @@ L'invariant principal est qu'ajouter, supprimer ou modifier une opportunité fut
 Après H1, C2 et C3, le moteur applique un contrôle de financement chronologique :
 
 - les évaluations sont groupées par date d'entrée ;
-- avant chaque groupe, les positions antérieures dont la sortie est antérieure ou égale à l'entrée du groupe libèrent leur nominal ;
-- une position ouverte dans le groupe n'est pas libérée au milieu de ce même groupe, même si sa sortie est le même jour ;
 - les décisions du groupe sont financées dans l'ordre de priorité simultanée C3 ;
 - seules les décisions encore `keep` peuvent réserver du capital ;
 - le nominal demandé est le nominal dimensionné de la position ;
 - il est financé intégralement ou refusé : aucun redimensionnement implicite n'est appliqué ;
-- si le capital libre est insuffisant, la décision devient `remove` ;
-- une date d'entrée invalide, une date de sortie invalide, une sortie antérieure à l'entrée ou un nominal invalide produit `observe` ;
-- le PnL n'augmente ni ne diminue le capital disponible : seule la libération du nominal est modélisée ;
+- une position ouverte dans le groupe n'est pas libérée au milieu de ce même groupe, même si sa sortie est le même jour ;
+- une date d'entrée invalide, une date de sortie invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL net non fini produit `observe` ;
 - chaque décision conserve les réservations et disponibilités avant/après, le nominal demandé, la date de libération, le rang et le motif ;
 - le résultat expose le pic de capital réservé, le minimum de capital libre et les refus de financement ;
 - les métriques finales de turnover sont recalculées sur les décisions réellement financées.
 
-Cette règle garantit, dans les scénarios couverts, que le capital réservé ne dépasse pas le capital initial. Elle ne modélise pas le réinvestissement du PnL, le levier, les appels de marge, les intérêts ou les flux externes.
+C4 conserve ces règles de réservation, mais remplace le capital initial fixe par la trésorerie effectivement réalisée à l'événement : `capital libre = capital réalisé - nominal réservé`.
+
+## Courbe de trésorerie réalisée — règle C4
+
+Le financement et la réalisation du PnL sont calculés dans une seule simulation événementielle :
+
+1. la simulation commence exactement au capital initial ;
+2. les dates d'entrée et de sortie sont ramenées au jour calendaire ISO valide ;
+3. avant les entrées d'une date, toutes les positions ouvertes dont la sortie est antérieure ou égale à cette date sont traitées ;
+4. les sorties partageant une date libèrent leur nominal et appliquent leur PnL net dans un événement agrégé ;
+5. l'ordre interne de ces sorties ne peut pas modifier le capital final du jour ;
+6. le PnL d'une position ne modifie jamais la trésorerie avant sa sortie ;
+7. les nouvelles entrées de la date sont ensuite financées selon la priorité C3 à partir du capital réalisé moins le nominal encore réservé ;
+8. un gain réalisé augmente et une perte réalisée réduit la capacité de financement à compter de cet événement ;
+9. une décision `remove` ou `observe` n'applique aucun PnL et ne réserve aucun nominal ;
+10. la courbe conserve un point initial et un point par date de sortie ayant au moins une position financée ;
+11. le dernier point doit égaler le capital initial plus la somme des PnL nets des positions financées à sorties valides ;
+12. chaque événement conserve son type, sa date, le capital réalisé, le nominal réservé, le capital libre, le PnL appliqué et les identifiants concernés avant et après.
+
+La courbe est une **courbe de trésorerie réalisée aux sorties**. Elle n'est pas mark-to-market : entre deux sorties, elle ne représente ni la valeur de marché des positions ouvertes ni un drawdown quotidien.
 
 ## Stress tests actuels
 
@@ -90,9 +106,11 @@ Cette règle garantit, dans les scénarios couverts, que le capital réservé ne
 
 ## Limites importantes
 
+- les bases nettes et full-cost fournies par les journaux ne sont pas encore normalisées par le moteur ;
 - le bootstrap ne corrige pas le biais de sélection, la dépendance temporelle ou le changement de régime ;
-- la réservation du nominal ne transforme pas la courbe affichée en courbe de trésorerie réalisée ou mark-to-market ;
-- un drawdown aux dates de sortie n'est pas un drawdown mark-to-market quotidien ;
+- la courbe réalisée aux sorties ne valorise pas les positions ouvertes et n'est pas mark-to-market ;
+- un drawdown aux seules dates de sortie n'est pas un drawdown quotidien de portefeuille ;
+- le levier, les appels de marge, les intérêts, les dividendes et les flux externes ne sont pas simulés ;
 - une CVaR sur peu de trades est instable ;
 - retirer le top N est un stress test ex post, pas une règle de trading ;
 - un score composite est un indice d'évidence, pas une prédiction de performance.
