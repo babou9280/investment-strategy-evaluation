@@ -1,11 +1,20 @@
 # C1 — réservation du capital entre positions simultanées
 
-Status: ready for Codex execution on `codex/c1-capital-reservation`, based on synchronized `breaktest-bootstrap` commit `88ccf837e4776646c757b8de6d2ce347e19bf4aa`.
+Status: implemented and validated on `codex/c1-capital-reservation`; ready for controlled pull-request review and merge into `breaktest-bootstrap`.
 
-## Objective
+## Scope delivered
 
-Prevent simultaneous open positions from reserving more nominal capital than the portfolio owns, without implicit resizing and without introducing C4 mark-to-market behavior.
+- chronological reservation and release of full position nominal ;
+- same-date funding priority inherited from C3 ;
+- no intragroup recycling of newly opened same-day positions ;
+- no implicit resizing ;
+- explicit invalid-date and insufficient-capital outcomes ;
+- per-decision capital diagnostics and aggregate constraints ;
+- funded-turnover reconciliation ;
+- deterministic build, Chromium invariants and cumulative regression suite.
 
-## Required evidence
+## Evidence
 
-See `NEXT_CODEX_PROMPT.md`. Preserve and rerun H1, C2 and C3 tests; add deterministic C1 browser invariants and exact build evidence.
+See `docs/validation/C1_CAPITAL_RESERVATION.md`.
+
+C4 and H2 to H6 remain outside this task.
