@@ -1,6 +1,6 @@
 # H2 — bases nettes observées du journal
 
-Status: implemented and validated on `codex/h2-journal-net-bases`, based on synchronized `breaktest-bootstrap` after C4.
+Status: merged into `breaktest-bootstrap` by pull request `#12`, squash commit `3504d448547bfeab9ef74114af3c08fb557a1c75`.
 
 ## Objective
 
@@ -24,8 +24,8 @@ Normalize and preserve journal-provided fixed-net and full-cost PnL/return bases
 
 - build: 166 862 bytes ;
 - SHA-256: `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
-- first full green GitHub Actions run: `29248248566` on `580f3bfaca51897ab8a1ab438813a6e3e1996298` ;
+- final exact-head GitHub Actions run: `29248916855` on `9539a9676ac1ac6d0a3bd1f470322c29b60edc96` ;
 - H1, H2 numeric, H1 browser, C2, C3, C1, C4, negative-free-cash, H2 browser and JavaScript syntax suites: passed ;
 - detailed evidence: `docs/validation/H2_JOURNAL_NET_BASES.md`.
 
-The candidate remains isolated from `main` and is ready for controlled merge into `breaktest-bootstrap` after one final exact-head validation run.
+`main` was not modified. The next isolated correction is H3.
