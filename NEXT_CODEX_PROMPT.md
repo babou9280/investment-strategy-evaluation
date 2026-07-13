@@ -30,6 +30,7 @@ Lire intégralement :
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/EDGE_RANGE_CONTRACT.md` ;
+- `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
 - `docs/tasks/EDGE_SURVIVAL_ENVELOPE.md` ;
 - les validations, revues, scénarios et fichiers de `capital_efficiency_lab/`.
 
@@ -97,6 +98,23 @@ Interdire les mots et concepts suivants comme résultat produit :
 - intégrité locale, syntaxe ;
 - non-régressions H1–H2/C1–C4 et Q0.
 
+## Standard de livraison ultérieure
+
+La mission reste en mode `work`. Ne génère pas encore de prétendu livrable final pour Ayman.
+
+Lorsque le fond sera stabilisé et qu'une décision de livraison sera explicitement prise, le livrable principal devra respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
+
+- HTML réellement navigable ;
+- fonctionnement sans internet ;
+- aucun serveur local obligatoire lorsque techniquement évitable ;
+- aucune dépendance distante ;
+- interactions et calculs réels ;
+- provenance, méthode, preuves et limites accessibles ;
+- package critique comprenant au minimum le démonstrateur produit et une vue méthodologie/preuve ;
+- captures conservées uniquement comme artefacts de test, jamais comme substitut au produit.
+
+La préparation technique du futur package est autorisée seulement si elle ne détourne pas le travail de la correction du fond. Aucun bundle à remettre à Ayman ne doit être déclaré prêt avant les gates du standard.
+
 ## Interdictions
 
 - aucune donnée réelle, import, courtier ou tarif réel ;
@@ -105,16 +123,19 @@ Interdire les mots et concepts suivants comme résultat produit :
 - aucune statistique avancée ;
 - aucune modification de `app/Breaktest_Studio.html` ;
 - aucune modification fonctionnelle de `validation_site/` ;
-- aucune reprise H3 à H6.
+- aucune reprise H3 à H6 ;
+- aucun livrable limité à des images ;
+- aucune appellation `final`, `production_ready` ou `commercially_validated` sans preuves correspondantes.
 
-## Livrables
+## Livrables de la mission actuelle
 
 - moteur et interface mis à jour sous `capital_efficiency_lab/` ;
 - tests Node et Chromium ;
-- captures de revue ;
+- captures de revue internes ;
 - `docs/validation/EDGE_SURVIVAL_ENVELOPE.md` ;
-- synchronisation canonique minimale fondée sur les exécutions réelles.
+- synchronisation canonique minimale fondée sur les exécutions réelles ;
+- aucun package utilisateur remis avant stabilisation rigoureuse du fond.
 
 ## Définition de terminé
 
-La mission est terminée uniquement si le head exact est entièrement vert, que les captures ont été inspectées, que la fourchette réduit réellement la fausse précision sans alourdir le parcours, et qu'aucune affirmation statistique, commerciale ou réglementaire n'est ajoutée.
+La mission est terminée uniquement si le head exact est entièrement vert, que les captures ont été inspectées, que la fourchette réduit réellement la fausse précision sans alourdir le parcours, qu'aucune affirmation statistique, commerciale ou réglementaire n'est ajoutée et que la future livraison HTML hors ligne reste conforme au standard sans être produite prématurément.
