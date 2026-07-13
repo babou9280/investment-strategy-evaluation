@@ -12,6 +12,15 @@ def wait_for_settled_results(page):
     page.wait_for_timeout(650)
 
 
+def fill_cost_scenario(page):
+    page.locator("#orderNotionalEur").fill("500")
+    page.locator('input[name="sideCount"][value="2"]').check()
+    page.locator("#commissionPerSideEur").fill("1")
+    page.locator("#fxRatePerSidePercent").fill("0,25")
+    page.locator("#spreadTotalPercent").fill("0,10")
+    page.locator("#slippageTotalPercent").fill("0,10")
+
+
 def open_edge_section(page):
     if page.locator("#edge-details").get_attribute("open") is None:
         page.locator("#edge-details summary").click()
@@ -47,11 +56,14 @@ with sync_playwright() as p:
         page.set_default_timeout(10000)
         page.goto(URL)
 
+        # La première capture montre volontairement un formulaire neutre, sans
+        # hypothèses financières préremplies ou scénario implicitement choisi.
         page.screenshot(
             path=str(OUTPUT / f"{name}-threshold-form.png"),
             full_page=True,
         )
 
+        fill_cost_scenario(page)
         page.get_by_role("button", name="Calculer le seuil brut").click()
         wait_for_settled_results(page)
         page.locator("#results").screenshot(
