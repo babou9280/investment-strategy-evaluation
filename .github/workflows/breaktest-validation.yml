@@ -92,6 +92,11 @@ jobs:
             python3 capital_efficiency_lab/tests/browser.py
           } 2>&1 | tee browser-tests.log
 
+      - name: Capture internal review screens
+        run: |
+          set -o pipefail
+          python3 capital_efficiency_lab/tests/capture_review.py 2>&1 | tee review-capture.log
+
       - name: Syntax validation
         run: |
           set -o pipefail
@@ -100,6 +105,7 @@ jobs:
               tests/validation_browser.py \
               tests/validation_static_integrity.py \
               capital_efficiency_lab/tests/browser.py \
+              capital_efficiency_lab/tests/capture_review.py \
               capital_efficiency_lab/tests/static_integrity.py
             python3 - <<'PY'
           from pathlib import Path
@@ -119,7 +125,7 @@ jobs:
             node --check capital_efficiency_lab/app.js
           } 2>&1 | tee javascript-syntax.log
 
-      - name: Upload validation logs
+      - name: Upload validation and review artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -129,6 +135,8 @@ jobs:
             numeric-tests.log
             static-integrity.log
             browser-tests.log
+            review-capture.log
             javascript-syntax.log
+            capital_efficiency_lab/review_artifacts/*.png
           if-no-files-found: warn
           retention-days: 3

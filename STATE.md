@@ -4,201 +4,176 @@
 
 Le 13 juillet 2026, Ayman a validé le pivot vers **Breaktest Cost Intelligence** pour les petits et moyens portefeuilles.
 
-Après revue des prototypes, il a constaté qu'un simple calcul de coûts apportait une valeur insuffisante. Le seuil brut nécessaire a été identifié comme une sortie nettement plus utile.
+Après critique des premiers prototypes, la direction a été raffinée en **Capital Efficiency** : le coût en euros devient explicatif ; le produit met en avant le seuil brut de couverture, le plancher variable, la marge nette, la part du rendement brut conservée et les contraintes économiques conditionnelles.
 
-La direction active est donc raffinée en **Capital Efficiency** : relier les frictions à un avantage brut et montrer la marge qui subsiste, les contraintes qui peuvent être satisfaites et celles qui sont structurellement impossibles.
-
-La phase active est la **revue interne du prototype**, avant toute publication externe.
+La phase active est la **revue interne du prototype progressif**, avant toute publication externe.
 
 Documents de référence :
 
-- `PRODUCT.md` ;
-- `STRATEGY.md` ;
+- `PRODUCT.md`, `QUALITY.md`, `STATE.md`, `DECISIONS.md`, `METHODOLOGY.md`, `AGENTS.md` ;
+- `STRATEGY.md`, `MARKET_EVIDENCE.md`, `BUSINESS_MODEL.md`, `VALIDATION_PLAN.md` ;
 - `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
 - `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
 - `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
-- `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
 - `docs/validation/CAPITAL_EFFICIENCY_LAB.md` ;
+- `docs/review/` ;
 - `NEXT_CODEX_PROMPT.md`.
 
-## 2. Instrument Q0 construit mais publication suspendue
+## 2. Calculateur Q0 construit mais non publié
 
-La pull request `#16` a été fusionnée dans `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
+La pull request `#16` a fusionné le calculateur descriptif `validation_site/` dans `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
 
-Le dossier `validation_site/` contient un calculateur local avec :
+La pull request `#17` a ajouté la préparation de lancement et les contrôles d'intégrité, fusionnés au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`.
 
-- achat simple ou aller-retour ;
-- commission, change, spread et slippage ;
-- coût par opération, annuel et relatif au capital ;
-- seuil brut de couverture ;
-- comparaison descriptive ;
-- partage sans capital exact par défaut.
+Le site Q0 calcule correctement les coûts et le seuil, mais sa publication a été suspendue parce que sa valeur restait principalement descriptive.
 
-La suite finale a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, run `29269231453`.
+## 3. Noyau Capital Efficiency fusionné
 
-La pull request `#17` a ajouté la préparation de lancement et les contrôles d'intégrité, fusionnés au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`. Le run final `29270109903` a réussi.
+La pull request `#20` a été fusionnée par squash dans `breaktest-bootstrap` au commit :
 
-Le site Q0 n'est pas publié : sa valeur reste principalement descriptive et ne justifie pas encore un test externe.
+`b68b0257e9ea506c98a607976bbdd9456c890dcc`.
 
-## 3. Capital Efficiency Lab implémenté et validé techniquement
-
-Branche : `strategy/capital-efficiency-core`.
-
-Le dossier `capital_efficiency_lab/` répond à la question :
-
-> Quelle part d'un avantage brut survit aux frictions, et quelles contraintes économiques doivent être satisfaites pour qu'il subsiste ?
-
-Fonctions exécutées :
+Elle a ajouté `capital_efficiency_lab/` avec :
 
 - seuil brut de couverture ;
 - plancher variable ;
 - séparation coût fixe / coût variable ;
 - marge nette en taux et euros ;
-- part d'avantage absorbée et conservée lorsque le brut est positif ;
+- part du rendement brut absorbée et conservée ;
 - taille frontière pour une marge positive ;
 - taille frontière pour une rétention cible ;
 - cas structurellement impossible ;
 - traitement exact des coûts fixes nuls sans faux ordre recommandé à zéro ;
 - fréquence frontière sous budget annuel ;
-- rendement brut requis pour une cible nette ;
+- rendement brut requis pour une marge nette cible ;
 - sensibilité du seuil à la taille ;
-- provenance `user_assumption` ou `synthetic_demo` ;
-- états indisponibles explicites sans `Infinity` ni fallback silencieux.
+- provenance et états indisponibles explicites.
 
-La version `capital-efficiency-lab-2`, sur le head `9ac41ecedb2e6e7937859f3963ae9cd940a08b9f`, a réussi le run GitHub Actions `29278627744`, comprenant :
+Le head final de la pull request `3a9db5cfaaf7058482997a06d7faca20df01016a` a réussi le run GitHub Actions `29278815173` : build, oracles, invariants, intégrité, Chromium, syntaxe et non-régressions H1–H2/C1–C4 et Q0.
 
-- oracles Node ;
-- invariants et cas limites, dont les frontières à coût fixe nul ;
-- Chromium à 390, 768, 1024 et 1440 px ;
-- focus d'erreur et absence de débordement horizontal ;
-- intégrité locale sans réseau ou persistance ;
-- syntaxe ;
-- toutes les non-régressions historiques H1–H2/C1–C4 et Q0.
+Le moteur validé est `capital-efficiency-lab-2`.
 
-Preuve : `docs/validation/CAPITAL_EFFICIENCY_LAB.md`.
+Cette validation est technique. Aucun utilisateur, paiement ou usage répété n'est validé.
 
-Cette validation est technique. Le laboratoire n'est ni publié ni commercialement validé.
+## 4. Revue interne progressive active
 
-## 4. Build technique historique conservé
+Pull request active : `#21`, branche `strategy/capital-efficiency-internal-review`.
 
-`app/Breaktest_Studio.html` demeure l'actif technique canonique provisoire. Le build cumulatif exécute H1, C2, C3, C1, C4 puis H2 via `scripts/build_breaktest.py`.
+La revue hostile initiale a identifié un défaut principal : la première interface montrait simultanément toutes les hypothèses et toutes les contraintes, ce qui masquait la valeur sur mobile.
 
-Empreintes :
+La correction implémentée organise désormais le parcours en trois étapes :
 
-- source v0.2 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00` ;
-- version fusionnée après H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`, 166 862 octets.
+1. **calculer le seuil** avec les seules hypothèses de friction ;
+2. **tester un rendement brut** facultatif, jamais prédit par Breaktest ;
+3. **résoudre une seule contrainte** choisie par l'utilisateur.
 
-Corrections fusionnées :
+Changements vérifiés :
 
-- H1 : pull request `#2` ;
-- C2 : pull requests `#3` et `#5` ;
-- C3 : pull request `#6` ;
-- C1 : pull request `#8` ;
-- C4 : pull request `#10` ;
-- H2 : pull request `#12`, commit `3504d448547bfeab9ef74114af3c08fb557a1c75`.
+- capital et fréquence placés dans une section annuelle facultative ;
+- rendement brut placé dans une deuxième étape facultative ;
+- une seule question avancée visible à la fois ;
+- une seule contrainte rendue dans le résultat ;
+- langage français concret avant le vocabulaire technique ;
+- coût total visuellement secondaire ;
+- méthode et limites repliables ;
+- captures de revue à 390, 768 et 1 440 pixels.
 
-Le nouveau laboratoire reste isolé et n'a modifié ni ce moteur ni le site Q0.
+Le head `cf4c50751565a05ca3760cc516567ebb46b2c4b4` a réussi le run GitHub Actions `29279747927`, incluant toutes les suites historiques, Q0, Capital Efficiency, Chromium, intégrité, syntaxe et captures visuelles.
 
-## 5. Fonctionnalités réellement validées
+L'inspection des captures confirme :
+
+- hiérarchie nettement plus claire ;
+- absence de débordement horizontal ;
+- mode seuil autonome ;
+- exemple complet mettant en avant `45 %` conservé, `0,90 %` de marge nette et une seule contrainte ;
+- densité mobile réduite sans retrait de la substance financière.
+
+Preuves internes :
+
+- `docs/review/CAPITAL_EFFICIENCY_HOSTILE_REVIEW.md` ;
+- `docs/review/PROGRESSIVE_EXPERIENCE_REVIEW.md` ;
+- `docs/review/INTERNAL_USER_REVIEW_PROTOCOL.md`.
+
+## 5. Build historique conservé
+
+`app/Breaktest_Studio.html` demeure l'actif technique historique provisoire. Son build cumulatif H1, C2, C3, C1, C4 et H2 reste inchangé :
+
+- SHA-256 après H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
+- taille : 166 862 octets.
+
+Le site Q0 et le laboratoire restent isolés de ce moteur.
+
+## 6. Fonctionnalités réellement validées
 
 ### Moteur historique
 
 - import/export, filtres et audit ;
 - validation numérique stricte ;
-- modèle antérieur propre à chaque décision ;
+- isolation temporelle ;
 - turnover chronologique ;
 - réservation du nominal ;
 - trésorerie réalisée aux sorties ;
-- bases brut/net/observé/simulé séparées ;
-- provenance conservée ;
-- absence de double comptage dans les scénarios testés.
+- bases observées et simulées séparées ;
+- provenance et absence de double comptage dans les scénarios testés.
 
-### Site Q0
+### Capital Efficiency
 
-- cinq scénarios synthétiques ;
-- conventions de côtés et fréquence ;
-- capital absent ou nul sans ratio inventé ;
-- calculs internes non arrondis ;
-- partage sans donnée personnelle par défaut ;
-- Chromium à 390, 768, 1024 et 1440 px ;
-- aucune capacité réseau ou persistance applicative active ;
-- syntaxe JavaScript validée.
+- contrat Edge Survival déterministe ;
+- cas principal exact et réconcilié ;
+- cas absent, nul, négatif, positif et inatteignable ;
+- contraintes inverses ;
+- limites à coût fixe nul ;
+- budget annuel et cible nette ;
+- monotonie et convergence ;
+- parcours progressif responsive ;
+- aucune recommandation, donnée réelle ou capacité réseau.
 
-### Capital Efficiency Lab
+## 7. Développements suspendus
 
-- moteur Edge Survival déterministe ;
-- scénario principal exact et réconcilié ;
-- seuil, plancher, marge, absorption et rétention ;
-- contraintes inverses et impossibilités structurelles ;
-- frontières exactes lorsque les coûts fixes sont nuls ;
-- budget annuel, fréquence frontière et cible nette ;
-- tests de monotonicité et convergence ;
-- interface locale responsive ;
-- provenance et limites visibles ;
-- aucune recommandation, donnée réelle ou service externe.
-
-## 6. Développements suspendus
-
-- publication externe du site Q0 et du laboratoire ;
+- publication externe ;
 - H3 à H6 ;
-- certification de stratégies ;
-- score global de recommandation ;
-- journal complet ;
-- application native ;
-- connexions courtiers ;
-- données ou tarifs réels ;
+- import réel ;
+- comptes et stockage persistant ;
+- données ou tarifs réels de courtiers ;
+- analytics, email et paiement ;
 - conseil, signaux et exécution ;
+- application native ;
 - marketplace, affiliation et API ;
-- import réel, comptes, stockage, analytics, email et paiement ;
-- métriques statistiques avancées sans données suffisantes.
-
-## 7. Défauts techniques historiques ouverts
-
-- H3 : provenance de devise du prix d'entrée ;
-- H4 : réconciliation définitive PnL / rendement / nominal ;
-- H5 : injection de formule CSV ;
-- H6 : coût algorithmique élevé ;
-- absence de valorisation mark-to-market ;
-- absence de levier, appels de marge, intérêts, dividendes et flux externes ;
-- compatibilité Safari/iPad non exhaustive.
-
-Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
+- statistiques avancées sans données suffisantes.
 
 ## 8. Marché — état de preuve
 
 ### Établi
 
-- le rapport fondateur illustre qu'une prime brute peut être absorbée par les frictions et le turnover ;
-- le mécanisme du seuil de couverture est calculable ;
-- les contraintes inverses du laboratoire sont techniquement exécutables ;
-- des outils adjacents obtiennent des abonnements payants ;
-- un calculateur Q0 et un laboratoire Edge Survival techniquement fonctionnels existent.
+- les frictions peuvent absorber une prime brute ;
+- le seuil, le plancher, la marge et les contraintes inverses sont calculables ;
+- le prototype interne fonctionne et est techniquement contrôlé ;
+- l'expérience progressive est plus claire que la première version selon l'inspection visuelle.
 
 ### Non validé
 
-- compréhension et valeur perçue des nouvelles sorties ;
-- existence d'un avantage brut suffisamment formalisé chez la cible ;
-- capacité des contraintes inverses à modifier une décision réelle ;
-- usage répété ;
+- compréhension réelle en moins de 90 secondes ;
+- capacité de la cible à fournir un rendement brut défendable ;
+- utilité réelle d'une contrainte inverse ;
+- absence de confusion avec une recommandation ;
+- seconde utilisation ;
 - demande d'import ;
-- volonté de payer ;
-- distribution organique ;
-- rentabilité et potentiel de plateforme.
+- paiement ;
+- distribution et potentiel de plateforme.
 
 ## 9. Hébergement GitHub
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
-- branche de référence produit : `breaktest-bootstrap` ;
-- pull request active : `#20`, branche `strategy/capital-efficiency-core` ;
+- branche produit : `breaktest-bootstrap` au commit `b68b0257e9ea506c98a607976bbdd9456c890dcc` ;
+- pull request active : `#21` ;
 - `main` reste inchangé et hors périmètre.
 
 ## 10. Prochaine exécution autorisée
 
-1. obtenir une exécution verte sur le head documentaire final ;
-2. fusionner uniquement dans `breaktest-bootstrap` si le périmètre et les preuves restent cohérents ;
+1. obtenir une exécution verte sur le head documentaire final de la pull request `#21` ;
+2. fusionner uniquement dans `breaktest-bootstrap` après revue finale ;
 3. ne rien publier ;
-4. mener ensuite la revue interne hostile définie dans `NEXT_CODEX_PROMPT.md` ;
-5. préparer une expérience limitée uniquement après cette revue ;
-6. ne reprendre aucune extension réelle avant preuve d'utilité et décision explicite.
+4. préparer la version critique interne et le protocole de cinq participants ;
+5. ne reprendre aucune extension de produit avant observations réelles et décision explicite.
