@@ -4,27 +4,11 @@
 
 Prototype local-first 0.1, consolidé et audité initialement le 12 juillet 2026.
 
-## Matériel existant
-
-- un prototype HTML autonome ;
-- quatre fichiers de lancement archivés qui contiennent le même code et diffèrent seulement par le titre et la vue initiale ;
-- un pitch deck, un product blueprint et un guide utilisateur ;
-- des journaux de backtest et de live-test ;
-- un rapport académique d'évaluation de stratégie.
-
 ## Build canonique
 
 `app/Breaktest_Studio.html` est le fichier canonique provisoire. La source v0.2 auditée est conservée dans sept fragments immuables sous `app/.bundle/`.
 
-Le build cumulatif exécute :
-
-1. `scripts/materialize_breaktest.py` — H1 ;
-2. `scripts/apply_c2_patch.py` — C2 ;
-3. `scripts/apply_c3_patch.py` — C3 ;
-4. `scripts/apply_c1_patch.py` — C1 ;
-5. `scripts/apply_c4_patch.py` — C4 ;
-6. `scripts/apply_h2_patch.py` — H2 ;
-7. `scripts/build_breaktest.py` — point d'entrée unique.
+Le build cumulatif exécute H1, C2, C3, C1, C4 puis H2 via `scripts/build_breaktest.py`.
 
 Empreintes :
 
@@ -34,92 +18,74 @@ Empreintes :
 - après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets ;
 - après C1 : `e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e`, 152 496 octets ;
 - après C4 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`, 158 682 octets ;
-- candidate H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`, 166 862 octets.
+- version fusionnée après H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`, 166 862 octets.
 
 ## Fonctionnalités confirmées par exécution
 
-- chargement local, navigation, recalcul du capital et paramètres de coûts ;
-- import CSV et refus ferme des données numériques ambiguës ;
-- export CSV, filtres, recherche, modal méthodologique et échappement HTML ;
-- modèle d'entraînement antérieur propre à chaque décision ;
-- allocation chronologique du turnover ;
-- réservation du nominal entre entrée et sortie ;
-- courbe de trésorerie réalisée aux sorties ;
-- gains et pertes disponibles pour le financement seulement après réalisation ;
-- sélection explicite entre résultat simulé, brut observé, net fixe observé et full-cost observé ;
+- application locale interactive, import/export, filtres et audit ;
+- validation numérique stricte ;
+- modèle antérieur propre à chaque décision ;
+- turnover chronologique ;
+- réservation du nominal ;
+- trésorerie réalisée aux sorties ;
+- sélection entre résultat simulé, brut observé, net fixe observé et full-cost observé ;
 - provenance observée, dérivée, fallback ou simulée conservée par ligne ;
 - bases observées indépendantes des hypothèses de coûts ;
-- absence de double comptage entre net observé et coûts simulés ;
-- base sélectionnée exposée dans les KPI, le Trade Gate, le ledger, l'audit, la courbe et l'export.
-
-Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni une valorisation mark-to-market.
+- absence de double comptage ;
+- base sélectionnée visible dans les KPI, le Trade Gate, le ledger, l'audit, la courbe et l'export.
 
 ## Corrections fusionnées dans `breaktest-bootstrap`
 
-- **H1** — validation numérique stricte : pull request `#2` ;
-- **C2** — isolation temporelle et par échantillon : pull requests `#3` et `#5` ;
-- **C3** — turnover chronologique : pull request `#6` ;
-- **C1** — réservation du capital : pull request `#8`, commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284` ;
-- **C4** — trésorerie réalisée aux sorties : pull request `#10`, commit `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
-
-## Correction validée sur branche, en attente de fusion
+- **H1** : pull request `#2` ;
+- **C2** : pull requests `#3` et `#5` ;
+- **C3** : pull request `#6` ;
+- **C1** : pull request `#8`, commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284` ;
+- **C4** : pull request `#10`, commit `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2` ;
+- **H2** : pull request `#12`, commit `3504d448547bfeab9ef74114af3c08fb557a1c75`.
 
 ### H2 — bases nettes observées du journal
 
-La candidate `codex/h2-journal-net-bases` normalise et conserve quatre bases distinctes : simulée, brute observée, nette fixe observée et full-cost observée.
+H2 normalise et conserve quatre bases distinctes : simulée, brute observée, nette fixe observée et full-cost observée.
 
-Règles validées :
+Sont validés : refus des valeurs fournies invalides, zéro réel, dérivations contrôlées, fallbacks explicites, conservation des incohérences pour H4, PnL fourni comme autorité de redimensionnement, indépendance des bases observées face aux coûts simulés et utilisation par C4 sans double soustraction.
 
-- valeurs fournies invalides : refus du lot ;
-- zéro observé : valeur valide ;
-- dérivation d'un membre manquant uniquement à partir de l'autre membre et du nominal ;
-- fallback uniquement lorsque la paire optionnelle est entièrement absente ;
-- provenance et origine du fallback conservées ;
-- valeurs PnL/rendement incompatibles conservées et signalées pour H4 ;
-- PnL fourni utilisé comme autorité de redimensionnement, sans réconciliation silencieuse ;
-- coûts simulés sans effet sur les bases observées ;
-- C4 utilise la base choisie sans double soustraction des coûts.
-
-Validations de référence :
+Preuves finales :
 
 - build : 166 862 octets, SHA-256 `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
-- GitHub Actions `29248248566` sur le head `580f3bfaca51897ab8a1ab438813a6e3e1996298` : réussite ;
-- H1, H2 numérique, H1 navigateur, C2, C3, C1, C4, C4 capital libre négatif et H2 navigateur : réussite ;
-- JavaScript construit : `node --check` réussi.
+- GitHub Actions `29248916855` sur le head exact `9539a9676ac1ac6d0a3bd1f470322c29b60edc96` : réussite ;
+- H1, H2 numérique, Chromium H1, C2, C3, C1, C4, capital libre négatif, H2 navigateur et `node --check` : réussite.
 
-Preuves : `docs/validation/H2_JOURNAL_NET_BASES.md`.
+Détail : `docs/validation/H2_JOURNAL_NET_BASES.md`.
 
 ## Défauts élevés encore ouverts
 
-1. **H3** — prix en euros reconvertis comme une devise étrangère ;
+1. **H3** — provenance de devise du prix d'entrée ;
 2. **H4** — politique définitive de réconciliation PnL / rendement / nominal ;
 3. **H5** — injection de formule dans l'export CSV ;
-4. **H6** — coût algorithmique élevé sur les imports moyens.
+4. **H6** — coût algorithmique élevé.
 
-## Ce qui n'est pas encore considéré comme validé
+## Non validé
 
-- exactitude de chaque formule et conformité complète aux journaux sources ;
-- provenance de devise de tous les champs de prix ;
-- réconciliation définitive des paires PnL/rendement incohérentes ;
-- valorisation mark-to-market ou quotidienne ;
+- exactitude exhaustive des formules ;
+- provenance de devise de tous les prix ;
+- politique finale H4 ;
+- valorisation mark-to-market ;
 - levier, appels de marge, intérêts, dividendes et flux externes ;
-- robustesse étendue des imports, sécurité exhaustive et performance à l'échelle ;
-- compatibilité complète Safari/iPad/mobile ;
-- calibration définitive du Breaktest Score ;
-- valeur commerciale et disposition à payer.
+- compatibilité Safari/iPad complète ;
+- sécurité exhaustive, performance à l'échelle et valeur commerciale.
 
 ## Hébergement GitHub
 
-- dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
+- dépôt : `babou9280/investment-strategy-evaluation` ;
 - branche de référence : `breaktest-bootstrap` ;
-- branche candidate H2 : `codex/h2-journal-net-bases` ;
-- `main` et le projet universitaire d'origine restent inchangés.
+- H2 est fusionné ;
+- la prochaine branche active doit être dédiée à H3 ;
+- `main` reste inchangé.
 
 ## Prochaine exécution autorisée
 
-1. retirer l'artefact temporaire de revue H2 du workflow ;
-2. réexécuter toutes les validations sur le head final ;
-3. fusionner H2 uniquement dans `breaktest-bootstrap` si cette exécution reste verte ;
-4. synchroniser les documents de fusion ;
-5. ouvrir ensuite une branche isolée pour H3 ;
-6. ne rien fusionner dans `main`.
+1. fusionner cette synchronisation documentaire ;
+2. créer une branche isolée H3 ;
+3. exécuter `NEXT_CODEX_PROMPT.md` ;
+4. préserver toutes les validations H1 à H2 ;
+5. ne rien fusionner dans `main`.
