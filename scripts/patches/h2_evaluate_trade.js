@@ -14,7 +14,16 @@ function resultBasisMeta(value) {
 }
 
 function scaledObservedBasis(trade, tradeKey, notional) {
-  const source = trade.pnlBases[tradeKey];
+  const legacyGross = {
+    return: trade.grossReturn,
+    provenance: tradeKey === "gross" ? "observed" : "fallback",
+    pnlProvenance: trade.grossPnlDerived ? "derived" : "observed",
+    returnProvenance: trade.grossReturnDerived ? "derived" : "observed",
+    fallbackFrom: tradeKey === "gross" ? null : tradeKey === "fixedNet" ? "gross" : "fixedNet",
+    pairDifference: 0,
+    pairInconsistent: false,
+  };
+  const source = trade.pnlBases?.[tradeKey] || legacyGross;
   return {
     pnl: notional * source.return,
     return: source.return,
