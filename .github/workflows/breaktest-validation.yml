@@ -50,7 +50,16 @@ jobs:
 
       - name: Temporary C1 context inspection
         if: ${{ hashFiles('scripts/inspect_c1_context.py') != '' }}
-        run: python3 scripts/inspect_c1_context.py
+        run: python3 scripts/inspect_c1_context.py > c1_context.txt
+
+      - name: Upload temporary C1 context
+        if: ${{ hashFiles('c1_context.txt') != '' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: c1-context
+          path: c1_context.txt
+          if-no-files-found: error
+          retention-days: 1
 
       - name: Strict numeric validation H1
         run: node tests/h1_strict_numeric_validation.test.js
