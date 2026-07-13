@@ -1,11 +1,13 @@
 # C4 — validation de la courbe de trésorerie réalisée
 
-- Branche validée : `codex/c4-realized-equity-curve`
-- Base : `breaktest-bootstrap` après C1, commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`
+- Statut : fusionnée dans `breaktest-bootstrap`
+- Pull request : `#10`
+- Commit squash : `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`
+- Base de développement : C1 au commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`
 - Build H1 + C2 + C3 + C1 + C4 : **158 682 octets**
 - SHA-256 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`
-- Exécution GitHub Actions de référence : `29245705155`
-- Commit testé : `ded3ded64edf5cf66e90438ca086678e197d9356`
+- Exécution GitHub Actions finale avant fusion : `29245856820`
+- Head validé : `c510e943bf4634cfda0a92caf61c483a42cab3b9`
 
 ## Comportement validé
 
@@ -55,7 +57,7 @@ python3 tests/c4_negative_free_cash.py
 node --check /tmp/breaktest-built.js
 ```
 
-Résultats observés dans GitHub Actions `29245705155` :
+Résultats observés dans GitHub Actions `29245856820` :
 
 ```text
 H1 strict numeric validation tests passed
