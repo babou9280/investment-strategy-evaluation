@@ -7,8 +7,8 @@ ROOT = Path(__file__).resolve().parents[1]
 TARGET = ROOT / "app" / "Breaktest_Studio.html"
 PATCH_DIR = ROOT / "scripts" / "patches"
 H2_SHA256 = "dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf"
-H3_SHA256 = ""
-H3_SIZE = 0
+H3_SHA256 = "49e558fa711bf5c523e9f3478085c3c09c512b5c33015beb94a863afc1a24312"
+H3_SIZE = 173_716
 
 
 def digest(payload: bytes) -> str:
@@ -37,7 +37,7 @@ html = replace_block(html, "function exportDecisions() {", "function openMethod(
 
 result = html.encode("utf-8")
 actual_h3 = digest(result)
-if H3_SIZE and (len(result) != H3_SIZE or actual_h3 != H3_SHA256):
+if len(result) != H3_SIZE or actual_h3 != H3_SHA256:
     raise SystemExit(
         f"H3 output mismatch: expected {H3_SIZE} bytes/{H3_SHA256}, "
         f"got {len(result)} bytes/{actual_h3}"
