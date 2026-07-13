@@ -15,6 +15,7 @@ function resultBasisMeta(value) {
 
 function scaledObservedBasis(trade, tradeKey, notional) {
   const legacyGross = {
+    pnl: trade.grossPnl,
     return: trade.grossReturn,
     provenance: tradeKey === "gross" ? "observed" : "fallback",
     pnlProvenance: trade.grossPnlDerived ? "derived" : "observed",
@@ -24,8 +25,9 @@ function scaledObservedBasis(trade, tradeKey, notional) {
     pairInconsistent: false,
   };
   const source = trade.pnlBases?.[tradeKey] || legacyGross;
+  const scale = trade.invested > 0 ? notional / trade.invested : 0;
   return {
-    pnl: notional * source.return,
+    pnl: source.pnl * scale,
     return: source.return,
     provenance: source.provenance,
     pnlProvenance: source.pnlProvenance,
