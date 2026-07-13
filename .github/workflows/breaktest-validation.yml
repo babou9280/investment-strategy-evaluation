@@ -49,6 +49,10 @@ jobs:
       - name: Deterministic build
         run: python3 scripts/build_breaktest.py
 
+      - name: Temporary C1 context inspection
+        if: ${{ hashFiles('scripts/inspect_c1_context.py') != '' }}
+        run: python3 scripts/inspect_c1_context.py
+
       - name: Strict numeric validation H1
         run: node tests/h1_strict_numeric_validation.test.js
 
