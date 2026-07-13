@@ -1,0 +1,42 @@
+[
+  {
+    "old": "  const turnover = applyTurnoverBudget(baseEvaluations, cfg);\n  const evaluations = turnover.evaluations.sort((a, b) => compareReplayTrades(a.trade, b.trade));",
+    "new": "  const turnover = applyTurnoverBudget(baseEvaluations, cfg);\n  const capitalReservation = applyCapitalReservation(turnover.evaluations, cfg);\n  const evaluations = capitalReservation.evaluations.sort((a, b) => compareReplayTrades(a.trade, b.trade));\n  const fundedTurnover = summarizeFundedTurnover(evaluations);",
+    "label": "capital reservation pipeline"
+  },
+  {
+    "old": "  const keptTurnoverAverageAnnual = turnover.years > 0 ? turnover.totalAcceptedUnits / turnover.years : 0;\n  const keptTurnoverPeakAnnual = turnover.peakRollingUnits;",
+    "new": "  const keptTurnoverAverageAnnual = turnover.years > 0 ? fundedTurnover.totalAcceptedUnits / turnover.years : 0;\n  const keptTurnoverPeakAnnual = fundedTurnover.peakRollingUnits;",
+    "label": "funded turnover aggregates"
+  },
+  {
+    "old": "    turnoverWindowDays: turnover.windowDays,\n    turnoverCapAnnual: cfg.turnoverCapAnnual,",
+    "new": "    turnoverWindowDays: turnover.windowDays,\n    turnoverCapAnnual: cfg.turnoverCapAnnual,\n    capitalInitial: capitalReservation.capitalInitial,\n    peakCapitalReserved: capitalReservation.peakReserved,\n    minimumCapitalFree: capitalReservation.minimumFree,\n    capitalFundingRefused: capitalReservation.fundingRefused,\n    capitalReservedAtEnd: capitalReservation.reservedAtEnd,",
+    "label": "capital reservation result fields"
+  },
+  {
+    "old": "<span class=\"eyebrow\">CAPITAL COMPATIBILITY</span>",
+    "new": "<span class=\"eyebrow\">CAPITAL RESERVATION</span>",
+    "label": "capital card eyebrow"
+  },
+  {
+    "old": "<div class=\"mini-stat-row\"><div><span>Pic turnover 365 j</span><strong id=\"mini-turnover\">324 %</strong></div><div><span>Plafond glissant</span><strong id=\"mini-budget\">600 %</strong></div></div>",
+    "new": "<div class=\"mini-stat-row\"><div><span>Pic capital réservé</span><strong id=\"mini-turnover\">0 €</strong></div><div><span>Capital libre minimum</span><strong id=\"mini-budget\">0 €</strong></div></div>",
+    "label": "capital reservation card metrics"
+  },
+  {
+    "old": "  byId(\"equity-caption\").textContent = `${total} trades · capital initial ${fmtCapital(result.config.capital)}`;",
+    "new": "  byId(\"equity-caption\").textContent = `${total} trades · capital initial ${fmtCapital(result.config.capital)} · courbe encore non temporelle`;",
+    "label": "equity curve limitation"
+  },
+  {
+    "old": "  let title = \"Capital compatible\";\n  let copy = \"Les frictions simulées laissent passer la majorité des trades avec une marge prudente positive.\";\n  if (compatibility < .35) {\n    title = \"Capital trop fragmenté\";\n    copy = \"Les frais fixes dominent les petits tickets. Réduire le nombre de trades ou augmenter le nominal change l’économie.\";\n  } else if (compatibility < .75) {\n    title = \"Compatible, sous sélection\";\n    copy = `${result.removed.length} trades ne couvrent pas encore leur coût all-in avec la borne d’edge choisie.`;\n  }",
+    "new": "  let title = \"Nominal chronologiquement financé\";\n  let copy = \"Les positions conservées respectent la réservation du capital entre leur entrée et leur sortie.\";\n  if (result.capitalFundingRefused > 0) {\n    title = \"Capital contraint par les chevauchements\";\n    copy = `${result.capitalFundingRefused} trade${result.capitalFundingRefused > 1 ? \"s\" : \"\"} refusé${result.capitalFundingRefused > 1 ? \"s\" : \"\"} faute de capital libre, sans redimensionnement implicite.`;\n  } else if (compatibility < .35) {\n    title = \"Capital très sélectif\";\n    copy = \"La majorité des décisions est écartée avant financement par les règles d’edge, de coûts ou de turnover.\";\n  } else if (compatibility < .75) {\n    title = \"Capital financé, sous sélection\";\n    copy = `${result.removed.length} trades sont écartés avant ou pendant le contrôle de financement.`;\n  }",
+    "label": "capital reservation verdict"
+  },
+  {
+    "old": "  byId(\"mini-turnover\").textContent = fmtPct(result.keptTurnoverAnnual, false, 0);\n  byId(\"mini-budget\").textContent = fmtPct(result.turnoverCapAnnual, false, 0);",
+    "new": "  byId(\"mini-turnover\").textContent = fmtCurrency(result.peakCapitalReserved);\n  byId(\"mini-budget\").textContent = fmtCurrency(result.minimumCapitalFree);",
+    "label": "capital reservation rendered metrics"
+  }
+]
