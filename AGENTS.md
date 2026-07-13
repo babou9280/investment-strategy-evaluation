@@ -1,53 +1,63 @@
 # Breaktest — instructions permanentes pour Codex
 
-## 1. Avant de travailler
+## 1. Autorité documentaire
 
-Lire intégralement :
+Avant toute modification matérielle, lire intégralement :
 
 - `PRODUCT.md` ;
 - `QUALITY.md` ;
 - `STATE.md` ;
 - `DECISIONS.md` ;
 - `METHODOLOGY.md` ;
+- `AGENTS.md` ;
 - `STRATEGY.md` ;
 - `MARKET_EVIDENCE.md` ;
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
 - `NEXT_CODEX_PROMPT.md` ;
 - `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
+- `docs/product/EDGE_SURVIVAL_ENVELOPE.md` ;
 - `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
 - `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
-- `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
-- `docs/validation/CAPITAL_EFFICIENCY_LAB.md` ;
-- les fichiers de code, tests et documents concernés.
+- `docs/standards/EDGE_RANGE_CONTRACT.md` ;
+- `docs/governance/BLIND_SPOT_REGISTER.md` ;
+- `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
+- la mission, la validation, les revues, scénarios, code et tests concernés.
 
-Traiter chaque demande comme un delta du produit existant. La stratégie Cost Intelligence et son raffinement Capital Efficiency priment sur les anciennes roadmaps.
+Traiter chaque demande comme un delta du produit existant. La stratégie Cost Intelligence, son raffinement Capital Efficiency et les décisions canoniques priment sur les anciennes roadmaps.
+
+En cas de contradiction :
+
+1. une décision explicitement validée plus récente prime ;
+2. le comportement réellement exécuté prime sur un résumé ;
+3. le contrat financier ou quantitatif prime sur l'apparence ;
+4. l'incertitude doit être déclarée, jamais comblée par invention.
 
 ## 2. Phase active
 
-La phase actuelle est la **revue interne du prototype Capital Efficiency**, avant toute validation commerciale externe.
+La phase actuelle est la **stabilisation interne d'Edge Survival Envelope**, avant toute publication ou validation commerciale externe.
 
-Le laboratoire `capital_efficiency_lab/` est implémenté et a réussi une validation technique. Cela n'autorise pas son extension automatique.
+La pull request active reste isolée de `main`. Le travail autorisé sans nouvelle décision stratégique comprend :
 
-Le seul travail de fond autorisé sans nouvelle décision stratégique est :
-
-- revue hostile de la valeur et de la compréhension ;
-- correction d'un défaut de calcul, contrat, accessibilité ou clarté ;
-- suppression d'un élément redondant ;
+- correction de calcul, contrat, état frontière ou réconciliation ;
+- correction d'accessibilité, compréhension, responsive ou comportement navigateur ;
+- recherche hostile d'angles morts visibles, adjacents et rétrospectifs ;
+- suppression d'un élément redondant ou trompeur ;
 - scénario synthétique indispensable à une preuve ;
-- test de non-régression ;
-- protocole de critique interne ;
+- oracle, invariant ou test de non-régression ;
+- synchronisation documentaire fondée sur des preuves exécutées ;
+- préparation technique non livrée du futur package HTML hors ligne ;
 - vérification Safari/iPad lorsque l'environnement le permet.
 
 Sont suspendus :
 
-- publication externe ;
+- publication ou déploiement externe ;
 - H3 à H6 ;
 - refonte de `app/Breaktest_Studio.html` ;
 - modification fonctionnelle de `validation_site/` ;
-- import CSV pour le nouveau produit ;
+- import réel pour le nouveau produit ;
 - comptes et stockage utilisateur ;
 - application native ;
 - connexion courtier ;
@@ -55,89 +65,131 @@ Sont suspendus :
 - analytics, email et paiement ;
 - marketplace, affiliation ou API ;
 - signaux, conseil, allocation et exécution ;
-- statistiques avancées sans données suffisantes.
+- statistiques avancées sans données suffisantes ;
+- package présenté à Ayman comme abouti avant les gates documentés.
 
-## 3. Autonomie
+## 3. Autonomie et escalade
 
-Prendre seul les décisions techniques réversibles et ordinaires. Ne pas demander à Ayman de choisir une bibliothèque, une structure de fichier, un type de test ou un détail d'implémentation lorsqu'une évaluation technique suffit.
+Prendre seul les décisions techniques, méthodologiques et produit réversibles et ordinaires. Ne pas demander à Ayman de choisir une bibliothèque, une structure, un test, une formulation technique ou une décomposition lorsqu'une évaluation professionnelle suffit.
 
 Demander une validation seulement pour une décision :
 
-- stratégique ;
-- coûteuse ;
+- qui change substantiellement la cible ou la proposition de valeur ;
+- coûteuse ou créant un engagement externe ;
 - irréversible ;
 - juridiquement engageante ;
-- substantiellement subjective ;
-- créant une publication ou un engagement externe.
+- dépendant réellement de sa préférence ;
+- opposant plusieurs directions stratégiques comparables ;
+- créant une publication, collecte de données ou transaction réelle.
 
-Dans ce cas, recommander une option unique lorsque c'est possible.
+Dans ce cas, recommander une option unique et demander seulement `valide` ou `refuse` lorsque possible.
 
 ## 4. Processus obligatoire
 
-1. Lire les fichiers canoniques et stratégiques.
-2. Reconstruire l'état réellement validé.
-3. Identifier le problème utilisateur ou la preuve recherchée.
-4. Vérifier qu'une modification est nécessaire.
-5. Modifier le minimum cohérent.
-6. Ajouter ou corriger les tests.
-7. Exécuter les validations pertinentes.
-8. Corriger les défauts détectés.
-9. Rechercher les régressions.
-10. Mettre à jour les documents uniquement avec des résultats démontrés.
-11. Résumer résultat, preuves, limites et action unique éventuelle.
+1. Lire les fichiers canoniques, stratégiques et le registre des angles morts.
+2. Reconstruire l'état réellement validé et le head exact.
+3. Identifier le problème utilisateur, financier ou de preuve.
+4. Chercher aussi au moins un défaut adjacent ou rétrospectif.
+5. Distinguer erreur, hypothèse, limite, risque et travail différé.
+6. Vérifier qu'une modification est nécessaire.
+7. Modifier le minimum cohérent, sans patch local contradictoire.
+8. Ajouter ou corriger les tests et oracles pertinents.
+9. Exécuter les validations sur le code exact.
+10. Corriger les défauts détectés et rechercher les régressions.
+11. Propager les conséquences dans calculs, interface, documents et livrables concernés.
+12. Mettre à jour le registre et les fichiers canoniques uniquement avec des résultats démontrés.
+13. Résumer résultat, preuves, limites et une seule action utilisateur éventuelle.
 
-## 5. Règles générales critiques
+Une critique doit produire, selon le cas :
 
-- Ne jamais inventer donnée, résultat, utilisateur, paiement, partenaire ou test réussi.
+- une correction locale ;
+- une règle permanente ;
+- un test empêchant le retour du défaut ;
+- une limite explicite ;
+- un gate daté ou conditionnel de réexamen.
+
+## 5. Recherche permanente des angles morts
+
+Jusqu'à déclaration explicite de fin du projet, inspecter systématiquement les domaines définis dans `docs/governance/BLIND_SPOT_REGISTER.md` :
+
+- finance et microstructure ;
+- quantitatif et statistique ;
+- données et provenance ;
+- produit et utilité ;
+- UX, accessibilité et compréhension ;
+- réglementation, droit et éthique ;
+- ingénierie, sécurité et confidentialité ;
+- business model, marché et distribution ;
+- validation et expérimentation ;
+- opérations et exploitation ;
+- réputation, candidature et preuve de travail ;
+- gouvernance du projet.
+
+Règles :
+
+- ne pas attendre qu'Ayman identifie lui-même le défaut ;
+- ne pas limiter la revue au sujet explicitement mentionné ;
+- ne pas inventer une exhaustivité impossible ;
+- une CI verte n'est jamais une preuve d'utilité, de conformité ou de demande ;
+- tout nouvel angle mort important est ajouté au registre avec priorité, statut, preuve et gate ;
+- une limite acceptée reste visible et doit avoir une condition de réexamen.
+
+## 6. Règles générales critiques
+
+- Ne jamais inventer donnée, résultat, utilisateur, paiement, partenaire, source ou test réussi.
 - Ne jamais masquer silencieusement une erreur avec une valeur par défaut.
 - Signaler tout fallback de données ou de calcul.
 - Ne jamais présenter une interaction factice comme fonctionnelle.
-- Toute formule importante doit être documentée et testée.
+- Toute formule importante doit être documentée, versionnée et testée.
 - Toute correction de bug doit ajouter un test de non-régression lorsqu'il est pertinent.
 - Une valeur numérique réelle égale à zéro reste distincte d'une absence.
 - Ne jamais utiliser l'arrondi d'affichage dans les calculs internes.
-- Préserver la cohérence entre code, méthodologie et discours commercial.
+- Préserver la cohérence entre code, méthodologie, interface et discours commercial.
 - Une sophistication qui ne change ni compréhension, ni diagnostic, ni preuve doit être supprimée ou différée.
+- Ne jamais appeler `final`, `production_ready`, `validated` ou équivalent ce qui ne satisfait pas la définition correspondante.
 
-## 6. Règles Capital Efficiency
+## 7. Contrats Capital Efficiency et Edge Range
 
-### Contrat quantitatif
+Implémenter exactement :
 
-Implémenter exactement `docs/standards/EDGE_SURVIVAL_CONTRACT.md`.
+- `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
+- `docs/standards/EDGE_RANGE_CONTRACT.md` ;
+- `docs/standards/QUANT_FINANCE_STANDARDS.md`.
 
-- le coût fixe et le plancher variable restent séparés ;
-- le seuil brut doit être réconcilié avec le coût total ;
-- la marge nette doit se réconcilier en taux et en euros ;
-- l'absorption et la rétention ne sont calculées que si l'avantage brut est strictement positif ;
-- une rétention négative n'est jamais tronquée ;
-- une contrainte impossible ne devient jamais `Infinity` visible ;
-- un coût fixe nul et une contrainte satisfaite ne doivent pas créer un faux minimum positif ;
-- la fréquence n'affecte pas le seuil par opération ;
-- la projection annuelle reste arithmétique, sans capitalisation ni positions simultanées ;
-- chaque dénominateur, unité et provenance doit être visible.
+Exigences permanentes :
 
-### Hiérarchie produit
+- séparer coût fixe diluable et plancher variable ;
+- réconcilier seuil brut et coût total ;
+- réconcilier marge nette en taux et euros ;
+- calculer absorption et rétention uniquement si le brut est strictement positif ;
+- ne jamais tronquer une marge ou rétention négative ;
+- ne jamais afficher `Infinity`, `NaN` ou `-0` ;
+- traiter exactement les coûts fixes nuls ;
+- garder le seuil par opération indépendant de la fréquence ;
+- qualifier toute projection annuelle d'arithmétique, sans capitalisation ni positions simultanées ;
+- afficher dénominateur, unité, provenance et domaine de validité ;
+- conserver trois modes non ambigus : seuil seul, point seul, fourchette complète seule ;
+- rejeter tout mélange point/fourchette, toute fourchette partielle et tout ordre incohérent ;
+- ne jamais compléter, réordonner ou convertir silencieusement une fourchette ;
+- considérer l'égalité au seuil ou au plancher selon la tolérance contractuelle, jamais comme marge strictement positive ;
+- conserver la rétrocompatibilité profonde des modes historiques.
 
-- avantage brut absent : mettre en avant le seuil brut et le plancher variable ;
-- avantage brut présent : mettre en avant la part conservée et la marge nette ;
-- le coût en euros explique le résultat, mais ne constitue pas seul la valeur principale ;
-- montrer ce qui est diluable et ce qui ne l'est pas ;
-- afficher les contraintes inverses uniquement avec la condition utilisateur visible ;
-- une démonstration de 90 secondes doit montrer pourquoi le produit dépasse un calculateur de frais.
+## 8. Hiérarchie produit et UX
 
-### États autorisés
+- Sans avantage brut : mettre en avant le seuil de couverture et le plancher variable.
+- Avec point brut : mettre en avant part conservée et marge nette.
+- Avec fourchette : mettre en avant la stabilité de la conclusion, puis les marges basse, centrale et haute.
+- Le coût en euros explique le résultat ; il ne constitue pas seul la valeur centrale.
+- Montrer ce qui est diluable et ce qui ne l'est pas.
+- Afficher une seule contrainte inverse à la fois avec la condition utilisateur visible.
+- Employer le français concret avant le jargon financier.
+- Ne pas surcharger le premier écran.
+- Masquer les résultats obsolètes après erreur ou conflit de mode.
+- Conserver focus, clavier, `aria-live`, contraste, mouvement réduit et absence de débordement.
+- Tester 390, 768, 1024 et 1440 pixels, puis Safari/iPad avant livraison à Ayman.
+- Une démonstration de 90 secondes doit montrer pourquoi Breaktest dépasse un totalisateur de frais.
 
-- `threshold_only` ;
-- `edge_fully_absorbed` ;
-- `edge_partially_retained` ;
-- `retention_target_met` ;
-- `structurally_unreachable` ;
-- `not_computable` ;
-- `unbounded_within_model` pour une frontière réellement non bornée dans le modèle.
-
-Aucun score opaque ou seuil arbitraire caché.
-
-### Frontière réglementaire
+## 9. Frontière réglementaire
 
 Ne jamais :
 
@@ -146,58 +198,64 @@ Ne jamais :
 - qualifier une taille ou fréquence d'optimale ;
 - adapter une conclusion à la tolérance au risque, au patrimoine ou aux objectifs ;
 - transmettre ou exécuter un ordre ;
-- présenter un seuil comme un rendement probable ;
+- présenter un seuil ou une fourchette comme rendement probable ;
+- utiliser les termes probabilité, confiance, prévision ou verdict sans méthode statistique et autorisation correspondantes ;
+- revendiquer une conformité, certification ou audit externe non obtenu ;
 - employer un avertissement comme substitut à une conception réellement non prescriptive.
 
-Un seuil mathématique, une taille frontière conditionnelle ou une fréquence frontière n'est pas un conseil. La formulation doit le rappeler.
+Un seuil, une taille frontière conditionnelle ou une fréquence frontière est une relation mathématique sous hypothèses, pas un conseil.
 
-## 7. Règles de preuve et de différenciation
+## 10. Preuve et différenciation
 
 Chaque fonction doit expliciter :
 
-1. le problème utilisateur ;
-2. la définition financière ;
-3. les entrées et unités ;
-4. la formule ;
-5. la provenance ;
-6. les cas indisponibles ;
-7. l'oracle ou l'invariant ;
-8. l'utilité décisionnelle ;
-9. la limite réglementaire ;
-10. la preuve commerciale recherchée.
+1. problème utilisateur ;
+2. définition financière ;
+3. entrées et unités ;
+4. formule ;
+5. provenance ;
+6. cas indisponibles ;
+7. oracle ou invariant ;
+8. utilité décisionnelle ;
+9. limite réglementaire ;
+10. preuve commerciale recherchée ;
+11. angle mort principal ;
+12. condition d'abandon ou de révision.
 
-La valeur académique ou commerciale ne doit jamais reposer sur :
+La valeur académique ou commerciale ne repose jamais sur :
 
 - le nombre de lignes de code ;
 - un design impressionnant seul ;
 - des métriques décoratives ;
-- une affirmation de conformité non auditée ;
+- une conformité non auditée ;
 - un résumé produit par une IA ;
-- une traction ou un utilisateur synthétique.
+- une traction, donnée ou personne synthétique présentée comme réelle.
 
-## 8. Qualité de la preuve commerciale
+## 11. Validation commerciale
 
-- Un clic, un email ou un compliment ne constitue pas une vente.
-- Une intention déclarée ne constitue pas un paiement.
+- Un clic, un email ou un compliment n'est pas une vente.
+- Une intention déclarée n'est pas un paiement.
 - Une réservation n'est pas un abonnement actif.
-- Ne pas créer de faux compteurs, avis, économies ou rareté.
-- Les données de démonstration doivent être marquées synthétiques.
+- Une première utilisation n'est pas une rétention.
+- Ne créer aucun faux compteur, avis, économie, partenaire ou rareté.
+- Marquer les démonstrations `synthetic_demo`.
 - Mesurer séparément compréhension, seconde utilisation, demande d'import, paiement et remboursement.
+- Conserver objections, abandons et trafic non qualifié.
 - Le test doit pouvoir conclure à l'abandon.
 - Ne pas élargir le produit pour améliorer artificiellement un indicateur faible.
 
-## 9. Règles historiques conservées
+## 12. Règles historiques conservées
 
 Pour le moteur d'audit existant :
 
 - séparer filtrage ex ante et analyse ex post ;
-- ne jamais retirer des perdants rétrospectivement ;
-- distinguer strictement résultat observé et scénario simulé ;
+- ne jamais retirer rétrospectivement les perdants ;
+- distinguer résultat observé et scénario simulé ;
 - ne jamais écraser une base observée ;
-- conserver la provenance des bases ;
+- conserver la provenance ;
 - refuser une valeur optionnelle explicitement invalide ;
 - ne jamais compter les coûts deux fois ;
-- signaler les incohérences PnL/rendement pour H4 ;
+- signaler les incohérences PnL/rendement ;
 - interdire toute influence future sur une décision antérieure ;
 - consommer le turnover chronologiquement ;
 - réserver le nominal complet jusqu'à la sortie ;
@@ -205,39 +263,64 @@ Pour le moteur d'audit existant :
 - réconcilier `capital libre = capital réalisé - nominal réservé` ;
 - employer « courbe de trésorerie réalisée aux sorties », jamais mark-to-market sans implémentation réelle.
 
-Ces règles restent actives, mais elles ne justifient pas la reprise automatique de la roadmap historique.
+Ces règles restent actives mais ne justifient pas la reprise automatique de la roadmap historique.
 
-## 10. Fichiers et branches
+## 13. Livraison HTML hors ligne
 
-- `app/Breaktest_Studio.html` reste l'actif technique canonique historique provisoire.
+Les futures versions remises à Ayman pour critique doivent respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md`.
+
+Priorité :
+
+1. HTML autonome réellement interactif ;
+2. sinon bundle ZIP local avec `index.html`, chemins relatifs et aucune dépendance distante.
+
+Le package doit inclure :
+
+- interaction et calculs réels issus du moteur validé ;
+- navigation hors ligne sans serveur obligatoire lorsque techniquement évitable ;
+- vue produit ;
+- vue méthode, preuves et limites ;
+- provenance et version du calcul ;
+- manifeste, liste des fichiers et SHA-256 ;
+- navigateurs et appareils réellement testés ;
+- limites connues.
+
+Les captures sont des preuves de test, jamais un substitut au livrable. Ne pas produire le package final prématurément.
+
+## 14. Fichiers et branches
+
+- `app/Breaktest_Studio.html` reste l'actif historique provisoire.
 - `validation_site/` reste le calculateur Q0 fusionné et gelé fonctionnellement.
 - `capital_efficiency_lab/` contient le prototype interne actif.
-- Les variantes de `source_material/` sont des archives.
+- `source_material/` contient des archives.
 - `main` reste strictement hors périmètre.
 - Toute mission utilise une branche isolée et une pull request vers `breaktest-bootstrap`.
-- Aucune fusion automatique.
+- Aucune fusion automatique sans preuve et revue.
 
-## 11. Définition de terminé
+## 15. Définition de terminé
 
 Une tâche n'est terminée que lorsque :
 
 - le comportement demandé fonctionne réellement ;
 - les tests pertinents ont été exécutés et réussissent ;
 - le build ou lancement pertinent a réussi ;
-- les cas d'erreur essentiels ont été vérifiés ;
+- les cas d'erreur et frontières essentiels ont été vérifiés ;
+- les angles morts adjacents ont été recherchés ;
 - les limites non vérifiées sont déclarées ;
 - aucun élément hors périmètre n'a été ajouté ;
-- les documents sont synchronisés avec les preuves ;
-- le head exact est identifié.
+- les documents et le registre sont synchronisés ;
+- le head exact est identifié ;
+- le package exact est testé lorsqu'un livrable est remis.
 
-Pour un prototype interne, « techniquement validé » ne signifie ni utile, ni commercialement validé, ni prêt à publier.
+« Techniquement validé » ne signifie ni utile, ni juridiquement conforme, ni commercialement validé, ni prêt à publier.
 
-## 12. Rapport final
+## 16. Rapport final
 
 Présenter :
 
 1. résultat obtenu ;
 2. changements importants ;
 3. validations réellement exécutées ;
-4. limites restantes ;
-5. une seule action utilisateur, uniquement si nécessaire.
+4. défauts trouvés, y compris rétrospectifs ;
+5. limites et angles morts restants ;
+6. une seule action utilisateur, uniquement si nécessaire.
