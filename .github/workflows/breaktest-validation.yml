@@ -126,6 +126,7 @@ jobs:
             node --check validation_site/app.js
             node --check capital_efficiency_lab/engine.js
             node --check capital_efficiency_lab/app.js
+            node --check capital_efficiency_lab/result_freshness.js
             node --check capital_efficiency_lab/tests/scenario_matrix.test.js
             node --check capital_efficiency_lab/tests/edge_range.test.js
             node --check capital_efficiency_lab/tests/point_range_consistency.test.js
