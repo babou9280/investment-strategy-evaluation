@@ -42,13 +42,26 @@ Le suivi réel par import, l'abonnement, les données de courtiers et les benchm
 
 ## 3. Préparation contrôlée du lancement
 
-La branche `strategy/cost-intelligence-launch-readiness` prépare sans engagement externe :
+La pull request `#17`, branche `strategy/cost-intelligence-launch-readiness`, prépare sans engagement externe :
 
 - la checklist de lancement statique ;
 - le protocole exact de test utilisateur ;
 - les limites minimales de confidentialité ;
+- les instructions de prévisualisation locale ;
 - le plan de rollback ;
-- les critères permettant de demander une décision de lancement à Ayman.
+- un test d'intégrité statique interdisant réseau, stockage persistant, secrets et intégrations actives.
+
+L'exécution de référence `29269885911`, head `245489655917a9de38cf80e6546852d3223eebcd`, a réussi :
+
+- build et suites historiques conservés ;
+- calculateur et Chromium verts ;
+- intégrité statique verte ;
+- 7 références locales ;
+- 43 171 octets actifs ;
+- aucune capacité réseau ou persistance détectée ;
+- syntaxe JavaScript et Python valide.
+
+Preuve : `docs/validation/COST_INTELLIGENCE_LAUNCH_READINESS.md`.
 
 Aucun domaine, hébergement public, analytics, collecte email ou paiement n'est activé par cette préparation.
 
@@ -101,7 +114,8 @@ Preuve H2 : `docs/validation/H2_JOURNAL_NET_BASES.md`.
 - clavier, focus d'erreur, annonce accessible et responsive testés dans Chromium ;
 - largeurs 390, 768, 1024 et 1440 px sans débordement horizontal ;
 - intégrations externes désactivées ;
-- syntaxe JavaScript validée.
+- syntaxe JavaScript validée ;
+- assets locaux, sans réseau ni stockage persistant actifs.
 
 ## 6. Développement suspendu
 
@@ -138,7 +152,8 @@ Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
 - le rapport fondateur démontre un cas où frictions et rotation contraignent fortement le net ;
 - des outils adjacents de suivi et de journalisation obtiennent des abonnements payants ;
 - la transparence des coûts demeure une préoccupation réglementaire et économique ;
-- un instrument technique de test est maintenant disponible.
+- un instrument technique de test est disponible ;
+- le protocole de première vague est préparé.
 
 ### Non validé
 
@@ -156,15 +171,16 @@ Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
 - branche de référence produit : `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3` ;
-- branche de préparation active : `strategy/cost-intelligence-launch-readiness` ;
+- pull request de préparation active : `#17`, branche `strategy/cost-intelligence-launch-readiness` ;
 - `main` reste inchangé et hors périmètre.
 
 ## 10. Prochaine exécution autorisée
 
-1. finaliser et fusionner les documents de préparation du test utilisateur ;
-2. vérifier les options actuelles d'hébergement statique au moment où un déploiement devient nécessaire ;
-3. demander à Ayman une validation unique avant toute publication externe ou dépense ;
-4. effectuer un test Safari/iPad avant diffusion plus large ;
-5. commencer par une première vague de cinq utilisateurs ;
-6. mettre à jour `MARKET_EVIDENCE.md` uniquement avec des comportements réellement observés ;
-7. ne reprendre aucune extension fonctionnelle avant les résultats du test.
+1. obtenir une exécution CI verte sur le head final de la pull request `#17` ;
+2. fusionner uniquement dans `breaktest-bootstrap` après revue ;
+3. vérifier les options actuelles d'hébergement statique au moment où un déploiement devient nécessaire ;
+4. présenter à Ayman une recommandation unique avant toute publication externe ou dépense ;
+5. effectuer un test Safari/iPad avant diffusion plus large ;
+6. commencer par une première vague de cinq utilisateurs ;
+7. mettre à jour `MARKET_EVIDENCE.md` uniquement avec des comportements réellement observés ;
+8. ne reprendre aucune extension fonctionnelle avant les résultats du test.
