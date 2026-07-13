@@ -1,292 +1,327 @@
-# Breaktest — plan de validation commerciale
+# Breaktest — plan de validation
 
-- Période externe prévue : 30 jours
-- Produit testé : Breaktest Capital Efficiency
-- Statut actuel : laboratoire interne validé techniquement, publication suspendue
-- Objectif : vérifier utilité décisionnelle, usage répété, demande d'import et paiement avant développement étendu
+- Produit actuellement testé : **Breaktest Capital Efficiency / Edge Survival**
+- Direction future validée : **Breaktest Cost Gate**
+- Statut : prototype interne ; publication, données externes et paiement suspendus
+- Principe : valider chaque couche séparément et permettre l'abandon
 
-## 1. Question décisive
+## 1. Question actuelle décisive
 
-> Des investisseurs autonomes trouvent-ils plus utile de connaître la part de leur avantage brut qui survit aux frictions et les contraintes économiques associées que de simplement connaître le montant des frais ?
+> Des investisseurs autonomes trouvent-ils plus utile de connaître le seuil brut, la part de leur avantage qui survit aux frictions et les contraintes économiques associées que de simplement connaître le montant des frais ?
 
-Le test ne vise pas à recueillir des compliments, des inscriptions gratuites ou des intentions abstraites.
+Le test ne vise pas les compliments, inscriptions gratuites ou intentions abstraites.
 
-## 2. Hypothèses à valider
+## 2. Hypothèses Capital Efficiency à valider
 
-1. La cible rencontre au moins mensuellement une décision liée aux frais, à la taille d'ordre, à la fréquence, au change ou à la performance nette.
-2. Le seuil brut de couverture est compris sans explication longue.
-3. Une partie de la cible peut fournir une hypothèse d'avantage brut ou une cible économique explicite.
-4. La part d'avantage conservée et la marge nette créent plus de valeur que le total des coûts.
-5. Les contraintes inverses répondent à une question réelle : taille frontière, fréquence sous budget ou brut requis.
-6. Le plancher variable permet d'identifier les cas qu'une taille supérieure ne peut pas résoudre.
-7. L'utilisateur distingue coûts observés, contractuels, estimés et hypothèses.
-8. Il revient réaliser une seconde analyse.
-9. Il demande un import de transactions ou un suivi automatique.
-10. Une fraction accepte une réservation payante ou un abonnement annuel faible.
-11. Le produit peut fonctionner avec peu de nettoyage ou de support manuel.
+1. La cible rencontre régulièrement une décision liée aux frais, à la taille, à la fréquence, au change ou à la performance nette.
+2. Le seuil brut est compris sans explication longue.
+3. Le plancher variable et le coût fixe diluable sont distingués.
+4. Une partie de la cible peut fournir une hypothèse brute ou une fourchette défendable.
+5. Marge nette, part conservée et contraintes inverses créent plus de valeur que le total des coûts.
+6. Les cas structurellement impossibles sont compris.
+7. L'utilisateur distingue donnée observée, contractuelle, estimée, hypothèse et démonstration synthétique.
+8. Une frontière mathématique n'est pas prise pour une recommandation.
+9. L'utilisateur revient réaliser une seconde analyse.
+10. Il demande import, suivi ou automatisation.
+11. Une fraction paie réellement.
+12. Le produit fonctionne avec peu de support manuel.
 
-## 3. Définition d'un utilisateur qualifié
+## 3. Utilisateur qualifié initial
 
-Un participant est qualifié s'il déclare au moins trois des caractéristiques suivantes :
+Un participant est qualifié s'il possède au moins trois caractéristiques :
 
-- capital investi supérieur ou égal à 2 000 EUR ;
+- capital investi d'au moins 2 000 EUR ;
 - au moins deux opérations ou versements par mois ;
-- investissement sur des actifs en devise étrangère ;
+- actifs en devise étrangère ;
 - plusieurs courtiers ou comptes ;
-- utilisation d'un tableur, journal ou outil de suivi ;
-- difficulté récente à comprendre les frais ou la performance nette ;
-- stratégie ou règle d'investissement avec une hypothèse de rendement brut ;
-- besoin récent de choisir une taille ou une fréquence d'exécution.
+- tableur, journal ou outil de suivi ;
+- difficulté récente avec frais ou performance nette ;
+- méthode ou règle d'investissement ;
+- besoin récent de choisir taille ou fréquence.
 
-Les personnes sans hypothèse d'avantage brut restent admissibles au mode seuil seul. Elles ne doivent pas être forcées à inventer une performance.
+Les personnes sans avantage brut utilisent le mode seuil. Elles ne doivent jamais inventer une performance.
 
-## 4. Phase interne avant publication
+## 4. Gate interne de la PR active
 
-### Objectif
+Avant toute critique externe :
 
-Vérifier que le laboratoire est assez utile et compréhensible pour mériter un test externe.
+- contrats Edge Survival et Edge Range réconciliés ;
+- égalités et tolérances cohérentes entre modes ;
+- capital et fréquence réellement facultatifs ;
+- résultat obsolète masqué après modification ;
+- aucune valeur synthétique préremplie comme donnée utilisateur ;
+- cas seuil exact distingué d'une marge positive ;
+- oracles Node et invariants verts ;
+- Chromium 390, 768, 1024 et 1440 px ;
+- clavier, focus, `aria-live`, mouvement réduit et absence de débordement ;
+- non-régressions H1–H2/C1–C4 et Q0 ;
+- fichiers canoniques et registre des angles morts synchronisés ;
+- package HTML hors ligne ultérieur non fabriqué prématurément.
 
-### Protocole
+Une CI verte prouve seulement les comportements testés.
+
+## 5. Revue interne de compréhension
 
 Présenter successivement :
 
-1. un scénario sans avantage brut ;
-2. la même situation avec avantage brut explicite ;
-3. une rétention cible atteignable ;
-4. une rétention structurellement impossible ;
-5. un budget annuel de friction.
+1. seuil seul ;
+2. point brut ;
+3. fourchette basse / centrale / haute ;
+4. rétention atteignable ;
+5. contrainte structurellement impossible ;
+6. budget annuel ;
+7. frontière dépassant potentiellement le capital disponible.
 
-### Preuves recherchées
+Gate sur cinq participants qualifiés :
 
-- l'utilisateur reformule correctement le seuil brut ;
-- il explique la différence entre coût fixe et plancher variable ;
-- il comprend que la part conservée peut être négative ;
-- il comprend qu'une frontière mathématique n'est pas une recommandation ;
-- il identifie au moins une sortie qui éclaire une décision réelle ;
-- il ne confond pas le scénario synthétique avec une observation de marché.
+- quatre comprennent le seuil ;
+- quatre comprennent la marge nette ;
+- trois identifient une contrainte utile ;
+- aucun ne croit que Breaktest prédit ou recommande ;
+- parcours principal inférieur à cinq minutes ;
+- aucun défaut bloquant.
 
-### Gate interne
+Ces seuils sont des règles internes, pas une preuve statistique.
 
-Le laboratoire peut devenir le prototype externe uniquement si, sur cinq revues internes qualifiées :
+## 6. Expérience externe Capital Efficiency — 30 jours
 
-- quatre participants sur cinq comprennent le seuil sans correction ;
-- quatre sur cinq comprennent la marge nette ;
-- au moins trois identifient une contrainte inverse utile ;
-- aucun ne croit que Breaktest prédit le rendement ou recommande une transaction ;
-- le parcours principal est terminé en moins de cinq minutes ;
-- aucun défaut bloquant de calcul, navigation ou lisibilité n'apparaît.
+### Jours 1 à 3
 
-Ces seuils sont des règles de décision internes, pas une preuve statistique de marché.
+- figer formules, langage et scénarios ;
+- vérifier Safari/iPad ;
+- préparer mesure minimale ;
+- aucune donnée financière détaillée dans l'analytics ;
+- revue juridique avant paiement.
 
-## 5. Expérience minimale externe
+### Jours 4 à 10
 
-### Page de validation
+- 100 premiers visiteurs qualifiés ;
+- mesurer seuil → Edge Survival ;
+- observer abandons ;
+- interroger seulement après usage réel ;
+- corriger uniquement compréhension et fonctionnement.
 
-La page devra proposer :
+### Jours 11 à 20
 
-- une promesse claire autour de la survie de l'avantage ;
-- un mode seuil sans avantage brut ;
-- un mode Edge Survival avec avantage explicite ;
-- les contraintes inverses conditionnelles ;
-- une démonstration synthétique clairement identifiée ;
-- un rapport partageable ;
-- une mention explicite : outil d'information, pas conseil en investissement.
+- mesurer seconde analyse ;
+- recueillir demandes d'import ;
+- tester l'intérêt pour historique et Evidence Ledger ;
+- ne pas construire l'import complet.
 
-### Paramètres demandés
+### Jours 21 à 30
 
-- capital facultatif ;
-- taille moyenne d'ordre ;
-- nombre d'opérations mensuelles ;
-- achat simple ou aller-retour ;
-- commission par côté ;
-- frais de change ;
-- spread et slippage comme hypothèses ;
-- avantage brut hypothétique facultatif ;
-- part cible d'avantage conservé facultative ;
-- budget annuel de friction facultatif ;
-- marge nette cible facultative.
+Après validation explicite seulement :
 
-### Résultats
+- réservation faible et remboursable ;
+- produit futur clairement indiqué ;
+- objections et remboursements conservés ;
+- décision continuer, modifier ou abandonner.
 
-Toujours :
+## 7. Mesures Capital Efficiency
 
-- seuil brut de couverture ;
-- plancher variable ;
-- coût fixe et coût variable ;
-- coût annuel arithmétique ;
-- sensibilité à la taille.
+- analyse seuil commencée et terminée ;
+- passage volontaire au point ou à la fourchette ;
+- contrainte inverse consultée ;
+- cas structurellement impossible consulté ;
+- rapport partagé ;
+- seconde analyse ;
+- demande d'import ;
+- réservation payée ;
+- remboursement ;
+- compréhension correcte du résultat ;
+- décision réelle éclairée ;
+- support manuel nécessaire.
 
-Lorsque l'avantage brut est fourni :
-
-- marge nette ;
-- part absorbée ;
-- part conservée ;
-- frontière de taille pour une marge positive ;
-- frontière de taille pour une rétention cible ;
-- impossibilité structurelle explicite.
-
-Lorsque les conditions sont fournies :
-
-- fréquence frontière sous budget ;
-- brut requis pour une marge nette cible.
-
-Aucune recommandation sur un actif, un courtier, une taille ou une fréquence ne doit être générée.
-
-## 6. Calendrier externe envisagé
-
-### Jours 1 à 3 — préparation
-
-- figer le message et les calculs ;
-- corriger uniquement les défauts issus de la critique interne ;
-- préparer cinq scénarios de démonstration ;
-- préparer la mesure d'événements minimale ;
-- vérifier le langage réglementaire ;
-- vérifier Safari/iPad.
-
-### Jours 4 à 10 — premiers utilisateurs
-
-- diffuser auprès de communautés qualifiées ;
-- obtenir 100 visiteurs qualifiés ;
-- mesurer le passage du seuil seul au mode Edge Survival ;
-- observer les abandons ;
-- interroger seulement les personnes ayant terminé une analyse ;
-- ne corriger que les blocages de compréhension ou de fonctionnement.
-
-### Jours 11 à 20 — récurrence et import
-
-- proposer de sauvegarder localement ou de partager le résultat selon une conception approuvée ;
-- inviter à une seconde analyse sans promesse commerciale ;
-- recueillir des demandes d'import et des formats représentatifs ;
-- mesurer si les utilisateurs reviennent pour un nouveau scénario ;
-- tester l'intérêt pour une vue historique.
-
-### Jours 21 à 30 — paiement
-
-Uniquement après revue juridique et décision explicite :
-
-- tester une réservation faible et remboursable ;
-- afficher clairement que le produit complet n'est pas encore disponible ;
-- documenter les objections ;
-- traiter les remboursements sans friction ;
-- décider continuer, modifier ou abandonner.
-
-## 7. Événements à mesurer
-
-- `landing_view` ;
-- `threshold_mode_start` ;
-- `threshold_mode_complete` ;
-- `edge_mode_start` ;
-- `edge_mode_complete` ;
-- `inverse_constraint_view` ;
-- `structurally_unreachable_view` ;
-- `sensitivity_view` ;
-- `report_share` ;
-- `return_visit` ;
-- `import_request` ;
-- `founder_pass_click` ;
-- `founder_pass_paid` ;
-- `refund_request`.
-
-Aucune donnée financière détaillée ne doit être envoyée à un outil d'analytics. Les événements doivent rester agrégés et minimisés.
-
-## 8. Seuils externes
+## 8. Seuils externes initiaux
 
 ### Gate positif
 
-À la fin des 30 jours :
+Après 30 jours :
 
 - 300 visiteurs qualifiés ;
 - 100 analyses complètes ;
-- au moins 40 passages volontaires au mode Edge Survival ;
-- 20 utilisateurs ayant réalisé une seconde analyse ;
+- 40 passages volontaires à Edge Survival ;
+- 20 secondes analyses ;
 - 10 rapports partagés ;
 - 10 réservations ou précommandes payées ;
-- au moins cinq demandes spontanées d'import ou de suivi automatique ;
-- moins de 20 % des cas nécessitant une intervention manuelle ;
-- au moins 60 % des utilisateurs interrogés pouvant reformuler correctement le résultat principal.
+- cinq demandes spontanées d'import ou suivi ;
+- moins de 20 % de cas nécessitant intervention manuelle ;
+- 60 % des personnes interrogées reformulant correctement le résultat.
 
 ### Signal intermédiaire
 
-Le produit peut être poursuivi avec modification si :
+Poursuite avec modification si :
 
 - au moins cinq paiements ;
-- forte demande d'import ;
+- demande d'import forte ;
 - seconde utilisation significative ;
-- valeur forte des contraintes inverses, même si l'avantage brut est rarement saisi ;
-- le faible paiement provient principalement d'un problème de confiance ou de distribution identifiable.
+- contraintes utiles même si G est rarement saisi ;
+- problème de confiance ou distribution identifiable.
 
 ### Gate négatif
 
-Abandon ou pivot si, après trafic réellement qualifié :
+Abandon ou pivot si :
 
 - moins de cinq paiements après 500 visiteurs qualifiés ;
 - moins de 10 % reviennent ;
-- la majorité ne peut pas fournir d'avantage brut ni de contrainte utile ;
-- les contraintes inverses ne modifient aucune décision réelle ;
-- presque aucun utilisateur ne demande import ou suivi ;
-- les économies ou informations produites sont généralement inférieures au prix ;
-- la majorité recherche uniquement une recommandation de courtier ou d'actif ;
-- l'acquisition nécessite exclusivement de la publicité payante ;
-- le maintien des tarifs ou imports exige un travail humain non scalable.
+- G ou une autre contrainte utile est rarement disponible ;
+- les résultats ne modifient aucun raisonnement réel ;
+- presque aucune demande d'import ;
+- valeur généralement inférieure au prix ;
+- utilisateurs recherchant surtout conseil ou sélection ;
+- acquisition uniquement payante ;
+- maintenance humaine non scalable.
 
 ## 9. Questions post-usage
 
-Les questions sont posées après une utilisation réelle :
-
-1. Quelle décision concrète essayais-tu de prendre ?
+1. Quelle décision essayais-tu de prendre ?
 2. Quel résultat as-tu compris en premier ?
-3. Que signifie pour toi le seuil brut nécessaire ?
-4. L'avantage brut saisi venait-il d'une mesure, d'un backtest ou d'une intuition ?
-5. Une contrainte calculée a-t-elle changé ton raisonnement ?
-6. Comment faisais-tu ce calcul auparavant ?
-7. Dans quel délai referais-tu cette analyse ?
-8. Qu'attendrais-tu d'un import automatique ?
-9. Qu'est-ce qui t'empêcherait de payer un prix annuel faible ?
-10. Le résultat t'a-t-il fait économiser du temps ou identifier une friction supérieure au prix du produit ?
+3. Que signifie le seuil brut ?
+4. D'où venait l'avantage brut ou la fourchette ?
+5. Une contrainte a-t-elle changé ton raisonnement ?
+6. Comment faisais-tu auparavant ?
+7. Quand referais-tu l'analyse ?
+8. Qu'attendrais-tu d'un import ?
+9. Qu'est-ce qui empêcherait de payer ?
+10. Quelle information était inutile ou trompeuse ?
 
-Ne pas demander « aimerais-tu ce produit ? » comme preuve de demande.
+Ne jamais demander seulement « aimerais-tu ce produit ? ».
 
-## 10. Garde-fous
+## 10. Direction Cost Gate : validation séparée
 
-- Ne pas modifier les calculs pour produire un résultat plus spectaculaire.
-- Ne pas inventer un avantage brut ou un coût implicite.
-- Préférer une plage ou une sensibilité à une fausse précision.
-- Ne pas collecter d'identifiants de compte ou de données inutiles.
-- Ne pas acheter de trafic avant d'avoir vérifié l'activation organique.
-- Ne pas construire l'import complet avant demandes réelles et fichiers représentatifs.
-- Ne pas utiliser de faux avis, compteurs ou économies.
-- Ne pas présenter une réservation comme un produit déjà disponible.
-- Ne pas présenter une frontière mathématique comme une prescription.
+La validation stratégique du 14 juillet 2026 n'autorise pas l'implémentation immédiate. Cost Gate suit des gates distincts.
 
-## 11. Décisions après le test
+### CG0 — noyau
 
-### Continuer
+- Edge Survival stabilisé ;
+- utilité actuelle observée ;
+- package hors ligne testé ;
+- absence de confusion avec une recommandation.
 
-Construire le Cost Tracker minimal et prioriser les formats réellement reçus.
+### CG1 — problème pré-trade
 
-### Modifier
+Vérifier auprès d'utilisateurs qualifiés :
 
-- seuil compris mais avantage brut rarement disponible : centrer le produit sur les contraintes de couverture et le suivi ex post ;
-- contraintes inverses utiles mais peu de récurrence : produit ponctuel ou widget à tester ;
-- forte demande d'import : prioriser les parseurs ;
-- forte demande de comparaison : base de barèmes et neutralité ;
-- demande de conseil : maintenir la frontière réglementaire ;
-- intérêt gratuit mais peu de paiement : tester distribution ou B2B sans construire prématurément.
+- fréquence réelle des analyses avant ordre ;
+- décisions où coûts, capital libre ou liquidité posent problème ;
+- outils utilisés aujourd'hui ;
+- coût d'une erreur ;
+- acceptation d'une saisie manuelle ;
+- réaction à un résultat `insufficient_data`.
 
-### Abandonner
+Kill criteria : problème rare, usage uniquement curieux ou saisie plus coûteuse que la décision.
 
-Conserver le moteur, les contrats et les preuves techniques, puis réévaluer un autre problème si les critères négatifs sont atteints.
+### CG2 — prototype synthétique manuel
 
-## 12. Développement autorisé avant le test externe
+Sans réseau ni donnée réelle :
+
+- scénario de trade manuel ;
+- cash libre et nominal réservé ;
+- point ou fourchette brute ;
+- hypothèses synthétiques de liquidité ;
+- états non prescriptifs ;
+- Data Quality Gate simulé et identifié.
+
+Mesurer :
+
+- compréhension ;
+- facteur limitant correctement identifié ;
+- absence de faux feu vert ;
+- modification volontaire d'un scénario ;
+- répétition d'usage.
+
+### CG3 — faisabilité du capital
+
+Avant toute donnée externe :
+
+- capital de référence, capital de stratégie, cash disponible et nominal réservé séparés ;
+- positions simultanées ;
+- aucun levier implicite ;
+- réutilisation des invariants C1/C4 ;
+- cas de concurrence du capital ;
+- validation utilisateur de l'utilité.
+
+### CG4 — Data Quality Gate
+
+Pour chaque source potentielle :
+
+- source et licence ;
+- timestamp, fraîcheur et fuseau ;
+- instrument, place et devise ;
+- couverture et valeurs manquantes ;
+- cohérence inter-sources ;
+- fallback et kill switch ;
+- coût par utilisateur ;
+- sécurité et confidentialité.
+
+Aucune conclusion dépendante d'une donnée externe sans état `data_ready`.
+
+### CG5 — source externe limitée
+
+Après décision explicite d'Ayman :
+
+- une seule source ;
+- univers restreint ;
+- aucune exécution ;
+- comparaison hypothèse utilisateur / donnée observée ;
+- mesure des données stale et indisponibles ;
+- aucune promesse de précision générale.
+
+### CG6 — juridique et commercial
+
+Avant vocabulaire ou action prescriptive :
+
+- revue information / recommandation ;
+- responsabilité et communication d'erreur ;
+- conditions d'utilisation ;
+- conflits d'intérêts ;
+- volonté de payer ;
+- coût des données et support ;
+- taux de faux blocage et faux sentiment de sécurité.
+
+### CG7 — intégration ou exécution
+
+Hors périmètre. Exige une décision stratégique, juridique, technique et économique distincte.
+
+## 11. Mesures futures Cost Gate
+
+À activer seulement au gate correspondant :
+
+- usage volontaire avant une opération ;
+- délai analyse → décision ;
+- réutilisation pré-trade ;
+- proportion `insufficient_data` ;
+- proportion de données stale ;
+- changement de nominal, timing ou type d'ordre sans qualifier ce changement de bon ;
+- abandon causé par la saisie ;
+- confusion avec une recommandation ;
+- coût de données par utilisateur actif ;
+- incident ou correction de diagnostic ;
+- volonté de payer spécifique au contrôle pré-trade.
+
+## 12. Garde-fous permanents
+
+- Ne pas modifier les calculs pour produire un résultat spectaculaire.
+- Ne pas inventer avantage, coût ou donnée de marché.
+- Préférer sensibilité et indisponibilité à la fausse précision.
+- Ne pas collecter de données inutiles.
+- Ne pas acheter de données avant demande et économie démontrées.
+- Ne pas construire l'import ou la connexion courtier prématurément.
+- Ne pas utiliser de faux avis, économies ou rareté.
+- Ne pas présenter une frontière ou un état comme prescription.
+- Ne pas appeler Cost Gate commercialement validé.
+- Le test doit pouvoir conclure à l'abandon.
+
+## 13. Développement autorisé actuellement
 
 Uniquement :
 
-- correction de bugs ;
-- amélioration de compréhension directement liée au protocole ;
-- scénarios synthétiques ;
-- tests ;
-- export méthodologique local ;
-- préparation de la revue interne ;
-- vérification Safari/iPad.
+- correction des défauts de la PR #23 ;
+- tests, oracles et revue hostile ;
+- synchronisation documentaire ;
+- scénarios synthétiques indispensables ;
+- préparation du protocole utilisateur ;
+- package HTML hors ligne après stabilisation ;
+- définition conceptuelle de Cost Gate et de ses gates.
 
-Restent interdits sans nouvelle décision : import réel, compte, stockage persistant, analytics actif, email, paiement, données de courtier, affiliation, API, conseil et exécution.
+Restent interdits : données externes, import réel, compte, stockage, réseau applicatif, analytics actif, email, paiement, connexion courtier, recommandation, ordre limite conseillé, transmission et exécution.
