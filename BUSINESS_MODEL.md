@@ -1,88 +1,162 @@
 # Breaktest — modèle économique
 
 - Statut : hypothèses à tester
-- Direction : Breaktest Cost Intelligence
-- Date : 13 juillet 2026
+- Direction : Breaktest Capital Efficiency
+- Date initiale : 13 juillet 2026
+- Dernier raffinement : 13 juillet 2026
 
 ## 1. Principe
 
-Le calculateur gratuit acquiert et qualifie les utilisateurs. Le suivi annuel des coûts, les imports et l'historique constituent le premier produit payant. Les revenus de plateforme, de données et d'API sont des options ultérieures, non des hypothèses nécessaires à la première validation.
+Le produit gratuit doit acquérir et qualifier les utilisateurs en révélant une contrainte économique utile, pas seulement en additionnant des frais.
 
-Le produit ne doit pas devenir une friction supérieure aux coûts qu'il aide à comprendre.
+La séquence économique envisagée devient :
 
-## 2. Segments
+1. seuil brut et plancher variable gratuits ;
+2. Edge Survival et contraintes inverses pour démontrer la valeur ;
+3. suivi réel des coûts et de la marge après import ;
+4. historique, réconciliation et Evidence Ledger comme premier produit payant ;
+5. benchmarks, données, API et partenariats uniquement après volume et conformité.
+
+Le produit ne doit pas devenir une friction supérieure aux coûts ou aux erreurs de décision qu'il aide à comprendre.
+
+## 2. Unité de valeur
+
+L'unité de valeur n'est plus « un calcul de frais ».
+
+Elle est :
+
+> une contrainte économique nouvelle, compréhensible et vérifiable, montrant ce qui doit être vrai pour qu'un avantage brut subsiste après friction.
+
+Exemples :
+
+- seuil brut de couverture ;
+- part d'avantage absorbée et conservée ;
+- marge nette en taux et euros ;
+- taille frontière conditionnelle ;
+- cas structurellement impossible ;
+- fréquence frontière sous budget ;
+- écart entre coût attendu et coût observé, après import futur.
+
+Une sortie n'a de valeur commerciale que si elle éclaire une décision, évite un calcul manuel, révèle un coût supérieur au prix du produit ou justifie un suivi répété.
+
+## 3. Segments
 
 | Segment | Besoin | Offre envisagée | Rôle économique |
 |---|---|---|---|
-| Capital inférieur à 2 000 EUR | Comprendre l'effet des petits ordres | Calculateur gratuit | Acquisition et éducation |
-| Investisseur autonome, 2 000 à 50 000 EUR | Suivre et réduire le cost drag | Pro annuel | Cœur payant initial |
-| Trader actif ou multi-comptes | Imports, ventilation et comparaisons avancées | Active annuel | Panier moyen supérieur |
-| Créateur ou communauté | Widget et rapports pédagogiques | Partenaire | Distribution |
-| Média, fintech ou courtier | Calculateur, benchmark ou API | B2B plus tard | Expansion |
+| Capital inférieur à 2 000 EUR | Comprendre le seuil imposé par les petits ordres | Seuil et démonstrations gratuits | Acquisition et éducation |
+| Investisseur autonome, 2 000 à 50 000 EUR | Savoir si son avantage brut survit et suivre sa marge nette | Capital Efficiency Pro | Cœur payant initial |
+| Trader actif ou multi-comptes | Import, réconciliation, budgets et comparaisons | Active annuel | Panier moyen supérieur |
+| Créateur, enseignant ou communauté | Simulations et rapports pédagogiques auditables | Widget ou licence partenaire | Distribution |
+| Média, fintech ou courtier | Calculs inverses, preuves et benchmarks | API/B2B plus tard | Expansion |
 
-## 3. Offres à tester
+Le cœur payant initial doit avoir :
 
-### Gratuit
+- un capital et une fréquence suffisants pour que l'information puisse valoir davantage que le prix ;
+- une méthode répétable ou un historique exploitable ;
+- un besoin de suivi, pas seulement une curiosité ponctuelle.
 
-- une simulation pré-transaction ;
-- comparaison de trois tailles ou fréquences ;
-- résultats en euros et pourcentage ;
-- rapport partageable ;
+## 4. Offres à tester
+
+### Gratuit — Threshold Mode
+
+- seuil brut de couverture ;
+- plancher variable ;
+- séparation coût fixe / coût variable ;
+- coût en euros et points de base ;
+- sensibilité à la taille ;
+- démonstrations synthétiques ;
 - aucun compte obligatoire au premier usage.
 
-### Founder Pass — test initial
+### Gratuit ou essai — Edge Survival
 
-- réservation payante de **9 EUR**, remboursable selon les conditions affichées ;
-- conversion en première année Pro à **39 EUR** lors de l'ouverture de la bêta ;
-- le solde n'est exigé qu'à la mise à disposition du produit annoncé ;
-- nombre limité de places pour éviter une promesse de livraison disproportionnée.
+Hypothèse à tester avant toute tarification :
 
-Cette construction est une hypothèse destinée à obtenir une preuve monétaire à faible friction. Les modalités de paiement, remboursement, TVA et information du consommateur doivent être vérifiées avant activation.
+- avantage brut explicitement fourni ;
+- marge nette ;
+- part absorbée et conservée ;
+- une contrainte inverse ;
+- impossibilité structurelle ;
+- rapport méthodologique local.
+
+Le but de cette couche est de démontrer une valeur supérieure au calculateur Q0. Son statut gratuit ou limité doit être décidé après observation de l'usage, pas par intuition.
+
+### Founder Pass — hypothèse de test ultérieure
+
+Uniquement après revue juridique et validation interne :
+
+- réservation payante faible, hypothèse actuelle **9 EUR** ;
+- remboursable selon des conditions explicites ;
+- conversion éventuelle en première année Pro à **39 EUR** ;
+- aucun solde exigé avant disponibilité du produit annoncé ;
+- nombre de places limité par la capacité réelle de livraison, jamais par fausse rareté.
+
+Ces prix ne sont pas validés. Aucun paiement n'est actuellement activé.
 
 ### Pro — prix cible après validation
 
-**49 à 59 EUR par an**, à tester.
+Hypothèse actuelle : **49 à 79 EUR par an**, à tester.
 
-- imports ;
-- historique mensuel ;
-- ventilation des coûts ;
+Valeur attendue :
+
+- import d'au moins un format réellement demandé ;
+- réconciliation brut/net ;
+- suivi mensuel de la marge et de la part absorbée ;
+- Evidence Ledger : source, formule, version et limites ;
+- budgets de friction ;
 - plusieurs scénarios ;
 - export ;
 - suivi multidevise ;
-- alertes de dégradation non prescriptives.
+- alertes descriptives de dérive, sans recommandation.
+
+Le haut de la fourchette ne devient défendable que si la valeur dépasse clairement le calcul gratuit et réduit du travail ou une perte mesurable.
 
 ### Active — plus tard
 
-**99 à 149 EUR par an**, uniquement après preuve de demande.
+Hypothèse : **99 à 199 EUR par an**, uniquement après preuve de demande.
 
 - plusieurs comptes ;
 - volumes plus importants ;
 - analyses d'exécution ;
-- règles et catégories personnalisées ;
-- rapports avancés.
+- budgets et règles personnalisés ;
+- plages d'incertitude ;
+- rapports avancés ;
+- comparaison de périodes et méthodes.
 
-## 4. Pourquoi une tarification annuelle
+## 5. Pourquoi une tarification annuelle
 
-- le problème peut ne pas justifier un paiement mensuel visible ;
+- le problème peut ne pas justifier un prélèvement mensuel visible ;
 - le prix annuel limite le sentiment d'ajouter une nouvelle friction ;
-- le suivi peut être mensuel sans nécessiter une décision de paiement chaque mois ;
-- la comparaison avec les outils adjacents reste favorable, sans chercher à gagner uniquement par le prix.
+- le suivi peut être mensuel sans renouvellement de décision chaque mois ;
+- un historique annuel et des comparaisons de périodes soutiennent mieux la rétention ;
+- la fréquence de paiement doit rester cohérente avec la fréquence de valeur observée.
 
-Sharesight facture actuellement de 7 à 23,25 USD par mois en facturation annuelle selon le plan. TradeZella affiche notamment 29 et 49 USD par mois. Ces repères démontrent des budgets adjacents, pas le prix acceptable pour Breaktest.
+La tarification annuelle n'est retenue que si les utilisateurs reviennent réellement. Une utilisation ponctuelle appellerait un autre modèle.
 
-## 5. Économie initiale — hypothèses
+## 6. Test de valeur avant prix
+
+Avant de tester un abonnement, Breaktest doit vérifier :
+
+1. l'utilisateur comprend le seuil brut ;
+2. la part conservée ou une contrainte inverse révèle une information nouvelle ;
+3. cette information éclaire une décision réelle ;
+4. l'utilisateur souhaite répéter l'analyse ou importer un historique ;
+5. la valeur économique ou le temps économisé dépasse le prix envisagé.
+
+Aucun prix ne doit être interprété comme validé tant qu'un paiement réel et un usage réel ne coexistent pas.
+
+## 7. Économie initiale — scénarios hypothétiques
 
 | Niveau | Hypothèse | Revenu annuel brut |
 |---|---|---:|
 | Première preuve | 25 clients à 39 EUR | 975 EUR |
-| Signal initial | 250 clients à 49 EUR | 12 250 EUR |
-| Base de recrutement prudente | 2 000 clients à 59 EUR | 118 000 EUR |
-| SaaS de niche | 20 000 clients à 69 EUR | 1 380 000 EUR |
-| Plateforme européenne | 200 000 clients à 69 EUR | 13 800 000 EUR |
+| Signal initial | 250 clients à 59 EUR | 14 750 EUR |
+| Base de recrutement prudente | 2 000 clients à 69 EUR | 138 000 EUR |
+| SaaS de niche | 20 000 clients à 79 EUR | 1 580 000 EUR |
+| Plateforme européenne | 200 000 clients à 79 EUR | 15 800 000 EUR |
 
-Ces scénarios excluent TVA, remboursements, frais de paiement, support, acquisition, données et salaires. Ils ne constituent pas des prévisions.
+Ces scénarios excluent TVA, remboursements, frais de paiement, support, acquisition, données, sécurité et salaires. Ils ne constituent pas des prévisions.
 
-## 6. Structure de coûts probable
+## 8. Structure de coûts probable
 
 ### Faibles au départ
 
@@ -90,21 +164,23 @@ Ces scénarios excluent TVA, remboursements, frais de paiement, support, acquisi
 - hébergement statique ;
 - développement assisté par IA ;
 - absence de données temps réel payantes ;
-- peu ou pas de stockage de données financières.
+- peu ou pas de stockage de données financières ;
+- moteur déterministe sans dépendances lourdes.
 
 ### Risques de coûts élevés
 
 - maintien des barèmes de courtiers ;
 - parseurs de relevés hétérogènes ;
-- support d'import ;
+- nettoyage et support d'import ;
 - sécurité et conformité ;
 - données de spread ou d'exécution ;
 - acquisition payante ;
-- remboursement et administration des abonnements.
+- remboursement et administration des abonnements ;
+- expertise humaine pour les cas non standardisables.
 
-Hypothèse de marge brute logicielle à terme : élevée, potentiellement supérieure à 80 %, uniquement si la majorité des imports et mises à jour est automatisée. Cette marge n'est pas validée.
+Hypothèse de marge brute logicielle à terme : potentiellement élevée, uniquement si la majorité des imports, mises à jour et diagnostics est automatisée. Cette marge n'est pas validée.
 
-## 7. Sources de revenus ultérieures
+## 9. Sources de revenus ultérieures
 
 ### Affiliation
 
@@ -117,10 +193,12 @@ Autorisation uniquement si :
 
 ### API et widgets
 
-- calculateur de cost drag ;
-- seuil de couverture des frais ;
-- comparaison de scénarios ;
-- décomposition des coûts ;
+- seuil de couverture ;
+- plancher variable ;
+- Edge Survival ;
+- contraintes inverses ;
+- budgets de friction ;
+- décomposition et provenance ;
 - rapports intégrables.
 
 ### Données et benchmarks
@@ -129,47 +207,54 @@ Uniquement avec consentement, anonymisation robuste, volume suffisant et conseil
 
 - coût effectif par taille d'ordre ;
 - écarts de change ;
-- slippage ;
+- slippage par benchmark nommé ;
 - comparaison annoncé/observé ;
-- benchmarks par marché et courtier.
+- distribution de la part d'avantage absorbée ;
+- benchmarks par marché, courtier et segment.
 
 ### Marketplace ou flux transactionnels
 
-Hors périmètre initial. Ces activités pourraient créer des revenus importants, mais elles augmentent fortement le risque réglementaire, les conflits d'intérêts et les besoins en capital.
+Hors périmètre initial. Ces activités pourraient créer des revenus importants, mais augmentent fortement le risque réglementaire, les conflits d'intérêts et les besoins en capital.
 
-## 8. Chemin vers une grande entreprise
+## 10. Chemin vers une grande entreprise
 
-Un abonnement grand public seul possède un plafond exigeant : à 50 EUR par an, un milliard de revenu demanderait 20 millions de clients payants.
-
-Le scénario de grande valeur nécessite une combinaison :
+Un abonnement grand public seul possède un plafond exigeant. Le scénario de grande valeur nécessite une combinaison :
 
 1. audience grand public ;
-2. données et benchmarks ;
-3. API intégrée ;
-4. distribution par partenaires ;
-5. marketplace ou infrastructure transactionnelle légalement encadrée.
+2. historique et rétention ;
+3. données consenties et benchmarks ;
+4. API intégrée ;
+5. distribution par partenaires ;
+6. éventuellement marketplace ou infrastructure transactionnelle légalement encadrée.
 
-Ce chemin est structurellement possible mais extrêmement improbable. Il ne doit pas influencer les décisions des trente premiers jours, qui portent uniquement sur problème, usage répété et paiement.
+Le moteur Capital Efficiency peut devenir une brique distribuable, mais cela reste une option extrêmement incertaine. Cette perspective ne justifie aucune construction prématurée.
 
-## 9. Règles de décision
+## 11. Règles de décision
 
 - Ne pas augmenter le prix avant d'avoir livré une valeur mesurée.
-- Ne pas ajouter une offre B2B avant cinq usages récurrents comparables.
-- Ne pas acheter de données avant que des utilisateurs en demandent explicitement l'usage.
-- Ne pas construire de connexion courtier avant une demande répétée et un modèle de sécurité.
+- Ne pas ajouter une offre B2B avant usages récurrents comparables.
+- Ne pas acheter de données avant demande explicite.
+- Ne pas construire de connexion courtier avant demande répétée et modèle de sécurité.
 - Ne pas activer l'affiliation avant une politique de neutralité publique.
-- Suspendre le modèle payant si le produit fait économiser moins que son prix à la majorité de la cible.
+- Suspendre le modèle payant si l'information produite vaut généralement moins que son prix.
+- Pénaliser toute offre exigeant un support humain non scalable.
+- Préférer un produit ponctuel si l'usage répété n'existe pas, plutôt que fabriquer artificiellement un abonnement.
 
-## 10. Indicateurs économiques de validation
+## 12. Indicateurs économiques de validation
 
-- conversion visiteur qualifié → simulation ;
-- simulation → sauvegarde ou email ;
-- simulation → réservation payante ;
-- coût d'acquisition organique et payé ;
+- conversion utilisateur qualifié → analyse complète ;
+- passage du mode seuil au mode Edge Survival ;
+- consultation d'une contrainte inverse ;
 - seconde analyse à 30 jours ;
+- demande d'import ;
+- analyse → réservation payante ;
+- coût d'acquisition organique et payé ;
 - coût manuel par import ;
 - remboursements ;
 - revenu annuel par utilisateur ;
-- économies ou coûts identifiés par rapport au prix payé.
+- valeur ou temps économisé par rapport au prix payé ;
+- proportion d'utilisateurs dont le résultat éclaire une décision réelle.
 
-La métrique initiale principale est : **nombre d'utilisateurs qualifiés qui reviennent et paient pour suivre leur cost drag**, pas le nombre total de visiteurs.
+La métrique initiale principale devient :
+
+> nombre d'utilisateurs qualifiés qui comprennent une contrainte économique nouvelle, reviennent et paient pour suivre leur Capital Efficiency.

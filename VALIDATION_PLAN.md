@@ -1,136 +1,209 @@
 # Breaktest — plan de validation commerciale
 
-- Période : 30 jours
-- Produit testé : Breaktest Cost Intelligence
-- Objectif : vérifier problème, usage répété, import et paiement avant développement étendu
+- Période externe prévue : 30 jours
+- Produit testé : Breaktest Capital Efficiency
+- Statut actuel : laboratoire interne validé techniquement, publication suspendue
+- Objectif : vérifier utilité décisionnelle, usage répété, demande d'import et paiement avant développement étendu
 
 ## 1. Question décisive
 
-> Des investisseurs autonomes reviennent-ils utiliser une analyse de coûts, demandent-ils un suivi de leurs transactions et acceptent-ils de payer un prix annuel faible pour cette valeur ?
+> Des investisseurs autonomes trouvent-ils plus utile de connaître la part de leur avantage brut qui survit aux frictions et les contraintes économiques associées que de simplement connaître le montant des frais ?
 
-Le test ne vise pas à recueillir des compliments, des inscriptions gratuites ou des préférences déclarées.
+Le test ne vise pas à recueillir des compliments, des inscriptions gratuites ou des intentions abstraites.
 
 ## 2. Hypothèses à valider
 
-1. La cible rencontre au moins mensuellement une décision liée aux frais, à la taille d'ordre, à la fréquence ou au change.
-2. Une simulation personnalisée est plus utile qu'une grille tarifaire générique.
-3. L'utilisateur comprend la distinction entre coûts observés, contractuels et estimés.
-4. Il revient réaliser une seconde simulation.
-5. Il demande un import de transactions ou un suivi automatique.
-6. Une fraction accepte une réservation payante de 9 EUR ou une précommande annuelle de 39 EUR.
-7. Le produit peut fonctionner avec peu de nettoyage ou de support manuel.
+1. La cible rencontre au moins mensuellement une décision liée aux frais, à la taille d'ordre, à la fréquence, au change ou à la performance nette.
+2. Le seuil brut de couverture est compris sans explication longue.
+3. Une partie de la cible peut fournir une hypothèse d'avantage brut ou une cible économique explicite.
+4. La part d'avantage conservée et la marge nette créent plus de valeur que le total des coûts.
+5. Les contraintes inverses répondent à une question réelle : taille frontière, fréquence sous budget ou brut requis.
+6. Le plancher variable permet d'identifier les cas qu'une taille supérieure ne peut pas résoudre.
+7. L'utilisateur distingue coûts observés, contractuels, estimés et hypothèses.
+8. Il revient réaliser une seconde analyse.
+9. Il demande un import de transactions ou un suivi automatique.
+10. Une fraction accepte une réservation payante ou un abonnement annuel faible.
+11. Le produit peut fonctionner avec peu de nettoyage ou de support manuel.
 
 ## 3. Définition d'un utilisateur qualifié
 
-Un visiteur est qualifié s'il déclare au moins trois des caractéristiques suivantes :
+Un participant est qualifié s'il déclare au moins trois des caractéristiques suivantes :
 
 - capital investi supérieur ou égal à 2 000 EUR ;
 - au moins deux opérations ou versements par mois ;
 - investissement sur des actifs en devise étrangère ;
 - plusieurs courtiers ou comptes ;
 - utilisation d'un tableur, journal ou outil de suivi ;
-- difficulté récente à comprendre les frais ou la performance nette.
+- difficulté récente à comprendre les frais ou la performance nette ;
+- stratégie ou règle d'investissement avec une hypothèse de rendement brut ;
+- besoin récent de choisir une taille ou une fréquence d'exécution.
 
-## 4. Expérience minimale
+Les personnes sans hypothèse d'avantage brut restent admissibles au mode seuil seul. Elles ne doivent pas être forcées à inventer une performance.
+
+## 4. Phase interne avant publication
+
+### Objectif
+
+Vérifier que le laboratoire est assez utile et compréhensible pour mériter un test externe.
+
+### Protocole
+
+Présenter successivement :
+
+1. un scénario sans avantage brut ;
+2. la même situation avec avantage brut explicite ;
+3. une rétention cible atteignable ;
+4. une rétention structurellement impossible ;
+5. un budget annuel de friction.
+
+### Preuves recherchées
+
+- l'utilisateur reformule correctement le seuil brut ;
+- il explique la différence entre coût fixe et plancher variable ;
+- il comprend que la part conservée peut être négative ;
+- il comprend qu'une frontière mathématique n'est pas une recommandation ;
+- il identifie au moins une sortie qui éclaire une décision réelle ;
+- il ne confond pas le scénario synthétique avec une observation de marché.
+
+### Gate interne
+
+Le laboratoire peut devenir le prototype externe uniquement si, sur cinq revues internes qualifiées :
+
+- quatre participants sur cinq comprennent le seuil sans correction ;
+- quatre sur cinq comprennent la marge nette ;
+- au moins trois identifient une contrainte inverse utile ;
+- aucun ne croit que Breaktest prédit le rendement ou recommande une transaction ;
+- le parcours principal est terminé en moins de cinq minutes ;
+- aucun défaut bloquant de calcul, navigation ou lisibilité n'apparaît.
+
+Ces seuils sont des règles de décision internes, pas une preuve statistique de marché.
+
+## 5. Expérience minimale externe
 
 ### Page de validation
 
-La page doit proposer :
+La page devra proposer :
 
-- une promesse claire ;
-- une simulation sans compte ;
-- un résultat immédiatement lisible ;
-- un comparatif de trois tailles ou fréquences ;
+- une promesse claire autour de la survie de l'avantage ;
+- un mode seuil sans avantage brut ;
+- un mode Edge Survival avec avantage explicite ;
+- les contraintes inverses conditionnelles ;
+- une démonstration synthétique clairement identifiée ;
 - un rapport partageable ;
-- un appel à réserver le Founder Pass ;
 - une mention explicite : outil d'information, pas conseil en investissement.
 
 ### Paramètres demandés
 
-- capital ;
+- capital facultatif ;
 - taille moyenne d'ordre ;
-- nombre d'ordres mensuels ;
-- frais fixes aller et retour ;
+- nombre d'opérations mensuelles ;
+- achat simple ou aller-retour ;
+- commission par côté ;
 - frais de change ;
-- spread et slippage comme hypothèses optionnelles ;
-- rendement brut hypothétique facultatif.
+- spread et slippage comme hypothèses ;
+- avantage brut hypothétique facultatif ;
+- part cible d'avantage conservé facultative ;
+- budget annuel de friction facultatif ;
+- marge nette cible facultative.
 
 ### Résultats
 
-- coût par aller-retour ;
-- coût annuel ;
-- coût en pourcentage de l'ordre ;
-- coût en pourcentage du capital ;
-- part du rendement brut absorbée, uniquement si un rendement est saisi ;
-- rendement brut nécessaire pour couvrir les coûts ;
-- comparaison entre les scénarios.
+Toujours :
 
-Aucune recommandation sur un actif ou un courtier ne doit être générée.
+- seuil brut de couverture ;
+- plancher variable ;
+- coût fixe et coût variable ;
+- coût annuel arithmétique ;
+- sensibilité à la taille.
 
-## 5. Calendrier
+Lorsque l'avantage brut est fourni :
+
+- marge nette ;
+- part absorbée ;
+- part conservée ;
+- frontière de taille pour une marge positive ;
+- frontière de taille pour une rétention cible ;
+- impossibilité structurelle explicite.
+
+Lorsque les conditions sont fournies :
+
+- fréquence frontière sous budget ;
+- brut requis pour une marge nette cible.
+
+Aucune recommandation sur un actif, un courtier, une taille ou une fréquence ne doit être générée.
+
+## 6. Calendrier externe envisagé
 
 ### Jours 1 à 3 — préparation
 
 - figer le message et les calculs ;
-- créer la page, le formulaire et cinq scénarios de démonstration ;
-- installer une mesure d'événements minimale ;
-- préparer les messages de diffusion ;
-- vérifier le langage réglementaire.
+- corriger uniquement les défauts issus de la critique interne ;
+- préparer cinq scénarios de démonstration ;
+- préparer la mesure d'événements minimale ;
+- vérifier le langage réglementaire ;
+- vérifier Safari/iPad.
 
 ### Jours 4 à 10 — premiers utilisateurs
 
-- diffuser dans des communautés qualifiées ;
+- diffuser auprès de communautés qualifiées ;
 - obtenir 100 visiteurs qualifiés ;
+- mesurer le passage du seuil seul au mode Edge Survival ;
 - observer les abandons ;
-- interroger seulement les personnes ayant terminé la simulation ;
+- interroger seulement les personnes ayant terminé une analyse ;
 - ne corriger que les blocages de compréhension ou de fonctionnement.
 
 ### Jours 11 à 20 — récurrence et import
 
-- proposer de sauvegarder le résultat ;
-- envoyer un rappel non promotionnel pour une seconde simulation ;
-- recueillir des exemples anonymisés de relevés ;
-- mesurer les demandes d'import et de comparaison entre courtiers ;
-- proposer le Founder Pass.
+- proposer de sauvegarder localement ou de partager le résultat selon une conception approuvée ;
+- inviter à une seconde analyse sans promesse commerciale ;
+- recueillir des demandes d'import et des formats représentatifs ;
+- mesurer si les utilisateurs reviennent pour un nouveau scénario ;
+- tester l'intérêt pour une vue historique.
 
 ### Jours 21 à 30 — paiement
 
-- tester la réservation à 9 EUR ;
-- afficher clairement l'offre future à 39 EUR la première année ;
+Uniquement après revue juridique et décision explicite :
+
+- tester une réservation faible et remboursable ;
+- afficher clairement que le produit complet n'est pas encore disponible ;
 - documenter les objections ;
 - traiter les remboursements sans friction ;
 - décider continuer, modifier ou abandonner.
 
-## 6. Événements à mesurer
+## 7. Événements à mesurer
 
 - `landing_view` ;
-- `calculator_start` ;
-- `calculator_complete` ;
-- `scenario_compare` ;
+- `threshold_mode_start` ;
+- `threshold_mode_complete` ;
+- `edge_mode_start` ;
+- `edge_mode_complete` ;
+- `inverse_constraint_view` ;
+- `structurally_unreachable_view` ;
+- `sensitivity_view` ;
 - `report_share` ;
-- `email_submit` ;
 - `return_visit` ;
 - `import_request` ;
 - `founder_pass_click` ;
 - `founder_pass_paid` ;
 - `refund_request`.
 
-Aucune donnée financière détaillée ne doit être envoyée à un outil d'analytics pendant le test. Les événements doivent rester agrégés et minimisés.
+Aucune donnée financière détaillée ne doit être envoyée à un outil d'analytics. Les événements doivent rester agrégés et minimisés.
 
-## 7. Seuils
+## 8. Seuils externes
 
 ### Gate positif
 
 À la fin des 30 jours :
 
 - 300 visiteurs qualifiés ;
-- 100 simulations complètes ;
-- 30 sauvegardes ou emails ;
-- 20 utilisateurs ayant réalisé une seconde simulation ;
+- 100 analyses complètes ;
+- au moins 40 passages volontaires au mode Edge Survival ;
+- 20 utilisateurs ayant réalisé une seconde analyse ;
 - 10 rapports partagés ;
 - 10 réservations ou précommandes payées ;
-- au moins trois demandes spontanées d'import ou de suivi automatique ;
-- moins de 20 % des cas nécessitant une intervention manuelle.
+- au moins cinq demandes spontanées d'import ou de suivi automatique ;
+- moins de 20 % des cas nécessitant une intervention manuelle ;
+- au moins 60 % des utilisateurs interrogés pouvant reformuler correctement le résultat principal.
 
 ### Signal intermédiaire
 
@@ -139,7 +212,8 @@ Le produit peut être poursuivi avec modification si :
 - au moins cinq paiements ;
 - forte demande d'import ;
 - seconde utilisation significative ;
-- le faible paiement provient principalement d'un problème de prix ou de confiance identifiable.
+- valeur forte des contraintes inverses, même si l'avantage brut est rarement saisi ;
+- le faible paiement provient principalement d'un problème de confiance ou de distribution identifiable.
 
 ### Gate négatif
 
@@ -147,63 +221,72 @@ Abandon ou pivot si, après trafic réellement qualifié :
 
 - moins de cinq paiements après 500 visiteurs qualifiés ;
 - moins de 10 % reviennent ;
+- la majorité ne peut pas fournir d'avantage brut ni de contrainte utile ;
+- les contraintes inverses ne modifient aucune décision réelle ;
 - presque aucun utilisateur ne demande import ou suivi ;
-- les économies potentielles sont généralement inférieures au prix ;
+- les économies ou informations produites sont généralement inférieures au prix ;
 - la majorité recherche uniquement une recommandation de courtier ou d'actif ;
 - l'acquisition nécessite exclusivement de la publicité payante ;
 - le maintien des tarifs ou imports exige un travail humain non scalable.
 
-## 8. Questions post-usage
+## 9. Questions post-usage
 
 Les questions sont posées après une utilisation réelle :
 
 1. Quelle décision concrète essayais-tu de prendre ?
-2. Quel chiffre t'a surpris ?
-3. Comment faisais-tu ce calcul auparavant ?
-4. Dans quel délai referais-tu cette analyse ?
-5. Qu'attendrais-tu d'un import automatique ?
-6. Qu'est-ce qui t'empêcherait de payer 39 EUR par an ?
-7. Le résultat t'a-t-il fait économiser du temps ou identifier un coût supérieur au prix du produit ?
+2. Quel résultat as-tu compris en premier ?
+3. Que signifie pour toi le seuil brut nécessaire ?
+4. L'avantage brut saisi venait-il d'une mesure, d'un backtest ou d'une intuition ?
+5. Une contrainte calculée a-t-elle changé ton raisonnement ?
+6. Comment faisais-tu ce calcul auparavant ?
+7. Dans quel délai referais-tu cette analyse ?
+8. Qu'attendrais-tu d'un import automatique ?
+9. Qu'est-ce qui t'empêcherait de payer un prix annuel faible ?
+10. Le résultat t'a-t-il fait économiser du temps ou identifier une friction supérieure au prix du produit ?
 
 Ne pas demander « aimerais-tu ce produit ? » comme preuve de demande.
 
-## 9. Garde-fous
+## 10. Garde-fous
 
 - Ne pas modifier les calculs pour produire un résultat plus spectaculaire.
-- Ne pas inventer un coût implicite : afficher un intervalle ou demander une hypothèse.
+- Ne pas inventer un avantage brut ou un coût implicite.
+- Préférer une plage ou une sensibilité à une fausse précision.
 - Ne pas collecter d'identifiants de compte ou de données inutiles.
 - Ne pas acheter de trafic avant d'avoir vérifié l'activation organique.
-- Ne pas construire l'import complet avant trois demandes réelles et des fichiers représentatifs.
+- Ne pas construire l'import complet avant demandes réelles et fichiers représentatifs.
 - Ne pas utiliser de faux avis, compteurs ou économies.
-- Ne pas présenter la réservation comme un produit déjà disponible.
+- Ne pas présenter une réservation comme un produit déjà disponible.
+- Ne pas présenter une frontière mathématique comme une prescription.
 
-## 10. Décisions après le test
+## 11. Décisions après le test
 
 ### Continuer
 
-Construire le Cost Tracker minimal et prioriser les formats de fichiers réellement reçus.
+Construire le Cost Tracker minimal et prioriser les formats réellement reçus.
 
 ### Modifier
 
-- intérêt gratuit mais peu de paiement : comparateur/affiliation ou widget B2B à tester ;
-- paiement mais peu de récurrence : offre ponctuelle de rapport ;
+- seuil compris mais avantage brut rarement disponible : centrer le produit sur les contraintes de couverture et le suivi ex post ;
+- contraintes inverses utiles mais peu de récurrence : produit ponctuel ou widget à tester ;
 - forte demande d'import : prioriser les parseurs ;
 - forte demande de comparaison : base de barèmes et neutralité ;
-- demande de conseil : maintenir la frontière réglementaire et ne pas suivre cette demande sans avis juridique.
+- demande de conseil : maintenir la frontière réglementaire ;
+- intérêt gratuit mais peu de paiement : tester distribution ou B2B sans construire prématurément.
 
 ### Abandonner
 
-Conserver le moteur technique et réévaluer un autre problème si les critères négatifs sont atteints.
+Conserver le moteur, les contrats et les preuves techniques, puis réévaluer un autre problème si les critères négatifs sont atteints.
 
-## 11. Développement autorisé pendant la validation
+## 12. Développement autorisé avant le test externe
 
 Uniquement :
 
-- page statique ;
-- calculateur déterministe limité ;
-- mesure d'événements minimale ;
-- formulaire ;
-- paiement ou réservation clairement présenté ;
-- correction de bugs bloquants.
+- correction de bugs ;
+- amélioration de compréhension directement liée au protocole ;
+- scénarios synthétiques ;
+- tests ;
+- export méthodologique local ;
+- préparation de la revue interne ;
+- vérification Safari/iPad.
 
-Tout autre développement est suspendu.
+Restent interdits sans nouvelle décision : import réel, compte, stockage persistant, analytics actif, email, paiement, données de courtier, affiliation, API, conseil et exécution.
