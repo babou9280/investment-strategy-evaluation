@@ -1,73 +1,68 @@
 # Breaktest — état actuel
 
-## 1. Décision stratégique
+## 1. Direction active
 
-Le 13 juillet 2026, Ayman a validé le pivot vers **Breaktest Cost Intelligence** : une application web installable qui mesure l'impact des commissions, du change, du spread, du slippage et de la rotation sur les petits et moyens portefeuilles.
+Le 13 juillet 2026, Ayman a validé le pivot vers **Breaktest Cost Intelligence** pour les petits et moyens portefeuilles.
 
-La phase active est la **validation commerciale**, pas l'extension du moteur historique.
+Le même jour, après revue des prototypes, il a constaté qu'un simple calcul de coûts apportait une valeur insuffisante. Le seuil brut nécessaire a été identifié comme une sortie nettement plus utile.
+
+La direction active est donc raffinée en **Capital Efficiency** : relier les frictions à un avantage brut et montrer la marge qui subsiste, les contraintes qui peuvent être satisfaites et celles qui sont structurellement impossibles.
+
+La phase active est la **conception et le prototype interne**, avant toute publication externe.
 
 Documents de référence :
 
+- `PRODUCT.md` ;
 - `STRATEGY.md` ;
-- `MARKET_EVIDENCE.md` ;
-- `BUSINESS_MODEL.md` ;
-- `VALIDATION_PLAN.md` ;
-- `go_to_market/` ;
-- `docs/design/` ;
+- `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
+- `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
-- `docs/launch/`.
+- `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
+- `NEXT_CODEX_PROMPT.md`.
 
-## 2. Instrument de validation construit et fusionné
+## 2. Instrument Q0 construit mais publication suspendue
 
 La pull request `#16` a été fusionnée dans `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
 
-Le dossier `validation_site/` contient une page statique mobile-first avec :
+Le dossier `validation_site/` contient un calculateur local de coûts avec :
 
-- calculateur pré-transaction déterministe et local ;
-- paramètres, unités, conventions et hypothèses visibles ;
 - achat simple ou aller-retour ;
-- commission et change par côté ;
-- spread et slippage pour le scénario complet ;
-- coût par opération, coût relatif à l'ordre, coût annuel et ratio annuel sur capital ;
-- décomposition des quatre composantes avec provenance ;
-- comparaison descriptive de trois scénarios ;
-- partage excluant le capital exact par défaut ;
-- formulaire de validation et emplacements analytics, email et paiement désactivés.
+- commission, change, spread et slippage ;
+- coût par opération, coût annuel et ratio sur capital ;
+- seuil brut de couverture ;
+- comparaison descriptive ;
+- partage sans capital exact par défaut.
 
-La suite finale de la pull request a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, GitHub Actions run `29269231453`. Preuve : `docs/validation/COST_INTELLIGENCE_VALIDATION_SITE.md`.
+La suite finale a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, GitHub Actions run `29269231453`.
 
-Le site n'est pas déployé publiquement. Aucun utilisateur, paiement, usage répété ou signal commercial n'est encore validé.
+La pull request `#17` a ensuite ajouté la préparation de lancement et les contrôles d'intégrité, fusionnés au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`. L'exécution finale `29270109903` a réussi.
 
-Le suivi réel par import, l'abonnement, les données de courtiers et les benchmarks ne sont pas construits ni validés.
+Cependant, le site Q0 n'est pas publié : sa valeur reste principalement descriptive et ne justifie pas encore un test externe.
 
-## 3. Préparation contrôlée du lancement fusionnée
+## 3. Nouvelle mission active
 
-La pull request `#17` a été fusionnée dans `breaktest-bootstrap` au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`.
+Branche : `strategy/capital-efficiency-core`.
 
-Elle a ajouté sans engagement externe :
+Objectif : construire `capital_efficiency_lab/`, un laboratoire interne déterministe répondant à la question :
 
-- la checklist de lancement statique ;
-- le protocole exact de test utilisateur ;
-- les limites minimales de confidentialité ;
-- les instructions de prévisualisation locale ;
-- le plan de rollback ;
-- un test d'intégrité statique interdisant réseau, stockage persistant, secrets et intégrations actives.
+> Quelle part d'un avantage brut survit aux frictions, et quelles contraintes économiques doivent être satisfaites pour qu'il subsiste ?
 
-L'exécution finale `29270109903`, head `a568199c0abc0d1ca534216d266a3289107c703d`, a réussi :
+Sorties prévues :
 
-- build et suites historiques conservés ;
-- calculateur et Chromium verts ;
-- intégrité statique verte ;
-- 7 références locales ;
-- 43 171 octets actifs ;
-- aucune capacité réseau ou persistance détectée ;
-- syntaxe JavaScript et Python valide.
+- seuil brut de couverture ;
+- plancher variable de friction ;
+- marge nette en taux, points de base et euros ;
+- part d'avantage absorbée et conservée ;
+- taille minimale de couverture ;
+- taille minimale pour une rétention cible ;
+- fréquence frontière sous budget annuel ;
+- sensibilité aux hypothèses.
 
-Preuve : `docs/validation/COST_INTELLIGENCE_LAUNCH_READINESS.md`.
+Le contrat quantitatif est versionné dans `docs/standards/EDGE_SURVIVAL_CONTRACT.md`.
 
-Aucun domaine, hébergement public, analytics, collecte email ou paiement n'a été activé.
+Le laboratoire n'est pas encore implémenté ni validé.
 
-## 4. Build technique canonique conservé
+## 4. Build technique historique conservé
 
 `app/Breaktest_Studio.html` demeure l'actif technique canonique provisoire. Le build cumulatif exécute H1, C2, C3, C1, C4 puis H2 via `scripts/build_breaktest.py`.
 
@@ -75,24 +70,6 @@ Empreintes :
 
 - source v0.2 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00` ;
 - version fusionnée après H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`, 166 862 octets.
-
-La construction du site de validation n'a pas modifié ce moteur.
-
-## 5. Fonctionnalités techniques validées
-
-### Moteur historique
-
-- application locale interactive ;
-- import/export, filtres et audit ;
-- validation numérique stricte ;
-- modèle antérieur propre à chaque décision ;
-- turnover chronologique ;
-- réservation du nominal ;
-- trésorerie réalisée aux sorties ;
-- sélection entre résultat simulé, brut observé, net fixe observé et full-cost observé ;
-- provenance conservée par ligne ;
-- séparation des bases observées et des coûts simulés ;
-- absence de double comptage dans les scénarios testés.
 
 Corrections fusionnées :
 
@@ -103,39 +80,53 @@ Corrections fusionnées :
 - C4 : pull request `#10` ;
 - H2 : pull request `#12`, commit `3504d448547bfeab9ef74114af3c08fb557a1c75`.
 
-Preuve H2 : `docs/validation/H2_JOURNAL_NET_BASES.md`.
+Le nouveau laboratoire doit rester isolé et ne modifier ni ce moteur ni le site Q0.
 
-### Site de validation Cost Intelligence
+## 5. Fonctionnalités réellement validées
 
-- cinq scénarios synthétiques reproduits ;
-- conventions de côtés et de fréquence testées ;
-- capital absent ou nul traité sans ratio inventé ;
-- validation stricte et absence de fallback silencieux ;
+### Moteur historique
+
+- import/export, filtres et audit ;
+- validation numérique stricte ;
+- modèle antérieur propre à chaque décision ;
+- turnover chronologique ;
+- réservation du nominal ;
+- trésorerie réalisée aux sorties ;
+- bases brut/net/observé/simulé séparées ;
+- provenance conservée ;
+- absence de double comptage dans les scénarios testés.
+
+### Site Q0
+
+- cinq scénarios synthétiques ;
+- conventions de côtés et fréquence ;
+- capital absent ou nul sans ratio inventé ;
 - calculs internes non arrondis ;
 - partage sans donnée personnelle par défaut ;
-- clavier, focus d'erreur, annonce accessible et responsive testés dans Chromium ;
-- largeurs 390, 768, 1024 et 1440 px sans débordement horizontal ;
-- intégrations externes désactivées ;
-- syntaxe JavaScript validée ;
-- assets locaux, sans réseau ni stockage persistant actifs.
+- Chromium à 390, 768, 1024 et 1440 px ;
+- aucune capacité réseau ou persistance applicative active ;
+- syntaxe JavaScript validée.
 
-## 6. Développement suspendu
+### Capital Efficiency
 
-La pull request `#14` consacrée à H3 a été fermée sans fusion. Son travail reste non validé et pourra être réexaminé uniquement si la validation commerciale démontre sa nécessité.
+À ce stade, seuls la définition produit, le contrat mathématique et la mission sont versionnés. Aucun moteur ou écran Capital Efficiency n'est encore validé.
 
-Sont suspendus :
+## 6. Développements suspendus
 
+- publication externe du site Q0 ;
 - H3 à H6 ;
 - certification de stratégies ;
-- score de recommandation ;
+- score global de recommandation ;
 - journal complet ;
 - application native ;
 - connexions courtiers ;
+- données ou tarifs réels ;
 - conseil, signaux et exécution ;
-- marketplace et API ;
-- import réel, comptes, stockage et paiement avant preuve de demande.
+- marketplace, affiliation et API ;
+- import réel, comptes, stockage, analytics, email et paiement ;
+- métriques statistiques avancées sans données suffisantes.
 
-## 7. Défauts techniques encore ouverts
+## 7. Défauts techniques historiques ouverts
 
 - H3 : provenance de devise du prix d'entrée ;
 - H4 : réconciliation définitive PnL / rendement / nominal ;
@@ -145,48 +136,40 @@ Sont suspendus :
 - absence de levier, appels de marge, intérêts, dividendes et flux externes ;
 - compatibilité Safari/iPad non exhaustive.
 
-Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
+Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
 
 ## 8. Marché — état de preuve
 
 ### Établi
 
-- le rapport fondateur démontre un cas où frictions et rotation contraignent fortement le net ;
-- des outils adjacents de suivi et de journalisation obtiennent des abonnements payants ;
-- la transparence des coûts demeure une préoccupation réglementaire et économique ;
-- un instrument technique de test est disponible ;
-- le protocole de première vague est préparé.
+- le rapport fondateur illustre qu'une prime brute peut être fortement absorbée par les frictions et le turnover ;
+- le mécanisme du seuil de couverture est calculable ;
+- des outils adjacents obtiennent des abonnements payants ;
+- un calculateur Q0 techniquement fonctionnel existe.
 
 ### Non validé
 
-- fréquence du problème chez la cible ;
-- compréhension réelle du calcul en moins de 90 secondes ;
+- compréhension et valeur perçue des nouvelles sorties ;
+- existence d'un avantage brut suffisamment formalisé chez la cible ;
 - usage répété ;
-- volonté de payer 39 à 59 EUR par an ;
 - demande d'import ;
-- coût de maintien des barèmes ;
+- volonté de payer ;
 - distribution organique ;
-- valeur d'une future base de données ;
 - rentabilité et potentiel de plateforme.
 
 ## 9. Hébergement GitHub
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
-- branche de référence produit : `breaktest-bootstrap` au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3` ;
-- aucune pull request produit active ;
+- branche de référence produit : `breaktest-bootstrap` ;
+- branche active : `strategy/capital-efficiency-core` ;
 - `main` reste inchangé et hors périmètre.
 
-## 10. Prochaine décision nécessaire
+## 10. Prochaine exécution autorisée
 
-La préparation interne réversible est terminée. La prochaine étape exige une validation explicite d'Ayman, car elle crée une publication externe.
-
-La décision doit porter sur :
-
-1. l'hébergeur statique et son compte externe ;
-2. l'utilisation d'une URL gratuite sans achat de domaine ;
-3. l'absence initiale d'analytics, collecte email et paiement ;
-4. le partage de l'URL uniquement avec une première vague de cinq testeurs ;
-5. le rollback immédiat en cas de défaut ;
-6. un test Safari/iPad avant diffusion plus large.
-
-Aucune extension fonctionnelle ne doit reprendre avant les résultats de cette validation commerciale.
+1. implémenter le laboratoire isolé selon le contrat ;
+2. ajouter les oracles et invariants quantitatifs ;
+3. exécuter les suites historiques, Q0, Chromium, intégrité et syntaxe ;
+4. corriger les défauts ;
+5. mettre à jour les fichiers canoniques uniquement avec les résultats exécutés ;
+6. ne rien publier ;
+7. revenir vers Ayman uniquement lorsqu'un prototype interne réellement fonctionnel est prêt à être critiqué ou lorsqu'une décision stratégique devient nécessaire.
