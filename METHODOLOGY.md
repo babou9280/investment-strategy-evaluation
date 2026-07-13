@@ -2,20 +2,21 @@
 
 ## 1. Statut méthodologique
 
-Breaktest possède deux couches distinctes :
+Breaktest possède désormais trois couches distinctes :
 
 1. **moteur historique validé** : audit de journaux et backtests, fusionné jusqu'à H2 ;
-2. **produit Cost Intelligence à valider** : calculateur pré-transaction et futur suivi des frictions.
+2. **calculateur Cost Intelligence Q0 validé techniquement** : calculateur pré-transaction descriptif ;
+3. **Capital Efficiency Lab validé techniquement** : seuil brut, plancher variable, survie de l'avantage et contraintes inverses.
 
-La seconde couche ne doit pas être présentée comme implémentée ni validée avant exécution de sa mission dédiée.
+Aucune de ces couches n'est commercialement validée tant qu'elle n'a pas été confrontée à des utilisateurs réels et à des paiements.
 
-## 2. Méthodologie du calculateur de validation
+## 2. Méthodologie du calculateur de validation Q0
 
 Le calculateur utilise uniquement des paramètres fournis par l'utilisateur et des scénarios synthétiques explicitement identifiés.
 
 ### Entrées
 
-- capital en euros, strictement positif ;
+- capital en euros, strictement positif lorsqu'il est fourni ;
 - montant d'ordre en euros, strictement positif ;
 - nombre d'allers-retours mensuels, supérieur ou égal à zéro ;
 - commission par côté, supérieure ou égale à zéro ;
@@ -34,7 +35,7 @@ Pour un aller-retour :
 - `coût_total = commission + change + spread + slippage` ;
 - `coût_ordre_pct = coût_total / montant_ordre` ;
 - `coût_annuel = coût_total × allers_retours_mensuels × 12` ;
-- `coût_capital_pct = coût_annuel / capital` ;
+- `coût_capital_pct = coût_annuel / capital` lorsque le capital est disponible ;
 - `seuil_brut_pct = coût_ordre_pct`.
 
 Le `seuil_brut_pct` indique le rendement brut nécessaire pour couvrir les frictions du scénario. Il ne constitue ni un objectif de rendement ni une recommandation d'effectuer l'opération.
@@ -55,11 +56,12 @@ Chaque coût doit porter une nature explicite :
 - `observed` : présent dans un relevé ;
 - `contractual` : issu d'un barème sourcé et daté ;
 - `estimated` : spread, slippage ou autre estimation ;
-- `user_assumption` : paramètre librement saisi.
+- `user_assumption` : paramètre librement saisi ;
+- `synthetic_demo` : scénario de démonstration non observé.
 
 Une estimation ne peut jamais être présentée comme un coût réellement payé. Une valeur contractuelle ne peut pas être présentée comme actuelle sans source et date.
 
-## 3. Limites du calculateur de validation
+## 3. Limites du calculateur Q0
 
 Le calculateur initial ne modélise pas :
 
@@ -192,4 +194,111 @@ La proposition de score reste non prioritaire et non commercialement validée :
 - risque de queue : 15 % ;
 - profondeur : 10 %.
 
-Aucun score global ne doit être utilisé dans la page Cost Intelligence. Un score composite est un indice d'évidence, pas une prédiction.
+Aucun score global ne doit être utilisé dans la page Cost Intelligence ou le Capital Efficiency Lab. Un score composite est un indice d'évidence, pas une prédiction.
+
+## 14. Capital Efficiency — contrat Edge Survival
+
+Le laboratoire suit `docs/standards/EDGE_SURVIVAL_CONTRACT.md`.
+
+### 14.1 Entrées supplémentaires
+
+- avantage brut moyen `G`, facultatif ;
+- part cible d'avantage conservé `R`, facultative ;
+- budget annuel de friction `B`, facultatif ;
+- marge nette cible `Q`, facultative.
+
+Aucune valeur d'avantage brut n'est inventée. Une démonstration portant `synthetic_demo` reste explicitement non observée.
+
+### 14.2 Décomposition structurelle
+
+Pour un nominal `N`, un nombre de côtés `k`, une commission par côté `C`, un taux de change par côté `F`, un spread total `S` et un slippage total `L` :
+
+- `fixed_cost_eur = k × C` ;
+- `variable_floor_rate = k × F + S + L` ;
+- `variable_cost_eur = N × variable_floor_rate` ;
+- `total_cost_eur = fixed_cost_eur + variable_cost_eur` ;
+- `break_even_gross_rate = total_cost_eur / N`.
+
+Le coût fixe peut être dilué par une taille supérieure. Le plancher variable ne diminue pas avec `N` dans ce modèle.
+
+### 14.3 Survie de l'avantage
+
+Lorsque `G` est fourni :
+
+- `net_edge_rate = G - break_even_gross_rate` ;
+- `gross_edge_eur = N × G` ;
+- `net_edge_eur = gross_edge_eur - total_cost_eur`.
+
+Si `G > 0` :
+
+- `edge_absorption_rate = break_even_gross_rate / G` ;
+- `edge_retained_rate = net_edge_rate / G`.
+
+Une rétention négative reste négative. Les ratios de rétention sont indisponibles lorsque `G <= 0`.
+
+### 14.4 Contraintes inverses
+
+#### Marge nette positive
+
+Calculable uniquement si :
+
+`G - variable_floor_rate > 0`.
+
+Alors :
+
+`minimum_order_for_positive_net = fixed_cost_eur / (G - variable_floor_rate)`.
+
+Sinon, la contrainte est `structurally_unreachable`.
+
+#### Rétention cible
+
+Définir :
+
+`retention_denominator = G × (1 - R) - variable_floor_rate`.
+
+Si ce dénominateur est strictement positif :
+
+`minimum_order_for_retention = fixed_cost_eur / retention_denominator`.
+
+Sinon, la cible est `structurally_unreachable`.
+
+#### Budget annuel
+
+- `annual_cost_eur = total_cost_eur × monthly_operations × 12` ;
+- `max_monthly_operations_under_budget = (B × capital) / (12 × total_cost_eur)` lorsque les entrées existent et que le coût total est positif.
+
+Lorsque le coût total est nul, la frontière est `unbounded_within_model`, jamais `Infinity`.
+
+#### Marge nette cible
+
+`required_gross_rate_for_target_net = Q + break_even_gross_rate`.
+
+Cette valeur est une contrainte mathématique, pas une prévision de rendement réalisable.
+
+### 14.5 Invariants
+
+- `break_even_gross_rate >= variable_floor_rate` ;
+- `fixed_cost_eur + variable_cost_eur = total_cost_eur` ;
+- `gross_edge_eur - total_cost_eur = net_edge_eur` ;
+- si `G > 0`, absorption + rétention = 1 ;
+- si le coût total est positif, part fixe + part variable = 1 ;
+- la fréquence n'affecte pas le seuil par opération ;
+- le coût annuel est proportionnel à la fréquence ;
+- le seuil converge vers le plancher variable lorsque `N` augmente.
+
+### 14.6 Projection annuelle
+
+Les projections annuelles de l'avantage sont strictement arithmétiques :
+
+- sans capitalisation ;
+- sans réinvestissement ;
+- sans positions simultanées ;
+- sans contrainte dynamique de capital.
+
+Elles ne constituent ni une performance annualisée, ni une simulation de portefeuille.
+
+### 14.7 Statut de validation
+
+Le laboratoire a réussi les oracles Node, les tests Chromium, les contrôles d'intégrité et les non-régressions indiqués dans `docs/validation/CAPITAL_EFFICIENCY_LAB.md`.
+
+Cette validation porte sur l'exécution technique du contrat. Elle ne démontre ni utilité utilisateur, ni demande, ni paiement, ni performance future.
