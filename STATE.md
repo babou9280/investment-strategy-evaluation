@@ -40,9 +40,11 @@ Le site n'est pas déployé publiquement. Aucun utilisateur, paiement, usage ré
 
 Le suivi réel par import, l'abonnement, les données de courtiers et les benchmarks ne sont pas construits ni validés.
 
-## 3. Préparation contrôlée du lancement
+## 3. Préparation contrôlée du lancement fusionnée
 
-La pull request `#17`, branche `strategy/cost-intelligence-launch-readiness`, prépare sans engagement externe :
+La pull request `#17` a été fusionnée dans `breaktest-bootstrap` au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`.
+
+Elle a ajouté sans engagement externe :
 
 - la checklist de lancement statique ;
 - le protocole exact de test utilisateur ;
@@ -51,7 +53,7 @@ La pull request `#17`, branche `strategy/cost-intelligence-launch-readiness`, pr
 - le plan de rollback ;
 - un test d'intégrité statique interdisant réseau, stockage persistant, secrets et intégrations actives.
 
-L'exécution de référence `29269885911`, head `245489655917a9de38cf80e6546852d3223eebcd`, a réussi :
+L'exécution finale `29270109903`, head `a568199c0abc0d1ca534216d266a3289107c703d`, a réussi :
 
 - build et suites historiques conservés ;
 - calculateur et Chromium verts ;
@@ -63,7 +65,7 @@ L'exécution de référence `29269885911`, head `245489655917a9de38cf80e6546852d
 
 Preuve : `docs/validation/COST_INTELLIGENCE_LAUNCH_READINESS.md`.
 
-Aucun domaine, hébergement public, analytics, collecte email ou paiement n'est activé par cette préparation.
+Aucun domaine, hébergement public, analytics, collecte email ou paiement n'a été activé.
 
 ## 4. Build technique canonique conservé
 
@@ -170,17 +172,21 @@ Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
 ## 9. Hébergement GitHub
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
-- branche de référence produit : `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3` ;
-- pull request de préparation active : `#17`, branche `strategy/cost-intelligence-launch-readiness` ;
+- branche de référence produit : `breaktest-bootstrap` au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3` ;
+- aucune pull request produit active ;
 - `main` reste inchangé et hors périmètre.
 
-## 10. Prochaine exécution autorisée
+## 10. Prochaine décision nécessaire
 
-1. obtenir une exécution CI verte sur le head final de la pull request `#17` ;
-2. fusionner uniquement dans `breaktest-bootstrap` après revue ;
-3. vérifier les options actuelles d'hébergement statique au moment où un déploiement devient nécessaire ;
-4. présenter à Ayman une recommandation unique avant toute publication externe ou dépense ;
-5. effectuer un test Safari/iPad avant diffusion plus large ;
-6. commencer par une première vague de cinq utilisateurs ;
-7. mettre à jour `MARKET_EVIDENCE.md` uniquement avec des comportements réellement observés ;
-8. ne reprendre aucune extension fonctionnelle avant les résultats du test.
+La préparation interne réversible est terminée. La prochaine étape exige une validation explicite d'Ayman, car elle crée une publication externe.
+
+La décision doit porter sur :
+
+1. l'hébergeur statique et son compte externe ;
+2. l'utilisation d'une URL gratuite sans achat de domaine ;
+3. l'absence initiale d'analytics, collecte email et paiement ;
+4. le partage de l'URL uniquement avec une première vague de cinq testeurs ;
+5. le rollback immédiat en cas de défaut ;
+6. un test Safari/iPad avant diffusion plus large.
+
+Aucune extension fonctionnelle ne doit reprendre avant les résultats de cette validation commerciale.
