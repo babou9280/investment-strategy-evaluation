@@ -17,8 +17,6 @@ def assert_no_nonfinite(page):
 
 
 def assert_results_clear_of_sticky_header(page):
-    # Le produit utilise un défilement doux. Attendre sa stabilisation avant
-    # de mesurer la position finale évite de valider une image intermédiaire.
     page.wait_for_timeout(650)
     positions = page.evaluate(
         '''() => {
@@ -37,6 +35,15 @@ def assert_results_clear_of_sticky_header(page):
     assert positions['titleTop'] >= positions['headerBottom'] - 1, positions
 
 
+def fill_cost_scenario(page):
+    page.locator('#orderNotionalEur').fill('500')
+    page.locator('input[name="sideCount"][value="2"]').check()
+    page.locator('#commissionPerSideEur').fill('1')
+    page.locator('#fxRatePerSidePercent').fill('0,25')
+    page.locator('#spreadTotalPercent').fill('0,10')
+    page.locator('#slippageTotalPercent').fill('0,10')
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
 
@@ -49,9 +56,15 @@ with sync_playwright() as p:
         assert not page.locator('#edge-details').get_attribute('open')
         assert not page.locator('#constraint-details').get_attribute('open')
         assert page.get_by_role('button', name='Calculer le seuil brut').is_visible()
+        assert page.locator('#orderNotionalEur').input_value() == ''
+        assert page.locator('#monthlyOperations').input_value() == ''
+        assert page.locator('input[name="sideCount"]:checked').count() == 0
+        assert 'hypothèses utilisateur' in page.locator('#provenance-banner').inner_text().lower()
         assert no_overflow(page)
 
-        # Mode seuil autonome.
+        # Le seuil fonctionne sans capital ni fréquence annuelle. Les seules
+        # entrées requises sont celles de l'opération et des frictions.
+        fill_cost_scenario(page)
         page.get_by_role('button', name='Calculer le seuil brut').click()
         page.locator('#results').wait_for(state='visible')
         assert '1,10' in page.locator('#break-even-value').inner_text()
@@ -59,6 +72,7 @@ with sync_playwright() as p:
         assert page.locator('#edge-section').is_hidden()
         assert page.locator('#range-section').is_hidden()
         assert page.evaluate('document.activeElement.id') == 'results'
+        assert 'optional-annual' in page.locator('#calculation-version').inner_text()
         assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
         assert_no_nonfinite(page)
@@ -78,12 +92,10 @@ with sync_playwright() as p:
         assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
 
-        # Une modification d'hypothèse invalide immédiatement le résultat
-        # rendu. Un ancien diagnostic ne doit jamais rester visible à côté de
-        # nouvelles entrées qui ne lui correspondent plus.
+        # Une modification d'hypothèse invalide immédiatement le résultat.
         page.locator('#grossEdgePercent').fill('2,10')
         assert page.locator('#results').is_hidden()
-        assert 'recalcul' in (page.locator('#result-live').text_content() or '').lower()
+        assert 'recalcule' in (page.locator('#result-live').text_content() or '').lower()
 
         # Mode fourchette : la marge change de signe autour du seuil.
         page.locator('input[name="edgeInputMode"][value="range"]').check()
@@ -130,6 +142,14 @@ with sync_playwright() as p:
         assert 'ne dépasse pas le seuil' in page.locator('#range-summary').inner_text()
         assert_results_clear_of_sticky_header(page)
         assert_no_nonfinite(page)
+
+        # Le bouton de démonstration assume explicitement la provenance et
+        # restaure capital et fréquence au lieu de les cacher comme défauts.
+        page.get_by_role('button', name='Voir un exemple complet').click()
+        page.locator('#results').wait_for(state='visible')
+        assert 'démonstration synthétique' in page.locator('#provenance-banner').inner_text().lower()
+        assert page.locator('#monthlyOperations').input_value() == '4'
+        assert 'Exemple synthétique' in page.locator('#result-provenance').inner_text()
 
         # Navigation clavier vers le choix de mode.
         page.locator('#orderNotionalEur').focus()
