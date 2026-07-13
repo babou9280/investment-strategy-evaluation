@@ -4,11 +4,14 @@
 
 - Branche : `strategy/capital-efficiency-core`
 - Pull request : `#20`
-- Head validé : `5715bdd75271bf6197ae07a989b1ddb44931b2dc`
-- GitHub Actions run : `29277241457`
+- Version moteur : `capital-efficiency-lab-2`
+- Head code et contrat validé : `9ac41ecedb2e6e7937859f3963ae9cd940a08b9f`
+- GitHub Actions run : `29278627744`
 - Conclusion du job `validate` : **success**
 - Publication externe : aucune
 - `main` : inchangé
+
+Une exécution antérieure avait déjà validé le noyau initial. La version 2 ajoute et teste explicitement les cas limites où les coûts fixes sont nuls, afin d'éviter de présenter un ordre nul comme recommandation ou de classer à tort une cible exactement satisfaite comme impossible.
 
 ## Périmètre exécuté
 
@@ -20,11 +23,11 @@ Le laboratoire isolé `capital_efficiency_lab/` contient :
 - `tests/browser.py` : contrôles Chromium ;
 - `tests/static_integrity.py` : interdiction de réseau, persistance et intégrations actives.
 
-Le moteur historique `app/Breaktest_Studio.html` et `validation_site/` n'ont pas été modifiés fonctionnellement par cette mission.
+Le moteur historique `app/Breaktest_Studio.html` et `validation_site/` n'ont pas été modifiés fonctionnellement.
 
 ## Résultats de référence vérifiés
 
-Pour le scénario synthétique principal :
+Scénario synthétique principal :
 
 - capital : `5 000 EUR` ;
 - nominal : `500 EUR` ;
@@ -71,6 +74,9 @@ Couverture :
 - cas principal exact ;
 - achat simple contre aller-retour ;
 - coûts nuls ;
+- coût fixe nul avec frontière zéro explicitement qualifiée ;
+- cible de rétention exactement satisfaite avec coût fixe nul ;
+- cible de rétention réellement impossible avec coût fixe nul ;
 - avantage absent, nul, négatif et positif ;
 - avantage au seuil et au plancher variable ;
 - rétention atteignable et structurellement impossible ;
@@ -83,7 +89,7 @@ Couverture :
 - convergence vers le plancher variable ;
 - indépendance du seuil par rapport à la fréquence ;
 - proportionnalité du coût annuel à la fréquence ;
-- absence de valeurs numériques non finies ou de `-0` dans l'arbre de sortie.
+- absence de valeurs non finies et de `-0` dans l'arbre de sortie.
 
 ## Tests Chromium
 
@@ -93,30 +99,31 @@ Commande CI :
 python3 capital_efficiency_lab/tests/browser.py
 ```
 
-Résultat dans GitHub Actions : **succès**.
+Résultat : **succès**.
 
 Contrôles exécutés :
 
 - largeurs `390`, `768`, `1024` et `1440` pixels ;
-- chargement du scénario synthétique ;
-- résultat principal `45 %` conservé ;
+- scénario synthétique principal ;
+- résultat `45 %` conservé ;
 - marge nette `0,90 %` ;
-- frontière de rétention `666,67 EUR` à l'affichage ;
+- frontière de rétention `666,67 EUR` ;
 - absence de débordement horizontal ;
 - absence de `NaN`, `Infinity` et `-0` visibles ;
 - focus sur le premier champ invalide ;
-- cas structurellement impossible visible.
+- cas structurellement impossible visible ;
+- cas à coût fixe nul affiché comme « aucun minimum positif imposé », et non comme ordre recommandé à zéro.
 
-Le navigateur Playwright n'était pas installé dans l'environnement de travail local. La preuve navigateur recevable provient donc du run GitHub Actions, qui installe Chromium avant exécution.
+La preuve navigateur recevable provient de GitHub Actions, qui installe et exécute Chromium.
 
 ## Non-régressions
 
-Le run `29277241457` a également réussi :
+Le run `29278627744` a également réussi :
 
 - build déterministe historique ;
 - H1 validation numérique stricte ;
 - H2 bases observées et simulées ;
-- calculateur Q0 `validation_site/` ;
+- calculateur Q0 ;
 - intégrité statique Q0 ;
 - H1 smoke Chromium ;
 - C2 isolation temporelle ;
@@ -137,7 +144,7 @@ python3 capital_efficiency_lab/tests/static_integrity.py
 
 Résultat : **succès**.
 
-La somme des quatre assets actifs du laboratoire est de `52 908` octets dans l'exécution locale correspondante. Le contrôle refuse notamment :
+Le contrôle refuse notamment :
 
 - requête réseau ;
 - WebSocket ou EventSource ;
@@ -149,13 +156,14 @@ La somme des quatre assets actifs du laboratoire est de `52 908` octets dans l'e
 
 ## Ce qui est validé
 
-- formules du contrat Edge Survival implémentées dans le périmètre testé ;
+- formules du contrat Edge Survival dans le périmètre testé ;
 - seuil brut et plancher variable ;
 - marge nette et réconciliation en euros ;
 - absorption et rétention lorsque l'avantage brut est positif ;
 - contraintes inverses ;
 - états indisponibles explicites ;
 - impossibilité structurelle sans affichage infini ;
+- absence de faux minimum positif lorsque les coûts fixes sont nuls ;
 - budget annuel et fréquence frontière ;
 - cible nette ;
 - sensibilité à la taille ;
@@ -172,9 +180,9 @@ La somme des quatre assets actifs du laboratoire est de `52 908` octets dans l'e
 - aucune position simultanée ;
 - aucune fiscalité, financement, market impact calibré ou exécution réelle ;
 - aucune preuve de disposition à payer ;
-- Safari/iPad non exécuté dans cette validation ;
+- Safari/iPad non exécuté ;
 - le laboratoire n'est pas une recommandation, une prévision ou un conseil.
 
 ## Conclusion
 
-Le laboratoire est **techniquement validé sur le head indiqué**. Cette conclusion n'est pas une validation commerciale et n'autorise ni publication, ni paiement, ni import réel, ni extension automatique du produit.
+Le laboratoire est **techniquement validé sur le head et le run indiqués**. Cette conclusion n'est pas une validation commerciale et n'autorise ni publication, ni paiement, ni import réel, ni extension automatique du produit.
