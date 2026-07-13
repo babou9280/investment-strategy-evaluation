@@ -30,6 +30,11 @@
     "label": "config event list"
   },
   {
+    "old": "  configInputs.forEach((id) => byId(id).addEventListener(\"input\", () => {\n    if ([\"fixed-fee\", \"min-commission\", \"spread-bps\", \"slippage-bps\", \"commission-bps\", \"fx-bps\"].includes(id)) byId(\"broker-preset\").value = \"custom\";\n    scheduleRender();\n  }));",
+    "new": "  configInputs.forEach((id) => [\"input\", \"change\"].forEach((eventName) => byId(id).addEventListener(eventName, () => {\n    if ([\"fixed-fee\", \"min-commission\", \"spread-bps\", \"slippage-bps\", \"commission-bps\", \"fx-bps\"].includes(id)) byId(\"broker-preset\").value = \"custom\";\n    scheduleRender();\n  })));",
+    "label": "config change compatibility"
+  },
+  {
     "old": "    byId(\"analysis-sample\").value = \"live\";\n    byId(\"impact-toggle\").checked = false;",
     "new": "    byId(\"analysis-sample\").value = \"live\";\n    byId(\"result-basis\").value = \"simulated\";\n    byId(\"impact-toggle\").checked = false;",
     "label": "reset basis"
