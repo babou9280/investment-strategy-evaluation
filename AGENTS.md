@@ -1,95 +1,193 @@
-# Breaktest - instructions permanentes pour Codex
+# Breaktest — instructions permanentes pour Codex
 
-## Avant de travailler
+## 1. Avant de travailler
 
-Lire :
+Lire intégralement :
 
 - `PRODUCT.md` ;
 - `QUALITY.md` ;
 - `STATE.md` ;
 - `DECISIONS.md` ;
 - `METHODOLOGY.md` ;
-- les fichiers de code et tests concernés.
+- `STRATEGY.md` ;
+- `MARKET_EVIDENCE.md` ;
+- `BUSINESS_MODEL.md` ;
+- `VALIDATION_PLAN.md` ;
+- `NEXT_CODEX_PROMPT.md` ;
+- les fichiers de code, tests et documents concernés.
 
-Traiter chaque demande comme une évolution du produit existant, pas comme un nouveau projet.
+Traiter chaque demande comme un delta du produit existant. La stratégie Cost Intelligence validée prime sur les anciennes roadmaps de fonctionnalités.
 
-## Autonomie
+## 2. Phase active
 
-Prendre seul les décisions techniques réversibles et ordinaires. Ne pas demander à l'utilisateur de choisir une bibliothèque, une structure de fichier, un type de test ou un détail d'implémentation lorsque ces choix peuvent être évalués techniquement.
+La phase actuelle est la **validation commerciale**.
 
-Demander une validation seulement pour une décision stratégique, coûteuse, irréversible ou substantiellement subjective. Dans ce cas, proposer une recommandation et au maximum deux alternatives.
+Le seul développement autorisé sans nouvelle décision stratégique est :
 
-## Processus obligatoire
+- une page statique de validation ;
+- un calculateur déterministe limité ;
+- des scénarios synthétiques ;
+- des tests ;
+- un formulaire ou des liens configurables désactivés par défaut ;
+- des corrections de bugs empêchant le test commercial.
 
-1. Inspecter l'existant.
-2. Identifier le delta demandé et ses conséquences.
-3. Établir un plan interne si la tâche est complexe.
-4. Modifier le minimum de code cohérent.
+Sont suspendus :
+
+- H3 à H6 ;
+- refonte de `app/Breaktest_Studio.html` ;
+- import CSV pour le nouveau produit ;
+- comptes et stockage utilisateur ;
+- application native ;
+- connexion courtier ;
+- tarifs réels de courtiers ;
+- analytics actifs ;
+- paiement réel ;
+- marketplace, affiliation ou API ;
+- signaux, conseil, allocation et exécution.
+
+Ne reprendre aucun de ces travaux sur la base d'une intuition technique. Exiger une preuve commerciale ou une décision stratégique explicite.
+
+## 3. Autonomie
+
+Prendre seul les décisions techniques réversibles et ordinaires. Ne pas demander à Ayman de choisir une bibliothèque, une structure de fichier, un type de test ou un détail d'implémentation lorsqu'une évaluation technique suffit.
+
+Demander une validation seulement pour une décision :
+
+- stratégique ;
+- coûteuse ;
+- irréversible ;
+- juridiquement engageante ;
+- substantiellement subjective.
+
+Dans ce cas, recommander une option et au maximum deux alternatives.
+
+## 4. Processus obligatoire
+
+1. Lire les fichiers canoniques et stratégiques.
+2. Reconstruire l'état réellement validé.
+3. Identifier la preuve que la modification doit produire.
+4. Modifier le minimum cohérent.
 5. Ajouter ou corriger les tests.
 6. Exécuter les validations pertinentes.
 7. Corriger les défauts détectés.
 8. Rechercher les régressions.
-9. Mettre à jour les documents canoniques.
-10. Résumer le résultat, les preuves et les limites restantes.
+9. Mettre à jour les documents concernés uniquement avec des résultats démontrés.
+10. Résumer résultat, preuves et limites.
 
-## Règles critiques
+## 5. Règles générales critiques
 
-- Ne jamais inventer une donnée, un résultat ou un test réussi.
+- Ne jamais inventer donnée, résultat, utilisateur, paiement, partenaire ou test réussi.
 - Ne jamais masquer silencieusement une erreur avec une valeur par défaut.
 - Signaler tout fallback de données ou de calcul.
 - Ne jamais présenter une interaction factice comme fonctionnelle.
-- Toute nouvelle formule importante doit être documentée et testée.
+- Toute formule importante doit être documentée et testée.
 - Toute correction de bug doit ajouter un test de non-régression lorsqu'il est pertinent.
-- Séparer filtrage ex ante et analyse ex post.
-- Ne jamais retirer des perdants rétrospectivement pour améliorer artificiellement une stratégie.
-- Distinguer strictement résultat observé et scénario simulé.
-- Ne jamais écraser une base observée du journal avec un résultat recalculé par Breaktest.
-- Conserver pour chaque base PnL/rendement sa provenance `observed`, `derived`, `fallback` ou `simulated` et la base d'origine du fallback.
-- Une valeur optionnelle explicitement fournie mais invalide doit refuser le lot ; un fallback n'est autorisé que lorsque la paire optionnelle est entièrement absente.
-- Un zéro numérique observé reste valide et ne déclenche jamais de fallback.
-- Ne jamais soustraire les coûts simulés d'une base nette observée : interdire tout double comptage.
-- Si PnL et rendement sont tous deux fournis mais incompatibles, conserver les deux et signaler l'anomalie pour H4 plutôt que les réconcilier silencieusement.
-- Lors du redimensionnement d'une base observée, utiliser le PnL fourni comme autorité de mise à l'échelle et conserver le rendement fourni pour l'audit.
-- Rendre la base de résultat sélectionnée visible dans les KPI, le ledger, l'audit, la courbe et l'export.
-- Pour toute décision rejouée, interdire qu'une observation future, de même date ou issue d'un échantillon non autorisé influence son modèle.
-- Conserver la provenance du modèle et la profondeur d'entraînement au niveau de chaque décision.
-- Consommer le budget de turnover dans l'ordre des dates d'entrée ; ne jamais classer globalement des opportunités de dates différentes selon leur edge avant allocation.
-- Autoriser un classement par edge uniquement entre opportunités simultanément disponibles à la même date, avec un dernier départage déterministe.
-- Garantir par test que l'ajout, la suppression ou la modification d'une opportunité future ne change pas une décision antérieure.
-- Conserver les diagnostics de turnover au niveau de chaque décision.
-- Réserver le nominal complet des positions financées entre l'entrée et la sortie ; ne jamais redimensionner silencieusement un trade pour le faire entrer dans le capital libre.
-- Libérer les positions antérieures avant un groupe de même date, mais ne jamais recycler au milieu du groupe une position nouvellement ouverte ce même jour.
-- Préserver l'ordre de priorité C3 entre entrées simultanées lors du financement.
-- Appliquer le PnL de la base sélectionnée une seule fois, uniquement à la date de sortie valide.
-- Traiter et agréger les sorties d'une date avant de financer les entrées de cette même date.
-- Garantir par test qu'aucun PnL ne modifie la courbe ou le financement avant sa sortie.
-- Garantir par test qu'un événement futur ne modifie ni une décision ni un point de courbe antérieurs.
-- Réconcilier à chaque événement `capital libre = capital réalisé - nominal réservé`.
-- Garantir que la courbe commence au capital initial et que son dernier point égale le capital initial plus les PnL sélectionnés des positions financées et sorties valides.
-- Conserver les diagnostics de financement et d'événement par décision.
-- Recalculer les métriques de turnover sur les décisions finalement financées.
-- Employer uniquement « courbe de trésorerie réalisée aux sorties » pour la courbe C4.
-- Ne pas employer « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » tant que ces comportements ne sont pas implémentés et validés.
-- Préserver la cohérence entre code, produit, méthodologie, deck et guide.
+- Une valeur numérique réelle égale à zéro reste distincte d'une absence.
+- Ne jamais utiliser l'arrondi d'affichage dans les calculs internes.
+- Préserver la cohérence entre code, méthodologie et discours commercial.
 
-## Fichier canonique actuel
+## 6. Règles Cost Intelligence
 
-`app/Breaktest_Studio.html` est la version canonique provisoire.
+### Provenance
 
-Les quatre variantes dans `source_material/` sont des archives et ne doivent pas être modifiées indépendamment.
+Chaque composante doit être classée comme :
 
-## Définition de terminé
+- `observed` ;
+- `contractual` ;
+- `estimated` ;
+- `user_assumption`.
+
+Ne jamais présenter :
+
+- une estimation comme un coût payé ;
+- un tarif sans date comme actuel ;
+- une donnée synthétique comme observation réelle ;
+- une hypothèse de démonstration comme tarif d'un courtier.
+
+### Calculateur de validation
+
+Les formules autorisées sont celles de `METHODOLOGY.md` et `NEXT_CODEX_PROMPT.md`.
+
+Le calculateur doit :
+
+- séparer commission, change, spread et slippage ;
+- afficher coût par ordre, coût annuel et impact relatif au capital ;
+- comparer des scénarios sans désigner un gagnant ;
+- refuser les valeurs invalides ;
+- fonctionner sans backend ;
+- ne transmettre aucune donnée financière à un tiers ;
+- afficher les limites et la mention non-prescriptive.
+
+### Frontière réglementaire
+
+Ne jamais :
+
+- recommander un instrument ;
+- recommander une transaction ;
+- choisir un courtier pour l'utilisateur ;
+- qualifier une taille ou une fréquence d'« optimale » ;
+- adapter une conclusion au patrimoine, aux objectifs ou à la tolérance au risque ;
+- transmettre ou exécuter un ordre ;
+- dissimuler un conflit d'intérêts.
+
+Un seuil mathématique de couverture des frais n'est pas un conseil. La formulation doit le rappeler.
+
+## 7. Qualité de la preuve commerciale
+
+- Un clic, un email ou un compliment ne constitue pas une vente.
+- Une intention déclarée ne constitue pas un paiement.
+- Une réservation n'est pas un abonnement actif.
+- Ne pas créer de faux compteurs, avis, économies ou rareté.
+- Les données de démonstration doivent être marquées synthétiques.
+- Mesurer séparément trafic qualifié, simulation, retour, partage, demande d'import, paiement et remboursement.
+- Le test doit pouvoir conclure à l'abandon.
+- Ne pas élargir le produit pour améliorer artificiellement un indicateur faible.
+
+## 8. Règles historiques conservées
+
+Pour le moteur d'audit existant :
+
+- séparer filtrage ex ante et analyse ex post ;
+- ne jamais retirer des perdants rétrospectivement ;
+- distinguer strictement résultat observé et scénario simulé ;
+- ne jamais écraser une base observée ;
+- conserver la provenance des bases ;
+- refuser une valeur optionnelle explicitement invalide ;
+- ne jamais compter les coûts deux fois ;
+- signaler les incohérences PnL/rendement pour H4 ;
+- interdire toute influence future sur une décision antérieure ;
+- consommer le turnover chronologiquement ;
+- réserver le nominal complet jusqu'à la sortie ;
+- appliquer le PnL sélectionné uniquement à la sortie ;
+- réconcilier `capital libre = capital réalisé - nominal réservé` ;
+- employer « courbe de trésorerie réalisée aux sorties », jamais mark-to-market sans implémentation réelle.
+
+Ces règles restent actives, mais elles ne justifient pas la reprise automatique de la roadmap historique.
+
+## 9. Fichiers et branches
+
+- `app/Breaktest_Studio.html` reste l'actif technique canonique provisoire.
+- Le site de validation doit être isolé, par exemple sous `validation_site/`.
+- Les variantes de `source_material/` sont des archives.
+- `main` reste strictement hors périmètre.
+- Toute mission utilise une branche isolée et une pull request vers `breaktest-bootstrap`.
+- Aucune fusion automatique.
+
+## 10. Définition de terminé
 
 Une tâche n'est terminée que lorsque :
 
 - le comportement demandé fonctionne réellement ;
 - les tests pertinents ont été exécutés et réussissent ;
-- le lancement ou build pertinent a réussi ;
+- le build ou lancement pertinent a réussi ;
 - les cas d'erreur essentiels ont été vérifiés ;
 - les limites non vérifiées sont déclarées ;
-- les documents canoniques sont mis à jour lorsque nécessaire.
+- aucun élément hors périmètre n'a été ajouté ;
+- les documents sont synchronisés avec les preuves.
 
-## Rapport final
+Pour une page de validation, « terminé » ne signifie pas que le marché est validé. Cela signifie uniquement que l'instrument de test est fonctionnel.
+
+## 11. Rapport final
 
 Présenter :
 
