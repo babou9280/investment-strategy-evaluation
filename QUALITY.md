@@ -75,15 +75,28 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - une position ouverte dans le groupe ne peut pas être libérée au milieu du même groupe, même si sa sortie est le même jour ;
 - l'ordre de financement d'un groupe doit préserver la priorité simultanée déterminée par C3 ;
 - le nominal complet est financé ou refusé : aucun redimensionnement silencieux n'est autorisé ;
-- le capital réservé ne peut jamais dépasser le capital initial ;
-- une date invalide, une sortie antérieure à l'entrée ou un nominal invalide produit `observe` sans réservation ;
+- le capital réservé ne peut jamais dépasser le capital réalisé disponible à l'événement ;
+- une date invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL net non fini produit `observe` sans réservation ;
 - une décision déjà `remove` ou `observe` ne réserve rien ;
-- le PnL ne modifie pas le capital disponible avant la sortie dans C1 ;
-- chaque décision conserve le capital réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
+- chaque décision conserve le capital réalisé, réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
 - le pic de capital réservé, le minimum de capital libre et les refus de financement doivent être exposés ;
 - les agrégats de turnover doivent être recalculés sur les décisions finalement financées.
 
-Les expressions « portefeuille entièrement simulé », « courbe réalisée », « mark-to-market » ou équivalentes restent interdites tant que C4 n'est pas validé.
+## Trésorerie réalisée aux sorties
+
+- la courbe commence exactement au capital initial ;
+- l'entrée d'une position réserve son nominal mais ne crée aucun PnL ;
+- le PnL net d'une décision finalement `keep` est appliqué une seule fois, uniquement à sa date de sortie valide ;
+- les sorties d'une date sont agrégées et traitées avant les entrées de cette même date ;
+- un gain ou une perte ne modifie la capacité de financement qu'à partir de sa réalisation ;
+- une décision `remove` ou `observe` ne contribue jamais à la courbe ;
+- une date de sortie invalide ne peut pas être remplacée silencieusement par l'entrée ou la fin de série ;
+- ajouter, supprimer ou modifier un événement futur ne doit jamais changer un point de courbe ou une décision antérieurs ;
+- le dernier point doit égaler le capital initial plus la somme des PnL nets des trades financés et sortis valides ;
+- à chaque événement, `capital libre = capital réalisé - nominal réservé` doit être réconcilié ;
+- chaque événement conserve sa date, son type, le capital réalisé, le nominal réservé, le capital libre, le PnL appliqué et les décisions concernées avant et après ;
+- l'expression autorisée est « courbe de trésorerie réalisée aux sorties » ;
+- les expressions « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » restent interdites tant que ces comportements ne sont pas réellement implémentés et validés.
 
 ## Qualité quantitative
 
