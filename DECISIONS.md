@@ -88,4 +88,11 @@
 - Statut : active
 - Décision : une décision conservée après H1, C2 et C3 doit réserver son nominal complet jusqu'à sa sortie ; le capital libéré par les positions antérieures est disponible avant les entrées de même date.
 - Justification : dimensionner chaque trade à partir du même capital initial sans tenir compte des chevauchements produit des positions simultanées impossibles à financer.
-- Conséquence : les entrées de même date préservent la priorité C3 ; aucune position du groupe n'est recyclée au milieu de ce groupe ; un nominal insuffisamment financé est refusé sans redimensionnement ; les dates ou nominaux invalides produisent `observe` ; le PnL ne modifie pas encore le capital disponible et C4 reste nécessaire pour une courbe temporelle.
+- Conséquence : les entrées de même date préservent la priorité C3 ; aucune position du groupe n'est recyclée au milieu de ce groupe ; un nominal insuffisamment financé est refusé sans redimensionnement ; les dates, nominaux ou PnL non finis produisent `observe` ; le capital libre est désormais calculé à partir de la trésorerie réalisée par C4.
+
+## D015 - Le PnL devient disponible uniquement à la sortie
+
+- Statut : active
+- Décision : le PnL net d'une position financée est appliqué une seule fois, à sa date de sortie valide ; les sorties d'une date sont traitées avant les nouvelles entrées de cette date.
+- Justification : affecter le PnL à l'entrée anticipe une information future, fausse la chronologie des gains et pertes et peut financer artificiellement des positions.
+- Conséquence : la courbe commence au capital initial, agrège les PnL par date de sortie et réconcilie à chaque événement le capital réalisé, le nominal réservé et le capital libre. Elle peut être appelée « courbe de trésorerie réalisée aux sorties », mais jamais mark-to-market ou valorisation quotidienne tant que les positions ouvertes ne sont pas valorisées.
