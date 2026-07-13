@@ -7,6 +7,11 @@ OUTPUT.mkdir(exist_ok=True)
 URL = (ROOT / "index.html").as_uri()
 
 
+def wait_for_settled_results(page):
+    page.locator("#results").wait_for(state="visible")
+    page.wait_for_timeout(650)
+
+
 def open_edge_section(page):
     if page.locator("#edge-details").get_attribute("open") is None:
         page.locator("#edge-details summary").click()
@@ -24,7 +29,7 @@ def submit_range(page, low, base, high):
     page.locator("#grossEdgeBasePercent").fill(base)
     page.locator("#grossEdgeHighPercent").fill(high)
     page.get_by_role("button", name="Tester la stabilité dans la fourchette").click()
-    page.locator("#results").wait_for(state="visible")
+    wait_for_settled_results(page)
 
 
 with sync_playwright() as p:
@@ -48,7 +53,7 @@ with sync_playwright() as p:
         )
 
         page.get_by_role("button", name="Calculer le seuil brut").click()
-        page.locator("#results").wait_for(state="visible")
+        wait_for_settled_results(page)
         page.locator("#results").screenshot(
             path=str(OUTPUT / f"{name}-threshold-results.png")
         )
@@ -59,7 +64,7 @@ with sync_playwright() as p:
         page.get_by_role(
             "button", name="Mesurer ce qui reste de la valeur brute"
         ).click()
-        page.locator("#results").wait_for(state="visible")
+        wait_for_settled_results(page)
         page.locator("#results").screenshot(
             path=str(OUTPUT / f"{name}-point-results.png")
         )
