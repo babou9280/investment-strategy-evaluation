@@ -82,3 +82,10 @@
 - Décision : le plafond de turnover est appliqué décision après décision sur une fenêtre glissante de 365,25 jours, dans l'ordre des dates d'entrée.
 - Justification : un tri global des opportunités de plusieurs dates selon leur edge utilise implicitement la connaissance des opportunités futures et produit une sélection ex post.
 - Conséquence : une opportunité future ne peut jamais modifier une décision antérieure ; un classement par edge n'est autorisé qu'entre opportunités disponibles à la même date, puis l'identifiant sert de départage déterministe ; les diagnostics de budget sont conservés par décision.
+
+## D014 - Le nominal est réservé entre l'entrée et la sortie
+
+- Statut : active
+- Décision : une décision conservée après H1, C2 et C3 doit réserver son nominal complet jusqu'à sa sortie ; le capital libéré par les positions antérieures est disponible avant les entrées de même date.
+- Justification : dimensionner chaque trade à partir du même capital initial sans tenir compte des chevauchements produit des positions simultanées impossibles à financer.
+- Conséquence : les entrées de même date préservent la priorité C3 ; aucune position du groupe n'est recyclée au milieu de ce groupe ; un nominal insuffisamment financé est refusé sans redimensionnement ; les dates ou nominaux invalides produisent `observe` ; le PnL ne modifie pas encore le capital disponible et C4 reste nécessaire pour une courbe temporelle.
