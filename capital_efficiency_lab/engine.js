@@ -5,7 +5,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  const VERSION = 'capital-efficiency-lab-3-edge-range';
+  const VERSION = 'capital-efficiency-lab-4-optional-annual';
   const TOLERANCE = 1e-12;
 
   function classifyNumber(value, options) {
@@ -121,7 +121,7 @@
       capitalEur: classifyNumber(input.capitalEur, { required: false, min: Number.MIN_VALUE }),
       orderNotionalEur: classifyNumber(input.orderNotionalEur, { required: true, min: Number.MIN_VALUE }),
       sideCount: classifyNumber(input.sideCount, { required: true, min: 1, max: 2, integer: true }),
-      monthlyOperations: classifyNumber(input.monthlyOperations, { required: true, min: 0 }),
+      monthlyOperations: classifyNumber(input.monthlyOperations, { required: false, min: 0 }),
       commissionPerSideEur: classifyNumber(input.commissionPerSideEur, { required: true, min: 0 }),
       fxRatePerSide: classifyNumber(input.fxRatePerSide, { required: true, min: 0, max: 1 }),
       spreadTotalRate: classifyNumber(input.spreadTotalRate, { required: true, min: 0, max: 1 }),
@@ -146,7 +146,7 @@
 
     const N = classified.orderNotionalEur.value;
     const k = classified.sideCount.value;
-    const m = classified.monthlyOperations.value;
+    const m = classified.monthlyOperations.status === 'valid' ? classified.monthlyOperations.value : null;
     const C = classified.commissionPerSideEur.value;
     const F = classified.fxRatePerSide.value;
     const S = classified.spreadTotalRate.value;
@@ -166,8 +166,8 @@
     const variableCostEur = N * variableFloorRate;
     const totalCostEur = fixedCostEur + variableCostEur;
     const breakEvenGrossRate = totalCostEur / N;
-    const annualOperations = 12 * m;
-    const annualCostEur = totalCostEur * annualOperations;
+    const annualOperations = m == null ? null : 12 * m;
+    const annualCostEur = annualOperations == null ? null : totalCostEur * annualOperations;
 
     const results = {
       fixedCostEur: available(fixedCostEur),
@@ -175,9 +175,13 @@
       variableCostEur: available(variableCostEur),
       totalCostEur: available(totalCostEur),
       breakEvenGrossRate: available(breakEvenGrossRate),
-      annualOperations: available(annualOperations),
-      annualCostEur: available(annualCostEur),
-      annualDragToCapitalRate: K == null ? unavailable('capital_missing') : available(annualCostEur / K),
+      annualOperations: annualOperations == null ? unavailable('frequency_missing') : available(annualOperations),
+      annualCostEur: annualCostEur == null ? unavailable('frequency_missing') : available(annualCostEur),
+      annualDragToCapitalRate: annualCostEur == null
+        ? unavailable('frequency_missing')
+        : K == null
+          ? unavailable('capital_missing')
+          : available(annualCostEur / K),
       fixedCostShare: totalCostEur === 0 ? unavailable('total_cost_zero') : available(fixedCostEur / totalCostEur),
       variableCostShare: totalCostEur === 0 ? unavailable('total_cost_zero') : available(variableCostEur / totalCostEur),
       fixedVariableEqualOrder: variableFloorRate === 0 ? unavailable('variable_floor_zero') : available(fixedCostEur / variableFloorRate),
@@ -211,10 +215,22 @@
       results.netEdgeRate = available(netEdgeRate);
       results.grossEdgeEur = available(grossEdgeEur);
       results.netEdgeEur = available(netEdgeEur);
-      results.annualGrossEdgeEur = available(grossEdgeEur * annualOperations, { qualification: 'arithmetic_projection' });
-      results.annualNetEdgeEur = available(netEdgeEur * annualOperations, { qualification: 'arithmetic_projection' });
-      results.annualGrossEdgeToCapitalRate = K == null ? unavailable('capital_missing') : available((grossEdgeEur * annualOperations) / K, { qualification: 'arithmetic_projection' });
-      results.annualNetEdgeToCapitalRate = K == null ? unavailable('capital_missing') : available((netEdgeEur * annualOperations) / K, { qualification: 'arithmetic_projection' });
+      results.annualGrossEdgeEur = annualOperations == null
+        ? unavailable('frequency_missing')
+        : available(grossEdgeEur * annualOperations, { qualification: 'arithmetic_projection' });
+      results.annualNetEdgeEur = annualOperations == null
+        ? unavailable('frequency_missing')
+        : available(netEdgeEur * annualOperations, { qualification: 'arithmetic_projection' });
+      results.annualGrossEdgeToCapitalRate = annualOperations == null
+        ? unavailable('frequency_missing')
+        : K == null
+          ? unavailable('capital_missing')
+          : available((grossEdgeEur * annualOperations) / K, { qualification: 'arithmetic_projection' });
+      results.annualNetEdgeToCapitalRate = annualOperations == null
+        ? unavailable('frequency_missing')
+        : K == null
+          ? unavailable('capital_missing')
+          : available((netEdgeEur * annualOperations) / K, { qualification: 'arithmetic_projection' });
 
       if (G > 0) {
         results.edgeAbsorptionRate = available(breakEvenGrossRate / G);
@@ -337,10 +353,12 @@
     });
 
     const frequencyFactors = [0.5, 1, 2];
-    const frequencySensitivity = frequencyFactors.map(function (factor) {
-      const monthly = m * factor;
-      return { monthlyOperations: monthly, annualCostEur: totalCostEur * monthly * 12 };
-    });
+    const frequencySensitivity = m == null
+      ? []
+      : frequencyFactors.map(function (factor) {
+          const monthly = m * factor;
+          return { monthlyOperations: monthly, annualCostEur: totalCostEur * monthly * 12 };
+        });
 
     return {
       ok: true,
