@@ -1,7 +1,7 @@
 # Breaktest — preuves de marché et hypothèses
 
 - Dernière mise à jour : 13 juillet 2026
-- Direction étudiée : application de cost intelligence pour investisseurs particuliers
+- Direction étudiée : Capital Efficiency et Edge Survival pour investisseurs particuliers
 - Règle : distinguer faits, inférences et hypothèses commerciales
 
 ## 1. Preuve fondatrice interne
@@ -14,7 +14,7 @@ Le rapport académique `Évaluation Stratégie - Projet Ayman BESBAS 3.pdf` éta
 - le live-test ajoutait frais fixes, change, slippage et spread selon des règles explicites ;
 - la performance brute subsistait en live, mais le résultat net était contraint par un budget de friction trop important ;
 - le turnover annualisé du live-test était estimé autour de 180 %, contre 26,8 % dans le backtest, sous réserve de la courte fenêtre d'observation ;
-- la conclusion du rapport demandait d'identifier les composantes de coûts dominantes et la frontière de viabilité nette.
+- la conclusion du rapport demandait d'identifier les composantes dominantes et la frontière de viabilité nette.
 
 Cette étude démontre qu'un écart brut/net peut être matériel. Elle ne démontre ni la fréquence de ce problème chez les particuliers, ni leur volonté de payer.
 
@@ -22,14 +22,7 @@ Cette étude démontre qu'un écart brut/net peut être matériel. Elle ne démo
 
 ### Outils de portefeuille payants
 
-Sharesight propose actuellement :
-
-- une offre gratuite limitée ;
-- Starter à 7 USD par mois en facturation annuelle ;
-- Standard à 18 USD ;
-- Premium à 23,25 USD ;
-- rapports de performance, contribution, multidevise et risque ;
-- plus de 500 000 utilisateurs revendiqués.
+Sharesight propose actuellement une offre gratuite et plusieurs plans payants comprenant notamment rapports de performance, contribution, multidevise et risque.
 
 Source : [Sharesight — Pricing](https://www.sharesight.com/pricing/), consultée le 13 juillet 2026.
 
@@ -39,15 +32,16 @@ Source : [Sharesight — Pricing](https://www.sharesight.com/pricing/), consult�
 
 TradeZella affiche notamment :
 
-- 29 USD par mois pour l'offre Essential mensuelle ;
-- 49 USD par mois pour Premium ;
+- des offres mensuelles de 29 et 49 USD ;
 - import ou synchronisation de comptes ;
 - backtesting, replay et analyse ;
-- prise en compte des commissions et frais.
+- prise en compte des commissions et frais ;
+- paramètres de breakeven ;
+- position sizing, rapports et nombreuses analyses de performance.
 
 Source : [TradeZella — Pricing](https://www.tradezella.com/pricing), consultée le 13 juillet 2026.
 
-**Interprétation prudente :** l'analyse des frais est déjà une fonctionnalité attendue dans les journaux avancés. Breaktest ne peut pas se différencier par un simple total de commissions.
+**Interprétation prudente :** le total de commissions et une fonction de breakeven existent déjà dans un produit beaucoup plus large. Breaktest ne peut pas se différencier par un calculateur de frais ou un seuil isolé. L'espace potentiel se situe dans la relation transparente entre avantage brut, plancher variable, capital, taille, fréquence et contraintes inverses.
 
 ### Transparence des coûts en Europe
 
@@ -70,32 +64,36 @@ Cette littérature ne valide pas le produit ni ses prix.
 
 | Catégorie | Exemples | Force | Espace potentiel pour Breaktest |
 |---|---|---|---|
-| Journal de trading | TradeZella, Tradervue, Edgewonk | Import, analyse, psychologie, replay | Analyse indépendante de l'impact économique du capital, de la fréquence et des frictions |
-| Suivi de portefeuille | Sharesight et outils de brokers | Performance, dividendes, fiscalité, multidevise | Planification pré-transaction et décomposition plus explicite des coûts implicites |
-| Courtier | Tableaux de frais et rapports du courtier | Données propriétaires, intégration | Comparaison indépendante et multi-courtiers |
-| Comparateurs | Sites d'affiliation | Acquisition SEO et grilles tarifaires | Personnalisation mathématique sans faire dépendre le classement de la commission d'affiliation |
-| Tableur personnel | Excel, Google Sheets | Gratuit et flexible | Réduction du temps de configuration, hypothèses versionnées et explications |
+| Journal de trading | TradeZella, Tradervue, Edgewonk | Import, analyse, frais, breakeven, psychologie, replay | Contraintes économiques inverses et plancher variable explicitement reliés à l'avantage brut |
+| Suivi de portefeuille | Sharesight et outils de brokers | Performance, dividendes, fiscalité, multidevise | Planification pré-transaction et décomposition explicite de l'Edge Survival |
+| Courtier | Tableaux de frais et rapports du courtier | Données propriétaires, intégration | Analyse indépendante et multi-source |
+| Comparateurs | Sites d'affiliation | Acquisition SEO et grilles tarifaires | Personnalisation mathématique sans dépendance au classement sponsorisé |
+| Tableur personnel | Excel, Google Sheets | Gratuit et flexible | Réduction du temps de configuration, contraintes inverses, hypothèses versionnées et auditabilité |
 
 ## 4. Problèmes encore mal résolus — inférences
 
 Les opportunités suivantes sont des inférences à valider :
 
-1. Les grilles affichent les frais, mais pas toujours leur impact relatif au capital et à la fréquence réelle.
-2. Les coûts explicites, le change et les coûts implicites restent dispersés entre plusieurs sources.
-3. Le particulier ne sait pas facilement distinguer coût observé, coût contractuel et coût estimé.
-4. Les comparateurs recommandent souvent un courtier générique plutôt qu'un scénario précis de taille et de fréquence.
-5. Un rapport mensuel de « performance préservée ou absorbée » pourrait créer davantage de rétention qu'un calculateur ponctuel.
+1. Les grilles affichent les frais, mais rarement le rendement brut minimal qu'ils imposent au niveau exact du capital et de l'ordre.
+2. L'utilisateur ne distingue pas facilement la part fixe diluable du plancher variable non diluable.
+3. Un total de frais ne dit pas si un avantage brut subsiste après friction.
+4. Les outils existants peuvent afficher une performance nette sans calculer les conditions inverses : taille minimale, avantage requis ou fréquence frontière.
+5. Les coûts explicites, le change et les coûts implicites restent dispersés entre plusieurs sources.
+6. Le particulier ne sait pas facilement distinguer coût observé, contractuel, estimé et hypothèse.
+7. Un historique de « part d'avantage absorbée » pourrait créer davantage de rétention qu'un calcul ponctuel.
 
 ## 5. Hypothèses critiques
 
 | Hypothèse | Statut | Test prévu |
 |---|---|---|
+| La cible dispose d'un avantage brut explicite ou d'un historique permettant de l'estimer | Non validée | Prototype et entretiens post-usage |
+| Le seuil brut et le plancher variable révèlent une information nouvelle | Non validée | Test de compréhension |
+| Les contraintes inverses influencent une décision de planification réelle | Non validée | Question sur la décision concrète |
 | Le problème survient au moins mensuellement chez la cible | Non validée | Retours et seconde simulation |
 | Les utilisateurs fourniront leurs frais ou importeront un historique | Non validée | Demande d'import et fichiers réels |
-| Le résultat est assez utile pour être partagé | Non validée | Taux de partage du rapport |
-| 39 à 49 EUR par an est acceptable | Non validée | Paiement ou réservation réelle |
-| Le gain perçu dépasse le prix du produit | Non validée | Entretien post-paiement et économies estimées |
-| Les tarifs peuvent être maintenus avec peu de travail manuel | Non validée | Temps de mise à jour et taux d'erreur |
+| Le résultat est assez utile pour être sauvegardé ou partagé | Non validée | Taux de sauvegarde et partage |
+| 39 à 59 EUR par an est acceptable | Non validée | Paiement ou réservation réelle |
+| Le gain perçu dépasse le prix du produit | Non validée | Entretien post-paiement et valeur identifiée |
 | Les coûts implicites peuvent être estimés de manière crédible | Partiellement technique | Scénarios explicites, intervalles et comparaison aux données réelles |
 | Une base anonymisée d'exécution est légalement et commercialement possible | Non validée | Plus tard, après consentement et avis juridique |
 
@@ -106,7 +104,7 @@ Les utilisateurs qui souffrent le plus des frais disposent souvent du capital le
 Conséquence stratégique :
 
 - très petits capitaux : acquisition gratuite ;
-- cible payante : investisseurs autonomes pour lesquels les économies et la fréquence justifient un abonnement annuel ;
+- cible payante : utilisateurs avec méthode répétable, avantage brut et besoin de suivi ;
 - monétisation future : abonnement, API, données ou partenariats, sans sacrifier la neutralité.
 
 ## 7. Frontière réglementaire
@@ -120,6 +118,7 @@ Conséquences :
 - pas de conseil sur l'instrument à acheter ;
 - pas d'adaptation à la tolérance au risque ou au patrimoine ;
 - pas d'ordre transmis ;
+- pas de taille ou fréquence « optimale » ;
 - pas de classement influencé silencieusement par l'affiliation ;
 - conseil juridique avant extension vers recommandations, marketplace ou exécution.
 
@@ -129,7 +128,8 @@ Il existe :
 
 - un mécanisme financier démontré dans le projet ;
 - un marché payant adjacent pour le suivi et l'analyse ;
-- une attention réglementaire durable aux coûts ;
-- une lacune plausible entre grilles tarifaires et impact économique personnalisé.
+- une attention durable aux coûts ;
+- des concurrents qui couvrent déjà le simple suivi des commissions et le breakeven ;
+- une lacune plausible autour de l'Edge Survival, du plancher variable et des contraintes inverses.
 
-Il n'existe pas encore de preuve que Breaktest puisse acquérir, retenir ou monétiser cette clientèle. La prochaine étape est donc une expérience commerciale instrumentée, pas un développement fonctionnel étendu.
+Il n'existe pas encore de preuve que cette lacune soit assez douloureuse, fréquente et monétisable. La prochaine étape correcte est un laboratoire interne rigoureux, puis un test utilisateur ciblé, pas une publication du calculateur Q0 comme produit final.
