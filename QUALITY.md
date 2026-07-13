@@ -1,245 +1,335 @@
-# Breaktest - standard de qualité
+# Breaktest — standard de qualité
 
-## Ordre de priorité
+## 1. Ordre de priorité
 
-1. Exactitude.
+1. Exactitude financière et quantitative.
 2. Fonctionnement réel.
 3. Utilité décisionnelle.
-4. Auditabilité.
-5. Cohérence.
-6. Simplicité.
-7. Crédibilité commerciale.
-8. Qualité visuelle.
-9. Richesse fonctionnelle.
+4. Auditabilité et provenance.
+5. Cohérence entre code, interface et discours.
+6. Simplicité cognitive.
+7. Sécurité, confidentialité et accessibilité.
+8. Crédibilité commerciale et académique.
+9. Qualité visuelle.
+10. Richesse fonctionnelle.
 
-## Définition d'une fonctionnalité terminée
+Une amélioration située plus bas dans cette liste ne peut jamais dégrader une exigence supérieure.
 
-Une fonctionnalité n'est pas terminée parce qu'elle est visible. Elle doit :
+## 2. Définition d'une fonctionnalité terminée
 
-- produire un résultat réel et reproductible ;
-- gérer les entrées invalides et les états d'erreur ;
-- avoir des règles et hypothèses explicites ;
-- être couverte par des tests pertinents ;
+Une fonction n'est pas terminée parce qu'elle est visible ou parce que sa CI est verte.
+
+Elle doit :
+
+- répondre à un problème utilisateur explicite ;
+- posséder une définition financière sans ambiguïté ;
+- produire un résultat déterministe et reproductible ;
+- gérer absence, invalidité, zéro, valeur négative et frontières pertinentes ;
+- afficher unité, dénominateur, provenance et domaine de validité ;
+- être couverte par des oracles, invariants ou tests adaptés ;
+- fonctionner dans le navigateur et aux largeurs prévues ;
 - ne pas dégrader les fonctions déjà validées ;
-- être cohérente avec la documentation et le discours commercial.
+- être cohérente avec les contrats et fichiers canoniques ;
+- déclarer les limites non vérifiées ;
+- avoir fait l'objet d'une recherche d'angles morts adjacents et rétrospectifs.
 
-## Données et affirmations
+## 3. Niveaux de validation
 
 Toujours distinguer :
 
-- données observées ;
-- données calculées ;
-- hypothèses ;
-- estimations ;
-- exemples synthétiques ;
-- résultats non encore vérifiés.
+- **spécifié** : contrat écrit, non exécuté ;
+- **implémenté** : code présent ;
+- **testé localement** : commandes exécutées dans un environnement identifié ;
+- **validé techniquement** : suites pertinentes vertes sur le head exact ;
+- **inspecté visuellement** : captures ou appareil réel examinés ;
+- **compris par utilisateur** : observation réelle sans coaching excessif ;
+- **commercialement validé** : comportement répété et paiement réel ;
+- **juridiquement revu** : analyse professionnelle ou procédure adaptée ;
+- **prêt à publier** : gates techniques, produit, juridique et opérationnel satisfaits.
 
-Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou une intégration fonctionnelle.
+Aucun niveau ne doit être déduit d'un niveau inférieur.
 
-## Validation stricte des données numériques source
+## 4. Données et provenance
 
-- une donnée source numérique obligatoire est classée comme `valid`, `missing` ou `invalid` avant tout calcul ;
-- un zéro numérique réel est une valeur valide et ne doit jamais être confondu avec une absence ;
-- une valeur explicitement fournie mais invalide ne peut pas être remplacée par un fallback ou une dérivation ;
-- lorsqu'un seul des deux champs brut PnL/rendement manque, il peut être dérivé uniquement à partir de l'autre champ et d'un nominal tous deux valides ;
-- la provenance dérivée doit être conservée pour permettre son audit ;
-- une ligne invalide ne doit pas être supprimée silencieusement : le lot est refusé et l'erreur est signalée.
+Toute valeur doit être qualifiée comme :
 
-## Séparation des bases observées et simulées
-
-- le brut observé, le net fixe observé, le full-cost observé et le résultat simulé sont des bases distinctes ;
-- une base observée ne peut jamais être écrasée ou modifiée par les hypothèses de coûts actives ;
-- le scénario simulé doit rester identifiable comme calcul Breaktest et ne pas être présenté comme une valeur du journal ;
-- une valeur optionnelle entièrement absente peut utiliser un fallback documenté vers la base précédente ;
-- un fallback doit conserver sa provenance et la base dont il provient ;
-- lorsqu'un seul membre PnL/rendement manque, la dérivation exige l'autre membre et un nominal valides ;
-- un zéro observé est conservé comme zéro et ne déclenche aucun fallback ;
-- une valeur explicitement fournie mais invalide fait échouer le lot ;
-- si PnL et rendement sont tous deux fournis mais incompatibles, H2 conserve les valeurs et expose l'anomalie : aucune réconciliation silencieuse n'est autorisée avant H4 ;
-- lors d'un redimensionnement du nominal, le PnL fourni reste l'autorité de mise à l'échelle ; le rendement fourni reste conservé pour l'audit ;
-- la base sélectionnée doit être visible dans les KPI, le ledger, la courbe, l'audit et l'export ;
-- C4 applique une seule fois, à la sortie, le PnL de la base sélectionnée ;
-- une base nette observée ne doit jamais subir une seconde soustraction des coûts simulés ;
-- le filtre ex ante et la base de résultat doivent rester conceptuellement séparés : choisir une base observée ne réécrit pas rétroactivement les règles de décision.
-
-## Isolation temporelle des modèles
-
-- chaque décision doit être évaluée avec un modèle construit uniquement à partir des observations autorisées et disponibles avant cette décision ;
-- une observation d'entraînement n'est admissible que si ses dates d'entrée et de sortie sont valides, cohérentes et si sa sortie est strictement antérieure à l'entrée de la décision ;
-- une observation future, de même date ou issue d'un échantillon interdit ne doit jamais modifier une décision antérieure ;
-- une ligne live ne peut pas entraîner le modèle de référence backtest ;
-- une décision dont la date d'entrée est absente ou invalide doit être placée en observation avec un diagnostic explicite ;
-- le modèle, la profondeur d'entraînement et les exclusions doivent rester attachés à chaque décision afin d'être auditables.
-
-## Allocation chronologique du turnover
-
-- les décisions sont traitées par date d'entrée croissante ;
-- le budget consommé avant une décision ne dépend que des décisions antérieures encore présentes dans la fenêtre glissante ;
-- une opportunité future ne doit jamais modifier le statut ou les diagnostics d'une décision antérieure ;
-- le plafond s'applique sur les 365,25 jours précédant chaque décision ;
-- un classement par edge n'est autorisé qu'entre opportunités disponibles à la même date ;
-- les égalités restantes sont résolues par une règle déterministe documentée ;
-- une date invalide, une décision déjà retirée ou une décision en observation ne consomme aucun budget ;
-- le budget avant et après, les unités demandées, le rang simultané et le motif doivent être conservés par décision ;
-- le pic glissant réellement contraint doit être distingué de la moyenne annuelle descriptive ;
-- tout retour à un tri global des opportunités de plusieurs dates selon leur edge est interdit.
-
-## Réservation chronologique du capital
-
-- seules les décisions encore `keep` après les contrôles antérieurs peuvent réserver du capital ;
-- les entrées sont traitées chronologiquement par groupes de même date ;
-- avant un groupe, les positions antérieures dont la sortie est antérieure ou égale à cette entrée libèrent leur nominal ;
-- une position ouverte dans le groupe ne peut pas être libérée au milieu du même groupe, même si sa sortie est le même jour ;
-- l'ordre de financement d'un groupe doit préserver la priorité simultanée déterminée par C3 ;
-- le nominal complet est financé ou refusé : aucun redimensionnement silencieux n'est autorisé ;
-- une nouvelle réservation ne peut être acceptée que si le capital libre avant l'entrée couvre le nominal demandé ;
-- une perte réalisée peut rendre le capital libre négatif alors que d'autres positions restent ouvertes ; cet état doit rester visible et aucune nouvelle entrée ne peut être financée, car C4 ne simule pas les appels de marge ou liquidations forcées ;
-- une date invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL sélectionné non fini produit `observe` sans réservation ;
-- une décision déjà `remove` ou `observe` ne réserve rien ;
-- chaque décision conserve le capital réalisé, réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
-- le pic de capital réservé, le minimum de capital libre et les refus de financement doivent être exposés ;
-- les agrégats de turnover doivent être recalculés sur les décisions finalement financées.
-
-## Trésorerie réalisée aux sorties
-
-- la courbe commence exactement au capital initial ;
-- l'entrée d'une position réserve son nominal mais ne crée aucun PnL ;
-- le PnL sélectionné d'une décision finalement `keep` est appliqué une seule fois, uniquement à sa date de sortie valide ;
-- les sorties d'une date sont agrégées et traitées avant les entrées de cette même date ;
-- un gain ou une perte ne modifie la capacité de financement qu'à partir de sa réalisation ;
-- une décision `remove` ou `observe` ne contribue jamais à la courbe ;
-- une date de sortie invalide ne peut pas être remplacée silencieusement par l'entrée ou la fin de série ;
-- ajouter, supprimer ou modifier un événement futur ne doit jamais changer un point de courbe ou une décision antérieurs ;
-- le dernier point doit égaler le capital initial plus la somme des PnL sélectionnés des trades financés et sortis valides ;
-- à chaque événement, `capital libre = capital réalisé - nominal réservé` doit être réconcilié ;
-- chaque événement conserve sa date, son type, le capital réalisé, le nominal réservé, le capital libre, le PnL appliqué et les décisions concernées avant et après ;
-- l'expression autorisée est « courbe de trésorerie réalisée aux sorties » ;
-- les expressions « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » restent interdites tant que ces comportements ne sont pas implémentés et validés.
-
-## Provenance des coûts — règle Cost Intelligence
-
-Toute composante de coût doit être classée comme :
-
-- **observée** : montant présent dans un relevé ou une transaction ;
-- **contractuelle** : valeur issue d'un barème identifié, daté et sourcé ;
-- **estimée** : valeur calculée, par exemple spread ou slippage ;
-- **hypothèse utilisateur** : paramètre saisi sans preuve externe ;
-- **démonstration synthétique** : exemple construit et explicitement non observé.
+- `observed` : présente dans une source identifiée ;
+- `contractual` : issue d'un barème daté et sourcé ;
+- `estimated` : calculée par une méthode documentée ;
+- `derived` : reconstruite depuis d'autres valeurs valides ;
+- `user_assumption` : saisie sans preuve externe ;
+- `synthetic_demo` : exemple construit et explicitement non observé.
 
 Règles :
 
-- ne jamais présenter un coût estimé comme payé ;
-- afficher l'unité, le dénominateur, la source et la date ;
-- une valeur contractuelle périmée doit être signalée ;
-- ne pas additionner deux coûts qui représentent la même friction ;
-- afficher chaque composante avant l'agrégat ;
-- tester indépendamment commissions, change, spread, slippage et fréquence ;
-- l'arrondi est réservé à l'affichage ;
-- un résultat de seuil économique ne constitue pas une recommandation.
+- ne jamais présenter une estimation comme un montant payé ;
+- conserver source, date, devise, unité et transformation ;
+- distinguer `missing`, `invalid` et zéro réel ;
+- ne jamais remplacer silencieusement une valeur invalide ;
+- conserver tout fallback et sa provenance ;
+- pouvoir réconcilier un agrégat avec ses lignes sources ;
+- ne jamais préremplir une hypothèse synthétique en la qualifiant de saisie utilisateur.
 
-## Qualité Capital Efficiency
+## 5. Validation numérique stricte
 
-### Hiérarchie de valeur
+- Toute entrée numérique est classée avant calcul.
+- Une donnée obligatoire absente ou invalide bloque le calcul concerné.
+- Une donnée facultative absente rend uniquement les sorties dépendantes indisponibles.
+- Les nombres non finis sont refusés.
+- `-0` est normalisé.
+- L'arrondi est réservé à l'affichage.
+- Les calculs internes conservent la précision disponible.
+- Aucun `NaN`, `Infinity` ou `-0` ne doit être visible ou présent dans l'arbre validé.
+- Toute version modifiant un contrat numérique reçoit un identifiant distinct.
 
-- sans avantage brut fourni, le résultat principal est le seuil brut de couverture ;
-- avec avantage brut positif, les résultats principaux sont la part conservée et la marge nette ;
-- avec avantage brut nul ou négatif, la marge nette reste calculable mais les ratios de rétention sont indisponibles ;
-- le coût en euros explique les résultats, mais ne peut plus constituer seul la proposition de valeur centrale.
+## 6. Contrat de friction
 
-### Contrat économique
+Pour un nominal `N`, `k` côtés, commission par côté `C`, change par côté `F`, spread total `S` et slippage total `L` :
 
-- séparer coût fixe diluable et plancher variable ;
-- `break_even_gross_rate` doit rester supérieur ou égal au plancher variable ;
-- `gross_edge_eur - total_cost_eur = net_edge_eur` doit être réconcilié ;
-- une part d'avantage conservée négative ne doit jamais être tronquée ;
-- une contrainte impossible doit produire `structurally_unreachable` ;
-- une frontière non bornée dans un scénario de coût nul ne doit jamais afficher `Infinity` ;
-- fréquence et taille doivent agir uniquement sur les métriques prévues par le contrat ;
-- les projections annuelles doivent être qualifiées d'arithmétiques, sans capitalisation ni positions simultanées.
+```text
+fixed_cost_eur = k * C
+variable_floor_rate = k * F + S + L
+variable_cost_eur = N * variable_floor_rate
+total_cost_eur = fixed_cost_eur + variable_cost_eur
+break_even_gross_rate = total_cost_eur / N
+```
 
-### Contraintes inverses
+Exigences :
 
-Une taille, une fréquence ou un rendement brut requis ne peut être affiché que si :
+- commission et change sont par côté ;
+- spread et slippage couvrent le scénario complet ;
+- aucune friction n'est comptée deux fois ;
+- le seuil reste supérieur ou égal au plancher variable ;
+- la fréquence ne modifie pas le seuil par opération ;
+- la sensibilité à la taille converge vers le plancher variable lorsque le coût fixe existe ;
+- toute friction non modélisée reste déclarée.
 
-- la condition utilisateur est visible ;
-- la formule et le dénominateur sont définis ;
-- les états indisponibles sont traités ;
-- la sortie n'est pas formulée comme optimale, recommandée ou probable.
+## 7. Contrat Edge Survival ponctuel
 
-### Preuve minimale
+Lorsque le brut `G` est fourni :
 
-Le noyau Capital Efficiency exige :
+```text
+net_edge_rate = G - break_even_gross_rate
+gross_edge_eur = N * G
+net_edge_eur = gross_edge_eur - total_cost_eur
+```
 
-- oracle principal calculé indépendamment ;
-- tests des cas zéro, absent, invalide, négatif et positif ;
-- tests d'invariants ;
-- monotonie du seuil avec la taille lorsque le coût fixe est positif ;
-- convergence vers le plancher variable ;
-- indépendance du seuil par rapport à la fréquence ;
-- proportionnalité du coût annuel à la fréquence ;
-- absence de `NaN`, `Infinity` et `-0` visibles ;
-- exécution Chromium mobile et desktop ;
-- intégrité locale sans service externe ;
-- non-régression du moteur historique et du calculateur Q0.
+Si `G > 0` :
 
-## Qualité de la validation commerciale
+```text
+edge_absorption_rate = break_even_gross_rate / G
+edge_retained_rate = net_edge_rate / G
+```
 
-- un visiteur, un email ou un compliment n'est pas une preuve de paiement ;
-- une intention déclarée n'est pas un achat ;
-- mesurer activation, seconde utilisation, demande d'import, paiement et remboursement ;
-- ne jamais fabriquer de faux avis, compteurs, économies ou partenaires ;
-- ne pas sélectionner uniquement les retours favorables ;
-- conserver les objections et abandons ;
-- déclarer le trafic non qualifié séparément ;
-- ne pas construire une fonction avant d'identifier la preuve qu'elle doit obtenir ;
-- tout paiement de réservation doit indiquer clairement que le produit complet n'est pas encore disponible ;
-- la validation doit pouvoir conduire à l'abandon du produit.
+Règles :
 
-## Frontière produit / conseil
+- `G` est une moyenne brute par opération complète, gains et pertes inclus, avant coûts ;
+- taux de réussite, gain moyen des gagnants, CAGR, Sharpe et performance nette ne sont pas des substituts ;
+- une marge ou rétention négative n'est jamais tronquée ;
+- les ratios sont indisponibles si `G <= 0` ;
+- l'égalité au seuil selon la tolérance n'est pas une marge positive ;
+- un point positif sans cible de rétention reçoit un état explicite ;
+- le mode point et une fourchette dégénérée doivent rester cohérents aux frontières.
 
-- calculer l'impact de paramètres saisis est autorisé dans le périmètre produit ;
-- ne pas recommander un instrument, un courtier, une fréquence ou une taille ;
-- comparer des scénarios sans désigner automatiquement un gagnant ;
-- ne pas adapter un résultat à la tolérance au risque, au patrimoine ou aux objectifs personnels ;
-- ne pas transmettre ou exécuter d'ordre ;
-- ne pas utiliser un avertissement comme substitut à une conception réellement non prescriptive.
+Le contrat sémantique complet est `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md`.
 
-## Qualité quantitative
+## 8. Contrat Edge Range
 
-- documenter les formules importantes ;
-- utiliser des scénarios de référence calculés indépendamment ;
-- tester les invariants ;
-- signaler les limites statistiques ;
-- ne pas ajouter une métrique pour son apparence sophistiquée ;
-- distinguer métriques au niveau des trades et métriques calendaires ;
-- éviter look-ahead, cherry-picking et suppression rétrospective trompeuse des perdants.
+Trois modes seulement sont autorisés :
 
-## Qualité visuelle
+- `threshold_only` : aucune valeur brute ;
+- `point_estimate` : une valeur ponctuelle seule ;
+- `range_estimate` : basse, centrale et haute seules.
 
-Chaque composant doit servir à comprendre, comparer, diagnostiquer, décider, paramétrer ou exporter.
+Interdictions :
+
+- point et fourchette simultanés ;
+- fourchette partielle ;
+- réordonnancement ou complétion silencieuse ;
+- conversion silencieuse d'une fourchette dégénérée ;
+- langage de probabilité, confiance ou prévision sans méthode statistique validée.
+
+États :
+
+```text
+survives_full_range
+crosses_break_even
+fails_full_range
+above_variable_floor_full_range
+variable_floor_crossing
+structurally_unreachable_full_range
+```
+
+Les mêmes helpers de tolérance gouvernent point, fourchette, seuil et plancher.
+
+## 9. Entrées annuelles facultatives
+
+Capital et fréquence sont facultatifs pour le seuil par opération et Edge Survival.
+
+- fréquence absente : opérations annuelles, coût annuel et projections annuelles indisponibles avec `frequency_missing` ;
+- capital absent : ratios au capital indisponibles avec `capital_missing` ;
+- fréquence égale à zéro : valeur explicite et valide ;
+- aucune valeur cachée ou défaut silencieux ;
+- une frontière de fréquence sous budget peut être calculée depuis capital et budget sans fréquence actuelle ;
+- toute projection annuelle reste arithmétique, sans capitalisation, chevauchement ou variation de nominal.
+
+## 10. Contraintes inverses
+
+Une frontière ne peut être affichée que si :
+
+- sa condition utilisateur est visible ;
+- sa formule et son dénominateur sont définis ;
+- les cas indisponibles sont explicites ;
+- l'égalité est traitée selon le contrat ;
+- un coût fixe nul ne produit pas un faux ordre recommandé à zéro ;
+- une contrainte impossible produit `structurally_unreachable`, jamais `Infinity` ;
+- la formulation reste descriptive et non prescriptive.
+
+Une frontière mathématique n'établit pas encore sa faisabilité avec le capital disponible. Cette couche future suit `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+
+## 11. Résultats et fraîcheur
+
+- Toute modification d'une entrée masque immédiatement le résultat précédent.
+- Une erreur de validation masque les anciens résultats.
+- Un changement de mode ne conserve aucune sortie incompatible.
+- Le résultat annonce sa mise à jour par `aria-live`.
+- Le focus rejoint le premier champ invalide ou le nouveau résultat selon le cas.
+- Aucun résultat ne doit sembler correspondre à des hypothèses qui ont déjà changé.
+
+## 12. UX et accessibilité
+
+- Français concret avant jargon.
+- Résultat principal avant détails.
+- Une contrainte avancée à la fois.
+- Aucune hypothèse financière préremplie comme valeur utilisateur.
+- Démonstration synthétique activée explicitement.
+- Labels persistants et unités visibles.
+- Navigation clavier complète.
+- Focus visible.
+- `aria-live` utile, non bavard.
+- Contraste suffisant.
+- `prefers-reduced-motion` respecté.
+- Aucun débordement horizontal à 390, 768, 1024 et 1440 px.
+- La barre fixe ne doit pas masquer le résultat après défilement.
+- Safari/iPad doit être vérifié avant livraison à Ayman.
+- La compréhension en moins de 90 secondes reste une hypothèse tant qu'elle n'est pas observée.
+
+## 13. Design
+
+Chaque composant doit servir à :
+
+- comprendre ;
+- diagnostiquer ;
+- comparer ;
+- paramétrer ;
+- prouver ;
+- exporter.
 
 Éviter :
 
 - cartes décoratives ;
+- scores opaques ;
 - chiffres sans origine ;
 - animations gratuites ;
 - interactions factices ;
-- design générique de dashboard IA ;
-- densité excessive ;
-- apparence qui promet plus que le moteur réel.
+- apparence de casino, crypto ou signaux ;
+- terminal institutionnel factice ;
+- dashboard générique reconnaissable comme produit par IA ;
+- densité qui masque la valeur ;
+- apparence promettant plus que le moteur réel.
 
-## Validation technique attendue
+## 14. Règles historiques H1–H2/C1–C4
 
-Selon la modification :
+Le moteur historique conserve :
 
-- tests unitaires ;
-- tests d'invariants ;
-- tests d'intégration ;
-- tests end-to-end ;
-- lint et vérification des types ;
-- build ;
-- lancement réel dans un navigateur ;
-- inspection mobile et desktop ;
-- contrôle des états loading, empty, error et success.
+- validation ferme des données ;
+- séparation des bases observées et simulées ;
+- dérivation avec provenance ;
+- isolation temporelle stricte ;
+- turnover consommé chronologiquement ;
+- réservation du nominal complet ;
+- sorties avant entrées le même jour selon la convention validée ;
+- PnL appliqué une seule fois à la sortie ;
+- réconciliation du capital réalisé, réservé et libre ;
+- expression « trésorerie réalisée aux sorties », jamais mark-to-market sans implémentation.
 
-Ne jamais déclarer un contrôle réussi sans l'avoir exécuté.
+Toute évolution du nouveau produit doit préserver ces non-régressions lorsque les composants sont partagés.
+
+## 15. Sécurité et confidentialité
+
+Le prototype interne reste local-only :
+
+- aucune requête réseau ;
+- aucun compte ;
+- aucun cookie ;
+- aucun stockage persistant ;
+- aucun analytics ;
+- aucun email ;
+- aucun paiement ;
+- aucun secret ;
+- aucune dépendance distante.
+
+Avant tout import réel : modèle de menace, XSS, fichiers hostiles, CSV injection, limites de taille et confidentialité doivent être traités.
+
+## 16. Livraison hors ligne
+
+Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
+
+- HTML autonome ou bundle ZIP avec `index.html` ;
+- ressources relatives locales ;
+- interaction réelle ;
+- même moteur que celui validé ;
+- méthode, preuve et limites ;
+- manifeste et SHA-256 ;
+- test du package exact ;
+- aucun besoin de serveur lourd lorsque techniquement évitable.
+
+Les captures sont des preuves de revue, pas le livrable principal.
+
+## 17. Recherche d'angles morts
+
+Toute tâche matérielle applique `docs/governance/BLIND_SPOT_REGISTER.md`.
+
+Chercher au minimum :
+
+- défaut visible ;
+- défaut adjacent ;
+- défaut rétrospectif ;
+- hypothèse utilisateur irréaliste ;
+- incohérence de dénominateur ou horizon ;
+- risque de conseil implicite ;
+- limitation de données ;
+- erreur de provenance ;
+- échec de marché ;
+- dette opérationnelle ;
+- faiblesse de preuve académique.
+
+Une CI verte est une preuve technique partielle, jamais une preuve d'exhaustivité, d'utilité, de conformité ou de demande.
+
+## 18. Validation commerciale
+
+- Un compliment n'est pas une activation.
+- Une activation n'est pas une seconde utilisation.
+- Une intention n'est pas un paiement.
+- Une réservation n'est pas un abonnement actif.
+- Une économie simulée n'est pas une économie observée.
+- Conserver objections, abandons et trafic non qualifié.
+- Ne jamais fabriquer avis, compteurs, partenaires ou rareté.
+- Le protocole doit pouvoir conclure à l'abandon.
+
+## 19. Gate de fusion
+
+Avant fusion d'une évolution :
+
+- head exact identifié ;
+- build réussi ;
+- oracles et invariants verts ;
+- tests navigateur verts ;
+- captures générées et inspectées ;
+- syntaxe et intégrité locales vertes ;
+- non-régressions historiques et Q0 vertes ;
+- fichiers canoniques et registre synchronisés ;
+- limites restantes déclarées ;
+- aucun hors-périmètre ajouté.
+
+Ne jamais déclarer un contrôle réussi sans preuve exécutée.
