@@ -177,3 +177,34 @@
 - Conséquence : toute critique doit produire selon le cas une correction locale, une règle permanente, un test de non-régression, une limite explicite ou un gate de réexamen.
 - Registre d'autorité : `docs/governance/BLIND_SPOT_REGISTER.md`.
 - Limite : une CI verte ne prouve ni l'exhaustivité, ni l'utilité, ni la conformité, ni la demande commerciale.
+
+## D030 — L'avantage brut possède une définition financière stricte
+
+- Statut : active
+- Décision : l'avantage brut demandé par Edge Survival désigne une moyenne brute par opération complète, gains, pertes et opérations nulles inclus, avant les coûts saisis, sur un nominal compatible.
+- Conséquence : taux de réussite, gain moyen des gagnants, CAGR, Sharpe, performance totale du compte, objectif personnel et résultat déjà net ne peuvent jamais servir de substituts silencieux.
+- Contrat : `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md`.
+- Gate : avant toute dérivation automatique, préciser estimateur, échantillon, période, univers, base brute/nette et provenance.
+
+## D031 — Capital et fréquence sont réellement facultatifs pour le diagnostic par opération
+
+- Statut : active
+- Décision : le seuil, le plancher et Edge Survival doivent fonctionner sans capital ni fréquence mensuelle.
+- Conséquence : l'absence de fréquence rend les sorties annuelles indisponibles avec `frequency_missing` ; l'absence de capital rend uniquement les ratios au capital indisponibles avec `capital_missing`.
+- Interdiction : aucun défaut silencieux à quatre opérations mensuelles ou à un capital fictif.
+
+## D032 — Le formulaire initial reste neutre et les résultats obsolètes disparaissent
+
+- Statut : active
+- Décision : aucune hypothèse financière synthétique ne doit être préremplie comme saisie utilisateur ; achat simple / aller-retour doit être choisi explicitement.
+- Conséquence : le scénario de démonstration est chargé par une action volontaire et marqué `synthetic_demo`.
+- Règle de fraîcheur : toute modification d'entrée masque immédiatement le résultat précédent et demande un nouveau calcul.
+- Justification : éviter ancrage, provenance fausse et coexistence d'un diagnostic avec des hypothèses déjà modifiées.
+
+## D033 — Une frontière mathématique ne prouve pas la faisabilité du capital
+
+- Statut : active comme limite et direction future, non implémentée
+- Décision : distinguer capital de référence, capital alloué, cash disponible, nominal réservé et exposition avant de qualifier une taille frontière de faisable.
+- Conséquence : le produit actuel ne doit ni supposer un levier, ni affirmer qu'une frontière tient dans le capital disponible.
+- Contrat futur : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+- Gate : stabiliser Edge Survival, valider l'utilité de cette information, définir les positions simultanées, puis réutiliser C1/C4.
