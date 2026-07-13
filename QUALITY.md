@@ -45,6 +45,23 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - la provenance dérivée doit être conservée pour permettre son audit ;
 - une ligne invalide ne doit pas être supprimée silencieusement : le lot est refusé et l'erreur est signalée.
 
+## Séparation des bases observées et simulées
+
+- le brut observé, le net fixe observé, le full-cost observé et le résultat simulé sont des bases distinctes ;
+- une base observée ne peut jamais être écrasée ou modifiée par les hypothèses de coûts actives ;
+- le scénario simulé doit rester identifiable comme calcul Breaktest et ne pas être présenté comme une valeur du journal ;
+- une valeur optionnelle entièrement absente peut utiliser un fallback documenté vers la base précédente ;
+- un fallback doit conserver sa provenance et la base dont il provient ;
+- lorsqu'un seul membre PnL/rendement manque, la dérivation exige l'autre membre et un nominal valides ;
+- un zéro observé est conservé comme zéro et ne déclenche aucun fallback ;
+- une valeur explicitement fournie mais invalide fait échouer le lot ;
+- si PnL et rendement sont tous deux fournis mais incompatibles, H2 conserve les valeurs et expose l'anomalie : aucune réconciliation silencieuse n'est autorisée avant H4 ;
+- lors d'un redimensionnement du nominal, le PnL fourni reste l'autorité de mise à l'échelle ; le rendement fourni reste conservé pour l'audit ;
+- la base sélectionnée doit être visible dans les KPI, le ledger, la courbe, l'audit et l'export ;
+- C4 applique une seule fois, à la sortie, le PnL de la base sélectionnée ;
+- une base nette observée ne doit jamais subir une seconde soustraction des coûts simulés ;
+- le filtre ex ante et la base de résultat doivent rester conceptuellement séparés : choisir une base observée ne réécrit pas rétroactivement les règles de décision.
+
 ## Isolation temporelle des modèles
 
 - chaque décision doit être évaluée avec un modèle construit uniquement à partir des observations autorisées et disponibles avant cette décision ;
@@ -77,7 +94,7 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - le nominal complet est financé ou refusé : aucun redimensionnement silencieux n'est autorisé ;
 - une nouvelle réservation ne peut être acceptée que si le capital libre avant l'entrée couvre le nominal demandé ;
 - une perte réalisée peut rendre le capital libre négatif alors que d'autres positions restent ouvertes ; cet état doit rester visible et aucune nouvelle entrée ne peut être financée, car C4 ne simule pas les appels de marge ou liquidations forcées ;
-- une date invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL net non fini produit `observe` sans réservation ;
+- une date invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL sélectionné non fini produit `observe` sans réservation ;
 - une décision déjà `remove` ou `observe` ne réserve rien ;
 - chaque décision conserve le capital réalisé, réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
 - le pic de capital réservé, le minimum de capital libre et les refus de financement doivent être exposés ;
@@ -87,13 +104,13 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 
 - la courbe commence exactement au capital initial ;
 - l'entrée d'une position réserve son nominal mais ne crée aucun PnL ;
-- le PnL net d'une décision finalement `keep` est appliqué une seule fois, uniquement à sa date de sortie valide ;
+- le PnL sélectionné d'une décision finalement `keep` est appliqué une seule fois, uniquement à sa date de sortie valide ;
 - les sorties d'une date sont agrégées et traitées avant les entrées de cette même date ;
 - un gain ou une perte ne modifie la capacité de financement qu'à partir de sa réalisation ;
 - une décision `remove` ou `observe` ne contribue jamais à la courbe ;
 - une date de sortie invalide ne peut pas être remplacée silencieusement par l'entrée ou la fin de série ;
 - ajouter, supprimer ou modifier un événement futur ne doit jamais changer un point de courbe ou une décision antérieurs ;
-- le dernier point doit égaler le capital initial plus la somme des PnL nets des trades financés et sortis valides ;
+- le dernier point doit égaler le capital initial plus la somme des PnL sélectionnés des trades financés et sortis valides ;
 - à chaque événement, `capital libre = capital réalisé - nominal réservé` doit être réconcilié ;
 - chaque événement conserve sa date, son type, le capital réalisé, le nominal réservé, le capital libre, le PnL appliqué et les décisions concernées avant et après ;
 - l'expression autorisée est « courbe de trésorerie réalisée aux sorties » ;
