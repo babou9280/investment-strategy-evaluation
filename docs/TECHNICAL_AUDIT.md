@@ -4,20 +4,20 @@
 - Fichier source audité : `app/Breaktest_Studio.html` issu du pack local v0.2
 - SHA-256 source vérifié : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
 - Taille source : 132 899 octets
-- Version candidate courante : H1 + C2 + C3 + C1 + C4, 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`
+- Version fusionnée courante : H1 + C2 + C3 + C1 + C4, 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`
 
 ## 1. Conclusion exécutive
 
 Le prototype est une application locale réellement interactive, sans dépendance réseau ni bibliothèque externe. Le chargement, la navigation, les contrôles de capital et de coûts, l'import CSV, la recherche du ledger, la fenêtre méthodologique et l'export CSV ont été exécutés avec succès dans Chromium.
 
-Les quatre défauts structurels critiques démontrés dans la source initiale sont désormais corrigés et couverts par des preuves reproductibles :
+Les quatre défauts structurels critiques démontrés dans la source initiale sont désormais corrigés, fusionnés dans `breaktest-bootstrap` et couverts par des preuves reproductibles :
 
 1. validation ferme des données numériques obligatoires — H1 ;
 2. isolation temporelle du modèle par décision — C2 ;
 3. allocation chronologique du turnover — C3 ;
 4. financement du nominal et réalisation temporelle du PnL — C1 puis C4.
 
-La candidate C4 produit une courbe de trésorerie réalisée aux sorties et utilise les gains ou pertes réalisés pour le financement à partir de leur date de sortie. Elle ne constitue pas une valorisation mark-to-market ni une simulation complète de portefeuille.
+C4 produit une courbe de trésorerie réalisée aux sorties et utilise les gains ou pertes réalisés pour le financement à partir de leur date de sortie. Elle ne constitue pas une valorisation mark-to-market ni une simulation complète de portefeuille.
 
 Les défauts élevés H2 à H6 restent ouverts. Le prochain travail prioritaire porte sur les bases nettes/full-cost fournies par le journal.
 
@@ -43,7 +43,7 @@ Ces contrôles ne prouvent pas la compatibilité Safari/iPad complète. L'ouvert
 
 ## 3. Architecture et build cumulatif
 
-La version candidate est reproduite de manière déterministe :
+La version fusionnée est reproduite de manière déterministe :
 
 1. `scripts/materialize_breaktest.py` reconstruit la source et applique H1 ;
 2. `scripts/apply_c2_patch.py` applique l'isolation temporelle C2 ;
@@ -89,25 +89,29 @@ C1 traite les entrées chronologiquement par groupes de même date, préserve la
 
 Le détail est consigné dans `docs/validation/C1_CAPITAL_RESERVATION.md`.
 
-### C4 — courbe de capital non temporelle — corrigé et validé sur branche
+### C4 — courbe de capital non temporelle — corrigé et fusionné
+
+C4 est fusionné par la pull request `#10`, commit squash `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
 
 **Preuve initiale :** le PnL complet des trades était ajouté dans l'ordre des entrées sans tenir compte du moment de sortie.
 
-La candidate C4 unifie financement et réalisation dans une simulation événementielle :
+C4 unifie financement et réalisation dans une simulation événementielle :
 
 - la courbe commence au capital initial ;
 - une entrée réserve le nominal sans appliquer le PnL ;
 - les positions sorties sont groupées par jour, traitées avant les entrées de ce jour, puis leur nominal est libéré et leur PnL net est appliqué ;
 - un gain ou une perte réalisé modifie la capacité de financement à partir de cet événement ;
 - les décisions `remove` ou `observe` n'affectent pas la courbe ;
+- une perte extrême peut rendre le capital libre négatif alors qu'une autre position reste ouverte ; l'état est exposé sans inventer de liquidation forcée ;
 - le dernier point est réconcilié avec le capital initial et les PnL nets des positions financées ;
 - l'interface présente explicitement une courbe réalisée aux sorties, non mark-to-market.
 
 **Preuves versionnées :**
 
 - build H1 + C2 + C3 + C1 + C4 : 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
-- GitHub Actions `29245031719` sur le commit `ad15babbfdda2833f7120eb260cbc10cb47ebefd` : réussite ;
+- GitHub Actions finale `29245856820` sur le head `c510e943bf4634cfda0a92caf61c483a42cab3b9` : réussite ;
 - suites H1, C2, C3, C1 et C4 réussies dans Chromium ;
+- test de capital libre négatif après perte réalisée réussi ;
 - JavaScript construit validé avec `node --check` ;
 - gain et perte absents avant la sortie ;
 - agrégation déterministe des sorties simultanées ;
