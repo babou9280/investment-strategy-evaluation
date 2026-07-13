@@ -1,10 +1,12 @@
-# Prochaine mission Codex — Capital Efficiency Lab
+# Prochaine mission Codex — revue interne Capital Efficiency
 
 ## Statut
 
-La publication externe du calculateur Q0 est suspendue. La nouvelle mission active consiste à construire un prototype interne apportant davantage de valeur que le simple calcul de coûts.
+Le laboratoire Capital Efficiency est implémenté sous `capital_efficiency_lab/` et a réussi une première validation complète dans GitHub Actions.
 
-Branche de travail : `strategy/capital-efficiency-core`.
+La mission suivante n'est pas d'ajouter des fonctionnalités. Elle consiste à transformer la preuve technique en un prototype interne réellement critiquable, sans publication externe.
+
+Branche active : `strategy/capital-efficiency-core` jusqu'à fusion éventuelle de la pull request `#20`.
 
 Ne modifie jamais `main`. Ne publie rien. Ne fusionne rien automatiquement.
 
@@ -23,92 +25,85 @@ Lire intégralement :
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
 - `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
+- `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
+- `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
-- les validations historiques et Cost Intelligence existantes.
+- `docs/validation/CAPITAL_EFFICIENCY_LAB.md` ;
+- le code et les tests de `capital_efficiency_lab/`.
 
 ## Objectif unique
 
-Exécuter intégralement `docs/tasks/CAPITAL_EFFICIENCY_LAB.md`.
+Effectuer une revue hostile et multidisciplinaire du laboratoire comme si le produit devait être examiné simultanément par :
 
-Construire sous `capital_efficiency_lab/` un laboratoire local et responsive qui relie les coûts à un avantage brut fourni par l'utilisateur.
+- un utilisateur autonome non expert ;
+- un professionnel de marché ;
+- un responsable produit fintech ;
+- un ingénieur logiciel ;
+- un évaluateur d'école de commerce ou d'ingénierie très sélective.
 
-Le produit doit prioriser :
+La revue doit déterminer si une démonstration de 90 secondes montre réellement que Breaktest apporte davantage qu'un calculateur de frais.
 
-1. le seuil brut de couverture lorsque l'avantage brut est absent ;
-2. la marge nette et la part de l'avantage conservée lorsque l'avantage brut est fourni ;
-3. le plancher variable de friction ;
-4. la taille minimale de couverture ;
-5. la taille minimale permettant une rétention cible ;
-6. la fréquence frontière sous un budget annuel de friction ;
-7. la sensibilité transparente aux hypothèses.
+## Questions obligatoires
 
-Le coût en euros reste une explication du résultat, pas la proposition de valeur principale.
+1. Le seuil brut est-il compris sans aide ?
+2. Le plancher variable et le coût fixe diluable sont-ils distingués ?
+3. La part conservée et la marge nette sont-elles réconciliées et prioritaires ?
+4. Une contrainte inverse est-elle utile, conditionnelle et non prescriptive ?
+5. Un cas structurellement impossible est-il compréhensible ?
+6. Les hypothèses, unités, dénominateurs et provenance sont-ils visibles ?
+7. Le produit évite-t-il la fausse précision et la sophistication décorative ?
+8. Le parcours permet-il une critique sérieuse de la valeur commerciale ?
+9. Le projet produit-il une preuve crédible de finance, ingénierie et entrepreneuriat sans exagération ?
+10. Quelle fonction ou formulation devrait être supprimée plutôt qu'ajoutée ?
 
-## Règles quantitatives
+## Travail autorisé
 
-Implémenter exactement `docs/standards/EDGE_SURVIVAL_CONTRACT.md`.
+- corriger les défauts de calcul ou de contrat ;
+- améliorer la compréhension directe du parcours ;
+- supprimer les éléments redondants ;
+- ajouter des tests de non-régression ;
+- préparer un protocole de revue interne de cinq participants ;
+- préparer des scénarios synthétiques complémentaires strictement nécessaires ;
+- documenter les objections et critères d'abandon ;
+- vérifier Safari/iPad lorsque l'environnement le permet.
 
-- aucun arrondi interne ;
-- tous les taux en décimaux internes ;
-- dénominateurs nommés ;
-- provenance visible ;
-- avantage brut facultatif, jamais inventé par défaut ;
-- cas impossibles affichés sans `Infinity` ;
-- rétention négative non tronquée ;
-- projection annuelle qualifiée d'arithmétique, sans capitalisation ;
-- aucun score opaque ;
-- aucune taille ou fréquence qualifiée d'optimale.
+## Travail interdit
 
-## Tests obligatoires
+- publication externe ;
+- import réel ;
+- compte ou stockage persistant ;
+- données ou tarifs de courtier réels ;
+- analytics, email ou paiement ;
+- recommandation, score opaque ou sélection d'actif ;
+- statistiques avancées sans données suffisantes ;
+- reprise H3 à H6 ;
+- modification de `app/Breaktest_Studio.html` ;
+- modification fonctionnelle de `validation_site/` ;
+- développement de marketplace, affiliation ou API.
 
-- tous les cas du contrat Edge Survival ;
-- oracles indépendants ;
-- invariants de réconciliation ;
-- monotonicité et convergence ;
-- achat simple / aller-retour ;
-- avantage absent, nul, négatif et positif ;
-- cas structurellement impossible ;
-- zéro, absence, invalidité et valeurs non finies ;
-- aucune valeur `NaN`, `Infinity` ou `-0` visible ;
-- Chromium 390, 768, 1024 et 1440 px ;
-- clavier, focus, annonces accessibles et absence de débordement ;
-- absence de réseau, stockage persistant, secret, analytics, email et paiement ;
-- syntaxe JavaScript ;
-- non-régression H1–H2/C1–C4 ;
-- non-régression du site Q0 fusionné.
+## Validation obligatoire
 
-## Documentation à mettre à jour
+Après chaque modification :
 
-Après exécution réelle seulement :
-
-- `STATE.md` ;
-- `DECISIONS.md` avec les décisions D025 à D027 si elles n'y figurent pas encore ;
-- `METHODOLOGY.md` ;
-- `QUALITY.md` ;
-- `AGENTS.md` ;
-- `VALIDATION_PLAN.md` ;
-- `BUSINESS_MODEL.md` uniquement pour distinguer le calculateur gratuit de la couche Edge Survival ;
-- `docs/validation/CAPITAL_EFFICIENCY_LAB.md` avec commandes, résultats exacts, head, limites et preuves.
-
-Ne présenter aucune formule ou interface comme commercialement validée.
-
-## Interdictions
-
-- aucun déploiement externe ;
-- aucun import réel ;
-- aucun courtier ou tarif réel ;
-- aucun compte ;
-- aucun tracking ;
-- aucun paiement ;
-- aucune recommandation ;
-- aucune statistique avancée sans données ;
-- aucune reprise de H3 à H6 ;
-- aucune modification de `app/Breaktest_Studio.html` ;
-- aucune modification fonctionnelle de `validation_site/` ;
-- aucune modification de `main`.
+- oracles Node ;
+- tests d'invariants ;
+- Chromium à 390, 768, 1024 et 1440 px ;
+- navigation clavier et focus ;
+- absence de débordement ;
+- aucune valeur `NaN`, `Infinity` ou `-0` ;
+- intégrité locale ;
+- syntaxe ;
+- non-régressions H1–H2/C1–C4 et Q0.
 
 ## Définition de terminé
 
-La mission est terminée uniquement si le code, les tests, les logs et les documents existent réellement sur GitHub, que toutes les suites pertinentes réussissent sur le head exact et qu'aucune capacité externe n'a été activée.
+La revue interne est prête seulement si :
+
+- le laboratoire est techniquement vert sur le head exact ;
+- les limites et preuves sont synchronisées ;
+- un protocole court permet d'obtenir des observations réelles sans orienter les réponses ;
+- aucune nouvelle affirmation commerciale n'est ajoutée ;
+- les défauts connus sont classés en blocants, importants ou différables ;
+- la prochaine décision demandée à Ayman est unique et réellement nécessaire.
