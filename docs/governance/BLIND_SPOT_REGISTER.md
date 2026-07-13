@@ -243,8 +243,8 @@ Vérifier notamment :
 | BS-002 | P0 | Produit | L'utilisateur peut ne pas disposer d'un avantage brut défendable | Le cœur Edge Survival devient inutilisable | open | Tester seuil seul, point et fourchette avec utilisateurs ; mesurer la source réelle de G |
 | BS-003 | P0 | Finance | Certaines frictions réelles restent hors modèle | Seuil sous-estimé | open | Inventaire explicite par instrument et juridiction avant toute donnée réelle |
 | BS-004 | P0 | UX / réglementation | Une frontière mathématique peut être comprise comme recommandation | Risque réglementaire et mauvais usage | mitigated | Revue de langage + observation utilisateur sans coaching |
-| BS-005 | P0 | Ingénierie | Des résultats anciens peuvent rester visibles après entrée invalide ou changement de mode | Résultat trompeur | under_review | Tests navigateur sur erreurs, transitions et focus |
-| BS-006 | P0 | Quantitatif | Égalités au seuil/plancher et tolérance peuvent changer l'état | Classification fausse aux frontières | under_review | Oracles indépendants et tests autour de la tolérance |
+| BS-005 | P0 | Ingénierie | Des résultats anciens peuvent rester visibles après entrée invalide ou changement de mode | Résultat trompeur | mitigated | Suite navigateur exacte-head verte sur erreurs, transitions, focus et masquage ; inspection manuelle encore requise avant livraison |
+| BS-006 | P0 | Quantitatif | Égalités au seuil/plancher et tolérance peuvent changer l'état | Classification fausse aux frontières | mitigated | Oracles `edge_range.test.js` couvrant égalité, plage dégénérée, tolérance, zéro négatif et non-finis ; revue indépendante requise avant `validated` |
 | BS-007 | P1 | UX | La densité progressive peut rester trop élevée sur mobile | Abandon ou mauvaise compréhension | open | Inspection 390/768 et test de compréhension en moins de 90 secondes |
 | BS-008 | P1 | Navigateur | Le comportement Safari/iPad n'est pas prouvé | Livrable non exploitable par Ayman | open | Exécution réelle sur Safari/iPad avant livraison |
 | BS-009 | P1 | Business | Un calcul utile peut ne pas créer d'usage répété | Faible rétention et faible revenu | open | Deuxième usage non sollicité et demande d'import après test externe |
@@ -257,8 +257,7 @@ Vérifier notamment :
 | BS-016 | P2 | Marché | Le courtier peut intégrer gratuitement une fonction équivalente | Faible défensibilité | open | Valider la valeur des données multi-courtiers, historiques et benchmarks |
 | BS-017 | P2 | Réputation | L'assistance IA peut diminuer la crédibilité si la preuve n'est pas défendable | Faible valeur académique/professionnelle | open | Dossier de preuves, décisions, tests et capacité d'explication orale |
 | BS-018 | P2 | International | Devise, fiscalité, langue et structure de frais varient par pays | Produit non généralisable | deferred | Ne pas généraliser avant périmètre pays/instrument explicite |
-
-`under_review` est un état transitoire de travail dans ce tableau ; avant fusion il doit être converti vers un statut canonique défini en section 3.
+| BS-019 | P3 | Supply chain CI | Les runtimes Node des actions GitHub évoluent et peuvent rendre le pipeline obsolète | Validation interrompue sans défaut produit | deferred | Surveiller les avis de dépréciation et mettre à jour les actions avant retrait forcé ; run 434 fonctionne sous Node 24 |
 
 ## 6. Gate de revue multidisciplinaire
 
