@@ -67,7 +67,23 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - le pic glissant réellement contraint doit être distingué de la moyenne annuelle descriptive ;
 - tout retour à un tri global des opportunités de plusieurs dates selon leur edge est interdit.
 
-Les expressions « OOS strict », « walk-forward complet » ou « portefeuille exécutable » restent interdites tant que la réservation du capital entre positions et la courbe temporelle du portefeuille ne sont pas elles aussi validées.
+## Réservation chronologique du capital
+
+- seules les décisions encore `keep` après les contrôles antérieurs peuvent réserver du capital ;
+- les entrées sont traitées chronologiquement par groupes de même date ;
+- avant un groupe, les positions antérieures dont la sortie est antérieure ou égale à cette entrée libèrent leur nominal ;
+- une position ouverte dans le groupe ne peut pas être libérée au milieu du même groupe, même si sa sortie est le même jour ;
+- l'ordre de financement d'un groupe doit préserver la priorité simultanée déterminée par C3 ;
+- le nominal complet est financé ou refusé : aucun redimensionnement silencieux n'est autorisé ;
+- le capital réservé ne peut jamais dépasser le capital initial ;
+- une date invalide, une sortie antérieure à l'entrée ou un nominal invalide produit `observe` sans réservation ;
+- une décision déjà `remove` ou `observe` ne réserve rien ;
+- le PnL ne modifie pas le capital disponible avant la sortie dans C1 ;
+- chaque décision conserve le capital réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
+- le pic de capital réservé, le minimum de capital libre et les refus de financement doivent être exposés ;
+- les agrégats de turnover doivent être recalculés sur les décisions finalement financées.
+
+Les expressions « portefeuille entièrement simulé », « courbe réalisée », « mark-to-market » ou équivalentes restent interdites tant que C4 n'est pas validé.
 
 ## Qualité quantitative
 

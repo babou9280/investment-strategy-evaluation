@@ -24,14 +24,16 @@ Le build cumulatif actuel exécute :
 1. `scripts/materialize_breaktest.py` pour produire la version H1 ;
 2. `scripts/apply_c2_patch.py` pour appliquer l'isolation temporelle C2 ;
 3. `scripts/apply_c3_patch.py` pour appliquer l'allocation chronologique du turnover C3 ;
-4. `scripts/build_breaktest.py` comme point d'entrée unique.
+4. `scripts/apply_c1_patch.py` pour appliquer la réservation chronologique du capital C1 ;
+5. `scripts/build_breaktest.py` comme point d'entrée unique.
 
 Empreintes :
 
 - source v0.2 : `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00` ;
 - après H1 : `f4be9f41ce33f52f11f3387f7055fa9b1d951618ee8505352eaa7247cdc9353c` ;
 - après C2 durci : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454` ;
-- version courante après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets.
+- après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets ;
+- version candidate après C1 : `e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e`, 152 496 octets.
 
 ## Fonctionnalités confirmées par exécution
 
@@ -47,9 +49,12 @@ Empreintes :
 - ouverture et fermeture de la modal méthodologique ;
 - échappement de l'injection HTML testée dans le DOM ;
 - modèle d'entraînement antérieur propre à chaque décision ;
-- allocation du turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours.
+- allocation du turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours ;
+- réservation du nominal entre l'entrée et la sortie des positions financées ;
+- refus sans redimensionnement implicite lorsqu'un chevauchement dépasse le capital disponible ;
+- diagnostics de capital par décision et agrégats de financement.
 
-Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni l'exécutabilité complète du portefeuille.
+Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni une courbe de portefeuille temporelle.
 
 ## Corrections fusionnées
 
@@ -63,33 +68,36 @@ Le moteur distingue une valeur numérique valide, manquante et invalide, refuse 
 
 Le noyau C2 est fusionné par la pull request `#3`, puis durci par la pull request `#5`, commit squash `0134b3bb7166e2a4720c27ad754512952b3f75de`.
 
-Chaque décision utilise uniquement des lignes backtest valides dont la sortie est strictement antérieure à son entrée. Les lignes live, futures, de même date, invalides et la décision elle-même sont exclues. Les dates calendaires impossibles sont refusées et les lignes partageant un identifiant restent distinguées par identité d'objet.
-
-Les preuves sont enregistrées dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
+Chaque décision utilise uniquement des lignes backtest valides dont la sortie est strictement antérieure à son entrée. Les lignes live, futures, de même date, invalides et la décision elle-même sont exclues. Les preuves sont enregistrées dans `docs/validation/C2_TEMPORAL_ISOLATION.md`.
 
 ### C3 — allocation chronologique du turnover
 
 C3 est fusionné dans `breaktest-bootstrap` par la pull request `#6`, commit squash `703f259e056189b2250bc5c528bd4a914f26f03c`.
 
-Les décisions sont traitées par date d'entrée croissante. Le plafond est appliqué aux unités de turnover acceptées pendant les 365,25 jours précédents. Un classement par edge n'est utilisé qu'entre opportunités simultanément disponibles à la même date ; l'identifiant constitue le dernier départage déterministe. Une opportunité future ne peut pas modifier une décision antérieure.
+Les décisions sont traitées par date d'entrée croissante et le plafond est appliqué sur une fenêtre glissante de 365,25 jours. Une opportunité future ne peut pas modifier une décision antérieure. Les preuves sont enregistrées dans `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
 
-Chaque évaluation conserve le budget avant et après, les unités demandées, le rang à date identique et le motif. Le pic glissant contraint est distingué de la moyenne annuelle descriptive.
+## Correction validée sur branche, en attente de fusion
 
-Validations versionnées :
+### C1 — réservation du capital entre positions simultanées
 
-- `python3 scripts/build_breaktest.py` : réussite et empreinte C3 conforme ;
-- suites H1, C2 et C3 : réussite ;
-- test Chromium C3 : réussite ;
+La candidate C1 est présente sur `codex/c1-capital-reservation`. Elle réserve le nominal complet des décisions encore `keep`, libère avant chaque groupe les positions antérieures sorties, préserve la priorité simultanée C3, ne recycle pas une nouvelle position au milieu de son groupe et refuse sans redimensionnement un nominal insuffisamment financé.
+
+Les dates d'entrée ou de sortie invalides, les sorties antérieures à l'entrée et les nominaux invalides produisent `observe` sans réservation. Le PnL ne modifie pas le capital disponible. Les métriques de turnover sont recalculées sur les décisions finalement financées.
+
+Validations exécutées dans GitHub Actions sur la candidate verrouillée :
+
+- build H1 + C2 + C3 + C1 : 152 496 octets, SHA-256 `e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e` ;
+- suite H1 stricte : réussite ;
+- smoke test Chromium H1 : réussite ;
+- suites C2, C3 et C1 : réussite ;
 - JavaScript construit : syntaxe validée avec `node --check` ;
-- invariance des décisions antérieures face à l'ajout ou à la modification d'opportunités futures ;
-- renouvellement de la fenêtre, égalités de date, budget nul, date invalide et décision préfiltrée couverts.
+- deux positions simultanées incompatibles, positions non chevauchantes, libération le jour de la sortie, absence de recyclage intragroupe, priorité C3, capital exact ou nul, dates invalides, sortie inversée, décision préfiltrée, opportunité future et PnL futur extrême couverts.
 
-Le détail est enregistré dans `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
+Le détail est enregistré dans `docs/validation/C1_CAPITAL_RESERVATION.md`.
 
-## Défauts critiques encore ouverts
+## Défaut critique encore ouvert
 
-1. **C1 — absence de réservation du capital entre positions simultanées** : plusieurs positions qui se chevauchent peuvent encore dépasser ensemble le capital déclaré ;
-2. **C4 — courbe de capital non temporelle** : le PnL est encore affecté selon l'entrée et la courbe n'est ni une trésorerie réalisée aux sorties ni une valeur mark-to-market.
+1. **C4 — courbe de capital non temporelle** : le PnL est encore affecté selon l'entrée et la courbe n'est ni une trésorerie réalisée aux sorties ni une valeur mark-to-market.
 
 ## Défauts élevés encore ouverts
 
@@ -103,8 +111,8 @@ Le détail est enregistré dans `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
 
 - exactitude de chaque formule ;
 - conformité complète des calculs aux journaux et rapports sources ;
-- portefeuille réellement financé entre positions simultanées ;
 - courbe de capital réalisée ou mark-to-market ;
+- réinvestissement chronologique du PnL, levier, appels de marge, intérêts et flux externes ;
 - robustesse de l'import sur une couverture large de formats ;
 - sécurité exhaustive du parsing et des exports ;
 - compatibilité complète Safari, iPad, mobile et navigateurs ;
@@ -116,15 +124,13 @@ Le détail est enregistré dans `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
 - branche de référence isolée : `breaktest-bootstrap` ;
-- branche C1 préparée : `codex/c1-capital-reservation` ;
+- branche C1 candidate : `codex/c1-capital-reservation` ;
 - la branche `main` et le projet universitaire d'origine restent inchangés ;
 - les PDF restent locaux et ne sont pas nécessaires aux corrections de code actuellement ciblées.
 
 ## Prochaine exécution autorisée
 
-1. repartir du dernier `breaktest-bootstrap` documenté ;
-2. actualiser la branche C1 sur cette base ;
-3. corriger uniquement la réservation du capital entre positions simultanées ;
-4. réexécuter intégralement H1, C2 et C3 et ajouter les invariants C1 ;
-5. auditer la pull request avant toute fusion dans `breaktest-bootstrap` ;
-6. ne rien fusionner dans `main`.
+1. auditer le diff final et l'état propre de la pull request C1 ;
+2. fusionner C1 uniquement dans `breaktest-bootstrap` si la dernière exécution verrouillée reste verte ;
+3. créer ensuite une branche isolée pour C4 — courbe de capital temporelle ;
+4. ne rien fusionner dans `main`.

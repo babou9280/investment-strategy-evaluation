@@ -48,7 +48,13 @@ Demander une validation seulement pour une décision stratégique, coûteuse, ir
 - Autoriser un classement par edge uniquement entre opportunités simultanément disponibles à la même date, avec un dernier départage déterministe.
 - Garantir par test que l'ajout, la suppression ou la modification d'une opportunité future ne change pas une décision antérieure.
 - Conserver les diagnostics de turnover au niveau de chaque décision : budget avant, unités demandées, budget après, rang simultané et motif.
-- Ne pas employer les termes « OOS strict », « walk-forward complet » ou « portefeuille exécutable » tant que la réservation du capital et la courbe temporelle du portefeuille ne sont pas validées.
+- Réserver le nominal complet des positions financées entre l'entrée et la sortie ; ne jamais redimensionner silencieusement un trade pour le faire entrer dans le capital libre.
+- Libérer les positions antérieures avant un groupe de même date, mais ne jamais recycler au milieu du groupe une position nouvellement ouverte ce même jour.
+- Préserver l'ordre de priorité C3 entre entrées simultanées lors du financement.
+- Garantir par test que le capital réservé ne dépasse jamais le capital initial et qu'une opportunité ou un PnL futur ne modifie pas une décision antérieure.
+- Conserver les diagnostics de financement par décision : capital réservé et libre avant/après, nominal demandé, décision, date de libération et motif.
+- Recalculer les métriques de turnover sur les décisions finalement financées.
+- Ne pas employer les termes « portefeuille entièrement simulé », « courbe réalisée » ou « mark-to-market » tant que C4 n'est pas validé.
 - Préserver la cohérence entre code, produit, méthodologie, deck et guide.
 
 ## Fichier canonique actuel

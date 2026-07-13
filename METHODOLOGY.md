@@ -59,7 +59,25 @@ Le plafond de turnover est appliqué dans l'ordre temporel des décisions :
 
 L'invariant principal est qu'ajouter, supprimer ou modifier une opportunité future ne peut jamais changer une décision antérieure.
 
-L'isolation temporelle du modèle et l'allocation chronologique du turnover ne suffisent pas encore à prouver l'exécutabilité complète : le capital n'est pas réservé entre positions simultanées et la courbe de capital n'est pas temporelle. Les libellés ne doivent donc pas revendiquer un « walk-forward complet », un « OOS strict » ou un portefeuille financé.
+## Réservation du capital — règle C1
+
+Après H1, C2 et C3, le moteur applique un contrôle de financement chronologique :
+
+- les évaluations sont groupées par date d'entrée ;
+- avant chaque groupe, les positions antérieures dont la sortie est antérieure ou égale à l'entrée du groupe libèrent leur nominal ;
+- une position ouverte dans le groupe n'est pas libérée au milieu de ce même groupe, même si sa sortie est le même jour ;
+- les décisions du groupe sont financées dans l'ordre de priorité simultanée C3 ;
+- seules les décisions encore `keep` peuvent réserver du capital ;
+- le nominal demandé est le nominal dimensionné de la position ;
+- il est financé intégralement ou refusé : aucun redimensionnement implicite n'est appliqué ;
+- si le capital libre est insuffisant, la décision devient `remove` ;
+- une date d'entrée invalide, une date de sortie invalide, une sortie antérieure à l'entrée ou un nominal invalide produit `observe` ;
+- le PnL n'augmente ni ne diminue le capital disponible : seule la libération du nominal est modélisée ;
+- chaque décision conserve les réservations et disponibilités avant/après, le nominal demandé, la date de libération, le rang et le motif ;
+- le résultat expose le pic de capital réservé, le minimum de capital libre et les refus de financement ;
+- les métriques finales de turnover sont recalculées sur les décisions réellement financées.
+
+Cette règle garantit, dans les scénarios couverts, que le capital réservé ne dépasse pas le capital initial. Elle ne modélise pas le réinvestissement du PnL, le levier, les appels de marge, les intérêts ou les flux externes.
 
 ## Stress tests actuels
 
@@ -73,7 +91,7 @@ L'isolation temporelle du modèle et l'allocation chronologique du turnover ne s
 ## Limites importantes
 
 - le bootstrap ne corrige pas le biais de sélection, la dépendance temporelle ou le changement de régime ;
-- le turnover chronologique ne corrige pas l'absence de réservation du capital ;
+- la réservation du nominal ne transforme pas la courbe affichée en courbe de trésorerie réalisée ou mark-to-market ;
 - un drawdown aux dates de sortie n'est pas un drawdown mark-to-market quotidien ;
 - une CVaR sur peu de trades est instable ;
 - retirer le top N est un stress test ex post, pas une règle de trading ;

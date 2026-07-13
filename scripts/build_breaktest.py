@@ -5,5 +5,5 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-for script in ("materialize_breaktest.py", "apply_c2_patch.py", "apply_c3_patch.py"):
+for script in ("materialize_breaktest.py", "apply_c2_patch.py", "apply_c3_patch.py", "apply_c1_patch.py"):
     subprocess.run([sys.executable, str(ROOT / "scripts" / script)], cwd=ROOT, check=True)

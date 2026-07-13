@@ -8,7 +8,7 @@ Breaktest est une couche de contrôle qualité pour les backtests et journaux de
 
 > Importer. Stresser. Vérifier ce qui reste.
 
-Breaktest ne vend pas une promesse de surperformance. Il aide à déterminer si une performance historique résiste aux coûts, aux gagnants extrêmes, à une séparation temporelle entre historique et décisions, et aux incohérences de données.
+Breaktest ne vend pas une promesse de surperformance. Il aide à déterminer si une performance historique résiste aux coûts, aux gagnants extrêmes, à une séparation temporelle entre historique et décisions, aux contraintes de turnover et de financement, et aux incohérences de données.
 
 ## Utilisateur cible provisoire
 
@@ -21,6 +21,7 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - divergence entre backtest et live-test ;
 - fuite temporelle entre historique d'entraînement et décisions rejouées ;
 - allocation rétrospective du budget de turnover ;
+- positions simultanées incompatibles avec le capital disponible ;
 - journal incohérent avec le résultat publié ;
 - faible profondeur d'échantillon ;
 - résultats difficiles à expliquer et à partager.
@@ -45,9 +46,9 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - analyse des trades conservés ou retirés ;
 - exports locaux.
 
-La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur et applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours. Une opportunité future ne peut plus évincer une décision antérieure par un tri global ex post.
+La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur, applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours, puis réserve le nominal des positions financées entre leur entrée et leur sortie. Une opportunité future ne peut plus évincer une décision antérieure et les positions simultanées ne peuvent plus réserver ensemble plus que le capital initial.
 
-Cette chaîne ne doit toutefois pas être présentée comme un portefeuille entièrement exécutable ou un walk-forward complet : le capital n'est pas encore réservé entre positions simultanées et la courbe affichée n'est pas encore une courbe réalisée ou mark-to-market.
+Cette chaîne ne doit toutefois pas être présentée comme une simulation complète de portefeuille : la courbe affichée n'est pas encore une courbe de trésorerie réalisée ou mark-to-market, le PnL n'est pas réinvesti et le moteur ne gère pas encore levier, appels de marge, intérêts ou flux externes.
 
 ## Différenciation
 
