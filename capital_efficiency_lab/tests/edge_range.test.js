@@ -24,7 +24,7 @@ const base = {
   provenance: 'synthetic_demo'
 };
 
-assert.equal(engine.VERSION, 'capital-efficiency-lab-3-edge-range');
+assert.equal(engine.VERSION, 'capital-efficiency-lab-4-optional-annual');
 
 const threshold = engine.compute(base);
 assert.equal(threshold.ok, true);
