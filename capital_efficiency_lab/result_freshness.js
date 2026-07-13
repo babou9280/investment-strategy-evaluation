@@ -10,7 +10,7 @@
   function invalidateRenderedResult(event) {
     if (!event.isTrusted || results.hidden) return;
     results.hidden = true;
-    live.textContent = 'Hypothèses modifiées. Le résultat précédent est masqué ; relance le calcul.';
+    live.textContent = 'Hypothèses modifiées. Le résultat précédent est masqué ; recalcule avant de l’interpréter.';
   }
 
   form.addEventListener('input', invalidateRenderedResult);
