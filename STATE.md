@@ -4,11 +4,11 @@
 
 Le 13 juillet 2026, Ayman a validé le pivot vers **Breaktest Cost Intelligence** pour les petits et moyens portefeuilles.
 
-Le même jour, après revue des prototypes, il a constaté qu'un simple calcul de coûts apportait une valeur insuffisante. Le seuil brut nécessaire a été identifié comme une sortie nettement plus utile.
+Après revue des prototypes, il a constaté qu'un simple calcul de coûts apportait une valeur insuffisante. Le seuil brut nécessaire a été identifié comme une sortie nettement plus utile.
 
 La direction active est donc raffinée en **Capital Efficiency** : relier les frictions à un avantage brut et montrer la marge qui subsiste, les contraintes qui peuvent être satisfaites et celles qui sont structurellement impossibles.
 
-La phase active est la **conception et le prototype interne**, avant toute publication externe.
+La phase active est la **revue interne du prototype**, avant toute publication externe.
 
 Documents de référence :
 
@@ -27,20 +27,20 @@ Documents de référence :
 
 La pull request `#16` a été fusionnée dans `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
 
-Le dossier `validation_site/` contient un calculateur local de coûts avec :
+Le dossier `validation_site/` contient un calculateur local avec :
 
 - achat simple ou aller-retour ;
 - commission, change, spread et slippage ;
-- coût par opération, coût annuel et ratio sur capital ;
+- coût par opération, annuel et relatif au capital ;
 - seuil brut de couverture ;
 - comparaison descriptive ;
 - partage sans capital exact par défaut.
 
-La suite finale a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, GitHub Actions run `29269231453`.
+La suite finale a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, run `29269231453`.
 
-La pull request `#17` a ensuite ajouté la préparation de lancement et les contrôles d'intégrité, fusionnés au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`. L'exécution finale `29270109903` a réussi.
+La pull request `#17` a ajouté la préparation de lancement et les contrôles d'intégrité, fusionnés au commit `3ffd20c845e0dcae8c7438fb866a18601ecc7ab3`. Le run final `29270109903` a réussi.
 
-Cependant, le site Q0 n'est pas publié : sa valeur reste principalement descriptive et ne justifie pas encore un test externe.
+Le site Q0 n'est pas publié : sa valeur reste principalement descriptive et ne justifie pas encore un test externe.
 
 ## 3. Capital Efficiency Lab implémenté et validé techniquement
 
@@ -53,23 +53,24 @@ Le dossier `capital_efficiency_lab/` répond à la question :
 Fonctions exécutées :
 
 - seuil brut de couverture ;
-- plancher variable de friction ;
+- plancher variable ;
 - séparation coût fixe / coût variable ;
 - marge nette en taux et euros ;
-- part d'avantage absorbée et conservée lorsque l'avantage brut est positif ;
+- part d'avantage absorbée et conservée lorsque le brut est positif ;
 - taille frontière pour une marge positive ;
 - taille frontière pour une rétention cible ;
 - cas structurellement impossible ;
+- traitement exact des coûts fixes nuls sans faux ordre recommandé à zéro ;
 - fréquence frontière sous budget annuel ;
 - rendement brut requis pour une cible nette ;
 - sensibilité du seuil à la taille ;
 - provenance `user_assumption` ou `synthetic_demo` ;
 - états indisponibles explicites sans `Infinity` ni fallback silencieux.
 
-Le head `5715bdd75271bf6197ae07a989b1ddb44931b2dc` a réussi l'exécution GitHub Actions `29277241457`, comprenant :
+La version `capital-efficiency-lab-2`, sur le head `9ac41ecedb2e6e7937859f3963ae9cd940a08b9f`, a réussi le run GitHub Actions `29278627744`, comprenant :
 
 - oracles Node ;
-- invariants et cas limites ;
+- invariants et cas limites, dont les frontières à coût fixe nul ;
 - Chromium à 390, 768, 1024 et 1440 px ;
 - focus d'erreur et absence de débordement horizontal ;
 - intégrité locale sans réseau ou persistance ;
@@ -131,6 +132,7 @@ Le nouveau laboratoire reste isolé et n'a modifié ni ce moteur ni le site Q0.
 - scénario principal exact et réconcilié ;
 - seuil, plancher, marge, absorption et rétention ;
 - contraintes inverses et impossibilités structurelles ;
+- frontières exactes lorsque les coûts fixes sont nuls ;
 - budget annuel, fréquence frontière et cible nette ;
 - tests de monotonicité et convergence ;
 - interface locale responsive ;
@@ -168,7 +170,7 @@ Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
 
 ### Établi
 
-- le rapport fondateur illustre qu'une prime brute peut être fortement absorbée par les frictions et le turnover ;
+- le rapport fondateur illustre qu'une prime brute peut être absorbée par les frictions et le turnover ;
 - le mécanisme du seuil de couverture est calculable ;
 - les contraintes inverses du laboratoire sont techniquement exécutables ;
 - des outils adjacents obtiennent des abonnements payants ;
@@ -194,10 +196,9 @@ Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
 
 ## 10. Prochaine exécution autorisée
 
-1. inspecter le laboratoire comme produit et non seulement comme calcul ;
-2. corriger les défauts quantitatifs, d'accessibilité ou de compréhension détectés ;
-3. obtenir une exécution verte sur le head documentaire final ;
-4. fusionner uniquement dans `breaktest-bootstrap` si le périmètre et les preuves restent cohérents ;
-5. ne rien publier ;
-6. préparer ensuite une critique interne et une expérience utilisateur limitée ;
-7. ne reprendre aucune extension réelle avant preuve d'utilité et décision explicite.
+1. obtenir une exécution verte sur le head documentaire final ;
+2. fusionner uniquement dans `breaktest-bootstrap` si le périmètre et les preuves restent cohérents ;
+3. ne rien publier ;
+4. mener ensuite la revue interne hostile définie dans `NEXT_CODEX_PROMPT.md` ;
+5. préparer une expérience limitée uniquement après cette revue ;
+6. ne reprendre aucune extension réelle avant preuve d'utilité et décision explicite.
