@@ -123,7 +123,8 @@ Toute composante de coût doit être classée comme :
 - **observée** : montant présent dans un relevé ou une transaction ;
 - **contractuelle** : valeur issue d'un barème identifié, daté et sourcé ;
 - **estimée** : valeur calculée, par exemple spread ou slippage ;
-- **hypothèse utilisateur** : paramètre saisi sans preuve externe.
+- **hypothèse utilisateur** : paramètre saisi sans preuve externe ;
+- **démonstration synthétique** : exemple construit et explicitement non observé.
 
 Règles :
 
@@ -135,6 +136,51 @@ Règles :
 - tester indépendamment commissions, change, spread, slippage et fréquence ;
 - l'arrondi est réservé à l'affichage ;
 - un résultat de seuil économique ne constitue pas une recommandation.
+
+## Qualité Capital Efficiency
+
+### Hiérarchie de valeur
+
+- sans avantage brut fourni, le résultat principal est le seuil brut de couverture ;
+- avec avantage brut positif, les résultats principaux sont la part conservée et la marge nette ;
+- avec avantage brut nul ou négatif, la marge nette reste calculable mais les ratios de rétention sont indisponibles ;
+- le coût en euros explique les résultats, mais ne peut plus constituer seul la proposition de valeur centrale.
+
+### Contrat économique
+
+- séparer coût fixe diluable et plancher variable ;
+- `break_even_gross_rate` doit rester supérieur ou égal au plancher variable ;
+- `gross_edge_eur - total_cost_eur = net_edge_eur` doit être réconcilié ;
+- une part d'avantage conservée négative ne doit jamais être tronquée ;
+- une contrainte impossible doit produire `structurally_unreachable` ;
+- une frontière non bornée dans un scénario de coût nul ne doit jamais afficher `Infinity` ;
+- fréquence et taille doivent agir uniquement sur les métriques prévues par le contrat ;
+- les projections annuelles doivent être qualifiées d'arithmétiques, sans capitalisation ni positions simultanées.
+
+### Contraintes inverses
+
+Une taille, une fréquence ou un rendement brut requis ne peut être affiché que si :
+
+- la condition utilisateur est visible ;
+- la formule et le dénominateur sont définis ;
+- les états indisponibles sont traités ;
+- la sortie n'est pas formulée comme optimale, recommandée ou probable.
+
+### Preuve minimale
+
+Le noyau Capital Efficiency exige :
+
+- oracle principal calculé indépendamment ;
+- tests des cas zéro, absent, invalide, négatif et positif ;
+- tests d'invariants ;
+- monotonie du seuil avec la taille lorsque le coût fixe est positif ;
+- convergence vers le plancher variable ;
+- indépendance du seuil par rapport à la fréquence ;
+- proportionnalité du coût annuel à la fréquence ;
+- absence de `NaN`, `Infinity` et `-0` visibles ;
+- exécution Chromium mobile et desktop ;
+- intégrité locale sans service externe ;
+- non-régression du moteur historique et du calculateur Q0.
 
 ## Qualité de la validation commerciale
 
