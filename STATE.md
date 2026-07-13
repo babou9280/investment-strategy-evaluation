@@ -32,7 +32,7 @@ Empreintes :
 - après C2 : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454` ;
 - après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets ;
 - après C1 : `e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e`, 152 496 octets ;
-- candidate C4 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`, 158 682 octets.
+- version fusionnée après C4 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`, 158 682 octets.
 
 ## Fonctionnalités confirmées par exécution
 
@@ -67,18 +67,18 @@ Fusionnée par la pull request `#6`. Preuves : `docs/validation/C3_CHRONOLOGICAL
 
 Fusionnée par la pull request `#8`, commit squash `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`. Le nominal complet est réservé jusqu'à la sortie, les priorités C3 sont préservées et aucun redimensionnement silencieux n'est autorisé. Preuves : `docs/validation/C1_CAPITAL_RESERVATION.md`.
 
-## Correction validée sur branche, prête à fusionner
-
 ### C4 — courbe de trésorerie réalisée aux sorties
 
-La candidate C4 unifie la réservation C1 et la réalisation du PnL dans une simulation événementielle : les sorties sont traitées avant les entrées de même date, le nominal est libéré, le PnL net est appliqué une seule fois à la sortie et la trésorerie réalisée modifie le financement à partir de cet instant.
+Fusionnée par la pull request `#10`, commit squash `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
+
+C4 unifie la réservation C1 et la réalisation du PnL dans une simulation événementielle : les sorties sont traitées avant les entrées de même date, le nominal est libéré, le PnL net est appliqué une seule fois à la sortie et la trésorerie réalisée modifie le financement à partir de cet instant.
 
 La courbe commence au capital initial, agrège les sorties d'une même date et se termine au capital initial augmenté de la somme des PnL nets des trades financés. Elle est explicitement présentée comme **réalisée aux sorties** et non mark-to-market.
 
 Validations de référence :
 
 - build H1 + C2 + C3 + C1 + C4 : 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
-- GitHub Actions `29245705155` sur le commit `ded3ded64edf5cf66e90438ca086678e197d9356` : réussite ;
+- GitHub Actions finale `29245856820` sur le head `c510e943bf4634cfda0a92caf61c483a42cab3b9` : réussite ;
 - suites H1, C2, C3, C1 et C4 : réussite ;
 - test complémentaire de capital libre négatif après perte réalisée : réussite ;
 - Chromium et `node --check` : réussite ;
@@ -109,13 +109,14 @@ Preuves : `docs/validation/C4_REALIZED_EQUITY_CURVE.md`.
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
 - branche de référence isolée : `breaktest-bootstrap` ;
-- branche candidate C4 : `codex/c4-realized-equity-curve` ;
+- C4 est fusionné ;
+- la prochaine branche active doit être dédiée à H2 ;
 - `main` et le projet universitaire d'origine restent inchangés.
 
 ## Prochaine exécution autorisée
 
-1. auditer le diff final de C4 et conserver une exécution GitHub Actions verte sur le head exact ;
-2. fusionner C4 uniquement dans `breaktest-bootstrap` ;
-3. synchroniser l'état canonique après fusion ;
-4. ouvrir ensuite une branche isolée pour H2 — bases nettes du journal ;
+1. fusionner cette synchronisation documentaire dans `breaktest-bootstrap` ;
+2. créer une branche isolée pour H2 — bases nettes du journal ;
+3. exécuter la mission exacte de `NEXT_CODEX_PROMPT.md` ;
+4. préserver H1, C2, C3, C1 et C4 ;
 5. ne rien fusionner dans `main`.
