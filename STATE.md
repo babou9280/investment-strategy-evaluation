@@ -78,8 +78,9 @@ La courbe commence au capital initial, agrège les sorties d'une même date et s
 Validations de référence :
 
 - build H1 + C2 + C3 + C1 + C4 : 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
-- GitHub Actions `29245031719` : réussite ;
+- GitHub Actions `29245705155` sur le commit `ded3ded64edf5cf66e90438ca086678e197d9356` : réussite ;
 - suites H1, C2, C3, C1 et C4 : réussite ;
+- test complémentaire de capital libre négatif après perte réalisée : réussite ;
 - Chromium et `node --check` : réussite ;
 - gains/pertes aux sorties, sorties simultanées, financement par gain, blocage par perte, invalides, absence de recyclage intragroupe, réconciliation et invariance au futur couverts.
 
