@@ -1,6 +1,6 @@
 # C4 — courbe de trésorerie réalisée aux sorties
 
-Status: implemented and validated on `codex/c4-realized-equity-curve`, based on `breaktest-bootstrap` commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`.
+Status: merged into `breaktest-bootstrap` by pull request `#10`, squash commit `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
 
 ## Objective
 
@@ -22,9 +22,9 @@ Replace the non-temporal entry-order PnL curve with an audited realized-cash cur
 
 - build: 158 682 bytes ;
 - SHA-256: `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
-- GitHub Actions: `29245705155` on commit `ded3ded64edf5cf66e90438ca086678e197d9356` ;
+- GitHub Actions final run: `29245856820` on validated head `c510e943bf4634cfda0a92caf61c483a42cab3b9` ;
 - H1, C2, C3, C1, C4 and negative-free-cash suites: passed ;
 - Chromium execution and JavaScript syntax: passed ;
 - detailed evidence: `docs/validation/C4_REALIZED_EQUITY_CURVE.md`.
 
-The change remains isolated from `main` and is ready for controlled merge into `breaktest-bootstrap` after final head verification.
+`main` was not modified. The next isolated correction is H2.
