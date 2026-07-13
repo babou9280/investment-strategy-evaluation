@@ -56,6 +56,7 @@ jobs:
           {
             node tests/h1_strict_numeric_validation.test.js
             node tests/h2_journal_net_bases.test.js
+            node tests/validation_calculator.test.js
           } 2>&1 | tee numeric-tests.log
 
       - name: Browser regression suites
@@ -77,6 +78,7 @@ jobs:
             if [ -f tests/h2_journal_net_bases.py ]; then
               python3 tests/h2_journal_net_bases.py
             fi
+            python3 tests/validation_browser.py
           } 2>&1 | tee browser-tests.log
 
       - name: JavaScript syntax
@@ -94,6 +96,9 @@ jobs:
           Path('/tmp/breaktest-built.js').write_text('\n'.join(scripts), encoding='utf-8')
           PY
             node --check /tmp/breaktest-built.js
+            node --check validation_site/config.js
+            node --check validation_site/calculator.js
+            node --check validation_site/app.js
           } 2>&1 | tee javascript-syntax.log
 
       - name: Upload validation logs
