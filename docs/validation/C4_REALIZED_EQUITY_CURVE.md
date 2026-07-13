@@ -4,8 +4,8 @@
 - Base : `breaktest-bootstrap` après C1, commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`
 - Build H1 + C2 + C3 + C1 + C4 : **158 682 octets**
 - SHA-256 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`
-- Exécution GitHub Actions de référence : `29245031719`
-- Commit testé : `ad15babbfdda2833f7120eb260cbc10cb47ebefd`
+- Exécution GitHub Actions de référence : `29245705155`
+- Commit testé : `ded3ded64edf5cf66e90438ca086678e197d9356`
 
 ## Comportement validé
 
@@ -31,6 +31,7 @@ C4 remplace la courbe cumulée dans l'ordre des entrées par une simulation év�
 - sortie puis entrée le même jour : le nominal et le PnL sortants sont disponibles avant le financement entrant ;
 - gain réalisé finançant une entrée qui ne pouvait pas être financée auparavant ;
 - perte réalisée empêchant une entrée ultérieure ;
+- perte extrême rendant le capital libre négatif pendant qu'une autre position reste ouverte : état conservé, nouvelle entrée refusée, aucune liquidation ou appel de marge inventé ;
 - absence de recyclage intragroupe pour deux positions ouvertes et sorties le même jour ;
 - décisions retirées ou observées sans effet sur le capital réalisé ;
 - date de sortie invalide sans imputation silencieuse ;
@@ -50,10 +51,11 @@ python3 tests/c2_temporal_isolation.py
 python3 tests/c3_chronological_turnover.py
 python3 tests/c1_capital_reservation.py
 python3 tests/c4_realized_equity_curve.py
+python3 tests/c4_negative_free_cash.py
 node --check /tmp/breaktest-built.js
 ```
 
-Résultats observés dans GitHub Actions `29245031719` :
+Résultats observés dans GitHub Actions `29245705155` :
 
 ```text
 H1 strict numeric validation tests passed
@@ -62,12 +64,14 @@ C2 temporal isolation tests passed
 C3 chronological turnover tests passed
 C1 capital reservation tests passed
 C4 realized equity curve tests passed
+C4 negative free cash test passed
 JavaScript syntax: success
 ```
 
 ## Limites maintenues
 
 - la courbe n'est pas mark-to-market et ne valorise pas les positions ouvertes entre entrée et sortie ;
+- un capital libre négatif n'entraîne aucune liquidation forcée, car les appels de marge ne sont pas modélisés ;
 - aucun levier, appel de marge, intérêt, frais de financement, dividende, dépôt ou retrait externe n'est simulé ;
 - un drawdown calculé uniquement aux sorties n'est pas un drawdown quotidien de portefeuille ;
 - H2 à H6 restent ouverts ;
