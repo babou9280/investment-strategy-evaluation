@@ -78,6 +78,13 @@ with sync_playwright() as p:
         assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
 
+        # Une modification d'hypothèse invalide immédiatement le résultat
+        # rendu. Un ancien diagnostic ne doit jamais rester visible à côté de
+        # nouvelles entrées qui ne lui correspondent plus.
+        page.locator('#grossEdgePercent').fill('2,10')
+        assert page.locator('#results').is_hidden()
+        assert 'recalcul' in (page.locator('#result-live').text_content() or '').lower()
+
         # Mode fourchette : la marge change de signe autour du seuil.
         page.locator('input[name="edgeInputMode"][value="range"]').check()
         assert page.locator('#range-edge-fields').is_visible()
