@@ -87,7 +87,7 @@ break_even_gross_rate >= variable_floor_rate
 
 Ces sorties ne sont calculables que lorsque `G` est fourni.
 
-### 5.1 Marge nette attendue
+### 5.1 Marge nette
 
 ```text
 net_edge_rate = G - break_even_gross_rate
@@ -128,11 +128,11 @@ edge_absorption_rate + edge_retained_rate == 1
 
 Si `G <= 0`, ces deux ratios sont indisponibles ; la marge nette reste calculable.
 
-## 6. Taille minimale
+## 6. Contraintes de taille
 
-### 6.1 Taille minimale pour une marge nette positive
+### 6.1 Frontière pour une marge nette strictement positive
 
-La condition est :
+Condition structurelle :
 
 ```text
 G - variable_floor_rate > 0
@@ -151,9 +151,18 @@ Sinon :
 minimum_order_for_positive_net = fixed_cost_eur / (G - variable_floor_rate)
 ```
 
-La valeur mathématique correspond au point de couverture exact. Pour exiger une marge strictement positive, l'interface doit préciser que l'ordre doit être supérieur à ce seuil, hors précision d'affichage.
+La valeur calculée correspond au point de couverture exact. Lorsque `fixed_cost_eur > 0`, une marge strictement positive exige un nominal strictement supérieur à ce seuil, hors précision d'affichage.
 
-### 6.2 Taille minimale pour une rétention cible
+Lorsque `fixed_cost_eur = 0` et que la condition structurelle est satisfaite :
+
+```text
+minimum_order_for_positive_net = 0
+boundary = no_positive_minimum_from_fixed_costs
+```
+
+L'interface ne doit pas suggérer un ordre nul. Elle doit expliquer qu'aucune taille minimale positive n'est imposée par les coûts fixes ; toute taille strictement positive satisfait cette composante du modèle.
+
+### 6.2 Frontière pour une rétention cible
 
 Condition :
 
@@ -173,20 +182,40 @@ Définir :
 retention_denominator = G * (1 - R) - variable_floor_rate
 ```
 
-Si `retention_denominator <= 0` :
+Cas 1 — `retention_denominator < 0` :
 
 ```text
 minimum_order_for_retention = unavailable
 minimum_order_reason = structurally_unreachable
 ```
 
-Sinon :
+Cas 2 — `retention_denominator = 0` et `fixed_cost_eur > 0` :
+
+```text
+minimum_order_for_retention = unavailable
+minimum_order_reason = structurally_unreachable
+```
+
+Aucun nominal fini ne peut éliminer le terme `fixed_cost_eur / N`.
+
+Cas 3 — `retention_denominator = 0` et `fixed_cost_eur = 0` :
+
+```text
+minimum_order_for_retention = 0
+boundary = no_positive_minimum_from_fixed_costs
+```
+
+La cible est exactement satisfaite pour toute taille strictement positive dans le modèle.
+
+Cas 4 — `retention_denominator > 0` :
 
 ```text
 minimum_order_for_retention = fixed_cost_eur / retention_denominator
 ```
 
-Cas `fixed_cost_eur = 0` : le seuil vaut zéro si la condition variable est satisfaite. L'interface ne doit pas suggérer un ordre nul ; elle doit expliquer qu'aucune taille minimale positive n'est imposée par les coûts fixes dans le modèle.
+Si `fixed_cost_eur = 0`, le résultat vaut zéro et porte également le diagnostic `no_positive_minimum_from_fixed_costs`.
+
+L'interface ne doit jamais afficher un ordre nul comme prescription. Elle doit expliquer l'absence de minimum positif imposé par les coûts fixes.
 
 ## 7. Budget annuel de friction
 
@@ -260,11 +289,11 @@ fixed_variable_equal_order = fixed_cost_eur / variable_floor_rate
 
 À ce nominal, coût fixe et coût variable sont égaux selon le modèle.
 
-Si `variable_floor_rate = 0`, cette sortie est indisponible ou infinie ; aucun affichage `Infinity` n'est autorisé.
+Si `variable_floor_rate = 0`, cette sortie est indisponible. Aucun affichage `Infinity` n'est autorisé.
 
 ## 10. Projection annuelle de l'avantage
 
-Uniquement comme projection arithmétique sans compounding, sans positions simultanées et sans réinvestissement :
+Uniquement comme projection arithmétique sans capitalisation, sans positions simultanées et sans réinvestissement :
 
 ```text
 annual_gross_edge_eur = gross_edge_eur * annual_operations
@@ -280,15 +309,24 @@ annual_net_edge_to_capital_rate = annual_net_edge_eur / K
 
 L'interface doit afficher : « projection arithmétique, sans capitalisation ni contrainte de positions simultanées ».
 
-## 11. États
+## 11. États et diagnostics
+
+États de scénario :
 
 ```text
 threshold_only
 edge_fully_absorbed
 edge_partially_retained
 retention_target_met
-structurally_unreachable
 not_computable
+```
+
+Diagnostics de contrainte :
+
+```text
+structurally_unreachable
+unbounded_within_model
+no_positive_minimum_from_fixed_costs
 ```
 
 Règles :
@@ -299,7 +337,9 @@ Règles :
 - `retention_target_met` si `R` est présent et `edge_retained_rate >= R` ;
 - sans `R`, ne pas inventer de seuil de qualification ; afficher seulement les valeurs ;
 - `structurally_unreachable` s'applique à une contrainte particulière, pas nécessairement à tout le scénario ;
-- `not_computable` si les entrées requises sont absentes ou invalides.
+- `not_computable` si les entrées requises sont absentes ou invalides ;
+- `unbounded_within_model` n'est autorisé que lorsque le modèle n'impose aucune frontière finie ;
+- `no_positive_minimum_from_fixed_costs` doit être expliqué en langage naturel.
 
 ## 12. Sensibilité
 
@@ -368,6 +408,8 @@ annual_net_edge_to_capital_rate = 0.0432
 - coûts fixes nuls ;
 - coûts variables nuls ;
 - coût total nul ;
+- rétention exacte lorsque le coût fixe est nul ;
+- rétention impossible malgré un coût fixe nul ;
 - avantage brut absent, nul, négatif et positif ;
 - avantage égal au seuil ;
 - avantage égal au plancher variable ;
@@ -379,7 +421,7 @@ annual_net_edge_to_capital_rate = 0.0432
 - valeurs invalides, infinies et chaînes ;
 - invariants de réconciliation ;
 - absence de `NaN`, `Infinity` et `-0` visible ;
-- monotonicité du seuil par rapport à la taille lorsque le coût fixe est positif ;
+- monotonie du seuil par rapport à la taille lorsque le coût fixe est positif ;
 - convergence vers le plancher variable ;
 - indépendance de la fréquence sur le seuil par opération ;
 - proportionnalité du coût annuel à la fréquence ;
