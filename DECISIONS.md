@@ -208,3 +208,15 @@
 - Conséquence : le produit actuel ne doit ni supposer un levier, ni affirmer qu'une frontière tient dans le capital disponible.
 - Contrat futur : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 - Gate : stabiliser Edge Survival, valider l'utilité de cette information, définir les positions simultanées, puis réutiliser C1/C4.
+
+## D034 — Breaktest Cost Gate devient la trajectoire pré-trade validée
+
+- Statut : **active comme direction stratégique, validée par Ayman le 14 juillet 2026 ; non implémentée et non commercialement validée**
+- Décision : Breaktest doit pouvoir évoluer vers une couche de contrôle pré-trade personnalisée qui confronte un trade envisagé aux frictions, au capital et cash libres, à la taille proposée, à la liquidité, aux paramètres utilisateur et à un avantage brut ou une fourchette explicitement fournis.
+- Articulation : Cost Intelligence, Capital Efficiency et Edge Survival Envelope restent le noyau analytique de cette future couche ; leur travail en cours n'est ni annulé ni interrompu.
+- États de travail autorisés : `compatible_under_assumptions`, `adjustment_required`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `insufficient_data`.
+- Data Quality Gate : toute conclusion utilisant une donnée externe exige source, timestamp, fraîcheur, instrument, place, devise, couverture, provenance, valeurs manquantes, incertitude, licence et domaine de validité visibles.
+- Interdictions actuelles : aucune donnée temps réel, connexion courtier, compte, stockage, réseau, exécution, probabilité d'exécution, ordre limite conseillé ou recommandation personnalisée sans décisions et validations distinctes.
+- Frontière réglementaire : le vocabulaire « exécuter », « rejeter », « acheter », « vendre », « ordre limite conseillé », « taille optimale » ou équivalent prescriptif reste interdit avant revue juridique et produit.
+- Contrat de direction : `docs/product/COST_GATE_DIRECTION.md`.
+- Gates : stabilisation Edge Survival, test utilisateur, faisabilité du capital, prototype synthétique manuel, Data Quality Gate, validation économique et revue juridique avant toute extension externe.
