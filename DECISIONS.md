@@ -45,54 +45,55 @@
 ## D008 - Amorçage GitHub isolé avant dépôt produit définitif
 
 - Statut : active
-- Décision : utiliser temporairement la branche `breaktest-bootstrap` du dépôt académique `babou9280/investment-strategy-evaluation` pour la première mission Codex.
-- Justification : préserver `main`, conserver la filiation avec le travail universitaire et éviter de bloquer l'audit sur une opération de création de dépôt.
-- Conséquence : aucune modification Breaktest n'est fusionnée dans `main` avant l'audit ; une migration vers un dépôt produit dédié reste possible après clarification de l'architecture et des besoins de confidentialité.
+- Décision : utiliser temporairement la branche `breaktest-bootstrap` du dépôt académique `babou9280/investment-strategy-evaluation`.
+- Justification : préserver `main`, conserver la filiation avec le travail universitaire et éviter de bloquer l'audit.
+- Conséquence : aucune modification Breaktest n'est fusionnée dans `main` ; une migration vers un dépôt produit dédié reste possible.
 
 ## D009 - Codex travaille depuis le dépôt, sans dépendance à une pièce jointe ZIP
 
 - Statut : active
-- Décision : les missions Codex Cloud doivent prendre pour source les fichiers versionnés dans le dépôt et la branche associés à l'environnement.
-- Justification : l'interface Codex Cloud actuelle est organisée autour d'un dépôt et d'un environnement ; le transfert d'un ZIP ne doit pas être considéré comme une étape requise ou disponible.
-- Conséquence : toute source nécessaire à une mission de code doit d'abord être matérialisée et vérifiée sur `breaktest-bootstrap`. Les instructions demandant de joindre le pack ZIP sont remplacées.
+- Décision : les missions Codex Cloud prennent pour source les fichiers versionnés dans le dépôt et la branche associés à l'environnement.
+- Conséquence : toute source nécessaire doit être matérialisée et vérifiée dans GitHub.
 
 ## D010 - L'audit initial peut précéder la matérialisation GitHub du HTML
 
 - Statut : active
-- Décision : l'audit technique initial exécuté sur le fichier local est recevable parce que le fichier a été identifié par une empreinte SHA-256 enregistrée et que les comportements déclarés ont été réellement exécutés.
-- Conséquence : `docs/TECHNICAL_AUDIT.md` devient la base de travail de la première correction, mais aucune modification de code ne peut être confiée à Codex tant que le fichier canonique correspondant n'est pas présent dans sa branche.
+- Décision : l'audit local est recevable lorsque le fichier est identifié par une empreinte SHA-256 et que les comportements déclarés sont réellement exécutés.
+- Conséquence : aucune modification de code ne peut être acceptée sans correspondance vérifiée avec la source canonique.
 
 ## D011 - Les données numériques source échouent fermement
 
 - Statut : active
-- Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais être transformée en zéro, ignorée ou remplacée par une autre colonne.
-- Justification : un fallback silencieux transforme une erreur de données en résultat quantitatif apparent.
-- Conséquence : les valeurs `missing`, `invalid` et le zéro réel sont distingués ; une dérivation n'est autorisée que lorsqu'elle est non ambiguë et sa provenance doit être conservée.
+- Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais être transformée en zéro, ignorée ou remplacée silencieusement.
+- Conséquence : `missing`, `invalid` et zéro réel sont distingués ; toute dérivation conserve sa provenance.
 
 ## D012 - Un modèle distinct et antérieur pour chaque décision
 
 - Statut : active
-- Décision : chaque trade rejoué est évalué avec un modèle construit uniquement à partir des lignes backtest dont la sortie est strictement antérieure à l'entrée de ce trade.
-- Justification : un modèle global ou alimenté par des observations futures transforme le replay en optimisation ex post.
-- Conséquence : les modèles et diagnostics sont conservés par décision ; les dates invalides entraînent un statut d'observation.
+- Décision : chaque trade rejoué utilise uniquement les lignes backtest sorties strictement avant son entrée.
+- Conséquence : modèles et diagnostics sont conservés par décision ; les dates invalides produisent `observe`.
 
 ## D013 - Le budget de turnover est consommé chronologiquement
 
 - Statut : active
-- Décision : le plafond de turnover est appliqué décision après décision sur une fenêtre glissante de 365,25 jours, dans l'ordre des dates d'entrée.
-- Justification : un tri global des opportunités de plusieurs dates selon leur edge utilise implicitement la connaissance des opportunités futures et produit une sélection ex post.
-- Conséquence : une opportunité future ne peut jamais modifier une décision antérieure ; un classement par edge n'est autorisé qu'entre opportunités disponibles à la même date, puis l'identifiant sert de départage déterministe ; les diagnostics de budget sont conservés par décision.
+- Décision : le plafond est appliqué décision après décision sur une fenêtre glissante de 365,25 jours.
+- Conséquence : une opportunité future ne peut jamais modifier une décision antérieure ; le classement par edge est limité aux opportunités de même date.
 
 ## D014 - Le nominal est réservé entre l'entrée et la sortie
 
 - Statut : active
-- Décision : une décision conservée après H1, C2 et C3 doit réserver son nominal complet jusqu'à sa sortie ; le capital libéré par les positions antérieures est disponible avant les entrées de même date.
-- Justification : dimensionner chaque trade à partir du même capital initial sans tenir compte des chevauchements produit des positions simultanées impossibles à financer.
-- Conséquence : les entrées de même date préservent la priorité C3 ; aucune position du groupe n'est recyclée au milieu de ce groupe ; un nominal insuffisamment financé est refusé sans redimensionnement ; les dates, nominaux ou PnL non finis produisent `observe` ; le capital libre est désormais calculé à partir de la trésorerie réalisée par C4.
+- Décision : une décision conservée doit réserver son nominal complet jusqu'à sa sortie.
+- Conséquence : les entrées simultanées préservent la priorité C3, aucun redimensionnement silencieux n'est autorisé et le capital libre est calculé à partir de la trésorerie réalisée.
 
 ## D015 - Le PnL devient disponible uniquement à la sortie
 
 - Statut : active
-- Décision : le PnL net d'une position financée est appliqué une seule fois, à sa date de sortie valide ; les sorties d'une date sont traitées avant les nouvelles entrées de cette date.
-- Justification : affecter le PnL à l'entrée anticipe une information future, fausse la chronologie des gains et pertes et peut financer artificiellement des positions.
-- Conséquence : la courbe commence au capital initial, agrège les PnL par date de sortie et réconcilie à chaque événement le capital réalisé, le nominal réservé et le capital libre. Elle peut être appelée « courbe de trésorerie réalisée aux sorties », mais jamais mark-to-market ou valorisation quotidienne tant que les positions ouvertes ne sont pas valorisées.
+- Décision : le PnL d'une position financée est appliqué une seule fois à sa sortie valide, avant les nouvelles entrées de même date.
+- Conséquence : la courbe est une trésorerie réalisée aux sorties, jamais présentée comme mark-to-market.
+
+## D016 - Les résultats observés restent séparés des scénarios simulés
+
+- Statut : active
+- Décision : le brut observé, le net fixe observé, le full-cost observé et le résultat simulé par Breaktest sont quatre bases distinctes, sélectionnables et auditables.
+- Justification : soustraire silencieusement des coûts simulés d'une valeur déjà nette, ou remplacer une valeur du journal par une estimation, détruit la traçabilité et peut compter les coûts deux fois.
+- Conséquence : les bases observées conservent leurs valeurs et provenance ; les fallbacks et dérivations sont explicites ; les valeurs invalides refusent le lot ; C4 utilise la base choisie sans double comptage ; les incohérences PnL/rendement sont signalées et laissées à H4 plutôt que corrigées silencieusement.

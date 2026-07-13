@@ -42,22 +42,31 @@ Demander une validation seulement pour une décision stratégique, coûteuse, ir
 - Toute correction de bug doit ajouter un test de non-régression lorsqu'il est pertinent.
 - Séparer filtrage ex ante et analyse ex post.
 - Ne jamais retirer des perdants rétrospectivement pour améliorer artificiellement une stratégie.
+- Distinguer strictement résultat observé et scénario simulé.
+- Ne jamais écraser une base observée du journal avec un résultat recalculé par Breaktest.
+- Conserver pour chaque base PnL/rendement sa provenance `observed`, `derived`, `fallback` ou `simulated` et la base d'origine du fallback.
+- Une valeur optionnelle explicitement fournie mais invalide doit refuser le lot ; un fallback n'est autorisé que lorsque la paire optionnelle est entièrement absente.
+- Un zéro numérique observé reste valide et ne déclenche jamais de fallback.
+- Ne jamais soustraire les coûts simulés d'une base nette observée : interdire tout double comptage.
+- Si PnL et rendement sont tous deux fournis mais incompatibles, conserver les deux et signaler l'anomalie pour H4 plutôt que les réconcilier silencieusement.
+- Lors du redimensionnement d'une base observée, utiliser le PnL fourni comme autorité de mise à l'échelle et conserver le rendement fourni pour l'audit.
+- Rendre la base de résultat sélectionnée visible dans les KPI, le ledger, l'audit, la courbe et l'export.
 - Pour toute décision rejouée, interdire qu'une observation future, de même date ou issue d'un échantillon non autorisé influence son modèle.
 - Conserver la provenance du modèle et la profondeur d'entraînement au niveau de chaque décision.
 - Consommer le budget de turnover dans l'ordre des dates d'entrée ; ne jamais classer globalement des opportunités de dates différentes selon leur edge avant allocation.
 - Autoriser un classement par edge uniquement entre opportunités simultanément disponibles à la même date, avec un dernier départage déterministe.
 - Garantir par test que l'ajout, la suppression ou la modification d'une opportunité future ne change pas une décision antérieure.
-- Conserver les diagnostics de turnover au niveau de chaque décision : budget avant, unités demandées, budget après, rang simultané et motif.
+- Conserver les diagnostics de turnover au niveau de chaque décision.
 - Réserver le nominal complet des positions financées entre l'entrée et la sortie ; ne jamais redimensionner silencieusement un trade pour le faire entrer dans le capital libre.
 - Libérer les positions antérieures avant un groupe de même date, mais ne jamais recycler au milieu du groupe une position nouvellement ouverte ce même jour.
 - Préserver l'ordre de priorité C3 entre entrées simultanées lors du financement.
-- Appliquer le PnL net d'une position financée une seule fois, uniquement à sa date de sortie valide.
+- Appliquer le PnL de la base sélectionnée une seule fois, uniquement à la date de sortie valide.
 - Traiter et agréger les sorties d'une date avant de financer les entrées de cette même date.
 - Garantir par test qu'aucun PnL ne modifie la courbe ou le financement avant sa sortie.
 - Garantir par test qu'un événement futur ne modifie ni une décision ni un point de courbe antérieurs.
 - Réconcilier à chaque événement `capital libre = capital réalisé - nominal réservé`.
-- Garantir que la courbe commence au capital initial et que son dernier point égale le capital initial plus les PnL nets des positions financées et sorties valides.
-- Conserver les diagnostics de financement et d'événement par décision : capital réalisé, réservé et libre avant/après, nominal demandé, décision, date de libération, PnL appliqué et motif.
+- Garantir que la courbe commence au capital initial et que son dernier point égale le capital initial plus les PnL sélectionnés des positions financées et sorties valides.
+- Conserver les diagnostics de financement et d'événement par décision.
 - Recalculer les métriques de turnover sur les décisions finalement financées.
 - Employer uniquement « courbe de trésorerie réalisée aux sorties » pour la courbe C4.
 - Ne pas employer « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » tant que ces comportements ne sont pas implémentés et validés.

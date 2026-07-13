@@ -23,7 +23,8 @@ Le build cumulatif exécute :
 3. `scripts/apply_c3_patch.py` — C3 ;
 4. `scripts/apply_c1_patch.py` — C1 ;
 5. `scripts/apply_c4_patch.py` — C4 ;
-6. `scripts/build_breaktest.py` — point d'entrée unique.
+6. `scripts/apply_h2_patch.py` — H2 ;
+7. `scripts/build_breaktest.py` — point d'entrée unique.
 
 Empreintes :
 
@@ -32,91 +33,93 @@ Empreintes :
 - après C2 : `e4ce6dd3c545549a58d453c7c4df72f96e197fb29d2dc82c662dfbaab64c0454` ;
 - après C3 : `b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80`, 142 782 octets ;
 - après C1 : `e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e`, 152 496 octets ;
-- version fusionnée après C4 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`, 158 682 octets.
+- après C4 : `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af`, 158 682 octets ;
+- candidate H2 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`, 166 862 octets.
 
 ## Fonctionnalités confirmées par exécution
 
 - chargement local, navigation, recalcul du capital et paramètres de coûts ;
-- import CSV nominal et refus ferme des données numériques ambiguës ;
-- export CSV nominal, filtres, recherche, modal méthodologique et échappement HTML ;
+- import CSV et refus ferme des données numériques ambiguës ;
+- export CSV, filtres, recherche, modal méthodologique et échappement HTML ;
 - modèle d'entraînement antérieur propre à chaque décision ;
-- allocation chronologique du turnover sur 365,25 jours ;
+- allocation chronologique du turnover ;
 - réservation du nominal entre entrée et sortie ;
-- refus sans redimensionnement implicite lorsque les positions simultanées dépassent le capital disponible ;
-- courbe de trésorerie réalisée aux dates de sortie des positions financées ;
-- gains et pertes réalisés disponibles pour le financement à partir de leur date de sortie ;
-- diagnostics de modèle, turnover, financement et événements réalisés.
+- courbe de trésorerie réalisée aux sorties ;
+- gains et pertes disponibles pour le financement seulement après réalisation ;
+- sélection explicite entre résultat simulé, brut observé, net fixe observé et full-cost observé ;
+- provenance observée, dérivée, fallback ou simulée conservée par ligne ;
+- bases observées indépendantes des hypothèses de coûts ;
+- absence de double comptage entre net observé et coûts simulés ;
+- base sélectionnée exposée dans les KPI, le Trade Gate, le ledger, l'audit, la courbe et l'export.
 
-Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni une valorisation mark-to-market du portefeuille.
+Ces validations ne prouvent pas encore l'exactitude générale du moteur quantitatif ni une valorisation mark-to-market.
 
 ## Corrections fusionnées dans `breaktest-bootstrap`
 
-### H1 — validation numérique stricte
+- **H1** — validation numérique stricte : pull request `#2` ;
+- **C2** — isolation temporelle et par échantillon : pull requests `#3` et `#5` ;
+- **C3** — turnover chronologique : pull request `#6` ;
+- **C1** — réservation du capital : pull request `#8`, commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284` ;
+- **C4** — trésorerie réalisée aux sorties : pull request `#10`, commit `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
 
-Fusionnée par la pull request `#2`. Preuves : `docs/validation/H1_STRICT_NUMERIC_VALIDATION.md`.
+## Correction validée sur branche, en attente de fusion
 
-### C2 — isolation temporelle et par échantillon
+### H2 — bases nettes observées du journal
 
-Fusionnée par les pull requests `#3` et `#5`. Preuves : `docs/validation/C2_TEMPORAL_ISOLATION.md`.
+La candidate `codex/h2-journal-net-bases` normalise et conserve quatre bases distinctes : simulée, brute observée, nette fixe observée et full-cost observée.
 
-### C3 — allocation chronologique du turnover
+Règles validées :
 
-Fusionnée par la pull request `#6`. Preuves : `docs/validation/C3_CHRONOLOGICAL_TURNOVER.md`.
-
-### C1 — réservation du capital entre positions simultanées
-
-Fusionnée par la pull request `#8`, commit squash `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`. Le nominal complet est réservé jusqu'à la sortie, les priorités C3 sont préservées et aucun redimensionnement silencieux n'est autorisé. Preuves : `docs/validation/C1_CAPITAL_RESERVATION.md`.
-
-### C4 — courbe de trésorerie réalisée aux sorties
-
-Fusionnée par la pull request `#10`, commit squash `691ed5e669b82f8f4638d0b8a4f84ef8c5866be2`.
-
-C4 unifie la réservation C1 et la réalisation du PnL dans une simulation événementielle : les sorties sont traitées avant les entrées de même date, le nominal est libéré, le PnL net est appliqué une seule fois à la sortie et la trésorerie réalisée modifie le financement à partir de cet instant.
-
-La courbe commence au capital initial, agrège les sorties d'une même date et se termine au capital initial augmenté de la somme des PnL nets des trades financés. Elle est explicitement présentée comme **réalisée aux sorties** et non mark-to-market.
+- valeurs fournies invalides : refus du lot ;
+- zéro observé : valeur valide ;
+- dérivation d'un membre manquant uniquement à partir de l'autre membre et du nominal ;
+- fallback uniquement lorsque la paire optionnelle est entièrement absente ;
+- provenance et origine du fallback conservées ;
+- valeurs PnL/rendement incompatibles conservées et signalées pour H4 ;
+- PnL fourni utilisé comme autorité de redimensionnement, sans réconciliation silencieuse ;
+- coûts simulés sans effet sur les bases observées ;
+- C4 utilise la base choisie sans double soustraction des coûts.
 
 Validations de référence :
 
-- build H1 + C2 + C3 + C1 + C4 : 158 682 octets, SHA-256 `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
-- GitHub Actions finale `29245856820` sur le head `c510e943bf4634cfda0a92caf61c483a42cab3b9` : réussite ;
-- suites H1, C2, C3, C1 et C4 : réussite ;
-- test complémentaire de capital libre négatif après perte réalisée : réussite ;
-- Chromium et `node --check` : réussite ;
-- gains/pertes aux sorties, sorties simultanées, financement par gain, blocage par perte, invalides, absence de recyclage intragroupe, réconciliation et invariance au futur couverts.
+- build : 166 862 octets, SHA-256 `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
+- GitHub Actions `29248248566` sur le head `580f3bfaca51897ab8a1ab438813a6e3e1996298` : réussite ;
+- H1, H2 numérique, H1 navigateur, C2, C3, C1, C4, C4 capital libre négatif et H2 navigateur : réussite ;
+- JavaScript construit : `node --check` réussi.
 
-Preuves : `docs/validation/C4_REALIZED_EQUITY_CURVE.md`.
+Preuves : `docs/validation/H2_JOURNAL_NET_BASES.md`.
 
 ## Défauts élevés encore ouverts
 
-1. **H2** — champs de PnL net/full-cost du journal ignorés ;
-2. **H3** — prix en euros reconvertis comme une devise étrangère ;
-3. **H4** — absence de réconciliation PnL / rendement / nominal ;
-4. **H5** — risque d'injection de formule dans l'export CSV ;
-5. **H6** — coût algorithmique élevé sur les imports moyens.
+1. **H3** — prix en euros reconvertis comme une devise étrangère ;
+2. **H4** — politique définitive de réconciliation PnL / rendement / nominal ;
+3. **H5** — injection de formule dans l'export CSV ;
+4. **H6** — coût algorithmique élevé sur les imports moyens.
 
 ## Ce qui n'est pas encore considéré comme validé
 
 - exactitude de chaque formule et conformité complète aux journaux sources ;
-- valorisation mark-to-market ou quotidienne des positions ouvertes ;
+- provenance de devise de tous les champs de prix ;
+- réconciliation définitive des paires PnL/rendement incohérentes ;
+- valorisation mark-to-market ou quotidienne ;
 - levier, appels de marge, intérêts, dividendes et flux externes ;
 - robustesse étendue des imports, sécurité exhaustive et performance à l'échelle ;
 - compatibilité complète Safari/iPad/mobile ;
 - calibration définitive du Breaktest Score ;
-- cohérence complète du deck et du guide ;
 - valeur commerciale et disposition à payer.
 
 ## Hébergement GitHub
 
 - dépôt d'amorçage : `babou9280/investment-strategy-evaluation` ;
-- branche de référence isolée : `breaktest-bootstrap` ;
-- C4 est fusionné ;
-- la prochaine branche active doit être dédiée à H2 ;
+- branche de référence : `breaktest-bootstrap` ;
+- branche candidate H2 : `codex/h2-journal-net-bases` ;
 - `main` et le projet universitaire d'origine restent inchangés.
 
 ## Prochaine exécution autorisée
 
-1. fusionner cette synchronisation documentaire dans `breaktest-bootstrap` ;
-2. créer une branche isolée pour H2 — bases nettes du journal ;
-3. exécuter la mission exacte de `NEXT_CODEX_PROMPT.md` ;
-4. préserver H1, C2, C3, C1 et C4 ;
-5. ne rien fusionner dans `main`.
+1. retirer l'artefact temporaire de revue H2 du workflow ;
+2. réexécuter toutes les validations sur le head final ;
+3. fusionner H2 uniquement dans `breaktest-bootstrap` si cette exécution reste verte ;
+4. synchroniser les documents de fusion ;
+5. ouvrir ensuite une branche isolée pour H3 ;
+6. ne rien fusionner dans `main`.

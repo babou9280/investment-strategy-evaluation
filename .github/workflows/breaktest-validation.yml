@@ -50,10 +50,13 @@ jobs:
           set -o pipefail
           python3 scripts/build_breaktest.py 2>&1 | tee build.log
 
-      - name: Strict numeric validation H1
+      - name: Numeric and result-basis validation
         run: |
           set -o pipefail
-          node tests/h1_strict_numeric_validation.test.js 2>&1 | tee h1.log
+          {
+            node tests/h1_strict_numeric_validation.test.js
+            node tests/h2_journal_net_bases.test.js
+          } 2>&1 | tee numeric-tests.log
 
       - name: Browser regression suites
         run: |
@@ -70,6 +73,9 @@ jobs:
             fi
             if [ -f tests/c4_negative_free_cash.py ]; then
               python3 tests/c4_negative_free_cash.py
+            fi
+            if [ -f tests/h2_journal_net_bases.py ]; then
+              python3 tests/h2_journal_net_bases.py
             fi
           } 2>&1 | tee browser-tests.log
 
@@ -97,7 +103,7 @@ jobs:
           name: breaktest-validation-logs
           path: |
             build.log
-            h1.log
+            numeric-tests.log
             browser-tests.log
             javascript-syntax.log
           if-no-files-found: warn
