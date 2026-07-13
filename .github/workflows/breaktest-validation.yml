@@ -59,6 +59,7 @@ jobs:
             node tests/h2_journal_net_bases.test.js
             node tests/validation_calculator.test.js
             node capital_efficiency_lab/tests/engine.test.js
+            node capital_efficiency_lab/tests/scenario_matrix.test.js
           } 2>&1 | tee numeric-tests.log
 
       - name: Static privacy and integrity
@@ -123,6 +124,7 @@ jobs:
             node --check validation_site/app.js
             node --check capital_efficiency_lab/engine.js
             node --check capital_efficiency_lab/app.js
+            node --check capital_efficiency_lab/tests/scenario_matrix.test.js
           } 2>&1 | tee javascript-syntax.log
 
       - name: Upload validation and review artifacts
