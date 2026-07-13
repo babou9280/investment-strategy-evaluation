@@ -1,77 +1,75 @@
-# Prochaine mission — H2 bases nettes observées du journal
+# Prochaine mission — H3 provenance de devise du prix d'entrée
 
-Travaille uniquement sur une nouvelle branche créée depuis le dernier `breaktest-bootstrap` après fusion contrôlée de C4. Ne modifie et ne fusionne rien dans `main`.
+Travaille uniquement sur une nouvelle branche créée depuis le dernier `breaktest-bootstrap` après fusion contrôlée de H2. Ne modifie et ne fusionne rien dans `main`.
 
-Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1, C2, C3, C1 et C4.
+Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1, C2, C3, C1, C4 et H2.
 
 ## Objectif unique
 
-Corriger H2 : lorsqu'un journal fournit explicitement des résultats nets de frais fixes ou full-cost, Breaktest doit les normaliser, les conserver et les distinguer des scénarios de coûts simulés au lieu de les ignorer et de recalculer silencieusement le net à partir du brut.
+Corriger H3 : un prix explicitement fourni en euros ne doit jamais être reconverti par `eurPerQuoteCurrency`, tandis qu'un prix fourni dans une devise de cotation doit être converti exactement une fois avec une provenance explicite.
 
-## Périmètre fonctionnel
+## Défaut démontré
 
-Inspecter les données sources et le parseur existant pour confirmer et documenter les noms de colonnes et alias réellement supportés. Le noyau minimal attendu couvre :
-
-- `fixed_net_pnl_eur` et son rendement associé ;
-- `full_cost_net_pnl_eur` et son rendement associé ;
-- les alias équivalents déjà présents dans les journaux ou la source ;
-- la provenance de chaque valeur : observée, dérivée ou fallback explicite.
+La normalisation actuelle choisit une valeur parmi `entry_price_eur`, `entry_price_usd` et `entry_price`, puis la stocke dans un champ commun. Le dimensionnement multiplie ensuite ce champ par `eurPerQuoteCurrency`. Ainsi, `entry_price_eur = 100` avec un taux de 0,92 peut produire un prix unitaire de 92 €, ce qui est faux.
 
 ## Politique retenue
 
-1. Distinguer au minimum trois bases par ligne : brut observé, net fixe observé et full-cost observé.
-2. Une valeur explicitement fournie mais non numérique, `NaN` ou infinie doit faire échouer fermement le lot ; elle ne peut pas être remplacée par le brut ni par une simulation.
-3. Un zéro numérique réel est une valeur observée valide.
-4. Pour chaque base, si le PnL est présent mais le rendement manque, dériver le rendement par `PnL / nominal` uniquement avec un nominal valide.
-5. Si le rendement est présent mais le PnL manque, dériver le PnL par `rendement × nominal` uniquement avec un nominal valide.
-6. Si PnL et rendement manquent tous deux pour une base optionnelle, appliquer le fallback documenté vers la base précédente et marquer explicitement cette provenance.
-7. Ne jamais écraser une base observée par le résultat d'un scénario de coûts simulés.
-8. Conserver séparément :
-   - résultats observés du journal ;
-   - résultats recalculés par Breaktest sous les hypothèses de coûts choisies.
-9. Les verdicts, tableaux et exports doivent indiquer sans ambiguïté quelle base est affichée.
-10. Les fallbacks et dérivations doivent être auditables par ligne et agrégés dans l'audit des données.
-11. Ne pas résoudre silencieusement une incohérence lorsque PnL et rendement sont tous deux fournis mais incompatibles : conserver l'anomalie pour H4 ou la signaler explicitement sans modifier les valeurs observées.
-12. Ne pas modifier les règles H1, C2, C3, C1 ou C4, sauf adaptation minimale nécessaire pour transporter la base de PnL choisie avec une provenance explicite.
+1. Conserver séparément la valeur du prix, sa devise/provenance et la clé source utilisée.
+2. `entry_price_eur` est déjà libellé en euros : facteur de conversion égal à 1.
+3. `entry_price_usd` est libellé en dollars : convertir exactement une fois avec le taux USD/EUR configuré.
+4. Le champ générique `entry_price` ne doit pas recevoir silencieusement une devise inventée :
+   - utiliser un champ explicite de devise/quote currency lorsqu'il existe et qu'il est supporté ;
+   - sinon conserver une provenance `unspecified` et ne pas prétendre à une conversion certaine ;
+   - choisir une politique fail-safe explicite pour le dimensionnement des titres entiers, documentée et testée.
+5. Une valeur explicitement invalide, négative ou infinie doit produire un diagnostic ou un refus conforme à H1 ; elle ne peut pas devenir zéro silencieusement.
+6. Un prix absent reste distinct d'un prix nul ou invalide.
+7. Pour les positions fractionnées, le nominal ne doit pas dépendre artificiellement du prix unitaire, mais le prix et sa provenance restent auditables.
+8. Pour les titres entiers, le nombre d'unités doit utiliser le prix réellement converti en euros.
+9. Modifier `eurPerQuoteCurrency` doit modifier uniquement les prix qui nécessitent réellement cette conversion.
+10. L'interface, l'audit et l'export doivent pouvoir indiquer la valeur source, la devise, le facteur appliqué et le prix final en euros.
+11. Ne pas modifier les règles H1, H2, C2, C3, C1 ou C4 sauf adaptation minimale du transport de provenance.
 
 ## Invariants obligatoires
 
-- une valeur nette observée survit à l'import et n'est pas remplacée par le brut ;
-- modifier les hypothèses de coûts simulés ne modifie jamais la valeur nette observée du journal ;
-- le zéro observé reste zéro ;
-- une valeur nette explicitement invalide refuse le lot ;
-- une dérivation ne se produit que lorsque l'autre membre de la paire et le nominal sont valides ;
-- un fallback n'est utilisé que lorsque la base optionnelle est entièrement absente et reste visible ;
-- le PnL appliqué par C4 provient de la base explicitement sélectionnée et documentée, sans double comptage des coûts ;
-- l'ajout de colonnes nettes à une ligne ne modifie pas les décisions historiques utilisant une autre base tant que l'utilisateur ne sélectionne pas cette base ;
-- les agrégats d'une base égalent la somme des valeurs ligne par ligne de cette même base ;
-- aucune régression H1, C2, C3, C1 ou C4.
+- `entry_price_eur = 100`, taux 0,92 : prix final 100 € ;
+- `entry_price_usd = 100`, taux 0,92 : prix final 92 € ;
+- changer le taux ne modifie pas un prix EUR ;
+- changer le taux modifie proportionnellement un prix USD une seule fois ;
+- aucune double conversion ;
+- la priorité des colonnes ne masque pas une valeur explicitement invalide dans une colonne fournie ;
+- un prix générique sans devise ne peut pas être présenté comme USD ou EUR certain ;
+- le nombre d'unités entières et le nominal résultant utilisent le prix EUR corrigé ;
+- une position fractionnée conserve son nominal attendu ;
+- prix absent, zéro, négatif, `NaN`, infini et texte invalide couverts ;
+- import, ledger, audit et export conservent la provenance ;
+- aucune régression H1, H2, C2, C3, C1 ou C4.
 
 ## Tests obligatoires
 
-- brut, net fixe et full-cost tous fournis et distincts : conservation exacte des trois bases ;
-- PnL net fourni, rendement manquant : dérivation correcte ;
-- rendement net fourni, PnL manquant : dérivation correcte ;
-- zéro net observé ;
-- base optionnelle entièrement absente : fallback explicite et provenance visible ;
-- valeur `abc`, `NaN`, infinie ou vide explicitement ambiguë dans une colonne fournie ;
-- coûts simulés modifiés sans changement des bases observées ;
-- sélection brut/net fixe/full-cost produisant les agrégats attendus ;
-- absence de double soustraction des coûts ;
-- import, ledger et export conservant la base et la provenance ;
-- réexécution intégrale des suites H1, C2, C3, C1 et C4 ;
-- build déterministe, lancement Chromium et `node --check`.
+- prix EUR et USD de même valeur nominale avec taux différent de 1 ;
+- changement de taux sur EUR puis USD ;
+- présence simultanée de plusieurs colonnes avec règle de priorité documentée ;
+- colonne prioritaire explicitement invalide ;
+- prix générique avec devise explicite supportée ;
+- prix générique sans devise ;
+- position entière avec capital juste au-dessus ou en dessous d'une unité ;
+- position fractionnée ;
+- prix nul, négatif, absent, non numérique et infini ;
+- contrôle du prix final, des unités, du nominal, des coûts dépendant du nominal et des champs exportés ;
+- réexécution intégrale de H1, H2, C2, C3, C1 et C4 ;
+- build déterministe, Chromium et `node --check`.
 
 ## Documentation et limites
 
-- créer `docs/validation/H2_JOURNAL_NET_BASES.md` avec commandes, empreintes et résultats exacts ;
-- ajouter une règle permanente sur la séparation entre résultat observé et scénario simulé ;
+- créer `docs/validation/H3_PRICE_CURRENCY_PROVENANCE.md` ;
+- ajouter une règle permanente interdisant toute conversion sans provenance de devise ;
+- documenter les devises explicitement supportées et le comportement fail-safe des devises inconnues ;
 - mettre à jour les fichiers canoniques uniquement avec les résultats démontrés ;
-- H3 à H6 restent ouverts ;
-- H4 reste responsable de la politique complète de réconciliation entre PnL, rendement et nominal lorsqu'ils sont tous fournis ;
+- H4 à H6 restent ouverts ;
+- ne pas ajouter un moteur FX multi-devises général hors du besoin H3 ;
 - ne pas refondre l'application ;
 - ne rien fusionner automatiquement.
 
 ## Résultat attendu
 
-Des bases brut, net fixe et full-cost réellement importées et auditables, des fallbacks et dérivations explicites, une séparation stricte entre observation et simulation, des invariants reproductibles et une pull request isolée vers `breaktest-bootstrap`.
+Un prix d'entrée normalisé avec valeur, devise, clé source et facteur de conversion auditables, aucune reconversion des prix EUR, une conversion unique des prix USD, un dimensionnement entier correct et une pull request isolée vers `breaktest-bootstrap`.
