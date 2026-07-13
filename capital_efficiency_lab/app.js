@@ -156,8 +156,13 @@
     const strong = document.createElement('strong');
     const p = document.createElement('p');
     if (item && item.status === 'available') {
-      strong.textContent = formatter(item.value);
-      p.textContent = description;
+      if (item.boundary === 'no_positive_minimum_from_fixed_costs' && item.value === 0) {
+        strong.textContent = 'Aucun minimum positif imposé';
+        p.textContent = 'Les coûts fixes sont nuls : toute taille strictement positive satisfait la composante fixe, sous réserve de la condition variable affichée.';
+      } else {
+        strong.textContent = formatter(item.value);
+        p.textContent = description;
+      }
     } else {
       article.classList.add(item && item.reason === 'structurally_unreachable' ? 'unreachable' : 'unavailable');
       if (item && item.reason === 'structurally_unreachable') {
