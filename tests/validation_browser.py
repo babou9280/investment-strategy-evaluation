@@ -19,6 +19,10 @@ def free_port() -> int:
         return int(sock.getsockname()[1])
 
 
+def normalized_text(value: str) -> str:
+    return " ".join(value.replace("\u00a0", " ").replace("\u202f", " ").split())
+
+
 class QuietHandler(http.server.SimpleHTTPRequestHandler):
     def log_message(self, fmt: str, *args: object) -> None:
         return
@@ -62,7 +66,7 @@ def main() -> None:
             page.goto(url, wait_until="networkidle")
             overflow = page.evaluate("document.documentElement.scrollWidth - window.innerWidth")
             assert overflow <= 1, f"horizontal overflow at {width}px: {overflow}px"
-            assert page.locator("h1").inner_text() == "Combien tes ordres coûtent-ils vraiment ?"
+            assert normalized_text(page.locator("h1").inner_text()) == "Combien tes ordres coûtent-ils vraiment ?"
             context.close()
 
         context = browser.new_context(viewport={"width": 390, "height": 1000}, reduced_motion="reduce", permissions=["clipboard-read", "clipboard-write"])
@@ -80,6 +84,7 @@ def main() -> None:
         assert abs(float(page.locator("#metric-capital").get_attribute("data-raw")) - 0.0528) < 1e-12
         assert page.locator("#result-live").inner_text() == "Résultat mis à jour"
         assert page.locator("[data-component='commission']").count() == 1
+        assert page.locator("[data-component='commission']").get_attribute("data-provenance") == "user_assumption"
         assert page.locator("[data-scenario='current']").count() == 1
         assert page.locator("[data-scenario='double_order']").count() == 1
         assert page.locator("[data-scenario='half_frequency']").count() == 1
@@ -109,6 +114,11 @@ def main() -> None:
         page.locator("#results").wait_for(state="visible")
         assert page.locator("#metric-capital").inner_text() == "Indisponible"
         assert float(page.locator("#metric-operation").get_attribute("data-raw")) == 5.5
+
+        page.locator("#capitalEur").fill("0")
+        page.locator("#cost-form button[type='submit']").click()
+        page.locator("#results").wait_for(state="visible")
+        assert page.locator("#metric-capital").inner_text() == "Indisponible"
 
         config = page.evaluate("window.BreaktestValidation.config")
         assert config["analyticsEnabled"] is False
