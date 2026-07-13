@@ -17,6 +17,9 @@ def assert_no_nonfinite(page):
 
 
 def assert_results_clear_of_sticky_header(page):
+    # Le produit utilise un défilement doux. Attendre sa stabilisation avant
+    # de mesurer la position finale évite de valider une image intermédiaire.
+    page.wait_for_timeout(650)
     positions = page.evaluate(
         '''() => {
             const header = document.querySelector('.topbar');
