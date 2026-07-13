@@ -1,11 +1,29 @@
 # C4 — courbe de trésorerie réalisée aux sorties
 
-Status: ready for implementation on `codex/c4-realized-equity-curve`, based on `breaktest-bootstrap` commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`.
+Status: implemented and validated on `codex/c4-realized-equity-curve`, based on `breaktest-bootstrap` commit `2d84a0fa06b5b28da2fbd16c2f704e0bb58ff284`.
 
 ## Objective
 
-Replace the non-temporal entry-date PnL curve with an audited realized-cash curve at exit dates, integrated coherently with C1 capital reservation without claiming mark-to-market valuation.
+Replace the non-temporal entry-order PnL curve with an audited realized-cash curve at exit dates, integrated coherently with C1 capital reservation without claiming mark-to-market valuation.
 
-## Required evidence
+## Implemented policy
 
-Follow `NEXT_CODEX_PROMPT.md`. Preserve and rerun H1, C2, C3 and C1; add deterministic C4 browser invariants, exact build evidence and canonical documentation. Never modify `main`.
+- start exactly at initial capital ;
+- reserve notional at entry without applying PnL ;
+- process and aggregate exits before same-date entries ;
+- release notional and apply net PnL only at a valid exit date ;
+- make realized gains or losses available for financing only from that event ;
+- preserve C3 same-date priority and C1 no-intragroup-recycling ;
+- keep full per-decision and per-event diagnostics ;
+- render one realized-exit curve for funded decisions, explicitly non mark-to-market.
+
+## Evidence
+
+- build: 158 682 bytes ;
+- SHA-256: `ae5e1f9c94b6e39b335eccc145461b8b4bc8af135eda184706529ab020c438af` ;
+- GitHub Actions: `29245031719` ;
+- H1, C2, C3, C1 and C4 suites: passed ;
+- Chromium execution and JavaScript syntax: passed ;
+- detailed evidence: `docs/validation/C4_REALIZED_EQUITY_CURVE.md`.
+
+The change remains isolated from `main` and is ready for controlled merge into `breaktest-bootstrap` after final head verification.
