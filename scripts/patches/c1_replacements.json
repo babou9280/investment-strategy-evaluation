@@ -15,6 +15,11 @@
     "label": "capital reservation result fields"
   },
   {
+    "old": "<article class=\"signal-card\">\n              <div class=\"orb-wrap\"><div class=\"orb\" id=\"capital-orb\">",
+    "new": "<article class=\"signal-card\" id=\"capital-view\">\n              <div class=\"orb-wrap\"><div class=\"orb\" id=\"capital-orb\">",
+    "label": "capital card semantic identifier"
+  },
+  {
     "old": "<span class=\"eyebrow\">CAPITAL COMPATIBILITY</span>",
     "new": "<span class=\"eyebrow\">CAPITAL RESERVATION</span>",
     "label": "capital card eyebrow"
