@@ -15,9 +15,9 @@
     "label": "capital reservation result fields"
   },
   {
-    "old": "<article class=\"signal-card\">\n              <div class=\"orb-wrap\"><div class=\"orb\" id=\"capital-orb\">",
-    "new": "<article class=\"signal-card\" id=\"capital-view\">\n              <div class=\"orb-wrap\"><div class=\"orb\" id=\"capital-orb\">",
-    "label": "capital card semantic identifier"
+    "old": "<section class=\"dashboard-view active\" data-view=\"capital\">",
+    "new": "<section class=\"dashboard-view active\" data-view=\"capital\" id=\"capital-view\">",
+    "label": "capital view semantic identifier"
   },
   {
     "old": "<span class=\"eyebrow\">CAPITAL COMPATIBILITY</span>",
