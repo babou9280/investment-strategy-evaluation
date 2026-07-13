@@ -5,7 +5,7 @@
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   'use strict';
 
-  const VERSION = 'capital-efficiency-lab-1';
+  const VERSION = 'capital-efficiency-lab-2';
   const TOLERANCE = 1e-12;
 
   function classifyNumber(value, options) {
@@ -144,16 +144,26 @@
       const positiveDenominator = G - variableFloorRate;
       results.minimumOrderForPositiveNet = positiveDenominator <= 0
         ? unavailable('structurally_unreachable')
-        : available(fixedCostEur / positiveDenominator, { boundary: 'strictly_greater_for_positive_margin' });
+        : available(fixedCostEur / positiveDenominator, {
+            boundary: fixedCostEur === 0 ? 'no_positive_minimum_from_fixed_costs' : 'strictly_greater_for_positive_margin'
+          });
 
       if (R != null) {
         if (G <= 0) {
           results.minimumOrderForRetention = unavailable('gross_edge_non_positive');
         } else {
           const retentionDenominator = G * (1 - R) - variableFloorRate;
-          results.minimumOrderForRetention = retentionDenominator <= 0
-            ? unavailable('structurally_unreachable')
-            : available(fixedCostEur / retentionDenominator, { boundary: 'at_least_for_target' });
+          if (retentionDenominator < -TOLERANCE) {
+            results.minimumOrderForRetention = unavailable('structurally_unreachable');
+          } else if (Math.abs(retentionDenominator) <= TOLERANCE) {
+            results.minimumOrderForRetention = fixedCostEur === 0
+              ? available(0, { boundary: 'no_positive_minimum_from_fixed_costs' })
+              : unavailable('structurally_unreachable');
+          } else {
+            results.minimumOrderForRetention = available(fixedCostEur / retentionDenominator, {
+              boundary: fixedCostEur === 0 ? 'no_positive_minimum_from_fixed_costs' : 'at_least_for_target'
+            });
+          }
         }
       }
 
