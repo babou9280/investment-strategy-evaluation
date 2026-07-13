@@ -75,7 +75,8 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - une position ouverte dans le groupe ne peut pas être libérée au milieu du même groupe, même si sa sortie est le même jour ;
 - l'ordre de financement d'un groupe doit préserver la priorité simultanée déterminée par C3 ;
 - le nominal complet est financé ou refusé : aucun redimensionnement silencieux n'est autorisé ;
-- le capital réservé ne peut jamais dépasser le capital réalisé disponible à l'événement ;
+- une nouvelle réservation ne peut être acceptée que si le capital libre avant l'entrée couvre le nominal demandé ;
+- une perte réalisée peut rendre le capital libre négatif alors que d'autres positions restent ouvertes ; cet état doit rester visible et aucune nouvelle entrée ne peut être financée, car C4 ne simule pas les appels de marge ou liquidations forcées ;
 - une date invalide, une sortie antérieure à l'entrée, un nominal invalide ou un PnL net non fini produit `observe` sans réservation ;
 - une décision déjà `remove` ou `observe` ne réserve rien ;
 - chaque décision conserve le capital réalisé, réservé et libre avant/après, le nominal demandé, la date de libération et le motif ;
