@@ -161,3 +161,19 @@
 - Statut : active
 - Décision : la différenciation recherchée combine calcul inverse, plancher variable, rétention de l'avantage, provenance, cas limites, auditabilité et expérience compréhensible.
 - Conséquence : aucune métrique, visualisation ou fonction n'entre dans le produit uniquement parce qu'elle paraît sophistiquée ou valorisante pour une candidature.
+
+## D028 — Les livrables de critique sont interactifs et hors ligne
+
+- Statut : **active, validée par Ayman le 14 juillet 2026**
+- Décision : les futurs livrables principaux remis pour critique doivent être de véritables expériences HTML navigables, utilisables sans internet et sans navigation lourde ; des images seules ne sont pas recevables.
+- Conséquence : privilégier un fichier HTML autonome ou, lorsque la séparation des ressources est nécessaire, un bundle ZIP local avec `index.html`, chemins relatifs, manifeste, empreintes et aucune dépendance distante.
+- Gate : aucun package n'est remis comme version aboutie avant stabilisation rigoureuse du fond, des calculs, de l'UX et des preuves sur le package exact.
+
+## D029 — La recherche des angles morts est permanente et multidisciplinaire
+
+- Statut : **active, validée par Ayman le 14 juillet 2026**
+- Décision : jusqu'à déclaration explicite de fin du projet, ChatGPT et Codex doivent rechercher activement les défauts visibles, adjacents et rétrospectifs dans tous les domaines liés au projet, et pas seulement dans les calculs.
+- Domaines minimaux : finance, quantitatif, données, produit, UX, accessibilité, réglementation, droit, sécurité, ingénierie, business model, marché, validation, distribution, opérations, réputation, valeur académique et gouvernance.
+- Conséquence : toute critique doit produire selon le cas une correction locale, une règle permanente, un test de non-régression, une limite explicite ou un gate de réexamen.
+- Registre d'autorité : `docs/governance/BLIND_SPOT_REGISTER.md`.
+- Limite : une CI verte ne prouve ni l'exhaustivité, ni l'utilité, ni la conformité, ni la demande commerciale.
