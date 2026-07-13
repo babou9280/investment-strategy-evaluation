@@ -130,7 +130,7 @@ def main() -> None:
             assert prohibited not in body
 
         reduced_duration = page.evaluate("getComputedStyle(document.querySelector('.button')).transitionDuration")
-        assert reduced_duration in ("0s", "0.001s", "0.000001s"), reduced_duration
+        assert reduced_duration in ("0s", "0.001s", "0.000001s", "1e-06s"), reduced_duration
         context.close()
         browser.close()
     print("Cost Intelligence browser tests passed at 390/768/1024/1440 px")
