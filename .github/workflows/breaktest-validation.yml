@@ -8,6 +8,7 @@ on:
     branches:
       - breaktest-bootstrap
       - 'codex/**'
+      - 'strategy/**'
 
 permissions:
   contents: read
@@ -59,6 +60,11 @@ jobs:
             node tests/validation_calculator.test.js
           } 2>&1 | tee numeric-tests.log
 
+      - name: Static privacy and integrity
+        run: |
+          set -o pipefail
+          python3 tests/validation_static_integrity.py 2>&1 | tee static-integrity.log
+
       - name: Browser regression suites
         run: |
           set -o pipefail
@@ -81,10 +87,11 @@ jobs:
             python3 tests/validation_browser.py
           } 2>&1 | tee browser-tests.log
 
-      - name: JavaScript syntax
+      - name: Syntax validation
         run: |
           set -o pipefail
           {
+            python3 -m py_compile tests/validation_browser.py tests/validation_static_integrity.py
             python3 - <<'PY'
           from pathlib import Path
           import re
@@ -109,6 +116,7 @@ jobs:
           path: |
             build.log
             numeric-tests.log
+            static-integrity.log
             browser-tests.log
             javascript-syntax.log
           if-no-files-found: warn

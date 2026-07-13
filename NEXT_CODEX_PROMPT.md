@@ -1,8 +1,10 @@
-# Prochaine mission Codex — page de validation Cost Intelligence
+# Prochaine mission Codex — audit de préparation au test utilisateur
 
 ## Statut
 
-Mission préparée après validation stratégique du 13 juillet 2026. Elle remplace la priorité H3. Elle ne doit être exécutée que sur une branche isolée créée depuis `breaktest-bootstrap` après fusion des documents stratégiques.
+La page Cost Intelligence a été fusionnée dans `breaktest-bootstrap` par la pull request `#16`, commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
+
+La mission active est une **préparation interne et réversible**. Elle n'autorise aucun déploiement public, domaine, collecte, analytics, paiement ou dépense.
 
 Ne modifie jamais `main`. Ne fusionne rien automatiquement.
 
@@ -20,117 +22,70 @@ Lire intégralement :
 - `MARKET_EVIDENCE.md` ;
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
-- `go_to_market/LANDING_PAGE_COPY.md` ;
-- `go_to_market/VALIDATION_FORM.md` ;
-- `go_to_market/DEMO_SCENARIOS.md` ;
-- `docs/TECHNICAL_AUDIT.md`.
+- `docs/design/` ;
+- `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
+- `docs/validation/COST_INTELLIGENCE_VALIDATION_SITE.md` ;
+- `docs/launch/STATIC_LAUNCH_CHECKLIST.md` ;
+- `docs/launch/USER_TEST_PROTOCOL.md` ;
+- `docs/launch/PRIVACY_MINIMUM.md` ;
+- `docs/tasks/COST_INTELLIGENCE_LAUNCH_READINESS.md` ;
+- `go_to_market/` ;
+- le dossier `validation_site/` et ses tests.
 
 ## Objectif unique
 
-Construire une **page statique de validation commerciale**, mobile-first et sans backend, comprenant un calculateur déterministe de cost drag. Cette page n'est pas la V1 du produit.
+Rendre le prototype prêt à être présenté localement ou via une URL de prévisualisation privée après validation d'Ayman, sans activer de service externe.
 
 ## Périmètre autorisé
 
-Créer un dossier isolé, par exemple `validation_site/`, sans refondre `app/Breaktest_Studio.html`.
-
-La page doit :
-
-1. reprendre fidèlement le texte de `go_to_market/LANDING_PAGE_COPY.md` ;
-2. permettre la saisie des paramètres du scénario ;
-3. calculer et afficher séparément :
-   - commissions aller-retour ;
-   - change aller-retour ;
-   - spread estimé ;
-   - slippage estimé ;
-   - coût total par aller-retour ;
-   - coût en pourcentage de l'ordre ;
-   - coût annuel ;
-   - coût annuel en pourcentage du capital ;
-   - rendement brut nécessaire pour couvrir les coûts ;
-4. comparer trois scénarios sans recommander le meilleur ;
-5. inclure les cinq démonstrations de `go_to_market/DEMO_SCENARIOS.md` ;
-6. inclure le formulaire de validation sous forme locale ou de lien configurable ;
-7. inclure des emplacements clairement configurables pour analytics, email et paiement, désactivés par défaut ;
-8. permettre de copier ou partager un résumé textuel sans inclure de donnée personnelle ;
-9. fonctionner sur iPhone, iPad et desktop ;
-10. afficher la mention réglementaire et l'état « version de validation ».
-
-## Formules
-
-Pour un aller-retour :
-
-- `commission = 2 × commission_par_côté` ;
-- `change = 2 × taux_change_par_côté × montant_ordre` ;
-- `spread = taux_spread_aller_retour × montant_ordre` ;
-- `slippage = taux_slippage_aller_retour × montant_ordre` ;
-- `coût_total = somme des composantes` ;
-- `coût_ordre_pct = coût_total / montant_ordre` ;
-- `coût_annuel = coût_total × allers_retours_mensuels × 12` ;
-- `coût_capital_pct = coût_annuel / capital` ;
-- `seuil_brut_pct = coût_ordre_pct`.
-
-Le calcul interne utilise des nombres non arrondis. L'arrondi est uniquement d'affichage.
-
-## Validation numérique
-
-- distinguer `0`, valeur absente et valeur invalide ;
-- refuser nombres négatifs, infinis ou non numériques ;
-- capital et montant d'ordre strictement positifs ;
-- fréquence supérieure ou égale à zéro ;
-- taux compris entre 0 et 100 % ;
-- aucune division par zéro ;
-- messages d'erreur utiles ;
-- ne jamais remplacer silencieusement une valeur invalide.
-
-## Tests obligatoires
-
-Ajouter des tests automatiques couvrant :
-
-- les cinq scénarios de démonstration et leurs valeurs exactes ;
-- tous les coûts à zéro ;
-- fréquence nulle ;
-- zéro valide ;
-- capital ou ordre absent ;
-- valeurs négatives, texte, `NaN` et infini ;
-- indépendance des composantes ;
-- arrondis d'affichage ;
-- partage sans données personnelles ;
-- fonctionnement clavier ;
-- rendu Chromium aux largeurs 390, 768, 1024 et 1440 px ;
-- absence de débordement horizontal ;
-- syntaxe JavaScript.
+1. créer `validation_site/README.md` avec des instructions locales exactes ;
+2. ajouter un test d'intégrité statique vérifiant :
+   - tous les assets sont locaux et relatifs ;
+   - aucun script tiers, pixel, iframe ou requête réseau n'est configuré ;
+   - aucun secret, token ou endpoint n'est présent ;
+   - analytics, email et paiement restent désactivés ;
+   - aucune donnée saisie n'est sérialisée automatiquement dans l'URL ou un stockage persistant ;
+3. contrôler le poids des fichiers et documenter un budget de performance simple ;
+4. vérifier à nouveau les calculs, la syntaxe et Chromium ;
+5. créer `docs/validation/COST_INTELLIGENCE_LAUNCH_READINESS.md` avec commandes, résultats et limites ;
+6. mettre à jour `STATE.md` uniquement avec les preuves exécutées.
 
 ## Interdictions
 
-- ne pas intégrer de courtier réel ni de tarif présenté comme actuel ;
-- ne pas construire d'import CSV ;
-- ne pas ajouter de compte utilisateur ;
-- ne pas ajouter de recommandation ;
-- ne pas choisir un scénario « optimal » ;
-- ne pas envoyer de données financières à un service tiers ;
-- ne pas installer de tracking actif ;
-- ne pas ajouter de paiement réel ;
-- ne pas modifier le moteur canonique Breaktest ;
-- ne pas reprendre H3 à H6.
+- aucun déploiement public ou privé chez un tiers ;
+- aucune création de domaine ;
+- aucune activation de GitHub Pages ou service équivalent ;
+- aucune collecte email ;
+- aucun analytics ;
+- aucun paiement ;
+- aucun cookie ou stockage persistant ;
+- aucun tarif réel de courtier ;
+- aucun import de transactions ;
+- aucune recommandation ;
+- aucune modification des formules Q0 sans nouvelle décision et nouvelle version ;
+- aucune reprise de H3 à H6 ;
+- aucune transformation en application complète.
 
-## Livrables
+## Tests obligatoires
 
-- page statique autonome ;
-- tests ;
-- README d'exécution ;
-- fichier de configuration des liens externes désactivés ;
-- rapport `docs/validation/COST_INTELLIGENCE_VALIDATION_SITE.md` contenant commandes, résultats et limites ;
-- mise à jour minimale de `STATE.md` uniquement avec ce qui a réellement été exécuté.
+- toutes les suites historiques et Cost Intelligence déjà validées ;
+- test d'intégrité statique ;
+- vérification des liens et fichiers locaux ;
+- vérification qu'aucun `http://`, `https://`, `fetch`, `XMLHttpRequest`, `WebSocket`, iframe, beacon ou script tiers n'est actif dans `validation_site/` ;
+- vérification de la configuration désactivée ;
+- vérification que le calculateur fonctionne depuis un serveur local statique ;
+- contrôle Chromium aux quatre largeurs ;
+- syntaxe JavaScript et Python.
 
 ## Définition de terminé
 
-La mission est terminée seulement si :
+La mission est terminée lorsque :
 
-- les calculs correspondent aux scénarios de référence ;
-- les tests sont exécutés ;
-- la page est ouverte réellement dans Chromium ;
-- les quatre largeurs sont contrôlées ;
-- les limitations commerciales et réglementaires sont visibles ;
-- aucune fonctionnalité de produit non nécessaire à la validation n'a été ajoutée.
+- le prototype peut être lancé localement avec une commande documentée ;
+- les contrôles prouvent l'absence d'intégration externe active ;
+- le build historique demeure inchangé ;
+- les suites sont vertes sur le head exact ;
+- les limites Safari/iPad et marché restent déclarées ;
+- une pull request isolée vers `breaktest-bootstrap` est prête pour revue.
 
-Ouvrir une pull request vers `breaktest-bootstrap`. Ne pas fusionner.
+La décision suivante devra porter uniquement sur l'autorisation d'une prévisualisation ou publication externe et sera présentée à Ayman avec une recommandation unique.

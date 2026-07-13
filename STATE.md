@@ -14,11 +14,14 @@ Documents de référence :
 - `VALIDATION_PLAN.md` ;
 - `go_to_market/` ;
 - `docs/design/` ;
-- `docs/standards/QUANT_FINANCE_STANDARDS.md`.
+- `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
+- `docs/launch/`.
 
-## 2. Instrument de validation construit
+## 2. Instrument de validation construit et fusionné
 
-La pull request `#16` contient une page statique mobile-first sous `validation_site/` avec :
+La pull request `#16` a été fusionnée dans `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3`.
+
+Le dossier `validation_site/` contient une page statique mobile-first avec :
 
 - calculateur pré-transaction déterministe et local ;
 - paramètres, unités, conventions et hypothèses visibles ;
@@ -31,13 +34,38 @@ La pull request `#16` contient une page statique mobile-first sous `validation_s
 - partage excluant le capital exact par défaut ;
 - formulaire de validation et emplacements analytics, email et paiement désactivés.
 
-La suite automatisée a réussi sur le commit `496e839a010970abcf3e6d3b56e608f73959d446`, GitHub Actions run `29268915729`. Preuve : `docs/validation/COST_INTELLIGENCE_VALIDATION_SITE.md`.
+La suite finale de la pull request a réussi sur le head `f58725cbf3a02967185b74f676b37209e71a5d44`, GitHub Actions run `29269231453`. Preuve : `docs/validation/COST_INTELLIGENCE_VALIDATION_SITE.md`.
 
 Le site n'est pas déployé publiquement. Aucun utilisateur, paiement, usage répété ou signal commercial n'est encore validé.
 
 Le suivi réel par import, l'abonnement, les données de courtiers et les benchmarks ne sont pas construits ni validés.
 
-## 3. Build technique canonique conservé
+## 3. Préparation contrôlée du lancement
+
+La pull request `#17`, branche `strategy/cost-intelligence-launch-readiness`, prépare sans engagement externe :
+
+- la checklist de lancement statique ;
+- le protocole exact de test utilisateur ;
+- les limites minimales de confidentialité ;
+- les instructions de prévisualisation locale ;
+- le plan de rollback ;
+- un test d'intégrité statique interdisant réseau, stockage persistant, secrets et intégrations actives.
+
+L'exécution de référence `29269885911`, head `245489655917a9de38cf80e6546852d3223eebcd`, a réussi :
+
+- build et suites historiques conservés ;
+- calculateur et Chromium verts ;
+- intégrité statique verte ;
+- 7 références locales ;
+- 43 171 octets actifs ;
+- aucune capacité réseau ou persistance détectée ;
+- syntaxe JavaScript et Python valide.
+
+Preuve : `docs/validation/COST_INTELLIGENCE_LAUNCH_READINESS.md`.
+
+Aucun domaine, hébergement public, analytics, collecte email ou paiement n'est activé par cette préparation.
+
+## 4. Build technique canonique conservé
 
 `app/Breaktest_Studio.html` demeure l'actif technique canonique provisoire. Le build cumulatif exécute H1, C2, C3, C1, C4 puis H2 via `scripts/build_breaktest.py`.
 
@@ -48,7 +76,7 @@ Empreintes :
 
 La construction du site de validation n'a pas modifié ce moteur.
 
-## 4. Fonctionnalités techniques validées
+## 5. Fonctionnalités techniques validées
 
 ### Moteur historique
 
@@ -86,9 +114,10 @@ Preuve H2 : `docs/validation/H2_JOURNAL_NET_BASES.md`.
 - clavier, focus d'erreur, annonce accessible et responsive testés dans Chromium ;
 - largeurs 390, 768, 1024 et 1440 px sans débordement horizontal ;
 - intégrations externes désactivées ;
-- syntaxe JavaScript validée.
+- syntaxe JavaScript validée ;
+- assets locaux, sans réseau ni stockage persistant actifs.
 
-## 5. Développement suspendu
+## 6. Développement suspendu
 
 La pull request `#14` consacrée à H3 a été fermée sans fusion. Son travail reste non validé et pourra être réexaminé uniquement si la validation commerciale démontre sa nécessité.
 
@@ -104,7 +133,7 @@ Sont suspendus :
 - marketplace et API ;
 - import réel, comptes, stockage et paiement avant preuve de demande.
 
-## 6. Défauts techniques encore ouverts
+## 7. Défauts techniques encore ouverts
 
 - H3 : provenance de devise du prix d'entrée ;
 - H4 : réconciliation définitive PnL / rendement / nominal ;
@@ -116,14 +145,15 @@ Sont suspendus :
 
 Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
 
-## 7. Marché — état de preuve
+## 8. Marché — état de preuve
 
 ### Établi
 
 - le rapport fondateur démontre un cas où frictions et rotation contraignent fortement le net ;
 - des outils adjacents de suivi et de journalisation obtiennent des abonnements payants ;
 - la transparence des coûts demeure une préoccupation réglementaire et économique ;
-- un instrument technique de test est maintenant disponible.
+- un instrument technique de test est disponible ;
+- le protocole de première vague est préparé.
 
 ### Non validé
 
@@ -137,18 +167,20 @@ Ces défauts restent documentés. Ils ne sont plus automatiquement prioritaires.
 - valeur d'une future base de données ;
 - rentabilité et potentiel de plateforme.
 
-## 8. Hébergement GitHub
+## 9. Hébergement GitHub
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
-- branche de référence produit : `breaktest-bootstrap` ;
-- pull request active : `#16`, branche `codex/cost-intelligence-validation-site` ;
+- branche de référence produit : `breaktest-bootstrap` au commit `aadef6dec71a6882f9746ea4b2721ee91a3ee1f3` ;
+- pull request de préparation active : `#17`, branche `strategy/cost-intelligence-launch-readiness` ;
 - `main` reste inchangé et hors périmètre.
 
-## 9. Prochaine exécution autorisée
+## 10. Prochaine exécution autorisée
 
-1. obtenir une exécution CI verte sur le head final documentaire de la pull request `#16` ;
-2. fusionner uniquement dans `breaktest-bootstrap` après revue du périmètre ;
-3. préparer une configuration de lancement statique et une procédure de test utilisateur ;
-4. ne pas activer domaine, déploiement public, collecte email, analytics ou paiement sans validation explicite d'Ayman ;
-5. commencer la validation commerciale avant toute extension fonctionnelle ;
-6. ne reprendre aucune autre fonctionnalité avant les résultats du test.
+1. obtenir une exécution CI verte sur le head final de la pull request `#17` ;
+2. fusionner uniquement dans `breaktest-bootstrap` après revue ;
+3. vérifier les options actuelles d'hébergement statique au moment où un déploiement devient nécessaire ;
+4. présenter à Ayman une recommandation unique avant toute publication externe ou dépense ;
+5. effectuer un test Safari/iPad avant diffusion plus large ;
+6. commencer par une première vague de cinq utilisateurs ;
+7. mettre à jour `MARKET_EVIDENCE.md` uniquement avec des comportements réellement observés ;
+8. ne reprendre aucune extension fonctionnelle avant les résultats du test.
