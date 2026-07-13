@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Laboratoire interne Breaktest Capital Efficiency : seuil brut, avantage conservé et contraintes économiques après frictions.">
+  <title>Breaktest — Capital Efficiency Lab</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#lab-form">Aller au laboratoire</a>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">B</span><span><strong>Breaktest</strong><small>Capital Efficiency Lab</small></span></div>
+      <div class="status-pill">Prototype interne · non publié</div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero shell">
+      <p class="eyebrow">EDGE SURVIVAL</p>
+      <h1>Quelle part de ton avantage brut survit aux frictions&nbsp;?</h1>
+      <p>Breaktest ne s’arrête pas au total des frais. Le laboratoire relie les coûts à un avantage brut explicite, montre le plancher variable et calcule les contraintes économiques qui doivent être satisfaites pour qu’une marge subsiste.</p>
+      <ul class="hero-principles" aria-label="Principes du laboratoire">
+        <li>Calcul local</li><li>Hypothèses visibles</li><li>Contraintes inverses</li><li>Aucune recommandation</li>
+      </ul>
+    </section>
+
+    <section class="shell workspace" aria-label="Laboratoire Capital Efficiency">
+      <form id="lab-form" class="input-panel" novalidate>
+        <div class="panel-heading">
+          <div><p class="eyebrow">HYPOTHÈSES</p><h2>Définis le scénario</h2></div>
+          <button id="load-demo" class="button secondary" type="button">Charger la démonstration synthétique</button>
+        </div>
+        <p id="provenance-banner" class="provenance-banner">Provenance actuelle : <strong>hypothèses utilisateur</strong>.</p>
+        <div id="error-summary" class="error-summary" role="alert" hidden></div>
+
+        <div class="form-section">
+          <h3>Capital et activité</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="capitalEur">Capital de référence <span>facultatif</span></label>
+              <div class="input-unit"><input id="capitalEur" name="capitalEur" inputmode="decimal" placeholder="5 000" aria-describedby="capital-help capital-error"><b>EUR</b></div>
+              <small id="capital-help">Utilisé seulement pour rapporter le coût annuel au capital.</small>
+              <p id="capital-error" class="field-error" data-error-for="capitalEur"></p>
+            </div>
+            <div class="field">
+              <label for="orderNotionalEur">Montant d’ordre</label>
+              <div class="input-unit"><input id="orderNotionalEur" name="orderNotionalEur" inputmode="decimal" value="500" aria-describedby="order-error"><b>EUR</b></div>
+              <p id="order-error" class="field-error" data-error-for="orderNotionalEur"></p>
+            </div>
+            <fieldset class="field segmented-field">
+              <legend>Type d’activité</legend>
+              <div class="segmented">
+                <label><input type="radio" name="sideCount" value="1"><span>Achat simple</span></label>
+                <label><input type="radio" name="sideCount" value="2" checked><span>Aller-retour</span></label>
+              </div>
+              <p class="field-error" data-error-for="sideCount"></p>
+            </fieldset>
+            <div class="field">
+              <label for="monthlyOperations">Opérations mensuelles</label>
+              <div class="input-unit"><input id="monthlyOperations" name="monthlyOperations" inputmode="decimal" value="4" aria-describedby="monthly-error"><b>/ mois</b></div>
+              <p id="monthly-error" class="field-error" data-error-for="monthlyOperations"></p>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Structure des frictions</h3>
+          <div class="form-grid">
+            <div class="field">
+              <label for="commissionPerSideEur">Commission par côté</label>
+              <div class="input-unit"><input id="commissionPerSideEur" name="commissionPerSideEur" inputmode="decimal" value="1" aria-describedby="commission-error"><b>EUR</b></div>
+              <p class="field-error" data-error-for="commissionPerSideEur"></p>
+            </div>
+            <div class="field">
+              <label for="fxRatePerSidePercent">Change par côté</label>
+              <div class="input-unit"><input id="fxRatePerSidePercent" name="fxRatePerSidePercent" inputmode="decimal" value="0,25" aria-describedby="fx-error"><b>%</b></div>
+              <p class="field-error" data-error-for="fxRatePerSidePercent"></p>
+            </div>
+            <div class="field">
+              <label for="spreadTotalPercent">Spread total du scénario</label>
+              <div class="input-unit"><input id="spreadTotalPercent" name="spreadTotalPercent" inputmode="decimal" value="0,10" aria-describedby="spread-error"><b>%</b></div>
+              <p class="field-error" data-error-for="spreadTotalPercent"></p>
+            </div>
+            <div class="field">
+              <label for="slippageTotalPercent">Slippage total du scénario</label>
+              <div class="input-unit"><input id="slippageTotalPercent" name="slippageTotalPercent" inputmode="decimal" value="0,10" aria-describedby="slippage-error"><b>%</b></div>
+              <p class="field-error" data-error-for="slippageTotalPercent"></p>
+            </div>
+          </div>
+          <p class="section-note">Commission et change sont saisis par côté. Spread et slippage couvrent déjà le scénario complet.</p>
+        </div>
+
+        <div class="form-section decision-inputs">
+          <h3>Hypothèses de valeur <span>facultatives</span></h3>
+          <p class="section-note">Laisse l’avantage brut vide pour utiliser le mode « seuil seulement ». Breaktest n’invente aucune performance.</p>
+          <div class="form-grid">
+            <div class="field featured-field">
+              <label for="grossEdgePercent">Avantage brut moyen supposé</label>
+              <div class="input-unit"><input id="grossEdgePercent" name="grossEdgePercent" inputmode="decimal" placeholder="ex. 2,00" aria-describedby="gross-help gross-error"><b>% / opération</b></div>
+              <small id="gross-help">Hypothèse ou mesure externe à documenter. Ce n’est pas une prévision.</small>
+              <p class="field-error" data-error-for="grossEdgePercent"></p>
+            </div>
+            <div class="field">
+              <label for="retentionTargetPercent">Part cible d’avantage conservé</label>
+              <div class="input-unit"><input id="retentionTargetPercent" name="retentionTargetPercent" inputmode="decimal" placeholder="ex. 50"><b>%</b></div>
+              <p class="field-error" data-error-for="retentionTargetPercent"></p>
+            </div>
+            <div class="field">
+              <label for="annualDragBudgetPercent">Budget annuel de friction</label>
+              <div class="input-unit"><input id="annualDragBudgetPercent" name="annualDragBudgetPercent" inputmode="decimal" placeholder="ex. 3,00"><b>% du capital</b></div>
+              <p class="field-error" data-error-for="annualDragBudgetPercent"></p>
+            </div>
+            <div class="field">
+              <label for="targetNetPercent">Marge nette cible</label>
+              <div class="input-unit"><input id="targetNetPercent" name="targetNetPercent" inputmode="decimal" placeholder="ex. 1,00"><b>% / opération</b></div>
+              <p class="field-error" data-error-for="targetNetPercent"></p>
+            </div>
+          </div>
+        </div>
+
+        <button class="button primary submit-button" type="submit">Analyser la survie de l’avantage</button>
+      </form>
+
+      <section id="results" class="results-panel" tabindex="-1" hidden>
+        <div class="result-header">
+          <div><p class="eyebrow">RÉSULTAT PRINCIPAL</p><h2 id="primary-title">—</h2></div>
+          <span id="result-provenance" class="status-pill subtle">—</span>
+        </div>
+        <div id="primary-result" class="primary-result"></div>
+        <p id="primary-explanation" class="primary-explanation"></p>
+
+        <div class="core-grid" aria-label="Indicateurs de structure">
+          <article class="metric"><span>Seuil brut nécessaire</span><strong id="break-even-value">—</strong><small>par opération</small></article>
+          <article class="metric"><span>Plancher variable</span><strong id="variable-floor-value">—</strong><small>ne se dilue pas avec la taille</small></article>
+          <article class="metric"><span>Coût fixe</span><strong id="fixed-cost-value">—</strong><small>diluable avec la taille</small></article>
+          <article class="metric"><span>Coût total</span><strong id="total-cost-value">—</strong><small>explication, pas résultat principal</small></article>
+        </div>
+
+        <section id="edge-section" class="result-section" hidden>
+          <div class="section-title"><h3>Edge Survival</h3><p>Réconciliation : avantage brut − frictions = marge nette.</p></div>
+          <div class="edge-grid">
+            <article class="metric emphasis"><span>Part conservée</span><strong id="retained-edge-value">—</strong><small id="retained-edge-note">—</small></article>
+            <article class="metric"><span>Marge nette</span><strong id="net-edge-value">—</strong><small id="net-edge-eur">—</small></article>
+            <article class="metric"><span>Part absorbée</span><strong id="absorbed-edge-value">—</strong><small>du brut saisi</small></article>
+            <article class="metric"><span>Avantage brut</span><strong id="gross-edge-value">—</strong><small id="gross-edge-eur">—</small></article>
+          </div>
+        </section>
+
+        <section class="result-section">
+          <div class="section-title"><h3>Contraintes économiques</h3><p>Frontières mathématiques conditionnelles — aucune recommandation de taille ou de fréquence.</p></div>
+          <div id="constraints-grid" class="constraints-grid"></div>
+        </section>
+
+        <section class="result-section structure-section">
+          <div class="section-title"><h3>Ce qui est diluable — et ce qui ne l’est pas</h3></div>
+          <div class="structure-grid">
+            <div class="structure-card">
+              <div class="structure-label"><span>Coût fixe</span><strong id="fixed-share-value">—</strong></div>
+              <div class="bar"><span id="fixed-share-bar"></span></div>
+              <p>La commission fixe est répartie sur un montant d’ordre plus important.</p>
+            </div>
+            <div class="structure-card">
+              <div class="structure-label"><span>Coût variable</span><strong id="variable-share-value">—</strong></div>
+              <div class="bar variable"><span id="variable-share-bar"></span></div>
+              <p>Change, spread et slippage forment un plancher proportionnel dans ce modèle.</p>
+            </div>
+          </div>
+          <p id="equal-order-note" class="interpretation-note"></p>
+        </section>
+
+        <section class="result-section">
+          <div class="section-title"><h3>Sensibilité à la taille</h3><p>Toutes les autres hypothèses restent constantes.</p></div>
+          <div id="sensitivity-chart" class="sensitivity-chart" role="img" aria-label="Évolution du seuil brut nécessaire selon la taille d'ordre"></div>
+          <p class="interpretation-note">Lorsque le montant d’ordre augmente, le seuil converge vers le plancher variable. Le plancher reste incompressible sous les conventions saisies.</p>
+        </section>
+
+        <section class="result-section evidence-section">
+          <div class="section-title"><h3>Preuve et limites</h3></div>
+          <dl class="evidence-list">
+            <div><dt>Version du calcul</dt><dd id="calculation-version">—</dd></div>
+            <div><dt>Provenance</dt><dd id="evidence-provenance">—</dd></div>
+            <div><dt>Convention</dt><dd id="side-convention">—</dd></div>
+            <div><dt>Projection annuelle</dt><dd>Arithmétique, sans capitalisation ni positions simultanées.</dd></div>
+            <div><dt>Non modélisé</dt><dd>Rendement futur, fiscalité, market impact calibré, financement, exécution réelle.</dd></div>
+          </dl>
+          <p class="disclaimer">Outil d’information et de calcul. Les sorties reposent sur les hypothèses saisies et ne constituent ni une recommandation, ni une prévision, ni un conseil en investissement.</p>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell"><p>Breaktest Capital Efficiency Lab · prototype interne</p><p>Aucun réseau, compte, stockage persistant, analytics, email ou paiement.</p></div></footer>
+  <div id="result-live" class="sr-only" aria-live="polite"></div>
+  <script src="engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
