@@ -27,6 +27,16 @@
     radio.checked = false;
   });
 
+  const grossHelp = document.getElementById('gross-help');
+  if (grossHelp) {
+    grossHelp.textContent = 'Moyenne brute par opération complète, gains, pertes et opérations nulles inclus, avant les coûts saisis. Cette valeur reste une hypothèse non vérifiée par Breaktest.';
+  }
+
+  const rangeIntro = document.querySelector('.range-intro p');
+  if (rangeIntro) {
+    rangeIntro.textContent = 'Les trois valeurs doivent décrire la même moyenne brute par opération complète, avant coûts. Elles servent à tester la sensibilité de la conclusion, pas à produire une probabilité ou un intervalle de confiance.';
+  }
+
   function invalidateRenderedResult(event) {
     if (!event.isTrusted || results.hidden) return;
     results.hidden = true;
