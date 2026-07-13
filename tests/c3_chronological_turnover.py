@@ -172,8 +172,8 @@ async def main():
     assert aggregates["demoAllHaveDiagnostics"] is True
 
     labels = result["labels"]
-    assert labels["capital"] == "Pic turnover 365 j", labels
-    assert labels["budget"] == "Plafond glissant", labels
+    assert labels["capital"] == "Pic capital réservé", labels
+    assert labels["budget"] == "Capital libre minimum", labels
     assert "Pic turnover 365 j" in labels["comparison"], labels
     assert labels["bodyHasExPost"] is False, labels
     assert labels["bodyHasRolling"] is True, labels
