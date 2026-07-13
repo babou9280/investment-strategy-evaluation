@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Breaktest — Combien tes ordres coûtent-ils vraiment ?</title>
+  <meta name="description" content="Calcule l’impact des commissions, du change, du spread, du slippage et de la fréquence sur un petit ou moyen portefeuille.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#calculator">Aller au calculateur</a>
+  <header class="topbar">
+    <div class="shell topbar-inner">
+      <a class="brand" href="#top" aria-label="Breaktest, accueil">
+        <strong>BREAKTEST</strong><span>Cost Intelligence</span>
+      </a>
+      <a href="#method">Méthode et limites</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero shell">
+      <p class="eyebrow">POUR PETITS ET MOYENS PORTEFEUILLES</p>
+      <h1>Combien tes ordres coûtent-ils vraiment&nbsp;?</h1>
+      <p class="hero-copy">Transforme commissions, change, spread, slippage et fréquence en un impact annuel lisible — sans recommandation d’investissement.</p>
+      <button id="hero-cta" class="button primary" type="button">Calculer mon cost drag</button>
+      <ul class="proofs" aria-label="Caractéristiques du calculateur">
+        <li>Calcul immédiat</li><li>Aucun compte requis</li><li>Paramètres visibles</li><li>Traitement local</li>
+      </ul>
+    </section>
+
+    <section id="calculator" class="section shell">
+      <div class="section-heading">
+        <p class="eyebrow">ÉTAPE 1</p>
+        <h2>Décris ton scénario</h2>
+        <p>Exemple synthétique modifiable — aucun tarif de courtier réel.</p>
+      </div>
+      <div class="demo-row" aria-label="Scénarios synthétiques">
+        <button type="button" class="button secondary" data-demo="small_round_trip">Très petit capital</button>
+        <button type="button" class="button secondary" data-demo="intermediate_round_trip">Capital intermédiaire</button>
+        <button type="button" class="button secondary" data-demo="monthly_eur_buy">Achat mensuel</button>
+        <button type="button" class="button secondary" data-demo="zero_commission_round_trip">Commission zéro</button>
+      </div>
+      <p id="demo-status" class="status" aria-live="polite"></p>
+
+      <form id="cost-form" novalidate>
+        <div id="error-summary" class="error-summary" role="alert" hidden></div>
+        <div class="form-grid">
+          <fieldset class="panel">
+            <legend>Portefeuille et activité</legend>
+            <div class="field">
+              <label for="capitalEur">Capital investi <span class="optional">facultatif</span></label>
+              <div class="input-unit"><input id="capitalEur" name="capitalEur" inputmode="decimal" value="5000" aria-describedby="capital-help capital-error"><span>EUR</span></div>
+              <p id="capital-help" class="help">Capital de référence utilisé pour mesurer le poids annuel des frictions.</p>
+              <p id="capital-error" class="field-error" data-error-for="capitalEur"></p>
+            </div>
+            <div class="field">
+              <label for="orderAmountEur">Montant moyen par ordre</label>
+              <div class="input-unit"><input id="orderAmountEur" name="orderAmountEur" inputmode="decimal" value="500" aria-describedby="order-help order-error"><span>EUR</span></div>
+              <p id="order-help" class="help">Montant notionnel d’un achat ou d’une vente.</p>
+              <p id="order-error" class="field-error" data-error-for="orderAmountEur"></p>
+            </div>
+            <fieldset class="segmented-field">
+              <legend>Type d’activité</legend>
+              <div class="segmented">
+                <label><input type="radio" name="activityType" value="single_buy"><span>Achat simple</span></label>
+                <label><input type="radio" name="activityType" value="round_trip" checked><span>Aller-retour</span></label>
+              </div>
+              <p class="field-error" data-error-for="activityType"></p>
+            </fieldset>
+            <div class="field">
+              <label for="monthlyFrequency">Nombre d’opérations par mois</label>
+              <div class="input-unit"><input id="monthlyFrequency" name="monthlyFrequency" inputmode="decimal" value="4" aria-describedby="frequency-help frequency-error"><span>/ mois</span></div>
+              <p id="frequency-help" class="help">0,33 correspond environ à une opération tous les trois mois.</p>
+              <p id="frequency-error" class="field-error" data-error-for="monthlyFrequency"></p>
+            </div>
+          </fieldset>
+
+          <fieldset class="panel">
+            <legend>Frictions</legend>
+            <div class="field">
+              <label for="commissionPerSideEur">Commission par côté</label>
+              <div class="input-unit"><input id="commissionPerSideEur" name="commissionPerSideEur" inputmode="decimal" value="1" aria-describedby="commission-error"><span>EUR</span></div>
+              <p class="provenance">Provenance : saisie utilisateur</p>
+              <p id="commission-error" class="field-error" data-error-for="commissionPerSideEur"></p>
+            </div>
+            <div class="field">
+              <label for="fxPerConversionPercent">Change par conversion</label>
+              <div class="input-unit"><input id="fxPerConversionPercent" name="fxPerConversionPercent" inputmode="decimal" value="0,25" aria-describedby="fx-help fx-error"><span>%</span></div>
+              <p id="fx-help" class="help">Mets 0 si aucune conversion de devise n’est nécessaire.</p>
+              <p id="fx-error" class="field-error" data-error-for="fxPerConversionPercent"></p>
+            </div>
+            <div class="field">
+              <label for="spreadPercent">Spread estimé pour le scénario complet</label>
+              <div class="input-unit"><input id="spreadPercent" name="spreadPercent" inputmode="decimal" value="0,10" aria-describedby="spread-help spread-error"><span>%</span></div>
+              <p id="spread-help" class="help">Hypothèse d’écart achat-vente total, non remultipliée par le nombre de côtés.</p>
+              <p id="spread-error" class="field-error" data-error-for="spreadPercent"></p>
+            </div>
+            <div class="field">
+              <label for="slippagePercent">Slippage estimé pour le scénario complet</label>
+              <div class="input-unit"><input id="slippagePercent" name="slippagePercent" inputmode="decimal" value="0,10" aria-describedby="slippage-help slippage-error"><span>%</span></div>
+              <p id="slippage-help" class="help">Écart hypothétique entre le prix attendu et le prix exécuté.</p>
+              <p id="slippage-error" class="field-error" data-error-for="slippagePercent"></p>
+            </div>
+          </fieldset>
+        </div>
+        <button class="button primary submit-button" type="submit">Voir l’impact</button>
+      </form>
+    </section>
+
+    <section id="results" class="section shell results" tabindex="-1" hidden>
+      <p class="eyebrow">ÉTAPE 2</p>
+      <h2>Lis l’impact du scénario</h2>
+      <div class="metrics-grid">
+        <article class="metric primary-metric">
+          <p id="operation-label">Coût estimé par aller-retour</p>
+          <strong id="metric-operation">—</strong>
+          <span id="metric-operation-rate">—</span>
+        </article>
+        <article class="metric"><p>Coût annuel estimé</p><strong id="metric-annual">—</strong><span id="metric-frequency">—</span></article>
+        <article class="metric"><p>Part du capital absorbée</p><strong id="metric-capital">—</strong><span id="capital-note">—</span></article>
+        <article class="metric"><p>Seuil de couverture des frais</p><strong id="metric-break-even">—</strong><span>Ne mesure ni la probabilité de gain ni l’intérêt de l’opération.</span></article>
+      </div>
+      <p class="interpretation">Selon les hypothèses saisies, le résultat brut doit d’abord couvrir les frictions affichées avant de produire un résultat net positif.</p>
+
+      <div class="subsection">
+        <h3>Ce qui compose le coût</h3>
+        <div id="component-list" class="component-list"></div>
+      </div>
+
+      <div class="subsection">
+        <h3>Deux variations descriptives</h3>
+        <p>Les écarts ci-dessous sont mathématiques. Breaktest ne désigne aucun scénario comme préférable.</p>
+        <div id="comparison-grid" class="comparison-grid"></div>
+      </div>
+
+      <div class="share-box">
+        <label class="checkbox"><input id="share-capital" type="checkbox"> Inclure volontairement mon capital exact dans le texte partagé</label>
+        <button id="share-result" class="button secondary" type="button">Partager ce résultat</button>
+        <p id="share-status" class="status" aria-live="polite"></p>
+      </div>
+    </section>
+
+    <section id="method" class="section shell method">
+      <div class="section-heading"><p class="eyebrow">TRANSPARENCE</p><h2>Ce que le calcul sait — et ce qu’il ne sait pas</h2></div>
+      <div class="method-grid">
+        <article class="panel"><h3>Calculé</h3><ul><li>commissions saisies par côté ;</li><li>change saisi par conversion ;</li><li>spread et slippage hypothétiques ;</li><li>fréquence et montant d’ordre ;</li><li>impact en euros, pourcentage et points de comparaison.</li></ul></article>
+        <article class="panel"><h3>Non calculé ou non garanti</h3><ul><li>rendement futur ;</li><li>fiscalité personnelle ;</li><li>qualité d’un courtier ;</li><li>probabilité de gain ;</li><li>conseil d’achat, de vente ou de fréquence.</li></ul></article>
+      </div>
+      <details>
+        <summary>Voir la formule simplifiée</summary>
+        <p>Coût total = commissions par côté + change par conversion + spread total du scénario + slippage total du scénario. Coût annuel = coût par opération × fréquence mensuelle × 12.</p>
+      </details>
+      <p class="version">Version du calcul : <code id="calculation-version">cost-intelligence-validation-1</code></p>
+      <p class="disclaimer">Breaktest est un outil d’information et de calcul. Il ne fournit ni recommandation personnalisée, ni conseil en investissement, ni exécution d’ordre. Les coûts implicites sont des hypothèses saisies par l’utilisateur.</p>
+    </section>
+
+    <section class="section shell interest">
+      <div class="section-heading"><p class="eyebrow">VALIDATION</p><h2>Tu veux suivre tes coûts dans le temps&nbsp;?</h2><p>La prochaine version envisagée pourrait importer des transactions et suivre le cost drag mois après mois. Elle n’est pas encore disponible.</p></div>
+      <form id="interest-form" class="panel interest-form">
+        <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="email"></div>
+        <div class="field"><label for="capital-band">Tranche de capital</label><select id="capital-band" name="capitalBand"><option>&lt; 2 000 EUR</option><option>2 000–10 000 EUR</option><option>10 001–50 000 EUR</option><option>&gt; 50 000 EUR</option></select></div>
+        <div class="field"><label for="primary-need">Besoin prioritaire</label><select id="primary-need" name="primaryNeed"><option>Calcul avant ordre</option><option>Import des frais</option><option>Comparaison de scénarios</option><option>Suivi mensuel</option></select></div>
+        <button class="button secondary" type="submit">Recevoir l’ouverture</button>
+        <button class="button muted" type="button" disabled aria-describedby="payment-note">Réserver la bêta</button>
+        <p id="payment-note" class="help">Réservation non ouverte dans cette version de validation.</p>
+        <p id="interest-status" class="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="footer"><div class="shell"><p>Version de validation — produit complet non encore disponible.</p><p>Aucune donnée financière n’est envoyée tant qu’aucun endpoint n’est configuré.</p></div></footer>
+  <div id="result-live" class="sr-only" aria-live="polite"></div>
+  <script src="config.js"></script>
+  <script src="calculator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
