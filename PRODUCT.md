@@ -2,8 +2,10 @@
 
 - Direction validée : 13 juillet 2026
 - Raffinement actif : Capital Efficiency et Edge Survival
+- Extension stratégique validée : Breaktest Cost Gate, 14 juillet 2026
 - Phase : prototype interne, revue hostile et validation technique avant tout test commercial externe
-- Nom de travail : **Breaktest Cost Intelligence**
+- Nom de travail actuel : **Breaktest Cost Intelligence**
+- Nom de travail futur : **Breaktest Cost Gate**
 
 ## 1. Vision
 
@@ -14,6 +16,8 @@ La promesse n'est plus « additionner des frais ».
 > Breaktest montre le rendement brut nécessaire pour couvrir les frictions, ce qui reste d'un avantage lorsqu'il est fourni, ce qui peut être dilué par la taille et ce qui constitue un plancher structurel.
 
 Breaktest ne recommande pas un instrument, un courtier, une taille, une fréquence ou une transaction. Il ne prédit aucun rendement et n'exécute aucun ordre.
+
+À terme, Cost Gate devra appliquer ce noyau à un trade envisagé avant envoi, en tenant compte du capital libre, de la taille proposée, de la liquidité et de la qualité des données, sans transformer automatiquement l'analyse en recommandation.
 
 ## 2. Utilisateur cible initial
 
@@ -40,8 +44,11 @@ Une grille tarifaire ou un total de frais ne répond pas directement à ces ques
 - une contrainte de taille est-elle mathématiquement atteignable ?
 - une fréquence reste-t-elle sous un budget de friction défini par l'utilisateur ?
 - une frontière mathématique dépasse-t-elle potentiellement le capital réellement disponible ?
+- un trade envisagé reste-t-il cohérent avec le cash libre, la liquidité et les données disponibles ?
 
-La dernière question est documentée mais n'est pas encore implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+La faisabilité du capital est documentée mais non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+
+La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md` et reste non implémentée.
 
 ## 4. Architecture de valeur
 
@@ -106,6 +113,43 @@ La future couche devra distinguer capital de référence, capital alloué, cash 
 
 Cette couche est documentée, non implémentée et conditionnée à une preuve d'utilité utilisateur.
 
+### 4.6 Cost Gate — couche pré-trade future
+
+Cost Gate devra réunir, pour un trade envisagé :
+
+- frictions explicites et implicites ;
+- capital de référence, cash libre et nominal déjà réservé ;
+- taille proposée ;
+- avantage brut ponctuel ou fourchette fournie ;
+- liquidité, spread, type d'ordre et fraîcheur des données lorsque ces informations seront légalement et techniquement disponibles ;
+- contraintes définies par l'utilisateur.
+
+Les résultats de travail restent analytiques :
+
+- `compatible_under_assumptions` ;
+- `adjustment_required` ;
+- `structurally_non_viable` ;
+- `capital_not_feasible` ;
+- `execution_cost_risk` ;
+- `insufficient_data`.
+
+Ces états décrivent la cohérence du scénario dans le modèle. Ils ne sont ni des recommandations, ni des autorisations d'ordre, ni des prévisions.
+
+### 4.7 Data Quality Gate — préalable obligatoire
+
+Aucun résultat dépendant d'une donnée externe ne pourra être produit sans contrôle visible de :
+
+- source ;
+- timestamp et fraîcheur ;
+- instrument, place et devise ;
+- couverture ;
+- provenance observée, contractuelle, estimée ou dérivée ;
+- valeurs manquantes ou contradictoires ;
+- niveau d'incertitude ;
+- licence et droit d'utilisation.
+
+Une donnée stale, partielle, conflictuelle ou indisponible doit limiter ou bloquer la conclusion concernée.
+
 ## 5. Définition de l'avantage brut
 
 L'entrée brute actuelle signifie :
@@ -145,6 +189,8 @@ Règles UX actives :
 - clavier, `aria-live`, mouvement réduit et responsive ;
 - vocabulaire concret avant le jargon.
 
+La future expérience Cost Gate devra rester progressive : scénario manuel d'abord, qualité des données ensuite, puis explication du facteur limitant. Elle ne doit pas devenir un mur de paramètres de microstructure.
+
 ## 7. État technique des actifs
 
 ### Moteur historique
@@ -180,9 +226,13 @@ Le calculateur descriptif `validation_site/` est techniquement validé et gelé.
 
 La version moteur en cours de validation est `capital-efficiency-lab-4-optional-annual`.
 
+### Cost Gate
+
+Cost Gate est une direction stratégique documentée. Aucun moteur de données de marché, diagnostic pré-trade, compte utilisateur, stockage, réseau, connexion courtier ou exécution n'est actuellement implémenté.
+
 ## 8. Positionnement
 
-Breaktest est une couche de **capital-efficiency intelligence**.
+Breaktest est une couche de **capital-efficiency intelligence** destinée à évoluer vers un **pre-trade cost and feasibility gate** explicable.
 
 Ce n'est pas :
 
@@ -214,6 +264,8 @@ Ce n'est pas :
 - dérivation de l'avantage depuis des historiques réels ;
 - incertitude statistique adaptée aux données ;
 - faisabilité du capital et positions simultanées ;
+- contrôle pré-trade Cost Gate ;
+- Data Quality Gate ;
 - barèmes versionnés ;
 - parseurs multi-courtiers ;
 - historique d'Edge Survival ;
@@ -242,6 +294,9 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 - profilage de risque ;
 - allocation personnalisée ;
 - transmission ou exécution d'ordres ;
+- ordre limite conseillé ;
+- probabilité d'exécution ;
+- regroupement temporel automatisé ;
 - levier ou marge ;
 - données temps réel payantes ;
 - import réel dans le nouveau produit ;
@@ -254,7 +309,7 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 
 ## 12. Gates
 
-### Avant fusion technique
+### Avant fusion technique de la PR active
 
 - contrats réconciliés ;
 - oracles et invariants réussis ;
@@ -274,6 +329,23 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 - compréhension sans coaching ;
 - aucune confusion entre hypothèse, prévision et conseil.
 
+### Avant prototype Cost Gate
+
+- noyau Edge Survival stabilisé ;
+- utilité du diagnostic actuel observée ;
+- contrat de faisabilité du capital validé ;
+- états pré-trade non prescriptifs testés ;
+- Data Quality Gate défini ;
+- scénario synthétique manuel avant toute donnée externe.
+
+### Avant donnée externe
+
+- source, coût, licence et couverture vérifiés ;
+- fraîcheur et fallback contractuels ;
+- sécurité et confidentialité ;
+- kill switch ;
+- décision explicite d'Ayman.
+
 ### Avant développement commercial étendu
 
 - révélation d'une contrainte économique nouvelle ;
@@ -283,3 +355,5 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 - automatisation suffisante ;
 - valeur perçue supérieure au prix ;
 - test capable de conduire à l'abandon.
+
+La validation de Cost Gate est stratégique. Elle ne prouve ni demande, ni précision pré-trade, ni disponibilité des données, ni conformité réglementaire.
