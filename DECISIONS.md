@@ -143,3 +143,21 @@
 - Statut : active
 - Décision : la pull request `#14` est fermée sans fusion après le pivot.
 - Conséquence : son code reste non validé et ne peut être repris qu'après démonstration d'un besoin direct pour le produit retenu.
+
+## D025 — Le coût devient une explication, pas le résultat principal
+
+- Statut : **active, issue de la critique d'Ayman du 13 juillet 2026**
+- Décision : Breaktest doit mettre en avant le seuil brut nécessaire lorsque l'avantage brut est absent, puis la part d'avantage conservée et la marge nette lorsqu'il est explicitement fourni.
+- Conséquence : un total de frais isolé ne suffit plus à justifier une fonctionnalité centrale.
+
+## D026 — Les contraintes inverses structurent la Capital Efficiency
+
+- Statut : active
+- Décision : le produit peut calculer des frontières mathématiques conditionnelles — taille, fréquence, budget et brut requis — sans les présenter comme recommandations.
+- Conséquence : un cas impossible doit être nommé `structurally_unreachable`, jamais remplacé par `Infinity` ou une pseudo-solution.
+
+## D027 — La barre mondiale repose sur la preuve et l'utilité
+
+- Statut : active
+- Décision : la différenciation recherchée combine calcul inverse, plancher variable, rétention de l'avantage, provenance, cas limites, auditabilité et expérience compréhensible.
+- Conséquence : aucune métrique, visualisation ou fonction n'entre dans le produit uniquement parce qu'elle paraît sophistiquée ou valorisante pour une candidature.
