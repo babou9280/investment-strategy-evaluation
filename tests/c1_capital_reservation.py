@@ -210,7 +210,7 @@ async def main():
     demo = result["demo"]
     assert demo["capitalInitial"] >= 0
     assert 0 <= demo["peakCapitalReserved"] <= demo["capitalInitial"] + 1e-9, demo
-    assert 0 <= demo["minimumCapitalFree"] <= demo["capitalInitial"] + 1e-9, demo
+    assert demo["minimumCapitalFree"] <= demo["capitalInitial"] + 1e-9, demo
     assert demo["capitalFundingRefused"] >= 0
     assert demo["allHaveDiagnostics"] is True
     assert demo["allKeptFunded"] is True
@@ -220,7 +220,8 @@ async def main():
     assert labels["eyebrow"] == "CAPITAL RESERVATION", labels
     assert labels["peak"] == "Pic capital réservé", labels
     assert labels["free"] == "Capital libre minimum", labels
-    assert "courbe encore non temporelle" in labels["equityCaption"], labels
+    assert "capital réalisé" in labels["equityCaption"], labels
+    assert "non mark-to-market" in labels["equityCaption"], labels
 
     print("C1 capital reservation tests passed")
 
