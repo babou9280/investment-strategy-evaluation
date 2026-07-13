@@ -15,9 +15,12 @@ Documents de référence :
 - `PRODUCT.md` ;
 - `STRATEGY.md` ;
 - `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
+- `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
+- `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
+- `docs/validation/CAPITAL_EFFICIENCY_LAB.md` ;
 - `NEXT_CODEX_PROMPT.md`.
 
 ## 2. Instrument Q0 construit mais publication suspendue
@@ -39,28 +42,43 @@ La pull request `#17` a ensuite ajouté la préparation de lancement et les cont
 
 Cependant, le site Q0 n'est pas publié : sa valeur reste principalement descriptive et ne justifie pas encore un test externe.
 
-## 3. Nouvelle mission active
+## 3. Capital Efficiency Lab implémenté et validé techniquement
 
 Branche : `strategy/capital-efficiency-core`.
 
-Objectif : construire `capital_efficiency_lab/`, un laboratoire interne déterministe répondant à la question :
+Le dossier `capital_efficiency_lab/` répond à la question :
 
 > Quelle part d'un avantage brut survit aux frictions, et quelles contraintes économiques doivent être satisfaites pour qu'il subsiste ?
 
-Sorties prévues :
+Fonctions exécutées :
 
 - seuil brut de couverture ;
 - plancher variable de friction ;
-- marge nette en taux, points de base et euros ;
-- part d'avantage absorbée et conservée ;
-- taille minimale de couverture ;
-- taille minimale pour une rétention cible ;
+- séparation coût fixe / coût variable ;
+- marge nette en taux et euros ;
+- part d'avantage absorbée et conservée lorsque l'avantage brut est positif ;
+- taille frontière pour une marge positive ;
+- taille frontière pour une rétention cible ;
+- cas structurellement impossible ;
 - fréquence frontière sous budget annuel ;
-- sensibilité aux hypothèses.
+- rendement brut requis pour une cible nette ;
+- sensibilité du seuil à la taille ;
+- provenance `user_assumption` ou `synthetic_demo` ;
+- états indisponibles explicites sans `Infinity` ni fallback silencieux.
 
-Le contrat quantitatif est versionné dans `docs/standards/EDGE_SURVIVAL_CONTRACT.md`.
+Le head `5715bdd75271bf6197ae07a989b1ddb44931b2dc` a réussi l'exécution GitHub Actions `29277241457`, comprenant :
 
-Le laboratoire n'est pas encore implémenté ni validé.
+- oracles Node ;
+- invariants et cas limites ;
+- Chromium à 390, 768, 1024 et 1440 px ;
+- focus d'erreur et absence de débordement horizontal ;
+- intégrité locale sans réseau ou persistance ;
+- syntaxe ;
+- toutes les non-régressions historiques H1–H2/C1–C4 et Q0.
+
+Preuve : `docs/validation/CAPITAL_EFFICIENCY_LAB.md`.
+
+Cette validation est technique. Le laboratoire n'est ni publié ni commercialement validé.
 
 ## 4. Build technique historique conservé
 
@@ -80,7 +98,7 @@ Corrections fusionnées :
 - C4 : pull request `#10` ;
 - H2 : pull request `#12`, commit `3504d448547bfeab9ef74114af3c08fb557a1c75`.
 
-Le nouveau laboratoire doit rester isolé et ne modifier ni ce moteur ni le site Q0.
+Le nouveau laboratoire reste isolé et n'a modifié ni ce moteur ni le site Q0.
 
 ## 5. Fonctionnalités réellement validées
 
@@ -107,13 +125,21 @@ Le nouveau laboratoire doit rester isolé et ne modifier ni ce moteur ni le site
 - aucune capacité réseau ou persistance applicative active ;
 - syntaxe JavaScript validée.
 
-### Capital Efficiency
+### Capital Efficiency Lab
 
-À ce stade, seuls la définition produit, le contrat mathématique et la mission sont versionnés. Aucun moteur ou écran Capital Efficiency n'est encore validé.
+- moteur Edge Survival déterministe ;
+- scénario principal exact et réconcilié ;
+- seuil, plancher, marge, absorption et rétention ;
+- contraintes inverses et impossibilités structurelles ;
+- budget annuel, fréquence frontière et cible nette ;
+- tests de monotonicité et convergence ;
+- interface locale responsive ;
+- provenance et limites visibles ;
+- aucune recommandation, donnée réelle ou service externe.
 
 ## 6. Développements suspendus
 
-- publication externe du site Q0 ;
+- publication externe du site Q0 et du laboratoire ;
 - H3 à H6 ;
 - certification de stratégies ;
 - score global de recommandation ;
@@ -144,13 +170,15 @@ Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
 
 - le rapport fondateur illustre qu'une prime brute peut être fortement absorbée par les frictions et le turnover ;
 - le mécanisme du seuil de couverture est calculable ;
+- les contraintes inverses du laboratoire sont techniquement exécutables ;
 - des outils adjacents obtiennent des abonnements payants ;
-- un calculateur Q0 techniquement fonctionnel existe.
+- un calculateur Q0 et un laboratoire Edge Survival techniquement fonctionnels existent.
 
 ### Non validé
 
 - compréhension et valeur perçue des nouvelles sorties ;
 - existence d'un avantage brut suffisamment formalisé chez la cible ;
+- capacité des contraintes inverses à modifier une décision réelle ;
 - usage répété ;
 - demande d'import ;
 - volonté de payer ;
@@ -161,15 +189,15 @@ Ces défauts restent documentés. Ils ne sont pas automatiquement prioritaires.
 
 - dépôt : `babou9280/investment-strategy-evaluation` ;
 - branche de référence produit : `breaktest-bootstrap` ;
-- branche active : `strategy/capital-efficiency-core` ;
+- pull request active : `#20`, branche `strategy/capital-efficiency-core` ;
 - `main` reste inchangé et hors périmètre.
 
 ## 10. Prochaine exécution autorisée
 
-1. implémenter le laboratoire isolé selon le contrat ;
-2. ajouter les oracles et invariants quantitatifs ;
-3. exécuter les suites historiques, Q0, Chromium, intégrité et syntaxe ;
-4. corriger les défauts ;
-5. mettre à jour les fichiers canoniques uniquement avec les résultats exécutés ;
-6. ne rien publier ;
-7. revenir vers Ayman uniquement lorsqu'un prototype interne réellement fonctionnel est prêt à être critiqué ou lorsqu'une décision stratégique devient nécessaire.
+1. inspecter le laboratoire comme produit et non seulement comme calcul ;
+2. corriger les défauts quantitatifs, d'accessibilité ou de compréhension détectés ;
+3. obtenir une exécution verte sur le head documentaire final ;
+4. fusionner uniquement dans `breaktest-bootstrap` si le périmètre et les preuves restent cohérents ;
+5. ne rien publier ;
+6. préparer ensuite une critique interne et une expérience utilisateur limitée ;
+7. ne reprendre aucune extension réelle avant preuve d'utilité et décision explicite.
