@@ -225,7 +225,7 @@
       }
 
       const positiveDenominator = G - variableFloorRate;
-      results.minimumOrderForPositiveNet = positiveDenominator <= 0
+      results.minimumOrderForPositiveNet = atOrBelow(G, variableFloorRate)
         ? unavailable('structurally_unreachable')
         : available(fixedCostEur / positiveDenominator, {
             boundary: fixedCostEur === 0 ? 'no_positive_minimum_from_fixed_costs' : 'strictly_greater_for_positive_margin'
@@ -250,12 +250,14 @@
         }
       }
 
-      if (netEdgeRate <= 0) {
+      if (atOrBelow(G, breakEvenGrossRate)) {
         results.primaryState = 'edge_fully_absorbed';
       } else if (R != null && G > 0) {
-        results.primaryState = results.edgeRetainedRate.value >= R - TOLERANCE
+        results.primaryState = strictlyAbove(results.edgeRetainedRate.value, R) || close(results.edgeRetainedRate.value, R)
           ? 'retention_target_met'
           : 'edge_partially_retained';
+      } else {
+        results.primaryState = 'edge_partially_retained';
       }
     }
 
@@ -308,6 +310,7 @@
       costReconciliation: close(fixedCostEur + variableCostEur, totalCostEur),
       pnlReconciliation: G == null ? null : close((N * G) - totalCostEur, results.netEdgeEur.value),
       edgeSharesReconciliation: G == null || G <= 0 ? null : close(results.edgeAbsorptionRate.value + results.edgeRetainedRate.value, 1),
+      pointPrimaryStateDefined: G == null ? null : results.primaryState !== null,
       costSharesReconciliation: totalCostEur === 0 ? null : close(results.fixedCostShare.value + results.variableCostShare.value, 1),
       rangeLowReconciliation: rangeLow == null ? null : close(GLow - breakEvenGrossRate, rangeLow.netEdgeRate.value),
       rangeBaseReconciliation: rangeBase == null ? null : close(GBase - breakEvenGrossRate, rangeBase.netEdgeRate.value),
