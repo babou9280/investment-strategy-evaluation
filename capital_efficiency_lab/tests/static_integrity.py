@@ -7,7 +7,6 @@ files = [
     ROOT / 'styles.css',
     ROOT / 'engine.js',
     ROOT / 'app.js',
-    ROOT / 'app_v2.js',
     ROOT / 'result_freshness.js',
 ]
 for file in files:
