@@ -8,6 +8,7 @@
   const live = document.querySelector("#result-live");
   const includeCapital = document.querySelector("#share-capital");
   let lastResult = null;
+  let currentProvenance = "synthetic_demo";
 
   function fieldValue(name) {
     const node = form.elements.namedItem(name);
@@ -16,14 +17,10 @@
 
   function rawScenario() {
     return {
-      capitalEur: fieldValue("capitalEur"),
-      orderAmountEur: fieldValue("orderAmountEur"),
-      activityType: fieldValue("activityType"),
-      monthlyFrequency: fieldValue("monthlyFrequency"),
-      commissionPerSideEur: fieldValue("commissionPerSideEur"),
-      fxPerConversionPercent: fieldValue("fxPerConversionPercent"),
-      spreadPercent: fieldValue("spreadPercent"),
-      slippagePercent: fieldValue("slippagePercent"),
+      capitalEur: fieldValue("capitalEur"), orderAmountEur: fieldValue("orderAmountEur"),
+      activityType: fieldValue("activityType"), monthlyFrequency: fieldValue("monthlyFrequency"),
+      commissionPerSideEur: fieldValue("commissionPerSideEur"), fxPerConversionPercent: fieldValue("fxPerConversionPercent"),
+      spreadPercent: fieldValue("spreadPercent"), slippagePercent: fieldValue("slippagePercent"),
     };
   }
 
@@ -71,18 +68,18 @@
       list.appendChild(zero);
       return;
     }
-    [...result.components]
-      .sort((a, b) => b.costEur - a.costEur)
-      .forEach((component) => {
-        const row = document.createElement("div");
-        row.className = "component-row";
-        row.innerHTML = `<div class="component-head"><span>${component.label}</span><strong>${calc.formatEur(component.costEur)}</strong></div>
-          <div class="bar" aria-hidden="true"><span style="width:${Math.max(component.share * 100, component.costEur > 0 ? 2 : 0)}%"></span></div>
-          <div class="component-meta"><span>${calc.formatPercent(component.share, 1)} du total</span><span>Hypothèse saisie</span></div>`;
-        row.dataset.component = component.key;
-        row.dataset.raw = String(component.costEur);
-        list.appendChild(row);
-      });
+    [...result.components].sort((a, b) => b.costEur - a.costEur).forEach((component) => {
+      const row = document.createElement("div");
+      row.className = "component-row";
+      const provenanceLabel = component.provenance === "synthetic_demo" ? "Exemple synthétique" : "Hypothèse saisie";
+      row.innerHTML = `<div class="component-head"><span>${component.label}</span><strong>${calc.formatEur(component.costEur)}</strong></div>
+        <div class="bar" aria-hidden="true"><span style="width:${Math.max(component.share * 100, component.costEur > 0 ? 2 : 0)}%"></span></div>
+        <div class="component-meta"><span>${calc.formatPercent(component.share, 1)} du total</span><span>${provenanceLabel}</span></div>`;
+      row.dataset.component = component.key;
+      row.dataset.raw = String(component.costEur);
+      row.dataset.provenance = component.provenance;
+      list.appendChild(row);
+    });
   }
 
   function renderComparisons(result) {
@@ -92,11 +89,9 @@
       const card = document.createElement("article");
       card.className = "comparison-card";
       card.dataset.scenario = entry.key;
-      const capitalRate = entry.result.annualCostToCapitalRate === null
-        ? "Indisponible sans capital"
-        : calc.formatPercent(entry.result.annualCostToCapitalRate);
-      card.innerHTML = `<h3>${entry.label}</h3>
-        <dl><div><dt>Par opération</dt><dd>${calc.formatEur(entry.result.totalCostPerOperationEur)}</dd></div>
+      const capitalRate = entry.result.annualCostToCapitalRate === null ? "Indisponible sans capital" : calc.formatPercent(entry.result.annualCostToCapitalRate);
+      card.innerHTML = `<h3>${entry.label}</h3><dl>
+        <div><dt>Par opération</dt><dd>${calc.formatEur(entry.result.totalCostPerOperationEur)}</dd></div>
         <div><dt>Part de l’ordre</dt><dd>${calc.formatPercent(entry.result.costRatePerOperation)}</dd></div>
         <div><dt>Par an</dt><dd>${calc.formatEur(entry.result.annualCostEur)}</dd></div>
         <div><dt>Sur le capital</dt><dd>${capitalRate}</dd></div></dl>`;
@@ -125,9 +120,10 @@
     live.textContent = "Résultat mis à jour";
   }
 
+  form.addEventListener("input", () => { currentProvenance = "user_assumption"; });
   form.addEventListener("submit", (event) => {
     event.preventDefault();
-    const outcome = calc.calculate(rawScenario());
+    const outcome = calc.calculate(rawScenario(), { provenance: currentProvenance });
     if (!outcome.ok) {
       resultSection.hidden = true;
       showErrors(outcome.errors);
@@ -150,9 +146,10 @@
       for (const [key, value] of Object.entries(demo.values)) {
         const node = form.elements.namedItem(key);
         if (!node) continue;
-        if (node instanceof RadioNodeList) node.value = value;
+        if (typeof RadioNodeList !== "undefined" && node instanceof RadioNodeList) node.value = value;
         else node.value = String(value).replace(".", ",");
       }
+      currentProvenance = demo.provenance;
       document.querySelector("#demo-status").textContent = `Exemple synthétique chargé : ${demo.label}.`;
       form.querySelector("button[type='submit']").focus();
     });
@@ -176,16 +173,10 @@
 
   document.querySelector("#interest-form").addEventListener("submit", (event) => {
     event.preventDefault();
-    const status = document.querySelector("#interest-status");
-    status.textContent = config.emailEndpoint
+    document.querySelector("#interest-status").textContent = config.emailEndpoint
       ? "Endpoint configuré mais envoi désactivé dans cette version de validation."
       : "Collecte non activée : aucune donnée n’a été envoyée.";
   });
 
-  window.BreaktestValidation = {
-    rawScenario,
-    renderResult,
-    getLastResult: () => lastResult,
-    config,
-  };
+  window.BreaktestValidation = { rawScenario, renderResult, getLastResult: () => lastResult, config };
 })();
