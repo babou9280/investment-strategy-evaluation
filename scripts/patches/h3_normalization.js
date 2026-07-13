@@ -14,17 +14,23 @@ function supportedPriceCurrency(value) {
 }
 
 function normalizedEntryPrice(raw, index = 0) {
+  const states = {};
+  for (const key of ["entry_price_eur", "entry_price_usd", "entry_price"]) {
+    if (!Object.prototype.hasOwnProperty.call(raw, key)) continue;
+    const state = numericState(raw[key]);
+    states[key] = state;
+    if (state.status === "invalid" || (state.status === "valid" && !(state.value > 0))) {
+      throw new TradeValidationError(index, key, "invalid");
+    }
+  }
+
   const dedicated = [
     { key: "entry_price_eur", currency: "EUR" },
     { key: "entry_price_usd", currency: "USD" },
   ];
   for (const candidate of dedicated) {
-    if (!Object.prototype.hasOwnProperty.call(raw, candidate.key)) continue;
-    const state = numericState(raw[candidate.key]);
-    if (state.status === "missing") continue;
-    if (state.status !== "valid" || !(state.value > 0)) {
-      throw new TradeValidationError(index, candidate.key, "invalid");
-    }
+    const state = states[candidate.key];
+    if (!state || state.status === "missing") continue;
     return {
       status: "valid",
       sourceValue: state.value,
@@ -34,28 +40,25 @@ function normalizedEntryPrice(raw, index = 0) {
       currencyProvenance: "column-name",
       conversionRequired: candidate.currency !== "EUR",
       supportedCurrency: true,
+      alternativePriceKeys: Object.keys(states).filter((key) => key !== candidate.key && states[key].status === "valid"),
     };
   }
 
-  if (Object.prototype.hasOwnProperty.call(raw, "entry_price")) {
-    const state = numericState(raw.entry_price);
-    if (state.status !== "missing") {
-      if (state.status !== "valid" || !(state.value > 0)) {
-        throw new TradeValidationError(index, "entry_price", "invalid");
-      }
-      const declared = explicitPriceCurrency(raw);
-      const supported = supportedPriceCurrency(declared.normalized);
-      return {
-        status: supported ? "valid" : "unsupported-currency",
-        sourceValue: state.value,
-        sourceKey: "entry_price",
-        sourceCurrency: supported || declared.raw || null,
-        currencySourceKey: declared.key,
-        currencyProvenance: declared.key ? (supported ? "explicit-field" : "unsupported-explicit-field") : "unspecified",
-        conversionRequired: supported === "USD",
-        supportedCurrency: Boolean(supported),
-      };
-    }
+  const generic = states.entry_price;
+  if (generic && generic.status === "valid") {
+    const declared = explicitPriceCurrency(raw);
+    const supported = supportedPriceCurrency(declared.normalized);
+    return {
+      status: supported ? "valid" : "unsupported-currency",
+      sourceValue: generic.value,
+      sourceKey: "entry_price",
+      sourceCurrency: supported || declared.raw || null,
+      currencySourceKey: declared.key,
+      currencyProvenance: declared.key ? (supported ? "explicit-field" : "unsupported-explicit-field") : "unspecified",
+      conversionRequired: supported === "USD",
+      supportedCurrency: Boolean(supported),
+      alternativePriceKeys: [],
+    };
   }
 
   return {
@@ -67,6 +70,7 @@ function normalizedEntryPrice(raw, index = 0) {
     currencyProvenance: "missing",
     conversionRequired: false,
     supportedCurrency: false,
+    alternativePriceKeys: [],
   };
 }
 
