@@ -34,6 +34,18 @@ with sync_playwright() as p:
     page.get_by_role('button', name='Analyser la survie de l’avantage').click()
     page.locator('#results').wait_for(state='visible')
     assert 'Impossible sous ces hypothèses' in page.locator('#constraints-grid').inner_text()
+
+    page.locator('#commissionPerSideEur').fill('0')
+    page.locator('#fxRatePerSidePercent').fill('0')
+    page.locator('#spreadTotalPercent').fill('0')
+    page.locator('#slippageTotalPercent').fill('0')
+    page.locator('#grossEdgePercent').fill('1')
+    page.locator('#retentionTargetPercent').fill('100')
+    page.get_by_role('button', name='Analyser la survie de l’avantage').click()
+    page.locator('#results').wait_for(state='visible')
+    constraints_text = page.locator('#constraints-grid').inner_text()
+    assert constraints_text.count('Aucun minimum positif imposé') >= 2
+    assert 'Infinity' not in page.locator('body').inner_text()
     browser.close()
 
 print('Capital Efficiency browser tests passed')
