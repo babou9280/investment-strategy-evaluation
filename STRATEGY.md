@@ -2,8 +2,10 @@
 
 - Date de décision initiale : 13 juillet 2026
 - Raffinement produit : 13 juillet 2026
-- Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency**
-- Nom de travail : **Breaktest Cost Intelligence**
+- Extension stratégique : 14 juillet 2026
+- Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
+- Nom de travail actuel : **Breaktest Cost Intelligence**
+- Nom de travail de la couche future : **Breaktest Cost Gate**
 - Phase actuelle : conception et prototype interne avant validation commerciale externe
 
 ## 1. Direction
@@ -132,13 +134,16 @@ Breaktest est une couche indépendante de **capital-efficiency intelligence** : 
 1. **Capital Efficiency Lab interne** — valider les formules, les contraintes inverses et l'expérience de valeur.
 2. **Prototype utilisateur contrôlé** — vérifier que le seuil, le plancher variable et la part d'avantage conservée révèlent une information réellement utile.
 3. **Cost Tracker** — valider l'import, la récurrence et le paiement annuel.
-4. **Base de barèmes et parseurs** — réduire la saisie manuelle.
-5. **Benchmarks anonymisés** — comparer les coûts réellement observés, sous consentement.
-6. **Comparateur indépendant** — ajouter les courtiers sans laisser l'affiliation déterminer le classement.
-7. **API et widgets** — distribuer le moteur chez des médias, communautés et fintechs.
-8. **Infrastructure de transaction-cost intelligence** — données, benchmarks et intégrations B2B.
+4. **Capital Feasibility** — distinguer capital de référence, capital alloué, cash disponible et nominal réservé.
+5. **Cost Gate synthétique** — tester un contrôle pré-trade manuel sans données externes ni recommandation.
+6. **Base de barèmes et parseurs** — réduire la saisie manuelle.
+7. **Data Quality Gate et donnée externe limitée** — une source et un univers restreints, après décision explicite.
+8. **Benchmarks anonymisés** — comparer les coûts réellement observés, sous consentement.
+9. **Comparateur indépendant** — ajouter les courtiers sans laisser l'affiliation déterminer le classement.
+10. **API et widgets** — distribuer le moteur chez des médias, communautés et fintechs.
+11. **Infrastructure de transaction-cost intelligence** — données, benchmarks et intégrations B2B.
 
-Les étapes 4 à 8 sont des options. Elles ne sont autorisées qu'après preuves de volume, de consentement, de qualité des données et de viabilité juridique.
+Les étapes 4 à 11 sont des options conditionnelles. Elles ne sont autorisées qu'après preuves d'usage, de volume, de qualité des données, de consentement, de viabilité économique et de conformité juridique.
 
 ## 8. Défensibilité recherchée
 
@@ -195,3 +200,27 @@ Après cela, aucune nouvelle fonctionnalité de fond ne doit être construite av
 - statistiques avancées sans données suffisantes.
 
 Le code existant demeure un actif technique réutilisable. Le coût déjà engagé ne justifie pas la poursuite d'une fonction sans preuve client.
+
+## 12. Direction stratégique Cost Gate
+
+Le 14 juillet 2026, Ayman a validé une trajectoire future vers **Breaktest Cost Gate**, couche de contrôle pré-trade personnalisée.
+
+La question de travail devient :
+
+> Ce trade envisagé reste-t-il économiquement compatible avec les frictions, le capital libre, la taille proposée, la liquidité disponible et l'avantage brut explicitement fourni ?
+
+Cette direction :
+
+- conserve Cost Intelligence comme moteur de friction ;
+- conserve Capital Efficiency comme moteur de contraintes ;
+- conserve Edge Survival Envelope comme moteur de sensibilité ;
+- ajoute à terme la faisabilité du capital, la qualité des données et la microstructure ;
+- ne transforme pas encore Breaktest en conseiller, courtier ou moteur d'exécution.
+
+Les états de travail autorisés restent explicatifs : `compatible_under_assumptions`, `adjustment_required`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk` et `insufficient_data`.
+
+Aucun état ne peut être produit à partir d'une donnée externe sans **Data Quality Gate** vérifiant source, timestamp, fraîcheur, couverture, instrument, place, devise, provenance, valeurs manquantes, incertitude et droit d'utilisation.
+
+Le vocabulaire « exécuter », « rejeter », « ordre limite conseillé », « taille optimale » ou tout équivalent prescriptif reste interdit avant validation juridique, réglementaire et produit distincte.
+
+La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. Cette validation est stratégique, pas technique, commerciale ou juridique.
