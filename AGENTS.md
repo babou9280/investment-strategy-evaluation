@@ -51,10 +51,16 @@ Demander une validation seulement pour une décision stratégique, coûteuse, ir
 - Réserver le nominal complet des positions financées entre l'entrée et la sortie ; ne jamais redimensionner silencieusement un trade pour le faire entrer dans le capital libre.
 - Libérer les positions antérieures avant un groupe de même date, mais ne jamais recycler au milieu du groupe une position nouvellement ouverte ce même jour.
 - Préserver l'ordre de priorité C3 entre entrées simultanées lors du financement.
-- Garantir par test que le capital réservé ne dépasse jamais le capital initial et qu'une opportunité ou un PnL futur ne modifie pas une décision antérieure.
-- Conserver les diagnostics de financement par décision : capital réservé et libre avant/après, nominal demandé, décision, date de libération et motif.
+- Appliquer le PnL net d'une position financée une seule fois, uniquement à sa date de sortie valide.
+- Traiter et agréger les sorties d'une date avant de financer les entrées de cette même date.
+- Garantir par test qu'aucun PnL ne modifie la courbe ou le financement avant sa sortie.
+- Garantir par test qu'un événement futur ne modifie ni une décision ni un point de courbe antérieurs.
+- Réconcilier à chaque événement `capital libre = capital réalisé - nominal réservé`.
+- Garantir que la courbe commence au capital initial et que son dernier point égale le capital initial plus les PnL nets des positions financées et sorties valides.
+- Conserver les diagnostics de financement et d'événement par décision : capital réalisé, réservé et libre avant/après, nominal demandé, décision, date de libération, PnL appliqué et motif.
 - Recalculer les métriques de turnover sur les décisions finalement financées.
-- Ne pas employer les termes « portefeuille entièrement simulé », « courbe réalisée » ou « mark-to-market » tant que C4 n'est pas validé.
+- Employer uniquement « courbe de trésorerie réalisée aux sorties » pour la courbe C4.
+- Ne pas employer « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » tant que ces comportements ne sont pas implémentés et validés.
 - Préserver la cohérence entre code, produit, méthodologie, deck et guide.
 
 ## Fichier canonique actuel

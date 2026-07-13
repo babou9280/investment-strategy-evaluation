@@ -22,6 +22,7 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - fuite temporelle entre historique d'entraînement et décisions rejouées ;
 - allocation rétrospective du budget de turnover ;
 - positions simultanées incompatibles avec le capital disponible ;
+- gains ou pertes affichés avant leur réalisation réelle ;
 - journal incohérent avec le résultat publié ;
 - faible profondeur d'échantillon ;
 - résultats difficiles à expliquer et à partager.
@@ -46,9 +47,11 @@ Investisseur particulier ou trader autonome, principalement francophone, déjà 
 - analyse des trades conservés ou retirés ;
 - exports locaux.
 
-La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur, applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours, puis réserve le nominal des positions financées entre leur entrée et leur sortie. Une opportunité future ne peut plus évincer une décision antérieure et les positions simultanées ne peuvent plus réserver ensemble plus que le capital initial.
+La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur, applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours, réserve le nominal des positions financées entre leur entrée et leur sortie, puis applique leur PnL net uniquement à leur date de sortie.
 
-Cette chaîne ne doit toutefois pas être présentée comme une simulation complète de portefeuille : la courbe affichée n'est pas encore une courbe de trésorerie réalisée ou mark-to-market, le PnL n'est pas réinvesti et le moteur ne gère pas encore levier, appels de marge, intérêts ou flux externes.
+Les sorties d'une date sont traitées avant les nouvelles entrées de cette date. Le gain ou la perte réalisé modifie donc la trésorerie disponible uniquement à partir de sa réalisation. La courbe affichée est une **courbe de trésorerie réalisée aux sorties**, agrégée par date, et non une valorisation mark-to-market.
+
+Cette chaîne ne doit toujours pas être présentée comme une simulation complète de portefeuille : elle ne valorise pas les positions ouvertes entre entrée et sortie et ne gère pas le levier, les appels de marge, les intérêts, les dividendes ou les flux externes.
 
 ## Différenciation
 

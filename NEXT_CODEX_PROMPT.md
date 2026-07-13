@@ -1,67 +1,77 @@
-# Prochaine mission — C4 courbe de capital temporelle
+# Prochaine mission — H2 bases nettes observées du journal
 
-Travaille uniquement sur une nouvelle branche créée depuis le dernier `breaktest-bootstrap` après fusion contrôlée de C1. Ne modifie et ne fusionne rien dans `main`.
+Travaille uniquement sur une nouvelle branche créée depuis le dernier `breaktest-bootstrap` après fusion contrôlée de C4. Ne modifie et ne fusionne rien dans `main`.
 
-Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1, C2, C3 et C1.
+Lis d'abord `AGENTS.md`, les six fichiers canoniques, `docs/TECHNICAL_AUDIT.md` et les validations H1, C2, C3, C1 et C4.
 
 ## Objectif unique
 
-Corriger C4 : la courbe de capital ne doit plus affecter le PnL complet à la date d'entrée. Elle doit représenter explicitement une courbe de trésorerie réalisée aux dates de sortie, cohérente avec la politique de financement C1.
+Corriger H2 : lorsqu'un journal fournit explicitement des résultats nets de frais fixes ou full-cost, Breaktest doit les normaliser, les conserver et les distinguer des scénarios de coûts simulés au lieu de les ignorer et de recalculer silencieusement le net à partir du brut.
 
-## Politique retenue pour cette mission
+## Périmètre fonctionnel
 
-1. Construire une courbe de **trésorerie réalisée**, pas une valorisation mark-to-market.
-2. Partir du capital initial.
-3. Conserver la réservation du nominal C1 séparée de la trésorerie réalisée : ouvrir une position réserve du capital mais ne crée pas de PnL.
-4. Appliquer le PnL net de chaque décision finalement `keep` uniquement à sa date de sortie valide.
-5. À une même date, agréger les PnL sortants avant de produire le point de courbe ; l'ordre interne ne doit pas modifier le résultat quotidien.
-6. Une décision `remove` ou `observe` ne contribue pas à la courbe.
-7. Une date de sortie invalide ne doit pas être imputée silencieusement à l'entrée ou à la fin de la série.
-8. Définir explicitement si le PnL réalisé augmente le capital utilisable pour de nouvelles entrées. Recommandation : oui, uniquement à partir des groupes d'entrée strictement postérieurs ou de même date après traitement des sorties antérieures ; préserver la convention C1 selon laquelle une sortie à une date peut financer une entrée de cette date.
-9. Recalculer le financement et la courbe dans une seule simulation événementielle cohérente, sans double comptage du nominal ni du PnL.
-10. Conserver pour chaque événement : date, type, capital réalisé avant/après, nominal réservé avant/après, capital libre avant/après, PnL appliqué et décisions concernées.
-11. Exposer clairement que la courbe est réalisée aux sorties et non mark-to-market.
-12. Ne pas introduire de levier, appels de marge, intérêts, frais de financement, dividendes, dépôts/retraits ou valorisation intermédiaire.
+Inspecter les données sources et le parseur existant pour confirmer et documenter les noms de colonnes et alias réellement supportés. Le noyau minimal attendu couvre :
+
+- `fixed_net_pnl_eur` et son rendement associé ;
+- `full_cost_net_pnl_eur` et son rendement associé ;
+- les alias équivalents déjà présents dans les journaux ou la source ;
+- la provenance de chaque valeur : observée, dérivée ou fallback explicite.
+
+## Politique retenue
+
+1. Distinguer au minimum trois bases par ligne : brut observé, net fixe observé et full-cost observé.
+2. Une valeur explicitement fournie mais non numérique, `NaN` ou infinie doit faire échouer fermement le lot ; elle ne peut pas être remplacée par le brut ni par une simulation.
+3. Un zéro numérique réel est une valeur observée valide.
+4. Pour chaque base, si le PnL est présent mais le rendement manque, dériver le rendement par `PnL / nominal` uniquement avec un nominal valide.
+5. Si le rendement est présent mais le PnL manque, dériver le PnL par `rendement × nominal` uniquement avec un nominal valide.
+6. Si PnL et rendement manquent tous deux pour une base optionnelle, appliquer le fallback documenté vers la base précédente et marquer explicitement cette provenance.
+7. Ne jamais écraser une base observée par le résultat d'un scénario de coûts simulés.
+8. Conserver séparément :
+   - résultats observés du journal ;
+   - résultats recalculés par Breaktest sous les hypothèses de coûts choisies.
+9. Les verdicts, tableaux et exports doivent indiquer sans ambiguïté quelle base est affichée.
+10. Les fallbacks et dérivations doivent être auditables par ligne et agrégés dans l'audit des données.
+11. Ne pas résoudre silencieusement une incohérence lorsque PnL et rendement sont tous deux fournis mais incompatibles : conserver l'anomalie pour H4 ou la signaler explicitement sans modifier les valeurs observées.
+12. Ne pas modifier les règles H1, C2, C3, C1 ou C4, sauf adaptation minimale nécessaire pour transporter la base de PnL choisie avec une provenance explicite.
 
 ## Invariants obligatoires
 
-- un PnL ne modifie jamais la courbe avant la sortie ;
-- changer uniquement la date d'entrée sans changer la sortie ne déplace pas le PnL réalisé ;
-- changer la date de sortie déplace le PnL au nouveau jour de sortie ;
-- deux sorties le même jour donnent le même point final quel que soit leur ordre ;
-- un trade retiré ou observé ne modifie pas la courbe ;
-- une perte réalisée réduit le capital disponible pour les entrées ultérieures, sans modifier les décisions antérieures ;
-- un gain réalisé augmente le capital disponible seulement à partir de sa réalisation ;
-- une sortie et une entrée le même jour respectent la convention documentée ;
-- l'ajout ou la modification d'un événement futur ne change jamais les points et décisions antérieurs ;
-- la courbe commence exactement au capital initial ;
-- le dernier point égale le capital initial plus la somme des PnL nets des trades financés et sortis valides ;
-- le capital libre et réservé restent réconciliés à chaque événement.
+- une valeur nette observée survit à l'import et n'est pas remplacée par le brut ;
+- modifier les hypothèses de coûts simulés ne modifie jamais la valeur nette observée du journal ;
+- le zéro observé reste zéro ;
+- une valeur nette explicitement invalide refuse le lot ;
+- une dérivation ne se produit que lorsque l'autre membre de la paire et le nominal sont valides ;
+- un fallback n'est utilisé que lorsque la base optionnelle est entièrement absente et reste visible ;
+- le PnL appliqué par C4 provient de la base explicitement sélectionnée et documentée, sans double comptage des coûts ;
+- l'ajout de colonnes nettes à une ligne ne modifie pas les décisions historiques utilisant une autre base tant que l'utilisateur ne sélectionne pas cette base ;
+- les agrégats d'une base égalent la somme des valeurs ligne par ligne de cette même base ;
+- aucune régression H1, C2, C3, C1 ou C4.
 
 ## Tests obligatoires
 
-- gain avec entrée J1 et sortie J10 : aucune hausse avant J10 ;
-- perte avec entrée J1 et sortie J10 : aucune baisse avant J10 ;
-- deux sorties le même jour, ordre inversé ;
-- sortie et nouvelle entrée le même jour ;
-- gain finançant une entrée ultérieure qui ne rentrait pas avant réalisation ;
-- perte empêchant une entrée ultérieure ;
-- trade `remove` et trade `observe` sans effet ;
-- date de sortie invalide ;
-- futur extrême sans effet sur le passé ;
-- réconciliation dernier point / somme des PnL réalisés ;
-- réexécution intégrale des suites H1, C2, C3 et C1 ;
+- brut, net fixe et full-cost tous fournis et distincts : conservation exacte des trois bases ;
+- PnL net fourni, rendement manquant : dérivation correcte ;
+- rendement net fourni, PnL manquant : dérivation correcte ;
+- zéro net observé ;
+- base optionnelle entièrement absente : fallback explicite et provenance visible ;
+- valeur `abc`, `NaN`, infinie ou vide explicitement ambiguë dans une colonne fournie ;
+- coûts simulés modifiés sans changement des bases observées ;
+- sélection brut/net fixe/full-cost produisant les agrégats attendus ;
+- absence de double soustraction des coûts ;
+- import, ledger et export conservant la base et la provenance ;
+- réexécution intégrale des suites H1, C2, C3, C1 et C4 ;
 - build déterministe, lancement Chromium et `node --check`.
 
 ## Documentation et limites
 
-- créer `docs/validation/C4_REALIZED_EQUITY_CURVE.md` avec les commandes, empreintes et résultats exacts ;
+- créer `docs/validation/H2_JOURNAL_NET_BASES.md` avec commandes, empreintes et résultats exacts ;
+- ajouter une règle permanente sur la séparation entre résultat observé et scénario simulé ;
 - mettre à jour les fichiers canoniques uniquement avec les résultats démontrés ;
-- conserver l'expression « courbe réalisée aux sorties » et interdire « mark-to-market » ;
-- H2 à H6 restent ouverts ;
+- H3 à H6 restent ouverts ;
+- H4 reste responsable de la politique complète de réconciliation entre PnL, rendement et nominal lorsqu'ils sont tous fournis ;
 - ne pas refondre l'application ;
 - ne rien fusionner automatiquement.
 
 ## Résultat attendu
 
-Une simulation événementielle cohérente entre financement et PnL réalisé, une courbe temporelle auditée aux dates de sortie, des invariants anti-futur reproductibles et une pull request isolée vers `breaktest-bootstrap`.
+Des bases brut, net fixe et full-cost réellement importées et auditables, des fallbacks et dérivations explicites, une séparation stricte entre observation et simulation, des invariants reproductibles et une pull request isolée vers `breaktest-bootstrap`.

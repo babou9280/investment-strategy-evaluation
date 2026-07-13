@@ -68,6 +68,9 @@ jobs:
             if [ -f tests/c4_realized_equity_curve.py ]; then
               python3 tests/c4_realized_equity_curve.py
             fi
+            if [ -f tests/c4_negative_free_cash.py ]; then
+              python3 tests/c4_negative_free_cash.py
+            fi
           } 2>&1 | tee browser-tests.log
 
       - name: JavaScript syntax
