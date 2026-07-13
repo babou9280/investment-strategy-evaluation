@@ -9,8 +9,8 @@ TARGET = ROOT / "app" / "Breaktest_Studio.html"
 PATCH = ROOT / "scripts" / "patches" / "c1_capital.js"
 REPLACEMENTS = ROOT / "scripts" / "patches" / "c1_replacements.json"
 C3_SHA256 = "b94b4a5b6e48b14e30a867bc3fb05beae112897fbf04015f7c77a7ffe796cb80"
-C1_SHA256 = ""
-C1_SIZE = 0
+C1_SHA256 = "e592046804c4ddaaa3b834ff580bef3e373c3f69a8f93dea027b4bb4fc537f2e"
+C1_SIZE = 152_496
 INSERT_BEFORE = "function selectReplayTrades(trades, sample) {"
 C1_MARKER = "function applyCapitalReservation(evaluations, config = {}) {"
 
@@ -40,7 +40,7 @@ for item in json.loads(REPLACEMENTS.read_text(encoding="utf-8")):
     html = replace_once(html, item["old"], item["new"], item["label"])
 result = html.encode("utf-8")
 actual_c1 = digest(result)
-if C1_SIZE and (len(result) != C1_SIZE or actual_c1 != C1_SHA256):
+if len(result) != C1_SIZE or actual_c1 != C1_SHA256:
     raise SystemExit(
         f"C1 output mismatch: expected {C1_SIZE} bytes/{C1_SHA256}, "
         f"got {len(result)} bytes/{actual_c1}"
