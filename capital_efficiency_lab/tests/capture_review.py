@@ -6,25 +6,93 @@ OUTPUT = ROOT / "review_artifacts"
 OUTPUT.mkdir(exist_ok=True)
 URL = (ROOT / "index.html").as_uri()
 
+
+def open_edge_section(page):
+    if page.locator("#edge-details").get_attribute("open") is None:
+        page.locator("#edge-details summary").click()
+
+
+def open_constraint_section(page):
+    if page.locator("#constraint-details").get_attribute("open") is None:
+        page.locator("#constraint-details summary").click()
+
+
+def submit_range(page, low, base, high):
+    open_edge_section(page)
+    page.locator('input[name="edgeInputMode"][value="range"]').check()
+    page.locator("#grossEdgeLowPercent").fill(low)
+    page.locator("#grossEdgeBasePercent").fill(base)
+    page.locator("#grossEdgeHighPercent").fill(high)
+    page.get_by_role("button", name="Tester la stabilité dans la fourchette").click()
+    page.locator("#results").wait_for(state="visible")
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
+
     for width, height, name in [
         (390, 1100, "mobile-390"),
         (768, 1100, "tablet-768"),
         (1440, 1100, "desktop-1440"),
     ]:
-        page = browser.new_page(viewport={"width": width, "height": height}, device_scale_factor=1)
+        page = browser.new_page(
+            viewport={"width": width, "height": height},
+            device_scale_factor=1,
+        )
+        page.set_default_timeout(10000)
         page.goto(URL)
-        page.screenshot(path=str(OUTPUT / f"{name}-threshold-form.png"), full_page=True)
+
+        page.screenshot(
+            path=str(OUTPUT / f"{name}-threshold-form.png"),
+            full_page=True,
+        )
+
         page.get_by_role("button", name="Calculer le seuil brut").click()
         page.locator("#results").wait_for(state="visible")
-        page.screenshot(path=str(OUTPUT / f"{name}-threshold-result.png"), full_page=True)
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-threshold-results.png")
+        )
 
-        page.get_by_role("button", name="Voir un exemple complet").click()
+        open_edge_section(page)
+        page.locator('input[name="edgeInputMode"][value="point"]').check()
+        page.locator("#grossEdgePercent").fill("2,00")
+        page.get_by_role(
+            "button", name="Mesurer ce qui reste de la valeur brute"
+        ).click()
         page.locator("#results").wait_for(state="visible")
-        page.screenshot(path=str(OUTPUT / f"{name}-edge-full.png"), full_page=True)
-        page.locator("#results").screenshot(path=str(OUTPUT / f"{name}-edge-results.png"))
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-point-results.png")
+        )
+
+        open_constraint_section(page)
+        page.locator("#constraintMode").select_option("positive")
+
+        submit_range(page, "0,80", "2,00", "3,00")
+        page.screenshot(
+            path=str(OUTPUT / f"{name}-range-cross-full.png"),
+            full_page=True,
+        )
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-range-cross-results.png")
+        )
+
+        submit_range(page, "1,20", "2,00", "3,00")
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-range-survives-results.png")
+        )
+
+        submit_range(page, "-1,00", "0,00", "0,60")
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-range-fails-results.png")
+        )
+
+        submit_range(page, "1,10", "1,10", "1,10")
+        page.locator("#results").screenshot(
+            path=str(OUTPUT / f"{name}-range-degenerate-results.png")
+        )
+
         page.close()
+
     browser.close()
 
-print(f"Captured progressive review screenshots in {OUTPUT}")
+print(f"Captured Edge Survival Envelope review screenshots in {OUTPUT}")
