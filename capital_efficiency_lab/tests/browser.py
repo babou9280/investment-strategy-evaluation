@@ -72,7 +72,7 @@ with sync_playwright() as p:
         assert page.locator('#edge-section').is_hidden()
         assert page.locator('#range-section').is_hidden()
         assert page.evaluate('document.activeElement.id') == 'results'
-        assert 'optional-annual' in page.locator('#calculation-version').inner_text()
+        assert 'optional-annual' in (page.locator('#calculation-version').text_content() or '')
         assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
         assert_no_nonfinite(page)
