@@ -50,6 +50,14 @@ jobs:
           set -o pipefail
           python3 scripts/build_breaktest.py 2>&1 | tee build.log
 
+      - name: Upload built HTML for C4 review
+        uses: actions/upload-artifact@v4
+        with:
+          name: breaktest-built-html
+          path: app/Breaktest_Studio.html
+          if-no-files-found: error
+          retention-days: 1
+
       - name: Strict numeric validation H1
         run: |
           set -o pipefail
