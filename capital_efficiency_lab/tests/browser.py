@@ -16,6 +16,24 @@ def assert_no_nonfinite(page):
         assert forbidden not in text
 
 
+def assert_results_clear_of_sticky_header(page):
+    positions = page.evaluate(
+        '''() => {
+            const header = document.querySelector('.topbar');
+            const results = document.querySelector('#results');
+            const headerRect = header.getBoundingClientRect();
+            const resultsRect = results.getBoundingClientRect();
+            return {
+                headerBottom: headerRect.bottom,
+                resultsTop: resultsRect.top,
+                titleTop: document.querySelector('#primary-title').getBoundingClientRect().top
+            };
+        }'''
+    )
+    assert positions['resultsTop'] >= positions['headerBottom'] - 1, positions
+    assert positions['titleTop'] >= positions['headerBottom'] - 1, positions
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
 
@@ -38,6 +56,7 @@ with sync_playwright() as p:
         assert page.locator('#edge-section').is_hidden()
         assert page.locator('#range-section').is_hidden()
         assert page.evaluate('document.activeElement.id') == 'results'
+        assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
         assert_no_nonfinite(page)
 
@@ -53,6 +72,7 @@ with sync_playwright() as p:
         assert '45,0' in page.locator('#retained-edge-value').inner_text()
         assert '0,90' in page.locator('#net-edge-value').inner_text()
         assert page.locator('#range-section').is_hidden()
+        assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
 
         # Mode fourchette : la marge change de signe autour du seuil.
@@ -75,6 +95,7 @@ with sync_playwright() as p:
         assert page.locator('.range-card').count() == 3
         assert page.locator('.constraint-table dd').count() == 3
         assert 'Fourchette basse' in (page.locator('#evidence-mode').text_content() or '')
+        assert_results_clear_of_sticky_header(page)
         assert no_overflow(page)
         assert_no_nonfinite(page)
 
@@ -97,6 +118,7 @@ with sync_playwright() as p:
         page.locator('#results').wait_for(state='visible')
         assert 'identiques' in page.locator('#range-shape-note').inner_text()
         assert 'ne dépasse pas le seuil' in page.locator('#range-summary').inner_text()
+        assert_results_clear_of_sticky_header(page)
         assert_no_nonfinite(page)
 
         # Navigation clavier vers le choix de mode.
