@@ -58,12 +58,13 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
-      - name: Numeric and result-basis validation
+      - name: Numeric and provenance validation
         run: |
           set -o pipefail
           {
             node tests/h1_strict_numeric_validation.test.js
             node tests/h2_journal_net_bases.test.js
+            node tests/h3_price_currency_provenance.test.js
           } 2>&1 | tee numeric-tests.log
 
       - name: Browser regression suites
@@ -84,6 +85,9 @@ jobs:
             fi
             if [ -f tests/h2_journal_net_bases.py ]; then
               python3 tests/h2_journal_net_bases.py
+            fi
+            if [ -f tests/h3_price_currency_provenance.py ]; then
+              python3 tests/h3_price_currency_provenance.py
             fi
           } 2>&1 | tee browser-tests.log
 
