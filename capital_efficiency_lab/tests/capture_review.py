@@ -15,11 +15,16 @@ with sync_playwright() as p:
     ]:
         page = browser.new_page(viewport={"width": width, "height": height}, device_scale_factor=1)
         page.goto(URL)
-        page.get_by_role("button", name="Charger la démonstration synthétique").click()
+        page.screenshot(path=str(OUTPUT / f"{name}-threshold-form.png"), full_page=True)
+        page.get_by_role("button", name="Calculer le seuil brut").click()
         page.locator("#results").wait_for(state="visible")
-        page.screenshot(path=str(OUTPUT / f"{name}-full.png"), full_page=True)
-        page.locator("#results").screenshot(path=str(OUTPUT / f"{name}-results.png"))
+        page.screenshot(path=str(OUTPUT / f"{name}-threshold-result.png"), full_page=True)
+
+        page.get_by_role("button", name="Voir un exemple complet").click()
+        page.locator("#results").wait_for(state="visible")
+        page.screenshot(path=str(OUTPUT / f"{name}-edge-full.png"), full_page=True)
+        page.locator("#results").screenshot(path=str(OUTPUT / f"{name}-edge-results.png"))
         page.close()
     browser.close()
 
-print(f"Captured review screenshots in {OUTPUT}")
+print(f"Captured progressive review screenshots in {OUTPUT}")
