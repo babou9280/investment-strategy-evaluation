@@ -1,99 +1,145 @@
-# Breaktest - décisions du projet
+# Breaktest — décisions du projet
 
-## D001 - Vendre l'audit, pas les signaux
+## D001 — Vendre l'audit, pas les signaux
 
-- Statut : active
-- Décision : Breaktest se positionne d'abord comme une couche de vérification de stratégies et journaux existants.
-- Conséquence : la V0 n'a pas besoin de créer des recommandations ou d'exécuter des ordres.
+- Statut : **remplacée par D017**
+- Décision historique : Breaktest se positionnait d'abord comme une couche de vérification de stratégies et journaux existants.
+- Élément conservé : aucune génération de signaux ni promesse de surperformance.
 
-## D002 - Fonctionnement avant apparence
+## D002 — Fonctionnement avant apparence
 
 - Statut : active
 - Décision : une fonction visuellement réussie ne peut pas être déclarée terminée sans validation réelle.
 
-## D003 - Local-first pour le prototype
+## D003 — Local-first pour le prototype
 
 - Statut : active
-- Décision : le traitement du CSV reste local dans le navigateur pour la V0.
-- Conséquence : confidentialité et simplicité d'essai, mais limitations de stockage, synchronisation et calcul à grande échelle.
+- Décision : le traitement des données financières reste local lorsque cela est possible.
+- Conséquence : confidentialité et faibles coûts, avec des limites pour les comptes, synchronisations et calculs à grande échelle.
 
-## D004 - Pas de filtrage rétrospectif trompeur
+## D004 — Pas de filtrage rétrospectif trompeur
 
 - Statut : active
 - Décision : un trade ne peut pas être retiré d'une stratégie exploitable uniquement parce qu'il s'est révélé perdant.
 - Conséquence : séparer strictement filtres ex ante et analyses ex post.
 
-## D005 - Direction évolutive
+## D005 — Direction évolutive
 
 - Statut : active
-- Décision : les orientations peuvent être remplacées au fil de la conversation.
-- Conséquence : conserver l'historique, mais ne pas maintenir simultanément des visions incompatibles.
+- Décision : les orientations peuvent être remplacées au fil des preuves.
+- Conséquence : conserver l'historique, sans maintenir simultanément des visions incompatibles.
 
-## D006 - Implication minimale du fondateur
+## D006 — Implication minimale du fondateur
 
 - Statut : active
 - Décision : Ayman intervient principalement pour valider, rejeter ou réorienter.
 - Conséquence : ChatGPT et Codex prennent en charge la décomposition, les choix techniques ordinaires, les tests et la mise à jour documentaire.
 
-## D007 - Un fichier HTML canonique
+## D007 — Un fichier HTML canonique technique
 
 - Statut : active
-- Décision : `app/Breaktest_Studio.html` est la version canonique provisoire.
-- Justification : les quatre fichiers HTML fournis sont identiques à l'exception du titre et de la vue initiale.
-- Conséquence : les anciennes variantes sont archivées, pas développées séparément.
+- Décision : `app/Breaktest_Studio.html` reste l'actif technique canonique provisoire.
+- Conséquence : les anciennes variantes sont archivées, pas développées séparément. La page de validation commerciale doit rester isolée de ce moteur.
 
-## D008 - Amorçage GitHub isolé avant dépôt produit définitif
-
-- Statut : active
-- Décision : utiliser temporairement la branche `breaktest-bootstrap` du dépôt académique `babou9280/investment-strategy-evaluation`.
-- Justification : préserver `main`, conserver la filiation avec le travail universitaire et éviter de bloquer l'audit.
-- Conséquence : aucune modification Breaktest n'est fusionnée dans `main` ; une migration vers un dépôt produit dédié reste possible.
-
-## D009 - Codex travaille depuis le dépôt, sans dépendance à une pièce jointe ZIP
+## D008 — Amorçage GitHub isolé avant dépôt produit définitif
 
 - Statut : active
-- Décision : les missions Codex Cloud prennent pour source les fichiers versionnés dans le dépôt et la branche associés à l'environnement.
-- Conséquence : toute source nécessaire doit être matérialisée et vérifiée dans GitHub.
+- Décision : utiliser temporairement `breaktest-bootstrap` dans `babou9280/investment-strategy-evaluation`.
+- Conséquence : aucune modification Breaktest dans `main` ; migration vers un dépôt produit dédié après validation possible.
 
-## D010 - L'audit initial peut précéder la matérialisation GitHub du HTML
-
-- Statut : active
-- Décision : l'audit local est recevable lorsque le fichier est identifié par une empreinte SHA-256 et que les comportements déclarés sont réellement exécutés.
-- Conséquence : aucune modification de code ne peut être acceptée sans correspondance vérifiée avec la source canonique.
-
-## D011 - Les données numériques source échouent fermement
+## D009 — Codex travaille depuis le dépôt
 
 - Statut : active
-- Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais être transformée en zéro, ignorée ou remplacée silencieusement.
+- Décision : les missions Codex prennent pour source les fichiers versionnés dans le dépôt et la branche associés à l'environnement.
+
+## D010 — Audit local recevable avec empreinte
+
+- Statut : active
+- Décision : un audit local est recevable lorsque le fichier est identifié par SHA-256 et que les comportements déclarés ont été exécutés.
+
+## D011 — Les données numériques source échouent fermement
+
+- Statut : active
+- Décision : une valeur numérique obligatoire explicitement invalide ne peut jamais devenir zéro ni être remplacée silencieusement.
 - Conséquence : `missing`, `invalid` et zéro réel sont distingués ; toute dérivation conserve sa provenance.
 
-## D012 - Un modèle distinct et antérieur pour chaque décision
+## D012 — Un modèle distinct et antérieur pour chaque décision
 
-- Statut : active
+- Statut : active pour le moteur historique
 - Décision : chaque trade rejoué utilise uniquement les lignes backtest sorties strictement avant son entrée.
-- Conséquence : modèles et diagnostics sont conservés par décision ; les dates invalides produisent `observe`.
 
-## D013 - Le budget de turnover est consommé chronologiquement
+## D013 — Le budget de turnover est consommé chronologiquement
 
-- Statut : active
+- Statut : active pour le moteur historique
 - Décision : le plafond est appliqué décision après décision sur une fenêtre glissante de 365,25 jours.
-- Conséquence : une opportunité future ne peut jamais modifier une décision antérieure ; le classement par edge est limité aux opportunités de même date.
 
-## D014 - Le nominal est réservé entre l'entrée et la sortie
+## D014 — Le nominal est réservé entre l'entrée et la sortie
 
-- Statut : active
+- Statut : active pour le moteur historique
 - Décision : une décision conservée doit réserver son nominal complet jusqu'à sa sortie.
-- Conséquence : les entrées simultanées préservent la priorité C3, aucun redimensionnement silencieux n'est autorisé et le capital libre est calculé à partir de la trésorerie réalisée.
 
-## D015 - Le PnL devient disponible uniquement à la sortie
+## D015 — Le PnL devient disponible uniquement à la sortie
 
-- Statut : active
-- Décision : le PnL d'une position financée est appliqué une seule fois à sa sortie valide, avant les nouvelles entrées de même date.
-- Conséquence : la courbe est une trésorerie réalisée aux sorties, jamais présentée comme mark-to-market.
+- Statut : active pour le moteur historique
+- Décision : le PnL d'une position financée est appliqué une seule fois à sa sortie valide.
 
-## D016 - Les résultats observés restent séparés des scénarios simulés
+## D016 — Les résultats observés restent séparés des scénarios simulés
 
 - Statut : active
-- Décision : le brut observé, le net fixe observé, le full-cost observé et le résultat simulé par Breaktest sont quatre bases distinctes, sélectionnables et auditables.
-- Justification : soustraire silencieusement des coûts simulés d'une valeur déjà nette, ou remplacer une valeur du journal par une estimation, détruit la traçabilité et peut compter les coûts deux fois.
-- Conséquence : les bases observées conservent leurs valeurs et provenance ; les fallbacks et dérivations sont explicites ; les valeurs invalides refusent le lot ; C4 utilise la base choisie sans double comptage ; les incohérences PnL/rendement sont signalées et laissées à H4 plutôt que corrigées silencieusement.
+- Décision : brut observé, net fixe observé, full-cost observé et résultat simulé sont des bases distinctes et auditables.
+- Conséquence : une base observée ne peut pas être écrasée par une estimation ou subir une seconde soustraction des coûts.
+
+## D017 — Pivot vers Breaktest Cost Intelligence
+
+- Statut : **active, validée par Ayman le 13 juillet 2026**
+- Décision : Breaktest devient une application web installable centrée sur l'impact économique des commissions, du change, du spread, du slippage et de la rotation pour les petits et moyens portefeuilles.
+- Client initial : investisseur autonome, environ 2 000 à 50 000 EUR de capital, avec usage régulier et complexité de coûts suffisante.
+- Justification : cette direction exploite l'insight le plus fort du projet académique, réduit le besoin d'autorité humaine préalable et permet une validation grand public rapide.
+- Conséquence : le moteur d'audit de stratégie devient un actif réutilisable, non la feuille de route automatique.
+
+## D018 — Valider le marché avant d'étendre le produit
+
+- Statut : active
+- Décision : le prochain risque traité est la demande commerciale.
+- Gate : usage répété, demande d'import, paiement réel et automatisation suffisante avant développement du Cost Tracker.
+- Conséquence : H3 à H6, application native, connexion courtier, marketplace, API et fonctions d'audit étendu sont suspendus sauf preuve client directe.
+
+## D019 — Le premier produit est un calculateur, pas un conseiller
+
+- Statut : active
+- Décision : la page de validation calcule les conséquences de paramètres saisis sans recommander un instrument, un courtier, une taille ou une fréquence.
+- Conséquence : elle peut comparer des scénarios, mais ne doit jamais désigner automatiquement une option optimale.
+
+## D020 — Les coûts gardent leur nature et leur provenance
+
+- Statut : active
+- Décision : distinguer dans toute évolution :
+  - coût observé dans un relevé ;
+  - coût contractuel issu d'un barème daté ;
+  - coût implicite estimé ;
+  - hypothèse utilisateur.
+- Conséquence : aucune estimation de spread ou slippage ne peut être présentée comme un montant réellement payé.
+
+## D021 — Les très petits capitaux sont d'abord un canal gratuit
+
+- Statut : active
+- Décision : les utilisateurs les plus sensibles aux coûts ne sont pas supposés être les meilleurs payeurs.
+- Conséquence : calculateur gratuit pour l'acquisition ; cœur payant initial centré sur les investisseurs dont la fréquence et le capital permettent une économie potentielle supérieure au prix.
+
+## D022 — L'affiliation ne doit jamais déterminer le classement
+
+- Statut : active
+- Décision : toute future rémunération d'un courtier doit être divulguée et séparée de la méthodologie de comparaison.
+- Conséquence : aucune affiliation avant politique publique de neutralité et revue juridique.
+
+## D023 — La défensibilité viendra des données et intégrations, pas de l'IA seule
+
+- Statut : active
+- Décision : l'IA, l'interface et un calculateur sont copiables.
+- Actifs défensifs recherchés : barèmes versionnés, parseurs, historique utilisateur, données consenties, benchmarks, API, intégrations et réputation de neutralité.
+
+## D024 — Fermeture de la mission H3
+
+- Statut : active
+- Décision : la pull request `#14` est fermée sans fusion après le pivot.
+- Conséquence : son code reste non validé et ne peut être repris qu'après démonstration d'un besoin direct pour le produit retenu.

@@ -1,83 +1,142 @@
-# Breaktest - définition actuelle du produit
+# Breaktest — définition actuelle du produit
+
+- Direction validée : 13 juillet 2026
+- Phase : validation commerciale
+- Nom de travail : Breaktest Cost Intelligence
 
 ## Vision
 
-Breaktest est une couche de contrôle qualité pour les backtests et journaux de trading. L'utilisateur importe un journal ou un résultat existant ; Breaktest teste ce qui subsiste après des hypothèses plus réalistes et documente les fragilités de la conclusion.
+Breaktest devient une application web installable qui aide les investisseurs particuliers à comprendre comment commissions, change, spread, slippage, frais fixes et rotation absorbent la performance d'un petit ou moyen portefeuille.
 
 ## Promesse actuelle
 
-> Importer. Stresser. Vérifier ce qui reste.
+> Comprendre ce que les ordres coûtent réellement avant que les frictions n'absorbent la performance.
 
-Breaktest ne vend pas une promesse de surperformance. Il aide à déterminer si une performance historique résiste aux coûts, aux gagnants extrêmes, à une séparation temporelle entre historique et décisions, aux contraintes de turnover et de financement, et aux incohérences de données.
+Breaktest ne recommande pas un instrument, ne prédit pas un rendement et n'exécute pas d'ordre. Il transforme les paramètres saisis ou les transactions importées en conséquences économiques explicites.
 
-## Utilisateur cible provisoire
+## Utilisateur cible initial
 
-Investisseur particulier ou trader autonome, principalement francophone, déjà habitué aux tableurs, brokers ou outils de charting, mais ne souhaitant pas coder lui-même un protocole de validation statistique.
+Investisseur autonome :
 
-## Problèmes traités
+- capital approximatif de 2 000 à 50 000 EUR ;
+- plusieurs opérations ou versements par mois ;
+- exposition possible à plusieurs devises, marchés ou courtiers ;
+- utilise déjà un courtier, un tableur ou un outil de suivi ;
+- veut comprendre sa performance nette sans recevoir de recommandation personnalisée.
 
-- coûts, spreads, slippage et frais fixes sous-estimés ;
-- performance dominée par un petit nombre de trades ;
-- divergence entre backtest et live-test ;
-- fuite temporelle entre historique d'entraînement et décisions rejouées ;
-- allocation rétrospective du budget de turnover ;
-- positions simultanées incompatibles avec le capital disponible ;
-- gains ou pertes affichés avant leur réalisation réelle ;
-- bases nettes fournies par le journal ignorées ou confondues avec des coûts simulés ;
-- journal incohérent avec le résultat publié ;
-- faible profondeur d'échantillon ;
-- résultats difficiles à expliquer et à partager.
+Les capitaux plus faibles constituent un public gratuit pertinent, mais ne sont pas supposés être la principale source de revenu.
+
+## Problème initial
+
+Les grilles tarifaires indiquent des frais isolés, mais ne répondent pas facilement aux questions suivantes :
+
+- quel pourcentage d'un petit ordre est absorbé ?
+- combien la fréquence coûte-t-elle sur un an ?
+- quelle part d'un rendement brut disparaît après frictions ?
+- comment commissions, change et coûts implicites se combinent-ils ?
+- les coûts affichés par le journal se réconcilient-ils avec le résultat net ?
+
+Le projet académique d'origine a illustré ce mécanisme : une prime brute pouvait subsister alors que la viabilité nette se détériorait sous l'effet du budget de friction et d'une rotation plus élevée. Cet exemple démontre le mécanisme, pas la demande commerciale.
 
 ## Expérience cible
 
-1. Importer un CSV ou ouvrir une démonstration.
-2. Choisir capital, scénario de coûts et base de résultat.
-3. Modifier une hypothèse à la fois.
-4. Lire le résultat, le reality gap et les fragilités.
-5. Examiner le laboratoire de robustesse et l'audit des données.
-6. Exporter un rapport ou un fichier de scénario.
+### Avant une transaction
 
-## Modules actuels du prototype
+1. Saisir capital, montant moyen, fréquence et coûts.
+2. Distinguer coûts contractuels et hypothèses de microstructure.
+3. Lire le coût par opération, annuel et relatif au capital.
+4. Comparer des scénarios sans recommandation automatique.
+5. Partager un résumé des hypothèses et résultats.
 
-- Capital Fit ;
-- Cost X-Ray ;
-- Evidence Lab ;
-- Trade Gate ;
+### Après les transactions — uniquement après preuve de demande
+
+1. Importer un historique.
+2. Séparer performance brute, nette observée et scénario simulé.
+3. Ventiler commissions, change, spread, slippage estimé et turnover.
+4. Suivre le cost drag dans le temps.
+5. Comparer comptes, marchés, devises et tailles d'ordre.
+
+## Produit d'entrée à valider
+
+- page statique mobile-first ;
+- calculateur déterministe sans compte ;
+- cinq scénarios de démonstration ;
+- comparaison de tailles ou fréquences ;
+- rapport partageable ;
+- formulaire de demande ;
+- Founder Pass présenté comme réservation, sous réserve de conformité du paiement.
+
+Le produit payant complet n'est pas encore construit.
+
+## Actifs techniques réutilisables
+
+Le prototype canonique existant reste un actif :
+
 - import CSV local ;
-- scénarios et presets de coûts ;
-- sélection de la base de résultat : simulée, brute observée, nette fixe observée ou full-cost observée ;
-- analyse des trades conservés ou retirés ;
-- exports locaux avec provenance des bases.
+- scénarios de coûts ;
+- séparation brut/net et observé/simulé ;
+- validation numérique stricte ;
+- turnover chronologique ;
+- réservation du capital ;
+- trésorerie réalisée aux sorties ;
+- audit, provenance et export ;
+- tests reproductibles.
 
-La version actuelle utilise, pour chaque décision rejouée, uniquement un historique backtest antérieur, applique le plafond de turnover dans l'ordre chronologique sur une fenêtre glissante de 365,25 jours, réserve le nominal des positions financées entre leur entrée et leur sortie, puis applique le PnL sélectionné uniquement à leur date de sortie.
+Ces capacités ne sont pas toutes nécessaires au premier test commercial. Elles ne doivent pas dicter la feuille de route.
 
-Les sorties d'une date sont traitées avant les nouvelles entrées de cette date. Le gain ou la perte réalisé modifie donc la trésorerie disponible uniquement à partir de sa réalisation. La courbe affichée est une **courbe de trésorerie réalisée aux sorties**, agrégée par date, et non une valorisation mark-to-market.
+## Positionnement
 
-Breaktest distingue désormais les résultats observés du journal des scénarios recalculés :
+Breaktest est une couche de **cost intelligence**, et non :
 
-- le **simulé par Breaktest** applique les hypothèses de coûts actives au brut observé ;
-- le **brut observé**, le **net fixe observé** et le **full-cost observé** conservent les valeurs et leur provenance ;
-- les dérivations et fallbacks sont visibles ;
-- modifier les hypothèses de coûts ne réécrit pas une base observée ;
-- la base choisie alimente le PnL rapporté et la trésorerie C4 sans double soustraction des coûts.
+- un journal de trading complet ;
+- un courtier ;
+- un robo-advisor ;
+- un comparateur sponsorisé opaque ;
+- une certification ;
+- un service de signaux ou de conseil personnalisé.
 
-Le mode par défaut reste le scénario simulé. La sélection de la base de résultat ne transforme pas un résultat observé en règle ex ante : le filtre de décision reste fondé sur les contrôles Breaktest documentés.
+## Différenciation recherchée
 
-Cette chaîne ne doit toujours pas être présentée comme une simulation complète de portefeuille : elle ne valorise pas les positions ouvertes entre entrée et sortie et ne gère pas le levier, les appels de marge, les intérêts, les dividendes ou les flux externes.
+À court terme :
 
-## Différenciation
+- impact relatif au capital et à la fréquence ;
+- séparation claire entre coûts observés, contractuels et estimés ;
+- calcul transparent ;
+- traitement local et confidentialité ;
+- neutralité vis-à-vis des courtiers.
 
-Breaktest ne cherche pas prioritairement à créer une stratégie, des signaux ou un moteur d'exécution. Son angle est de vérifier et expliquer une performance déjà produite, en séparant explicitement ce que le journal observe de ce que Breaktest simule.
+À long terme, uniquement si validé :
+
+- barèmes versionnés ;
+- parseurs de nombreux courtiers ;
+- historique de coûts ;
+- données d'exécution consenties et agrégées ;
+- benchmarks indépendants ;
+- API et intégrations.
+
+L'IA et l'interface ne sont pas considérées comme des avantages défendables à elles seules.
 
 ## Non-objectifs actuels
 
-- recommandations d'investissement personnalisées ;
-- promesse de rendement futur ;
-- exécution automatique d'ordres ;
+- recommandation d'achat, de vente ou de conservation ;
+- choix automatique d'un courtier ;
+- allocation adaptée au profil de risque ;
+- exécution ou transmission d'ordres ;
+- données temps réel payantes ;
+- application native ;
 - synchronisation courtier complète ;
-- données temps réel ;
-- validation commerciale déjà démontrée.
+- marketplace ;
+- certification de stratégie ;
+- reprise de H3 à H6 sans besoin démontré.
 
-## Direction évolutive
+## Gate de validation
 
-Cette définition représente la direction actuelle. Elle peut être modifiée lorsque de nouveaux apprentissages ou retours rendent une autre direction plus forte.
+Aucun développement produit étendu avant preuve de :
+
+- usage répété ;
+- demande d'import ou de suivi ;
+- paiement réel ;
+- automatisation suffisante ;
+- valeur perçue supérieure au prix.
+
+Les seuils sont définis dans `VALIDATION_PLAN.md`. La stratégie détaillée figure dans `STRATEGY.md`.

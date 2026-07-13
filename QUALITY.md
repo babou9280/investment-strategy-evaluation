@@ -114,7 +114,49 @@ Ne jamais inventer silencieusement une donnée, un test réussi, une traction ou
 - à chaque événement, `capital libre = capital réalisé - nominal réservé` doit être réconcilié ;
 - chaque événement conserve sa date, son type, le capital réalisé, le nominal réservé, le capital libre, le PnL appliqué et les décisions concernées avant et après ;
 - l'expression autorisée est « courbe de trésorerie réalisée aux sorties » ;
-- les expressions « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » restent interdites tant que ces comportements ne sont pas réellement implémentés et validés.
+- les expressions « mark-to-market », « valorisation quotidienne » ou « portefeuille entièrement simulé » restent interdites tant que ces comportements ne sont pas implémentés et validés.
+
+## Provenance des coûts — règle Cost Intelligence
+
+Toute composante de coût doit être classée comme :
+
+- **observée** : montant présent dans un relevé ou une transaction ;
+- **contractuelle** : valeur issue d'un barème identifié, daté et sourcé ;
+- **estimée** : valeur calculée, par exemple spread ou slippage ;
+- **hypothèse utilisateur** : paramètre saisi sans preuve externe.
+
+Règles :
+
+- ne jamais présenter un coût estimé comme payé ;
+- afficher l'unité, le dénominateur, la source et la date ;
+- une valeur contractuelle périmée doit être signalée ;
+- ne pas additionner deux coûts qui représentent la même friction ;
+- afficher chaque composante avant l'agrégat ;
+- tester indépendamment commissions, change, spread, slippage et fréquence ;
+- l'arrondi est réservé à l'affichage ;
+- un résultat de seuil économique ne constitue pas une recommandation.
+
+## Qualité de la validation commerciale
+
+- un visiteur, un email ou un compliment n'est pas une preuve de paiement ;
+- une intention déclarée n'est pas un achat ;
+- mesurer activation, seconde utilisation, demande d'import, paiement et remboursement ;
+- ne jamais fabriquer de faux avis, compteurs, économies ou partenaires ;
+- ne pas sélectionner uniquement les retours favorables ;
+- conserver les objections et abandons ;
+- déclarer le trafic non qualifié séparément ;
+- ne pas construire une fonction avant d'identifier la preuve qu'elle doit obtenir ;
+- tout paiement de réservation doit indiquer clairement que le produit complet n'est pas encore disponible ;
+- la validation doit pouvoir conduire à l'abandon du produit.
+
+## Frontière produit / conseil
+
+- calculer l'impact de paramètres saisis est autorisé dans le périmètre produit ;
+- ne pas recommander un instrument, un courtier, une fréquence ou une taille ;
+- comparer des scénarios sans désigner automatiquement un gagnant ;
+- ne pas adapter un résultat à la tolérance au risque, au patrimoine ou aux objectifs personnels ;
+- ne pas transmettre ou exécuter d'ordre ;
+- ne pas utiliser un avertissement comme substitut à une conception réellement non prescriptive.
 
 ## Qualité quantitative
 

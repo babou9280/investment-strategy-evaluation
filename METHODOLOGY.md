@@ -1,12 +1,97 @@
-# Breaktest - méthodologie actuelle
+# Breaktest — méthodologie actuelle
 
-## Nature des calculs
+## 1. Statut méthodologique
 
-Le prototype travaille principalement au niveau des trades et des PnL fournis. La courbe C4 est calendaire aux seules dates de sortie : elle ne constitue pas une valorisation quotidienne des positions ouvertes.
+Breaktest possède deux couches distinctes :
 
-## Bases de résultat — règle H2
+1. **moteur historique validé** : audit de journaux et backtests, fusionné jusqu'à H2 ;
+2. **produit Cost Intelligence à valider** : calculateur pré-transaction et futur suivi des frictions.
 
-Breaktest conserve quatre bases séparées :
+La seconde couche ne doit pas être présentée comme implémentée ni validée avant exécution de sa mission dédiée.
+
+## 2. Méthodologie du calculateur de validation
+
+Le calculateur utilise uniquement des paramètres fournis par l'utilisateur et des scénarios synthétiques explicitement identifiés.
+
+### Entrées
+
+- capital en euros, strictement positif ;
+- montant d'ordre en euros, strictement positif ;
+- nombre d'allers-retours mensuels, supérieur ou égal à zéro ;
+- commission par côté, supérieure ou égale à zéro ;
+- taux de change par conversion, compris entre 0 et 100 % ;
+- spread aller-retour estimé, compris entre 0 et 100 % ;
+- slippage aller-retour estimé, compris entre 0 et 100 %.
+
+### Formules
+
+Pour un aller-retour :
+
+- `commission = 2 × commission_par_côté` ;
+- `change = 2 × taux_change_par_côté × montant_ordre` ;
+- `spread = taux_spread_aller_retour × montant_ordre` ;
+- `slippage = taux_slippage_aller_retour × montant_ordre` ;
+- `coût_total = commission + change + spread + slippage` ;
+- `coût_ordre_pct = coût_total / montant_ordre` ;
+- `coût_annuel = coût_total × allers_retours_mensuels × 12` ;
+- `coût_capital_pct = coût_annuel / capital` ;
+- `seuil_brut_pct = coût_ordre_pct`.
+
+Le `seuil_brut_pct` indique le rendement brut nécessaire pour couvrir les frictions du scénario. Il ne constitue ni un objectif de rendement ni une recommandation d'effectuer l'opération.
+
+### Précision
+
+- les calculs internes utilisent les nombres non arrondis ;
+- l'arrondi intervient uniquement à l'affichage ;
+- chaque composante reste visible avant l'agrégat ;
+- les scénarios sont comparés sans classement automatique ;
+- une valeur nulle réelle reste valide ;
+- absence, valeur invalide et zéro sont distingués.
+
+### Provenance des coûts
+
+Chaque coût doit porter une nature explicite :
+
+- `observed` : présent dans un relevé ;
+- `contractual` : issu d'un barème sourcé et daté ;
+- `estimated` : spread, slippage ou autre estimation ;
+- `user_assumption` : paramètre librement saisi.
+
+Une estimation ne peut jamais être présentée comme un coût réellement payé. Une valeur contractuelle ne peut pas être présentée comme actuelle sans source et date.
+
+## 3. Limites du calculateur de validation
+
+Le calculateur initial ne modélise pas :
+
+- fiscalité personnelle ;
+- rendement futur ;
+- qualité globale d'un courtier ;
+- probabilité de gain ;
+- coût d'opportunité ;
+- impact de marché calibré sur des données temps réel ;
+- intérêts, financement ou appels de marge ;
+- transmission ou exécution d'ordres.
+
+Il ne recommande ni actif, ni courtier, ni fréquence, ni taille d'ordre.
+
+## 4. Méthodologie future du Cost Tracker
+
+Cette couche reste conditionnelle à la validation commerciale.
+
+Lorsqu'un historique est importé, Breaktest devra distinguer :
+
+- commissions observées ;
+- frais de change observés ou contractuels ;
+- coûts implicites estimés ;
+- performance brute observée ;
+- performance nette observée ;
+- scénarios recalculés.
+
+Toute agrégation devra se réconcilier avec les lignes sources. Les coûts estimés devront être affichés séparément et accompagnés d'un intervalle ou d'une hypothèse explicite lorsque l'incertitude est matérielle.
+
+## 5. Bases de résultat du moteur historique — règle H2
+
+Le moteur validé conserve quatre bases séparées :
 
 - **Brut observé** : PnL/rendement brut fourni par la ligne ;
 - **Net fixe observé** : PnL/rendement net fixe fourni ; fallback explicite vers le brut lorsque la paire est entièrement absente ;
@@ -21,95 +106,85 @@ Pour chaque base observée :
 - si seul le rendement est présent, le PnL est dérivé par `rendement × nominal` ;
 - si la paire optionnelle est entièrement absente, le fallback et sa base d'origine sont conservés ;
 - si PnL et rendement sont tous deux présents mais incompatibles, les deux valeurs sont conservées et l'anomalie est signalée pour H4 ;
-- lors d'un redimensionnement, le PnL fourni est mis à l'échelle par `nominal simulé / nominal source` ; le rendement fourni reste conservé pour l'audit ;
-- la provenance `observed`, `derived`, `fallback` ou `simulated` est attachée à la ligne.
+- lors d'un redimensionnement, le PnL fourni est mis à l'échelle par `nominal simulé / nominal source` ;
+- la provenance `observed`, `derived`, `fallback` ou `simulated` reste attachée à la ligne.
 
-Le mode par défaut reste **simulé par Breaktest**. La base sélectionnée détermine le résultat affiché, les agrégats et le PnL appliqué par C4. Les hypothèses de coûts ne modifient jamais une base observée et ne sont jamais soustraites une seconde fois d'un net observé.
+Le mode historique par défaut reste **simulé par Breaktest**. Les hypothèses de coûts ne modifient jamais une base observée et ne sont jamais soustraites une seconde fois d'un net observé.
 
-La sélection de la base ne modifie pas rétroactivement les règles ex ante d'edge, de coûts, de turnover et de financement. Elle sépare le verdict de contrôle Breaktest du résultat observé ou simulé utilisé pour le reporting et la trésorerie réalisée.
-
-## Normalisation numérique de la base brute — règle H1
+## 6. Normalisation numérique historique — règle H1
 
 - le nominal investi doit être présent, fini et strictement positif ;
-- au moins un des champs `gross_pnl_eur` ou `gross_return` doit être présent et numériquement valide ;
-- une valeur explicitement fournie mais non numérique, `NaN` ou infinie entraîne le refus du lot ;
-- lorsque le rendement manque mais que le PnL brut et le nominal sont valides, le rendement est dérivé par `PnL / nominal` ;
-- lorsque le PnL brut manque mais que le rendement et le nominal sont valides, le PnL est dérivé par `rendement × nominal` ;
+- au moins un des champs `gross_pnl_eur` ou `gross_return` doit être présent et valide ;
+- une valeur fournie non numérique, `NaN` ou infinie entraîne le refus du lot ;
+- une dérivation n'est autorisée qu'à partir d'une autre valeur et d'un nominal valides ;
 - un zéro réel reste une observation valide ;
-- la ligne normalisée conserve la provenance des valeurs.
+- la provenance est conservée.
 
-## Isolation temporelle du modèle — règle C2
+## 7. Isolation temporelle — règle C2
 
 Chaque trade rejoué est évalué avec son propre modèle :
 
 - seules les lignes `backtest` peuvent entraîner le modèle ;
-- la ligne de décision elle-même est exclue par identité de ligne ;
-- les dates doivent représenter des jours calendaires réels ;
-- l'entrée doit être antérieure ou égale à la sortie ;
+- la ligne elle-même est exclue ;
+- les dates doivent être valides et cohérentes ;
 - la sortie d'entraînement doit être strictement antérieure à l'entrée de la décision ;
-- les sorties de même date, les lignes futures et les lignes live sont exclues ;
+- sorties de même date, lignes futures et lignes live sont exclues ;
 - une décision à date invalide est classée `observe` ;
-- le modèle, la profondeur et les exclusions sont conservés par décision.
+- modèle, profondeur et exclusions sont conservés.
 
-## Allocation du turnover — règle C3
+## 8. Turnover — règle C3
 
 - les évaluations sont ordonnées par date d'entrée croissante ;
 - le budget est consommé sur une fenêtre glissante de 365,25 jours ;
-- les décisions déjà `remove` ou `observe` ne consomment rien ;
+- les décisions `remove` ou `observe` ne consomment rien ;
 - les dates différentes ne sont jamais triées globalement selon l'edge ;
-- les opportunités d'une même date sont classées par edge prudent, edge central puis identifiant ;
-- chaque décision conserve budget avant/après, unités, rang et motif ;
+- les opportunités de même date suivent une priorité déterministe ;
 - une opportunité future ne peut jamais changer une décision antérieure.
 
-## Réservation du capital — règle C1
+## 9. Réservation du capital — règle C1
 
 - les évaluations sont groupées par date d'entrée ;
 - les décisions du groupe suivent la priorité C3 ;
-- seules les décisions encore `keep` réservent le nominal complet ;
+- seules les décisions `keep` réservent le nominal complet ;
 - aucune réduction implicite du nominal n'est autorisée ;
-- une position du groupe n'est pas libérée au milieu de ce même groupe ;
-- les données temporelles, nominales ou de résultat sélectionné invalides produisent `observe` ;
-- chaque décision conserve capital réalisé, réservé et libre avant/après ;
-- les métriques finales de turnover utilisent uniquement les décisions financées.
+- une position du groupe n'est pas libérée au milieu de ce groupe ;
+- les données invalides produisent `observe` ;
+- capital réalisé, réservé et libre restent auditables.
 
-## Courbe de trésorerie réalisée — règle C4
+## 10. Trésorerie réalisée — règle C4
 
-Le financement et la réalisation sont calculés dans une seule simulation événementielle :
+- la simulation commence au capital initial ;
+- les sorties sont traitées avant les entrées de même date ;
+- une sortie libère le nominal et applique une seule fois le PnL sélectionné ;
+- le PnL ne modifie jamais la trésorerie avant sa sortie ;
+- une décision `remove` ou `observe` n'applique aucun PnL ;
+- le dernier point égale le capital initial plus les PnL sélectionnés des positions financées ;
+- la courbe reste une **courbe de trésorerie réalisée aux sorties**, pas une valorisation mark-to-market.
 
-1. la simulation commence au capital initial ;
-2. avant les entrées d'une date, les positions sorties à cette date ou avant sont traitées ;
-3. les sorties d'un même jour libèrent leur nominal et appliquent le PnL de la base sélectionnée dans un événement agrégé ;
-4. le PnL ne modifie jamais la trésorerie avant la sortie ;
-5. les nouvelles entrées utilisent ensuite `capital réalisé - nominal réservé` ;
-6. une décision `remove` ou `observe` n'applique aucun PnL ;
-7. la courbe contient un point initial et un point par date de sortie financée ;
-8. le dernier point égale le capital initial plus les PnL sélectionnés des positions financées ;
-9. chaque événement conserve capital réalisé, réservé, libre, PnL et identifiants avant/après.
-
-La courbe est une **courbe de trésorerie réalisée aux sorties**, pas une valorisation mark-to-market.
-
-## Stress tests actuels
+## 11. Stress tests historiques
 
 - augmentation des coûts ;
 - retrait des meilleurs trades pour mesurer la concentration ;
-- comparaison backtest / live-test ;
+- comparaison backtest/live-test ;
 - risque de queue au niveau des trades ;
 - réconciliation entre lignes et agrégats ;
 - bootstrap conditionnel à l'échantillon fourni.
 
-## Limites importantes
+## 12. Limites techniques ouvertes
 
-- H3 : la provenance de devise du prix d'entrée n'est pas encore corrigée ;
-- H4 : aucune politique définitive ne réconcilie encore PnL, rendement et nominal lorsqu'ils sont simultanément incohérents ;
-- H5 : l'export CSV n'est pas encore protégé contre l'injection de formule ;
-- H6 : les performances sur imports moyens et grands restent insuffisantes ;
-- la courbe réalisée ne valorise pas les positions ouvertes ;
-- le levier, les appels de marge, intérêts, dividendes et flux externes ne sont pas simulés ;
-- le bootstrap ne corrige pas le biais de sélection, la dépendance temporelle ou le changement de régime ;
-- retirer le top N est un stress test ex post, pas une règle de trading ;
-- un score composite est un indice d'évidence, pas une prédiction.
+- H3 : provenance de devise du prix d'entrée ;
+- H4 : politique définitive de réconciliation PnL/rendement/nominal ;
+- H5 : protection de l'export contre l'injection de formule ;
+- H6 : performances sur imports moyens et grands ;
+- absence de valorisation mark-to-market ;
+- absence de levier, intérêts, dividendes et flux externes ;
+- bootstrap sans correction du biais de sélection, de dépendance temporelle ou de changement de régime.
 
-## Breaktest Score - proposition actuelle
+H3 à H6 sont suspendus jusqu'à démonstration d'un besoin produit direct.
+
+## 13. Breaktest Score historique
+
+La proposition de score reste non prioritaire et non commercialement validée :
 
 - résilience aux coûts : 25 % ;
 - résilience aux outliers : 25 % ;
@@ -117,4 +192,4 @@ La courbe est une **courbe de trésorerie réalisée aux sorties**, pas une valo
 - risque de queue : 15 % ;
 - profondeur : 10 %.
 
-La formule et les seuils doivent être versionnés, testés et gelés avant application à de nouvelles données.
+Aucun score global ne doit être utilisé dans la page Cost Intelligence. Un score composite est un indice d'évidence, pas une prédiction.

@@ -3,6 +3,7 @@
 - Audit initial : 12 juillet 2026
 - Source v0.2 : 132 899 octets, SHA-256 `5dd4614868be7d00b7966a1979621b2a42ff8db0c55ecbede047b93757304f00`
 - Version fusionnée : H1 + C2 + C3 + C1 + C4 + H2, 166 862 octets, SHA-256 `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`
+- Statut produit depuis le 13 juillet 2026 : pivot validé vers Breaktest Cost Intelligence ; extension du moteur suspendue pendant la validation commerciale
 
 ## 1. Conclusion exécutive
 
@@ -10,11 +11,13 @@ Le prototype est une application locale réellement interactive. Le chargement, 
 
 H1, C2, C3, C1, C4 et H2 sont corrigés et fusionnés dans `breaktest-bootstrap`. H2 sépare résultat simulé, brut observé, net fixe observé et full-cost observé, conserve leur provenance et empêche le double comptage des coûts.
 
-H3 à H6 restent ouverts. Le produit n'est toujours ni une valorisation mark-to-market ni une simulation complète de portefeuille.
+H3 à H6 restent ouverts. Ils ne constituent plus la feuille de route active : le prochain risque traité est commercial. Le produit historique n'est toujours ni une valorisation mark-to-market ni une simulation complète de portefeuille.
 
 ## 2. Architecture et build cumulatif
 
 Le build déterministe exécute H1, C2, C3, C1, C4 puis H2. Chaque étape vérifie l'empreinte de son entrée et de sa sortie.
+
+Le nouveau site de validation Cost Intelligence devra rester isolé de `app/Breaktest_Studio.html`. Sa construction ne modifiera pas la preuve technique accumulée sur le moteur historique.
 
 ## 3. Corrections structurelles validées
 
@@ -55,11 +58,13 @@ La correction :
 
 Détail : `docs/validation/H2_JOURNAL_NET_BASES.md`.
 
-## 4. Défauts élevés encore ouverts
+## 4. Défauts techniques encore ouverts
 
 ### H3 — provenance de devise du prix d'entrée
 
 `entry_price_eur` peut encore être multiplié par `eurPerQuoteCurrency`, comme s'il s'agissait d'un prix en devise étrangère.
+
+La pull request `#14` a été fermée sans fusion après le pivot stratégique. Son contenu n'est ni canonique ni validé.
 
 ### H4 — réconciliation PnL / rendement / nominal
 
@@ -79,13 +84,13 @@ L'évaluation peut bloquer l'interface sur des imports moyens ou grands, particu
 
 - application locale interactive ;
 - H1, C2, C3, C1, C4 et H2 ;
-- séparation observation / simulation ;
+- séparation observation/simulation ;
 - sélection et conservation des bases observées ;
 - absence de double comptage ;
 - provenance visible dans l'interface et l'export ;
 - invariance temporelle dans les scénarios couverts.
 
-### Non validé
+### Non validé techniquement
 
 - exactitude exhaustive des formules ;
 - provenance de devise de tous les prix ;
@@ -93,8 +98,20 @@ L'évaluation peut bloquer l'interface sur des imports moyens ou grands, particu
 - valorisation quotidienne ou mark-to-market ;
 - levier, appels de marge, intérêts, dividendes et flux externes ;
 - compatibilité Safari/iPad complète ;
-- sécurité exhaustive, performance à l'échelle et valeur commerciale.
+- sécurité exhaustive et performance à l'échelle.
 
-## 6. Prochaine correction recommandée
+### Non validé commercialement
 
-Corriger **H3 — provenance de devise du prix d'entrée** : un prix EUR doit rester inchangé et un prix en devise de cotation doit être converti exactement une fois avec une provenance auditée.
+- fréquence du problème Cost Intelligence ;
+- usage répété ;
+- demande d'import ;
+- volonté de payer ;
+- économie du maintien des barèmes ;
+- distribution et rétention ;
+- valeur d'une base de données future.
+
+## 6. Prochaine exécution recommandée
+
+Construire uniquement l'instrument de validation défini dans `NEXT_CODEX_PROMPT.md`, vérifier ses calculs contre `go_to_market/DEMO_SCENARIOS.md`, puis obtenir les preuves définies dans `VALIDATION_PLAN.md`.
+
+Ne reprendre H3 à H6 qu'après démonstration d'un besoin direct pour le produit commercial retenu.
