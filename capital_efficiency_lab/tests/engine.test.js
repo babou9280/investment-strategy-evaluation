@@ -3,6 +3,8 @@ const assert = require('assert');
 const engine = require('../engine.js');
 
 function approx(actual, expected, tolerance = 1e-12) {
+  assert.equal(typeof actual, 'number', `Expected a numeric value, received ${typeof actual}`);
+  assert.ok(Number.isFinite(actual), `Expected a finite value, received ${actual}`);
   assert.ok(Math.abs(actual - expected) <= tolerance * Math.max(1, Math.abs(actual), Math.abs(expected)), `${actual} != ${expected}`);
 }
 
@@ -71,11 +73,35 @@ assert.equal(zeroCosts.ok, true);
 approx(zeroCosts.results.totalCostEur.value, 0);
 approx(zeroCosts.results.breakEvenGrossRate.value, 0);
 approx(zeroCosts.results.netEdgeRate.value, 0.01);
+assert.equal(zeroCosts.results.minimumOrderForPositiveNet.status, 'available');
 approx(zeroCosts.results.minimumOrderForPositiveNet.value, 0);
+assert.equal(zeroCosts.results.minimumOrderForPositiveNet.boundary, 'no_positive_minimum_from_fixed_costs');
+assert.equal(zeroCosts.results.minimumOrderForRetention.status, 'available');
 approx(zeroCosts.results.minimumOrderForRetention.value, 0);
+assert.equal(zeroCosts.results.minimumOrderForRetention.boundary, 'no_positive_minimum_from_fixed_costs');
 assert.equal(zeroCosts.results.maxMonthlyOperationsUnderBudget.reason, 'unbounded_within_model');
 assert.equal(zeroCosts.results.fixedCostShare.reason, 'total_cost_zero');
 engine.assertFiniteTree(zeroCosts);
+
+const zeroFixedExactRetention = engine.compute({
+  ...reference,
+  commissionPerSideEur: 0,
+  grossEdgeRate: 0.014,
+  retentionTargetRate: 0.5
+});
+assert.equal(zeroFixedExactRetention.results.minimumOrderForRetention.status, 'available');
+approx(zeroFixedExactRetention.results.minimumOrderForRetention.value, 0);
+assert.equal(zeroFixedExactRetention.results.minimumOrderForRetention.boundary, 'no_positive_minimum_from_fixed_costs');
+approx(zeroFixedExactRetention.results.edgeRetainedRate.value, 0.5);
+
+const zeroFixedUnreachableRetention = engine.compute({
+  ...reference,
+  commissionPerSideEur: 0,
+  grossEdgeRate: 0.013,
+  retentionTargetRate: 0.5
+});
+assert.equal(zeroFixedUnreachableRetention.results.minimumOrderForRetention.status, 'unavailable');
+assert.equal(zeroFixedUnreachableRetention.results.minimumOrderForRetention.reason, 'structurally_unreachable');
 
 const negativeEdge = engine.compute({ ...reference, grossEdgeRate: -0.01 });
 assert.equal(negativeEdge.results.primaryState, 'edge_fully_absorbed');
