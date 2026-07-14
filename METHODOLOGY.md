@@ -2,14 +2,15 @@
 
 ## 1. Couches distinctes
 
-Breaktest conserve quatre niveaux méthodologiques séparés :
+Breaktest conserve cinq niveaux méthodologiques séparés :
 
 1. **moteur historique** : audit de journaux et backtests, validé jusqu'à H2 et C1–C4 ;
 2. **calculateur Q0** : coût descriptif pré-transaction, techniquement validé mais non publié ;
 3. **Capital Efficiency** : seuil, plancher, survie ponctuelle et contraintes inverses ;
-4. **Edge Survival Envelope** : sensibilité déterministe basse / centrale / haute, en stabilisation interne.
+4. **Edge Survival Envelope** : sensibilité déterministe basse / centrale / haute, fusionnée après validation technique interne ;
+5. **Cost Gate foundation** : orchestration future de snapshots, cash, alignement de l'avantage et constats multiples ; contrats en revue hostile, sans moteur validé à ce stade.
 
-Aucune couche n'est commercialement validée.
+Aucune couche n'est commercialement validée. La présence d'un contrat Cost Gate ne prouve pas son implémentation.
 
 ## 2. Principes généraux
 
@@ -386,31 +387,37 @@ Règles :
 - une erreur de validation ne laisse aucun ancien résultat visible ;
 - la définition de l'avantage brut est affichée avant saisie.
 
-## 18. Faisabilité du capital — méthodologie future
+## 18. Cost Gate foundation — méthodologie contractuelle
 
-La taille frontière ne prouve pas sa faisabilité.
+La taille frontière ne prouve pas sa faisabilité. Le périmètre initial futur est limité à un compte cash, un achat long sans levier et une action ou un ETF au comptant.
 
-Une future couche devra distinguer :
+La faisabilité immédiate distingue :
 
 ```text
 reference_capital_eur
 strategy_capital_eur
-available_cash_eur
-reserved_notional_eur
-order_notional_eur
+strategy_capital_committed_eur
+available_settled_cash_eur
+account_free_settled_cash_eur
+strategy_allocation_headroom_eur
+capital_feasibility_cash_eur
+entry_cash_requirement_eur
+lifecycle_friction_eur
 ```
 
-Elle devra traiter :
+Règles :
 
-- frontière dépassant le capital disponible ;
-- ordre supérieur au cash sans levier modélisé ;
-- allocation partielle ;
-- réserve utilisateur ;
-- positions simultanées ;
-- durée de détention ;
-- nominal réservé et libéré chronologiquement.
+- le cash fourni par une source déclare s'il inclut déjà chaque hold ;
+- un `hold_id` n'est déduit qu'une fois ;
+- le plafond de faisabilité est le minimum entre cash réglé réconcilié et allocation de stratégie encore libre ;
+- l'engagement d'entrée exclut les coûts de sortie futurs ;
+- spread et slippage incorporés au prix ne sont pas ajoutés une deuxième fois au cash ;
+- `G` doit être aligné sur instrument, place, direction, portée, horizon, dénominateur, prix, devise, coûts, estimateur et période ;
+- la sortie conserve `findings[]` ; une synthèse n'efface aucun constat ;
+- toute mutation rend les anciens constats inactifs ;
+- marge, short, dérivés et cash réglé non identifiable restent `unsupported_scope`.
 
-Cette couche est spécifiée dans `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md` et n'est pas implémentée.
+Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`, `COST_GATE_SNAPSHOT_CONTRACT.md`, `COST_GATE_FINDINGS_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md`. Aucune de ces règles n'est une recommandation ni une preuve d'implémentation.
 
 ## 19. Méthodologie historique conservée
 
