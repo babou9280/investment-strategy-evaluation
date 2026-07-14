@@ -12,7 +12,9 @@ Exemples :
 - une fréquence annuelle paraît compatible avec un budget de friction alors que la durée de détention immobilise le capital ;
 - une taille frontière est interprétée comme recommandation, alors qu'elle ne décrit qu'une condition arithmétique.
 
-Ce contrat définit le problème. Il n'autorise pas encore son implémentation dans la pull request Edge Survival Envelope.
+Ce contrat définit le problème général. Pour le cash immédiat du périmètre cash long, `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` est désormais l'autorité la plus spécifique. Ses noms, son ledger de holds et son plafonnement par allocation remplacent les anciens raccourcis `available_cash_eur` et `reserved_notional_eur`.
+
+Ce document reste l'autorité future pour le chevauchement des positions, l'exposition et la réservation chronologique. Il n'autorise ni donnée réelle, ni connexion de compte, ni levier.
 
 ## 2. Distinctions obligatoires
 
@@ -20,48 +22,56 @@ Ne jamais confondre :
 
 ```text
 reference_capital_eur
-available_cash_eur
-order_notional_eur
-reserved_notional_eur
+strategy_capital_eur
+strategy_capital_committed_eur
+available_settled_cash_eur
+account_free_settled_cash_eur
+strategy_allocation_headroom_eur
+capital_feasibility_cash_eur
+entry_cash_requirement_eur
+scenario_notional_eur
 portfolio_gross_exposure_eur
 portfolio_net_exposure_eur
 ```
 
-Le prototype actuel demande un `capital de référence`. Cette valeur sert principalement de dénominateur pour les frictions annuelles. Elle ne prouve pas qu'elle est entièrement disponible pour un nouvel ordre.
+Le `capital de référence` sert principalement de dénominateur analytique. Il ne prouve ni une allocation à la stratégie, ni du cash réglé, ni l'absence de holds.
 
-Avant toute fonction de faisabilité réelle, l'interface devra demander ou dériver explicitement la base de capital pertinente.
-
+La faisabilité immédiate utilise le minimum entre cash réglé réconcilié et allocation de stratégie encore libre. Une source déjà nette d'un hold ne peut pas provoquer une seconde soustraction de ce même hold.
 ## 3. Périmètre sans levier
 
 Tant que levier, marge et liquidations forcées ne sont pas implémentés :
 
 - une opération ne peut pas être présentée comme finançable uniquement parce que son seuil est positif ;
-- si `order_notional_eur > available_cash_eur`, l'état doit être `not_feasible_without_leverage` ;
-- le produit ne doit pas supposer silencieusement un crédit, une marge ou une vente à découvert ;
-- une taille frontière supérieure au capital disponible doit rester visible comme `frontier_exceeds_available_capital` ;
+- si `entry_cash_requirement_eur > capital_feasibility_cash_eur`, l'état doit être `insufficient_declared_strategy_cash` ;
+- le produit ne doit pas supposer silencieusement un crédit, une marge, une vente à découvert ou l'affectation de tout le compte à la stratégie ;
+- une taille frontière supérieure au plafond disponible doit rester visible comme `frontier_exceeds_available_capital` ;
 - aucune réduction automatique de taille n'est autorisée.
 
 Ces états sont descriptifs. Ils ne recommandent ni levier ni augmentation du capital.
-
 ## 4. Frontière contre faisabilité
 
 Pour une frontière de taille `N_min` :
 
 ```text
-frontier_status = mathematically_available | structurally_unreachable
-capital_feasibility = unknown | feasible_within_available_capital | frontier_exceeds_available_capital
+frontier_status =
+  mathematically_available
+  | structurally_unreachable
+
+capital_feasibility =
+  unknown
+  | feasible_within_declared_strategy_cash
+  | frontier_exceeds_available_capital
 ```
 
-La faisabilité n'est calculable que si la base de capital est explicitement définie.
+La faisabilité n'est calculable que si cash réglé, base d'inclusion des holds, allocation de stratégie et capital déjà engagé sont explicitement définis.
 
 Si :
 
 ```text
-N_min <= available_cash_eur
+N_min <= capital_feasibility_cash_eur
 ```
 
-le résultat signifie seulement que la frontière tient dans le cash déclaré. Il ne signifie pas que l'ordre est approprié, prudent ou optimal.
-
+le résultat signifie seulement que la frontière tient dans le plafond déclaré et réconcilié. Il ne signifie pas que l'ordre est approprié, prudent ou optimal.
 ## 5. Positions simultanées
 
 La faisabilité d'une stratégie répétée dépend de la durée de détention et du chevauchement des positions.
@@ -107,28 +117,41 @@ La future entrée doit être explicite :
 
 ```text
 capital_allocation_rate
-strategy_capital_eur = reference_capital_eur * capital_allocation_rate
+strategy_capital_eur =
+  reference_capital_eur * capital_allocation_rate
+strategy_capital_committed_eur
+strategy_allocation_headroom_eur =
+  strategy_capital_eur - strategy_capital_committed_eur
 ```
 
-Ne jamais présumer que 100 % du capital est disponible pour la stratégie ou l'opération analysée.
+La faisabilité compare ensuite l'engagement au minimum entre ce headroom et le cash réglé réconcilié du compte.
 
-## 8. Réserve de sécurité
+Ne jamais présumer que 100 % du capital ou du cash du compte est disponible pour la stratégie ou l'opération analysée.
+## 8. Réserve de cash
 
 Une réserve de cash peut être décrite par l'utilisateur, mais Breaktest ne doit pas en choisir le niveau.
 
 ```text
-user_defined_cash_reserve_eur
-available_cash_eur = strategy_capital_eur - user_defined_cash_reserve_eur - reserved_notional_eur
+account_free_settled_cash_eur =
+  available_settled_cash_eur
+  - holds_non_deja_inclus_par_la_source
+  - user_defined_cash_reserve_eur
+
+capital_feasibility_cash_eur =
+  min(
+    account_free_settled_cash_eur,
+    strategy_allocation_headroom_eur
+  )
 ```
 
-Le produit calcule la conséquence de cette condition ; il ne recommande pas la réserve.
-
+Les holds sont déduits par identifiant unique selon le contrat cash/cycle. Le produit calcule la conséquence de cette condition ; il ne recommande ni le niveau de réserve ni l'allocation.
 ## 9. États futurs autorisés
 
 ```text
 capital_basis_missing
-available_cash_unknown
-feasible_within_available_capital
+capital_basis_missing
+cash_basis_missing
+feasible_within_declared_strategy_cash
 frontier_exceeds_available_capital
 order_exceeds_available_capital
 not_feasible_without_leverage
@@ -160,12 +183,13 @@ Tester au minimum :
 
 Cette couche ne doit être implémentée qu'après :
 
-1. stabilisation et fusion d'Edge Survival Envelope ;
-2. validation que les utilisateurs comprennent la frontière de taille actuelle ;
-3. preuve que la faisabilité par rapport au capital change réellement leur diagnostic ;
-4. définition explicite de la base de capital disponible ;
-5. décision sur le traitement des positions simultanées ;
-6. tests de non-régression avec C1 et C4.
+1. fusion d'Edge Survival Envelope — réalisée dans la PR `#23` ;
+2. cohérence des contrats de cash, snapshot et constats ;
+3. base de cash réglé et ledger de holds explicitement définis ;
+4. allocation de stratégie et capital déjà engagé explicitement définis ;
+5. prototype synthétique démontrant le plafonnement sans donnée réelle ;
+6. positions simultanées maintenues hors périmètre tant qu'elles ne sont pas modélisées ;
+7. tests de non-régression avec C1 et C4.
 
 ## 12. Valeur produit potentielle
 
