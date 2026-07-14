@@ -20,7 +20,7 @@ const base = fixtures.baseInput();
 const result = engine.compute(base);
 assert.equal(result.ok, true);
 assert.equal(result.scope.supported, true);
-assert.equal(result.version, 'cost-gate-foundation-2-synthetic');
+assert.equal(result.version, 'cost-gate-foundation-3-synthetic');
 
 const independentFixed = 2 * 1;
 const independentVariableRate = 2 * 0.0025 + 0.001 + 0.001;
@@ -180,9 +180,34 @@ assert.equal(finding(entryFxMismatch, 'cash_basis_conflicted').condition, 'entry
 
 const sameCurrencyFx = engine.compute(fixtures.baseInput({ quoteCurrency: 'EUR' }));
 assert.equal(finding(sameCurrencyFx, 'cash_basis_conflicted').condition, 'same_currency_fx_cost_conflict');
+assert.equal(finding(sameCurrencyFx, 'invalid_cost.fxRatePerSide').condition, 'same_currency_fx_cost_conflict');
+assert.equal(sameCurrencyFx.friction.complete, false);
+
+const sameCurrencyWithoutCash = engine.compute(fixtures.baseInput({ quoteCurrency: 'EUR', cash: null }));
+assert.equal(sameCurrencyWithoutCash.ok, false);
+assert.equal(finding(sameCurrencyWithoutCash, 'invalid_cost.fxRatePerSide').condition, 'same_currency_fx_cost_conflict');
+assert.equal(sameCurrencyWithoutCash.friction.complete, false);
+
+const sameCurrencyWithoutFx = engine.compute(fixtures.baseInput({
+  quoteCurrency: 'EUR',
+  cost: { fxRatePerSide: 0 },
+  cash: { entryFxCashCostEur: 0 }
+}));
+assert.equal(sameCurrencyWithoutFx.friction.complete, true);
+assert.equal(sameCurrencyWithoutFx.cash.status, 'feasible_within_declared_strategy_cash');
+assert.equal(sameCurrencyWithoutFx.summaryCode, 'no_incompatibility_detected_under_assumptions');
 
 const unmodelledEntryTax = engine.compute(fixtures.baseInput({ cash: { entryTaxEur: 1 } }));
 assert.equal(finding(unmodelledEntryTax, 'cash_basis_conflicted').condition, 'entry_fixed_costs_missing_from_lifecycle_model');
+assert.equal(unmodelledEntryTax.friction.complete, false);
+assert.deepEqual(unmodelledEntryTax.friction.missingComponents, ['tax_lifecycle_counterpart']);
+assert.equal(finding(unmodelledEntryTax, 'friction_components_missing').status, 'insufficient_data');
+assert.equal(finding(unmodelledEntryTax, 'complete_friction_required_for_edge').status, 'insufficient_data');
+assert.equal(unmodelledEntryTax.findings.some((item) => item.findingCode === 'complete_friction_geometry_calculated'), false);
+
+const unmodelledEntryFees = engine.compute(fixtures.baseInput({ cash: { entryContractualFeesEur: 1 } }));
+assert.equal(unmodelledEntryFees.friction.complete, false);
+assert.deepEqual(unmodelledEntryFees.friction.missingComponents, ['contractual_fees_lifecycle_counterpart']);
 
 const duplicateHold = engine.compute(fixtures.baseInput({
   cash: {
@@ -232,6 +257,7 @@ const malformedSources = engine.compute(fixtures.baseInput({
 assert.equal(malformedSources.ok, false);
 assert.equal(malformedSources.snapshot.status, 'snapshot_incomplete');
 assert.equal(finding(malformedSources, 'invalid_sources').condition, 'array_required');
+assert.equal(malformedSources.findings.some((item) => item.findingCode === 'synthetic_sources_current_for_evaluation_time'), false);
 
 const malformedSourceElement = engine.compute(fixtures.baseInput({
   sources: [null],
@@ -241,6 +267,7 @@ assert.equal(malformedSourceElement.ok, false);
 assert.equal(malformedSourceElement.snapshot.status, 'snapshot_incomplete');
 assert.equal(finding(malformedSourceElement, 'invalid_sources.0').condition, 'object_required');
 assert.equal(malformedSourceElement.findings.some((item) => item.findingCode === 'snapshot_serialization_failed'), false);
+assert.equal(malformedSourceElement.findings.some((item) => item.findingCode === 'synthetic_sources_current_for_evaluation_time'), false);
 
 const duplicateSourceIds = engine.compute(fixtures.baseInput({
   sources: [
@@ -365,7 +392,8 @@ const source = {
   venueId: 'SYNTH-X',
   quoteCurrency: 'USD',
   observedAtUtc: '2026-07-14T10:00:00Z',
-  validUntilUtc: '2026-07-14T10:01:00Z'
+  validUntilUtc: '2026-07-14T10:01:00Z',
+  critical: true
 };
 const fresh = engine.compute(fixtures.baseInput({ sources: [source], evaluatedAtUtc: '2026-07-14T10:00:30Z' }));
 const stale = engine.compute(fixtures.baseInput({ sources: [source], evaluatedAtUtc: '2026-07-14T10:02:00Z' }));
@@ -378,6 +406,45 @@ assert.deepEqual(engine.compareSnapshots(fresh, stale), {
   oldSnapshot: 'expired',
   oldFindingsActive: false
 });
+
+const invalidEvaluationTime = engine.compute(fixtures.baseInput({
+  sources: [source],
+  evaluatedAtUtc: 'not-a-time'
+}));
+assert.equal(invalidEvaluationTime.ok, false);
+assert.equal(invalidEvaluationTime.snapshot.status, 'snapshot_incomplete');
+assert.equal(finding(invalidEvaluationTime, 'invalid_evaluatedAtUtc').condition, 'valid_utc_timestamp_required');
+assert.equal(invalidEvaluationTime.findings.some((item) => item.findingCode === 'synthetic_sources_current_for_evaluation_time'), false);
+assert.deepEqual(engine.compareSnapshots(fresh, invalidEvaluationTime), {
+  sameContent: true,
+  oldSnapshot: 'unusable',
+  oldFindingsActive: false
+});
+
+const incompleteSourceIdentity = engine.compute(fixtures.baseInput({
+  sources: [{
+    sourceId: 'SYNTH-INCOMPLETE',
+    provenance: 'synthetic_demo',
+    observedAtUtc: '2026-07-14T10:00:00Z',
+    validUntilUtc: '2026-07-14T11:00:00Z',
+    critical: true
+  }],
+  evaluatedAtUtc: '2026-07-14T10:30:00Z'
+}));
+assert.equal(incompleteSourceIdentity.ok, false);
+assert.equal(incompleteSourceIdentity.snapshot.status, 'snapshot_incomplete');
+assert.equal(finding(incompleteSourceIdentity, 'invalid_sources.0.instrumentId').condition, 'non_empty_string_required');
+assert.equal(finding(incompleteSourceIdentity, 'invalid_sources.0.venueId').condition, 'non_empty_string_required');
+assert.equal(finding(incompleteSourceIdentity, 'invalid_sources.0.quoteCurrency').condition, 'non_empty_string_required');
+assert.equal(incompleteSourceIdentity.findings.some((item) => item.findingCode === 'synthetic_sources_current_for_evaluation_time'), false);
+
+const missingCriticalFlag = engine.compute(fixtures.baseInput({
+  sources: [Object.assign({}, source, { critical: undefined })],
+  evaluatedAtUtc: '2026-07-14T10:00:30Z'
+}));
+assert.equal(missingCriticalFlag.ok, false);
+assert.equal(missingCriticalFlag.snapshot.status, 'snapshot_incomplete');
+assert.equal(finding(missingCriticalFlag, 'invalid_sources.0.critical').condition, 'boolean_required');
 
 const staleAndConflicted = engine.compute(fixtures.baseInput({
   sources: [Object.assign({}, source, { instrumentId: 'SYNTH:OTHER' })],
@@ -421,6 +488,10 @@ assert.equal(beforeNonCriticalExpiry.snapshot.expiresAtUtc, criticalSource.valid
 assert.equal(afterNonCriticalExpiry.snapshot.expiresAtUtc, criticalSource.validUntilUtc);
 assert.equal(afterNonCriticalExpiry.snapshot.status, 'snapshot_current');
 assert.equal(finding(afterNonCriticalExpiry, 'synthetic_source_stale').status, 'expired');
+assert.equal(
+  afterNonCriticalExpiry.findings.some((item) => item.findingCode === 'synthetic_sources_current_for_evaluation_time'),
+  false
+);
 assert.deepEqual(engine.compareSnapshots(beforeNonCriticalExpiry, afterNonCriticalExpiry), {
   sameContent: true,
   oldSnapshot: 'active',

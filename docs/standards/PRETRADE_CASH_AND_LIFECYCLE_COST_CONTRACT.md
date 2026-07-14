@@ -157,7 +157,9 @@ account_currency = quote_currency -> fx_rate_per_side = 0
 account_currency = quote_currency -> entry_fx_cash_cost_eur = 0
 ```
 
-Une contradiction produit `cash_basis_conflicted`. La fondation actuelle ne possède pas encore de champs de cycle pour réconcilier des taxes ou frais contractuels asymétriques entre entrée et sortie. Toute valeur d'entrée non nulle dans ces deux catégories bloque donc la synthèse favorable avec `entry_fixed_costs_missing_from_lifecycle_model` ; elle ne disparaît pas du cash et n'est pas omise du seuil par défaut.
+Une hypothèse FX non nulle entre devises identiques invalide la géométrie de friction même lorsque la vue cash n'est pas fournie. Lorsque la vue cash existe, toute ligne FX non nulle est également conflictuelle. Une absence de cash ne peut donc pas rendre valide un événement de change économiquement impossible.
+
+Une contradiction de cash produit `cash_basis_conflicted`. La fondation actuelle ne possède pas encore de champs de cycle pour réconcilier des taxes ou frais contractuels asymétriques entre entrée et sortie. Toute valeur d'entrée non nulle dans ces deux catégories produit `entry_fixed_costs_missing_from_lifecycle_model`, marque la friction de cycle comme incomplète et interdit tout constat Edge Survival dépendant d'un seuil complet. Le montant reste visible dans le cash immédiat ; il n'est ni supprimé, ni implicitement remplacé par zéro dans le seuil.
 
 Le spread et le slippage ne sont ajoutés comme cash séparé que si la base du prix prouve qu'ils ne sont pas déjà incorporés.
 
@@ -380,9 +382,10 @@ Tester :
 - capital de stratégie déjà engagé ;
 - réserve utilisateur ;
 - coût nul ;
-- taxe d'entrée non nulle sans contrepartie de cycle, bloquée comme base incomplète ;
+- taxe ou frais contractuel d'entrée non nul sans contrepartie de cycle : cash conflictuel, friction incomplète et Edge Survival non évalué ;
 - change à l'entrée ;
-- contradiction entre devises identiques et change non nul ;
+- contradiction entre devises identiques et change non nul, avec et sans vue cash ;
+- devises identiques et change nul, conservés comme cas valide ;
 - divergence commission ou change entre entrée et cycle ;
 - dérivé, short ou marge non supportés ;
 - aucun double comptage par `hold_id` ;
@@ -408,5 +411,7 @@ Avant d'afficher une faisabilité de capital :
 Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles de la version `1` distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces correctifs réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`, puis au head documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` dans le run `#610`.
 
 La version `cost-gate-foundation-2-synthetic` ajoute les réconciliations nominal, base de cash, devise et coûts entrée/cycle. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté. Cette preuve reste synthétique et n'établit ni solde réel, ni règle de règlement d'un courtier, ni exhaustivité fiscale.
+
+La révision locale `cost-gate-foundation-3-synthetic` étend le conflit même devise/FX à la friction sans dépendre de la présence du cash et rend explicitement incomplète la friction lorsqu'une taxe ou un frais contractuel d'entrée n'a pas de contrepartie de cycle. Elle reste une prévalidation jusqu'à un head distant, une CI exact-head et un artefact inspecté.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

@@ -80,7 +80,7 @@ capital_feasibility_cash = 1 000 EUR
 snapshot = manual_assumptions_only
 ```
 
-La devise de cotation synthétique USD explique le coût de change vers le compte EUR. Une cotation EUR avec ces mêmes coûts FX est conflictuelle.
+La devise de cotation synthétique USD explique le coût de change vers le compte EUR. Une cotation EUR avec ces mêmes coûts FX est conflictuelle, y compris lorsque la vue cash est absente. Le cas EUR/EUR avec coût FX nul reste calculable et sert d'oracle positif adjacent.
 
 Attendus :
 
@@ -180,6 +180,8 @@ lifecycle_friction = 5,50 EUR
 Le prix attendu de l'actif contient déjà les effets de prix déclarés à l'entrée : spread et slippage ne sont donc pas ajoutés comme lignes de cash. Ils restent dans la mesure économique du cycle parce que `G` est défini avant toutes les frictions modélisées.
 
 Les frais de sortie futurs ne sont pas ajoutés au cash immédiat. L'oracle doit détecter `505,50 EUR`, `505 EUR` ou toute autre somme qui réintroduit des coûts futurs ou incorporés sans base explicite.
+
+Régression associée : une taxe ou un frais contractuel d'entrée non nul sans composante de cycle correspondante conserve le conflit cash, rend `lifecycle_friction` incomplet, expose la composante manquante et interdit tout constat Edge Survival calculé comme si le sous-total était complet.
 ### CG-07 — spread déjà incorporé au prix ask
 
 Entrées :
@@ -229,7 +231,7 @@ summary = snapshot_unusable
 
 Cette quote sert uniquement à falsifier la politique de fraîcheur. Elle n'est ni réelle ni externe. Elle n'est jamais remplacée par zéro ni qualifiée d'actuelle.
 
-Régressions temporelles associées : une source observée après `evaluated_at_utc` produit `snapshot_temporally_inconsistent` et `synthetic_source_observed_after_evaluation`. Une source non critique expirée garde son propre constat stale, mais ne raccourcit pas l'expiration agrégée portée par les sources critiques.
+Régressions temporelles associées : une source observée après `evaluated_at_utc` produit `snapshot_temporally_inconsistent` et `synthetic_source_observed_after_evaluation`. Une source non critique expirée garde son propre constat stale, mais ne raccourcit pas l'expiration agrégée portée par les sources critiques et ne coexiste pas avec un faux constat affirmant que toutes les sources sont actuelles. Une heure d'évaluation absente ou invalide rend le snapshot incomplet et les anciens constats inactifs malgré un hash de contenu identique. Une source sans instrument, place, devise de cotation ou booléen critique explicite est invalide, jamais actuelle.
 ### CG-10 — conflit instrument / place / devise
 
 Entrées : coût contractuel pour un instrument ou une place différents du scénario.

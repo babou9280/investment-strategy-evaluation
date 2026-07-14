@@ -83,7 +83,7 @@ entry_cash_requirement_eur <=
 
 La base globale, `source_included_hold_ids[]` et les indicateurs d'inclusion de chaque hold doivent se réconcilier exactement. Une base brute ne peut contenir aucun hold déclaré déjà inclus. Une collection mal formée ou une contradiction bloque la conclusion de faisabilité au lieu d'être assimilée à une liste vide.
 
-Les commissions et le change présents dans la vue cash immédiate se réconcilient avec leur composante par côté dans la vue du cycle. Des devises compte/cotation identiques imposent un change nul. Une taxe ou un frais contractuel d'entrée non modélisé dans le cycle empêche de qualifier la friction complète.
+Les commissions et le change présents dans la vue cash immédiate se réconcilient avec leur composante par côté dans la vue du cycle. Des devises compte/cotation identiques imposent un change nul dans la friction, même si aucune vue cash n'est fournie. Une taxe ou un frais contractuel d'entrée non modélisé dans le cycle empêche de qualifier la friction complète et interdit tout constat Edge Survival dépendant de ce total.
 
 Cette condition est nécessaire mais non suffisante dès que le modèle sort du périmètre cash long, qu'une allocation manque ou que plusieurs positions ne sont pas réconciliées.
 
@@ -134,7 +134,8 @@ Règles :
 - aucun fallback silencieux ;
 - zéro distinct d'absence ;
 - timestamp obligatoire pour les données de marché ;
-- instrument, place et devise réconciliés ;
+- heure d'évaluation UTC valide obligatoire dès qu'une source temporelle est fournie ;
+- identifiant de source, instrument, place, devise et caractère critique obligatoires et réconciliés ;
 - donnée stale jamais présentée comme actuelle ;
 - conflit entre sources conservé et visible ;
 - `data_ready` nécessaire pour toute conclusion dépendante de la donnée ;

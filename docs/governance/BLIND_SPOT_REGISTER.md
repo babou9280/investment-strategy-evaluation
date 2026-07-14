@@ -149,9 +149,12 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-059 | P0 | Cost Gate / temps | Source observée après l'heure d'évaluation classée actuelle | Utilisation d'une donnée qui n'existait pas encore | validated | `snapshot_temporally_inconsistent` et constat bloquant ; régression exact-head, head `faafd3`, run `#612` |
 | BS-060 | P1 | Cost Gate / temps | Source non critique raccourcissant l'expiration de tout le snapshot | Constats indépendants invalidés trop tôt | validated | `expires_at_utc` limité aux sources critiques et comparaison temporelle testée, head `faafd3`, run `#612` |
 | BS-061 | P0 | Cost Gate / entrées | Ledger, sources ou contraintes fournis comme objet puis assimilés à une liste vide | Hold, provenance ou contrainte matérielle supprimés silencieusement | validated | Non-tableaux, éléments mal formés et identifiants de source/contrainte dupliqués rejetés ; holds, sources, contraintes et exclusions testés, head `faafd3`, run `#612` |
-| BS-062 | P0 | Cost Gate / devise | Frais FX non nuls malgré une devise de compte identique à la devise de cotation | Friction et cash sans événement de change réel | validated | Oracle EUR/USD cohérent et conflit même devise/FX non nul bloqué, head `faafd3`, run `#612` |
+| BS-062 | P0 | Cost Gate / devise | Frais FX non nuls malgré une devise de compte identique à la devise de cotation | Friction et cash sans événement de change réel | mitigated | Le contrôle couvre désormais la friction même sans vue cash et conserve le cas FX nul valide ; régressions locales version `3`, CI exact-head requise |
 | BS-063 | P0 | Cost Gate / coûts | Commission ou change d'entrée différents des hypothèses par côté du cycle | Cash immédiat et seuil décrivent deux économies incompatibles | validated | Commission et change d'entrée réconciliés avec le modèle de cycle, head `faafd3`, run `#612` |
-| BS-064 | P0 | Cost Gate / coûts | Taxe ou frais contractuel d'entrée présent mais absent du seuil du cycle | Avantage net surestimé | validated | Synthèse favorable bloquée jusqu'à une contrepartie de cycle explicite, head `faafd3`, run `#612` |
+| BS-064 | P0 | Cost Gate / coûts | Taxe ou frais contractuel d'entrée présent mais absent du seuil du cycle | Avantage net surestimé | mitigated | Cash conflictuel, friction incomplète et Edge Survival indisponible jusqu'à une contrepartie de cycle ; régressions locales version `3`, CI exact-head requise |
+| BS-065 | P0 | Cost Gate / provenance | Source sans instrument, place, devise ou caractère critique explicite classée actuelle | Donnée non attribuable ou expiration arbitraire | mitigated | Identité non vide et booléen `critical` obligatoires ; snapshot incomplet et aucun constat positif d'actualité ; CI exact-head requise |
+| BS-066 | P0 | Cost Gate / temps | Heure d'évaluation absente ou invalide laissant les anciens constats actifs à hash identique | Ancien diagnostic réutilisé sans instant de contrôle valide | mitigated | Snapshot incomplet et `compareSnapshots` rend les anciens constats inutilisables ; régression locale version `3`, CI exact-head requise |
+| BS-067 | P1 | Cost Gate / explication | Régression pouvant faire coexister une source non critique stale et « toutes les sources actuelles » | Explication contradictoire et confiance dégradée | mitigated | Condition conservée et régression explicite ajoutée sans expirer les constats indépendants ; CI exact-head requise |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -193,6 +196,9 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 34. Un coût FX existe-t-il alors que compte et cotation ont la même devise ?
 35. Les coûts immédiats communs se réconcilient-ils avec les hypothèses du cycle ?
 36. Une taxe ou un frais d'entrée manque-t-il au seuil économique complet ?
+37. Chaque source possède-t-elle une identité complète et un caractère critique explicite ?
+38. L'heure d'évaluation est-elle valide avant d'activer ou de réactiver des constats ?
+39. Un constat positif d'actualité contredit-il une source stale encore visible ?
 
 ## 7. Règle de clôture
 

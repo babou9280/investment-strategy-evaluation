@@ -3,11 +3,11 @@
 const crypto = require('crypto');
 const capitalEfficiency = require('../capital_efficiency_lab/engine.js');
 
-const VERSION = 'cost-gate-foundation-2-synthetic';
-const POLICY_VERSION = 'cost-gate-findings-3';
-const SNAPSHOT_VERSION = 'cost-gate-snapshot-3';
+const VERSION = 'cost-gate-foundation-3-synthetic';
+const POLICY_VERSION = 'cost-gate-findings-4';
+const SNAPSHOT_VERSION = 'cost-gate-snapshot-4';
 const ALIGNMENT_VERSION = 'gross-edge-alignment-1';
-const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-3';
+const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-4';
 const TOLERANCE = capitalEfficiency.TOLERANCE;
 
 const SUPPORTED_INSTRUMENTS = new Set(['spot_equity', 'spot_etf']);
@@ -257,6 +257,12 @@ function computeFriction(input, alignment, errors) {
     if (!item.ok) errors[`cost.${key}`] = item.reason;
   });
   if (
+    classified.fxRatePerSide.ok && !classified.fxRatePerSide.missing &&
+    input.accountCurrency === input.quoteCurrency && classified.fxRatePerSide.value > 0
+  ) {
+    errors['cost.fxRatePerSide'] = 'same_currency_fx_cost_conflict';
+  }
+  if (
     classified.sideCount.ok &&
     OPERATION_SCOPE_SIDE_COUNT[input.operationScope] !== classified.sideCount.value
   ) {
@@ -385,7 +391,15 @@ function computeCash(input, errors) {
     return { assessed: true, status: 'cash_basis_conflicted', reason: 'entry_fx_lifecycle_mismatch' };
   }
   if (values.entryContractualFeesEur > 0 || values.entryTaxEur > 0) {
-    return { assessed: true, status: 'cash_basis_conflicted', reason: 'entry_fixed_costs_missing_from_lifecycle_model' };
+    const missingLifecycleComponents = [];
+    if (values.entryContractualFeesEur > 0) missingLifecycleComponents.push('contractual_fees_lifecycle_counterpart');
+    if (values.entryTaxEur > 0) missingLifecycleComponents.push('tax_lifecycle_counterpart');
+    return {
+      assessed: true,
+      status: 'cash_basis_conflicted',
+      reason: 'entry_fixed_costs_missing_from_lifecycle_model',
+      missingLifecycleComponents
+    };
   }
 
   if (!Array.isArray(cash.holds)) errors['cash.holds'] = 'array_required';
@@ -503,7 +517,8 @@ function assessSources(input, errors) {
   }
   const utcPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
   const evaluatedAt = Date.parse(input.evaluatedAtUtc || '');
-  if (!utcPattern.test(input.evaluatedAtUtc || '') || !Number.isFinite(evaluatedAt)) {
+  const invalidEvaluationTime = !utcPattern.test(input.evaluatedAtUtc || '') || !Number.isFinite(evaluatedAt);
+  if (invalidEvaluationTime) {
     errors.evaluatedAtUtc = 'valid_utc_timestamp_required';
   }
   const stale = [];
@@ -511,7 +526,7 @@ function assessSources(input, errors) {
   const future = [];
   const conflicts = [];
   const sourceIds = new Set();
-  let invalidSource = false;
+  let invalidSource = invalidEvaluationTime;
   sources.forEach((source, index) => {
     if (!source || typeof source !== 'object' || Array.isArray(source)) {
       errors[`sources.${index}`] = 'object_required';
@@ -527,7 +542,7 @@ function assessSources(input, errors) {
     } else {
       sourceIds.add(source.sourceId);
     }
-    if (source.critical !== undefined && typeof source.critical !== 'boolean') {
+    if (typeof source.critical !== 'boolean') {
       errors[`sources.${index}.critical`] = 'boolean_required';
       invalidSource = true;
     }
@@ -536,6 +551,12 @@ function assessSources(input, errors) {
       invalidSource = true;
       return;
     }
+    ['instrumentId', 'venueId', 'quoteCurrency'].forEach((field) => {
+      if (typeof source[field] !== 'string' || !source[field]) {
+        errors[`sources.${index}.${field}`] = 'non_empty_string_required';
+        invalidSource = true;
+      }
+    });
     const observed = Date.parse(source.observedAtUtc || '');
     const validUntil = Date.parse(source.validUntilUtc || '');
     if (!utcPattern.test(source.observedAtUtc || '') || !utcPattern.test(source.validUntilUtc || '') || !Number.isFinite(observed) || !Number.isFinite(validUntil)) {
@@ -794,6 +815,15 @@ function compute(inputValue) {
   const alignment = assessAlignment(input);
   const friction = unsupported.length ? { complete: false, missing: [], result: null } : computeFriction(input, alignment, errors);
   const cash = unsupported.length ? { assessed: false, status: 'unsupported_capital_model' } : computeCash(input, errors);
+  if (
+    friction.complete && friction.result &&
+    cash.status === 'cash_basis_conflicted' && cash.reason === 'entry_fixed_costs_missing_from_lifecycle_model'
+  ) {
+    friction.complete = false;
+    friction.knownCostEur = friction.result.results.totalCostEur.value;
+    friction.missing = cash.missingLifecycleComponents || [];
+    friction.result = null;
+  }
   const sourceAssessment = assessSources(input, errors);
 
   if (input.userConstraints !== undefined && !Array.isArray(input.userConstraints)) {
@@ -853,7 +883,7 @@ function compute(inputValue) {
         provenance: 'synthetic_demo'
       }));
     }
-    if (!sourceAssessment.stale.length && !sourceAssessment.future.length && !sourceAssessment.conflicts.length) {
+    if (sourceAssessment.status === 'snapshot_current' && sourceAssessment.stale.length === 0) {
       findings.push(finding('synthetic_sources_current_for_evaluation_time', 'data_quality', 'satisfied', 'informational', {
         provenance: 'synthetic_demo',
         limitations: ['synthetic_only']
@@ -991,7 +1021,7 @@ function compareSnapshots(previousResult, currentResult) {
     return { sameContent: true, oldSnapshot: 'expired', oldFindingsActive: false };
   }
   const unusable = ['snapshot_conflicted', 'snapshot_temporally_inconsistent', 'snapshot_incomplete'].includes(currentResult.snapshot.status) ||
-    currentFindings.some((item) => ['obsolete', 'conflicted'].includes(item.status));
+    currentFindings.some((item) => ['invalid', 'obsolete', 'conflicted'].includes(item.status));
   if (unusable) {
     return { sameContent: true, oldSnapshot: 'unusable', oldFindingsActive: false };
   }

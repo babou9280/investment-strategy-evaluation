@@ -119,7 +119,7 @@ capital_status
 
 Chaque élément du `cash_hold_ledger` possède un `hold_id` unique, un type, un montant et ses indicateurs d'inclusion côté source et côté stratégie. Les anciens agrégats `reserved_cash_eur` et `pending_cash_commitments_eur` peuvent être exposés comme vues, jamais comme déductions indépendantes sans réconciliation.
 
-`source_included_hold_ids[]`, `cash_hold_ledger[]`, `sources[]`, `user_constraints[]` et `cost_exclusions[]` sont des collections typées. Un objet unique ou toute autre valeur non tableau est une entrée invalide, jamais un tableau vide implicite. Chaque source et contrainte possède un identifiant stable et non dupliqué. Les collections économiquement non ordonnées sont triées avant hash et évaluation.
+`source_included_hold_ids[]`, `cash_hold_ledger[]`, `sources[]`, `user_constraints[]` et `cost_exclusions[]` sont des collections typées. Un objet unique ou toute autre valeur non tableau est une entrée invalide, jamais un tableau vide implicite. Chaque source et contrainte possède un identifiant stable et non dupliqué. Chaque source déclare aussi un `instrument_id`, un `venue_id`, une `quote_currency` non vides et un booléen `critical` explicite. Une absence n'est pas assimilée à `critical = true` ou `false`. Les collections économiquement non ordonnées sont triées avant hash et évaluation.
 
 ### Avantage brut
 
@@ -186,7 +186,7 @@ L'expiration agrégée est la plus proche des expirations obligatoires :
 expires_at_utc = min(valid_until_utc des données critiques)
 ```
 
-Une source marquée non critique peut produire son propre constat stale, mais elle ne raccourcit pas `expires_at_utc` et n'expire pas à elle seule tous les autres constats. Si aucune source n'est critique, l'expiration agrégée est `no_automatic_expiry`.
+Une source marquée non critique peut produire son propre constat stale, mais elle ne raccourcit pas `expires_at_utc` et n'expire pas à elle seule tous les autres constats. Dans ce cas, aucun constat affirmant que toutes les sources sont actuelles n'est émis. Si aucune source n'est critique, l'expiration agrégée est `no_automatic_expiry`.
 
 Si une politique manque, la donnée dépendante ne peut pas produire une conclusion actuelle.
 
@@ -197,6 +197,7 @@ Deux données peuvent être individuellement non stale tout en étant incompatib
 Le produit vérifie au minimum :
 
 - fuseau normalisé en UTC ;
+- `evaluated_at_utc` présent, valide et normalisé en UTC dès qu'une source temporelle est fournie ;
 - `observed_at_utc <= evaluated_at_utc` pour toute donnée utilisée ;
 - absence de timestamp futur injustifié ;
 - écart maximal autorisé entre quote, profondeur, FX et capital, défini par politique ;
@@ -207,6 +208,8 @@ Le produit vérifie au minimum :
 Un mélange temporel invalide uniquement les conclusions dépendantes ; les calculs indépendants restent visibles.
 
 Une source observée après l'heure d'évaluation produit `snapshot_temporally_inconsistent` et le constat bloquant `synthetic_source_observed_after_evaluation` dans la fondation synthétique. Elle n'est jamais classée `snapshot_current`.
+
+Une heure d'évaluation absente ou invalide produit `snapshot_incomplete`. Comme cette heure est réévaluée et n'identifie pas le contenu économique, deux évaluations peuvent conserver le même `snapshot_id` ; `compareSnapshots` doit néanmoins rendre les anciens constats inactifs lorsque l'heure courante est invalide.
 
 ## 7. Invalidation
 
@@ -290,7 +293,9 @@ Tester :
 - quantité × prix × devise × nominal économique réconciliés ;
 - source observée après l'évaluation refusée ;
 - expiration agrégée limitée aux sources critiques ;
-- collections et identifiants mal formés refusés ;
+- source non critique stale sans faux constat positif d'actualité globale ;
+- heure d'évaluation absente ou invalide rendant le snapshot incomplet et les anciens constats inactifs ;
+- collections, identifiants de source, instrument, place, devise de cotation et indicateur critique mal formés refusés ;
 - zéro contre absence ;
 - rejet de `NaN`, `Infinity` et `-0` ;
 - couche indépendante encore calculable lorsque la quote manque ;
@@ -313,5 +318,7 @@ Avant donnée externe réelle :
 Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2`, validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` puis synchronisée par le run `#610`, ajoute l'ordre canonique des ensembles et l'inactivation après expiration.
 
 La version `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, exige des identifiants stables et uniques pour les sources et contraintes, et limite l'expiration agrégée aux sources critiques. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté.
+
+La révision locale `cost-gate-snapshot-4` exige l'identité complète et le caractère critique explicite de chaque source, invalide une heure d'évaluation absente ou incorrecte et retire le faux constat global d'actualité lorsqu'une source non critique est stale. Elle reste une prévalidation jusqu'à une CI distante exact-head et son artefact inspecté.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

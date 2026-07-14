@@ -4,7 +4,7 @@
 
 - Branche : `strategy/cost-gate-foundation`
 - Base : `breaktest-bootstrap`
-- Phase : preuve synthétique version `2` exécutée ; synchronisation documentaire et revue finale de PR
+- Phase : durcissement rétrospectif version `3` prévalidé localement ; CI distante requise
 - Publication : interdite
 - Données externes : interdites
 - `main` : hors périmètre
@@ -120,6 +120,8 @@ La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` 
 
 La revue automatisée finale du head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite révélé quatre défauts supplémentaires : nominal économique non réconcilié avec quantité × prix, source observée après l'évaluation, expiration agrégée pilotée par une source non critique et collections mal formées assimilées à des listes vides. L'audit adjacent a reproduit une contradiction base brute/nette contre holds inclus, puis les incohérences devise/FX et coûts d'entrée/cycle. La révision `cost-gate-foundation-2-synthetic` corrige ces causes sur le head `faafd348da55217e96ba67efd9f9434be62725ca` ; le run exact-head `#612` (`29342135098`) et l'artefact `8314518122` inspecté les valident techniquement. La synchronisation documentaire, les réponses aux quatre fils et une dernière revue du head final restent requises.
 
+La revue hostile indépendante du head documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, engagée après l'indisponibilité du quota de revue automatisée, a ensuite trouvé quatre défauts adjacents : conflit même devise/FX dépendant à tort de la présence du cash ; taxe ou frais contractuel laissant la friction et Edge Survival paraître complets ; heure d'évaluation invalide laissant un snapshot paraître actuel ; identité ou caractère critique de source incomplets. Pendant la correction, un cinquième risque de régression a aussi été verrouillé : une source non critique stale ne doit jamais coexister avec un constat positif affirmant que toutes les sources sont actuelles. La révision locale `cost-gate-foundation-3-synthetic` ajoute les garde-fous et régressions correspondants. Elle n'est pas validée à distance tant qu'un nouveau head exact, sa CI et son artefact n'ont pas été inspectés.
+
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 
 La preuve couvre aussi :
@@ -155,8 +157,12 @@ Ajouter :
 - expiration agrégée limitée aux sources critiques ;
 - rejet des collections non-tableaux ;
 - cohérence devise compte/cotation et coûts FX ;
+- conflit même devise/FX refusé même sans vue cash et cas même devise/FX nul conservé valide ;
 - réconciliation commission et change entre cash d'entrée et coût du cycle ;
-- refus explicite des taxes ou frais d'entrée non modélisés dans le cycle ;
+- refus explicite des taxes ou frais d'entrée non modélisés dans le cycle, avec friction incomplète et Edge Survival non évalué ;
+- identité complète, indicateur critique explicite et heure d'évaluation valide pour toute source ;
+- absence de constat positif d'actualité lorsqu'une source non critique est stale ;
+- inactivation des anciens constats lorsque l'heure d'évaluation est invalide à contenu identique ;
 - ordres en attente ;
 - snapshot déterministe et identité d'instance séparée ;
 - invalidation après changement ;
@@ -179,10 +185,10 @@ Ajouter :
 Révision courante :
 
 ```text
-cost-gate-foundation-2-synthetic
-cost-gate-snapshot-3
-cost-gate-findings-3
-cost-gate-findings-catalog-3
+cost-gate-foundation-3-synthetic
+cost-gate-snapshot-4
+cost-gate-findings-4
+cost-gate-findings-catalog-4
 ```
 
 Ce numéro identifie uniquement la preuve synthétique restreinte. Il ne nomme pas un produit prêt à publier.

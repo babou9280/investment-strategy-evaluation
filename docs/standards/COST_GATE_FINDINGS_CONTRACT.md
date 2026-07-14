@@ -148,6 +148,7 @@ Aucun de ces identifiants n'est un titre destiné à l'utilisateur. Les migratio
 - entrées valides ;
 - snapshot utilisable ;
 - toutes les données critiques prêtes, ou un snapshot `manual_assumptions_only` qui ne revendique aucune actualité de marché ;
+- friction de cycle complète, sans composante d'entrée connue mais absente du modèle économique du cycle ;
 - capital faisable dans le modèle supporté, après plafonnement par le cash réglé réconcilié **et** l'allocation de stratégie déclarée ;
 - avantage au-dessus du seuil lorsque l'avantage est évalué et correctement aligné ;
 - contraintes utilisateur calculables et satisfaites ;
@@ -177,6 +178,8 @@ Si une quote manque mais que les commissions contractuelles sont disponibles :
 - synthèse globale : ne peut pas être favorable si la donnée manquante est critique.
 
 Le produit ne remplace pas la donnée manquante par zéro.
+
+Une taxe ou un frais contractuel d'entrée non nul sans contrepartie de cycle suit la même règle : le cash immédiat peut signaler le conflit, mais la friction reste incomplète, le seuil complet indisponible et Edge Survival `insufficient_data`. Un constat calculé sur le seul sous-total connu ne peut pas être présenté comme une survie après toutes les frictions déclarées.
 
 ## 7. État exact au seuil
 
@@ -312,6 +315,10 @@ Tester :
 - capital suffisant mais avantage absorbé ;
 - snapshot expiré ;
 - conflit de devise ;
+- conflit même devise / FX non nul sans vue cash ;
+- taxe ou frais contractuel d'entrée sans contrepartie de cycle, avec friction incomplète et Edge Survival indisponible ;
+- source incomplète ou heure d'évaluation invalide sans constat positif d'actualité ;
+- source non critique stale sans constat contradictoire affirmant que toutes les sources sont actuelles ;
 - couche non applicable ;
 - domaine non supporté avec synthèse `unsupported_scope` ;
 - donnée manquante dans une couche et fait dur indépendant conservé ;
@@ -326,5 +333,7 @@ Tester :
 ## 15. Statut
 
 Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. La version `3` ajoute les constats bloquants de cohérence temporelle, cash et coûts. CG-12 et les régressions ciblées réussissent au head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` dans le run `#612` ; l'artefact a été inspecté. La synchronisation documentaire exact-head reste requise avant clôture de la PR.
+
+La révision locale de politique et catalogue `4` empêche un constat Edge Survival sur une friction connue incomplète, exige une évaluation temporelle et une identité de source valides, et interdit le constat positif d'actualité globale dès qu'une source est stale. Cette révision n'est pas encore une preuve distante.
 
 Toute extension de domaine ou exposition utilisateur doit conserver ce contrat, ajouter ses propres constats et faire l'objet d'une nouvelle validation.
