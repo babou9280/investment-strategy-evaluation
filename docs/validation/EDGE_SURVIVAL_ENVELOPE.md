@@ -3,16 +3,16 @@
 ## Statut
 
 - Branche : `strategy/edge-survival-envelope`
-- Head fonctionnel exact inspecté : `714e9628e893d419474c00a9c982f25492b7a164`
+- Head fonctionnel exact inspecté : `7b6f608231aa2e9ef6a2f8071ff32c2067808d9a`
 - Pull request : `#23`
-- GitHub Actions : run `29330727579` (`#540`)
+- GitHub Actions : run `29331116076` (`#546`)
 - Conclusion : `success`
 - Moteur : `capital-efficiency-lab-4-optional-annual`
 - Nature de la preuve : technique, quantitative, responsive et interne
 - Publication externe : non autorisée
 - Cost Gate : direction stratégique documentée, aucune implémentation dans ce run
 
-Une nouvelle exécution exact-head reste obligatoire après toute synchronisation documentaire ultérieure.
+Le run `#546` valide le head fonctionnel ci-dessus. Une exécution exact-head reste obligatoire après la présente synchronisation documentaire.
 
 ## Objet validé
 
@@ -113,6 +113,8 @@ Aucune hypothèse ne produit de marge positive
 ```
 
 Il ne dit plus que les frictions ne sont pas couvertes, car une hypothèse exactement au seuil couvre les frictions sans produire de marge positive.
+
+Le cas strictement inférieur reste distinct : avec une borne haute sous `1,10 %`, l'état demeure `fails_full_range` et les trois marges sont négatives. Les oracles moteur et navigateur vérifient aussi l'absence de l'ancienne phrase et de toute valeur non finie.
 
 ## Commandes exécutées dans GitHub Actions
 
@@ -219,11 +221,14 @@ Les captures Chromium pleine page pouvaient répéter artificiellement le skip l
 
 Le générateur applique désormais uniquement pendant la capture :
 
-- un focus hors écran ;
-- le masquage du skip link ;
-- le passage du header sticky en flux normal.
+- neutralisation du focus créé par l'automatisation via une cible hors écran ;
+- retour en haut de page ;
+- mesure géométrique prouvant que le skip link non focalisé est déjà hors du viewport ;
+- retrait temporaire du skip link de l'arbre de rendu avec `display: none !important` ;
+- passage temporaire du header sticky en flux normal pour éviter sa répétition lors de l'assemblage Chromium ;
+- restauration exacte des attributs `style` dans un bloc `finally`.
 
-Ces overrides sont retirés immédiatement après la capture. Le comportement réel du skip link reste vérifié séparément par le test clavier.
+Le comportement réel du skip link n'est pas modifié : le test navigateur confirme qu'il reste le premier élément atteint par `Tab` aux quatre largeurs. Une assertion DOM avant la capture ne suffit pas ; les images finales de l'artefact exact sont inspectées séparément.
 
 ## Captures inspectées
 
@@ -238,7 +243,7 @@ L'artefact du run contient, à 390, 768 et 1 440 pixels :
 - fourchette dégénérée au seuil ;
 - vue pleine page du scénario principal.
 
-Inspection interne du run `29330727579` :
+Inspection interne du run `29331116076` :
 
 - hiérarchie financière claire ;
 - titre complet visible ;
@@ -266,9 +271,9 @@ Les suites H1, H2, C1, C2, C3, C4, Q0, Capital Efficiency, point/range et matric
 ## Artefact
 
 - Nom : `breaktest-validation-logs`
-- Run : `29330727579`
-- Head : `714e9628e893d419474c00a9c982f25492b7a164`
-- Digest fourni par GitHub : `sha256:ba78f49b8f39ae270ffa30864ae8498a148d3157d8c8f09c040cec3ae3b6c1e2`
+- Run : `29331116076`
+- Head : `7b6f608231aa2e9ef6a2f8071ff32c2067808d9a`
+- Digest fourni par GitHub : `sha256:3109774af4802345abc4a32c4bdf0034db1adf9f970059eb1c5f5daab2c8c9fc`
 
 ## Limites restantes
 
