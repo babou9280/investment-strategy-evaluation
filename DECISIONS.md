@@ -161,3 +161,62 @@
 - Statut : active
 - Décision : la différenciation recherchée combine calcul inverse, plancher variable, rétention de l'avantage, provenance, cas limites, auditabilité et expérience compréhensible.
 - Conséquence : aucune métrique, visualisation ou fonction n'entre dans le produit uniquement parce qu'elle paraît sophistiquée ou valorisante pour une candidature.
+
+## D028 — Les livrables de critique sont interactifs et hors ligne
+
+- Statut : **active, validée par Ayman le 14 juillet 2026**
+- Décision : les futurs livrables principaux remis pour critique doivent être de véritables expériences HTML navigables, utilisables sans internet et sans navigation lourde ; des images seules ne sont pas recevables.
+- Conséquence : privilégier un fichier HTML autonome ou, lorsque la séparation des ressources est nécessaire, un bundle ZIP local avec `index.html`, chemins relatifs, manifeste, empreintes et aucune dépendance distante.
+- Gate : aucun package n'est remis comme version aboutie avant stabilisation rigoureuse du fond, des calculs, de l'UX et des preuves sur le package exact.
+
+## D029 — La recherche des angles morts est permanente et multidisciplinaire
+
+- Statut : **active, validée par Ayman le 14 juillet 2026**
+- Décision : jusqu'à déclaration explicite de fin du projet, ChatGPT et Codex doivent rechercher activement les défauts visibles, adjacents et rétrospectifs dans tous les domaines liés au projet, et pas seulement dans les calculs.
+- Domaines minimaux : finance, quantitatif, données, produit, UX, accessibilité, réglementation, droit, sécurité, ingénierie, business model, marché, validation, distribution, opérations, réputation, valeur académique et gouvernance.
+- Conséquence : toute critique doit produire selon le cas une correction locale, une règle permanente, un test de non-régression, une limite explicite ou un gate de réexamen.
+- Registre d'autorité : `docs/governance/BLIND_SPOT_REGISTER.md`.
+- Limite : une CI verte ne prouve ni l'exhaustivité, ni l'utilité, ni la conformité, ni la demande commerciale.
+
+## D030 — L'avantage brut possède une définition financière stricte
+
+- Statut : active
+- Décision : l'avantage brut demandé par Edge Survival désigne une moyenne brute par opération complète, gains, pertes et opérations nulles inclus, avant les coûts saisis, sur un nominal compatible.
+- Conséquence : taux de réussite, gain moyen des gagnants, CAGR, Sharpe, performance totale du compte, objectif personnel et résultat déjà net ne peuvent jamais servir de substituts silencieux.
+- Contrat : `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md`.
+- Gate : avant toute dérivation automatique, préciser estimateur, échantillon, période, univers, base brute/nette et provenance.
+
+## D031 — Capital et fréquence sont réellement facultatifs pour le diagnostic par opération
+
+- Statut : active
+- Décision : le seuil, le plancher et Edge Survival doivent fonctionner sans capital ni fréquence mensuelle.
+- Conséquence : l'absence de fréquence rend les sorties annuelles indisponibles avec `frequency_missing` ; l'absence de capital rend uniquement les ratios au capital indisponibles avec `capital_missing`.
+- Interdiction : aucun défaut silencieux à quatre opérations mensuelles ou à un capital fictif.
+
+## D032 — Le formulaire initial reste neutre et les résultats obsolètes disparaissent
+
+- Statut : active
+- Décision : aucune hypothèse financière synthétique ne doit être préremplie comme saisie utilisateur ; achat simple / aller-retour doit être choisi explicitement.
+- Conséquence : le scénario de démonstration est chargé par une action volontaire et marqué `synthetic_demo`.
+- Règle de fraîcheur : toute modification d'entrée masque immédiatement le résultat précédent et demande un nouveau calcul.
+- Justification : éviter ancrage, provenance fausse et coexistence d'un diagnostic avec des hypothèses déjà modifiées.
+
+## D033 — Une frontière mathématique ne prouve pas la faisabilité du capital
+
+- Statut : active comme limite et direction future, non implémentée
+- Décision : distinguer capital de référence, capital alloué, cash disponible, nominal réservé et exposition avant de qualifier une taille frontière de faisable.
+- Conséquence : le produit actuel ne doit ni supposer un levier, ni affirmer qu'une frontière tient dans le capital disponible.
+- Contrat futur : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+- Gate : stabiliser Edge Survival, valider l'utilité de cette information, définir les positions simultanées, puis réutiliser C1/C4.
+
+## D034 — Breaktest Cost Gate devient la trajectoire pré-trade validée
+
+- Statut : **active comme direction stratégique, validée par Ayman le 14 juillet 2026 ; non implémentée et non commercialement validée**
+- Décision : Breaktest doit pouvoir évoluer vers une couche de contrôle pré-trade personnalisée qui confronte un trade envisagé aux frictions, au capital et cash libres, à la taille proposée, à la liquidité, aux paramètres utilisateur et à un avantage brut ou une fourchette explicitement fournis.
+- Articulation : Cost Intelligence, Capital Efficiency et Edge Survival Envelope restent le noyau analytique de cette future couche ; leur travail en cours n'est ni annulé ni interrompu.
+- États de travail autorisés : `compatible_under_assumptions`, `adjustment_required`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `insufficient_data`.
+- Data Quality Gate : toute conclusion utilisant une donnée externe exige source, timestamp, fraîcheur, instrument, place, devise, couverture, provenance, valeurs manquantes, incertitude, licence et domaine de validité visibles.
+- Interdictions actuelles : aucune donnée temps réel, connexion courtier, compte, stockage, réseau, exécution, probabilité d'exécution, ordre limite conseillé ou recommandation personnalisée sans décisions et validations distinctes.
+- Frontière réglementaire : le vocabulaire « exécuter », « rejeter », « acheter », « vendre », « ordre limite conseillé », « taille optimale » ou équivalent prescriptif reste interdit avant revue juridique et produit.
+- Contrat de direction : `docs/product/COST_GATE_DIRECTION.md`.
+- Gates : stabilisation Edge Survival, test utilisateur, faisabilité du capital, prototype synthétique manuel, Data Quality Gate, validation économique et revue juridique avant toute extension externe.

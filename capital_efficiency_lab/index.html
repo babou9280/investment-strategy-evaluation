@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Laboratoire interne Breaktest Capital Efficiency : seuil brut, avantage conservé et contraintes économiques après frictions.">
+  <meta name="description" content="Laboratoire interne Breaktest Capital Efficiency : seuil brut, avantage conservé et stabilité d'une fourchette après frictions.">
   <title>Breaktest — Capital Efficiency Lab</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -19,11 +19,11 @@
   <main>
     <section class="hero shell">
       <p class="eyebrow">CAPITAL EFFICIENCY</p>
-      <h1>Quel rendement brut doit survivre à tes frictions&nbsp;?</h1>
-      <p>Commence par le seuil imposé par tes coûts. Ajoute ensuite, seulement si tu en disposes, une hypothèse d’avantage brut pour mesurer la marge qui subsiste et résoudre une contrainte précise.</p>
+      <h1>Ton rendement brut résiste-t-il vraiment aux frictions&nbsp;?</h1>
+      <p>Commence par le rendement minimal nécessaire pour couvrir les coûts. Ajoute ensuite, seulement si tu en disposes, une valeur ou une fourchette brute pour mesurer la marge qui subsiste — sans transformer une hypothèse en prévision.</p>
       <ol class="journey" aria-label="Parcours en trois étapes">
         <li><span>1</span><strong>Calcule le seuil</strong><small>Sans inventer de rendement.</small></li>
-        <li><span>2</span><strong>Teste un avantage</strong><small>Optionnel et explicitement sourcé.</small></li>
+        <li><span>2</span><strong>Teste une hypothèse</strong><small>Valeur unique ou fourchette explicite.</small></li>
         <li><span>3</span><strong>Résous une contrainte</strong><small>Une seule question à la fois.</small></li>
       </ol>
     </section>
@@ -56,22 +56,22 @@
             <div class="field">
               <label for="commissionPerSideEur">Commission par côté</label>
               <div class="input-unit"><input id="commissionPerSideEur" name="commissionPerSideEur" inputmode="decimal" value="1" aria-describedby="commission-error"><b>EUR</b></div>
-              <p class="field-error" data-error-for="commissionPerSideEur"></p>
+              <p id="commission-error" class="field-error" data-error-for="commissionPerSideEur"></p>
             </div>
             <div class="field">
               <label for="fxRatePerSidePercent">Change par côté</label>
               <div class="input-unit"><input id="fxRatePerSidePercent" name="fxRatePerSidePercent" inputmode="decimal" value="0,25" aria-describedby="fx-error"><b>%</b></div>
-              <p class="field-error" data-error-for="fxRatePerSidePercent"></p>
+              <p id="fx-error" class="field-error" data-error-for="fxRatePerSidePercent"></p>
             </div>
             <div class="field">
               <label for="spreadTotalPercent">Spread total</label>
               <div class="input-unit"><input id="spreadTotalPercent" name="spreadTotalPercent" inputmode="decimal" value="0,10" aria-describedby="spread-error"><b>%</b></div>
-              <p class="field-error" data-error-for="spreadTotalPercent"></p>
+              <p id="spread-error" class="field-error" data-error-for="spreadTotalPercent"></p>
             </div>
             <div class="field">
               <label for="slippageTotalPercent">Slippage total</label>
               <div class="input-unit"><input id="slippageTotalPercent" name="slippageTotalPercent" inputmode="decimal" value="0,10" aria-describedby="slippage-error"><b>%</b></div>
-              <p class="field-error" data-error-for="slippageTotalPercent"></p>
+              <p id="slippage-error" class="field-error" data-error-for="slippageTotalPercent"></p>
             </div>
           </div>
           <p class="section-note">Commission et change sont saisis par côté. Spread et slippage couvrent déjà le scénario complet.</p>
@@ -97,11 +97,47 @@
         <details id="edge-details" class="progressive-section">
           <summary><span><b>Tester un avantage brut</b><small>Étape 2 — facultatif, jamais prédit par Breaktest</small></span></summary>
           <div class="details-content">
-            <div class="field featured-field">
-              <label for="grossEdgePercent">Rendement brut moyen supposé</label>
-              <div class="input-unit"><input id="grossEdgePercent" name="grossEdgePercent" inputmode="decimal" placeholder="ex. 2,00" aria-describedby="gross-help gross-error"><b>% / opération</b></div>
-              <small id="gross-help">Cette hypothèse doit venir de ta méthode, d’un test ou d’une mesure externe. Breaktest ne l’estime pas.</small>
-              <p class="field-error" data-error-for="grossEdgePercent"></p>
+            <fieldset class="field segmented-field edge-mode-field">
+              <legend>Mode d’hypothèse</legend>
+              <div class="segmented three-way">
+                <label><input type="radio" name="edgeInputMode" value="threshold" checked><span>Seuil seul</span></label>
+                <label><input type="radio" name="edgeInputMode" value="point"><span>Valeur unique</span></label>
+                <label><input type="radio" name="edgeInputMode" value="range"><span>Fourchette</span></label>
+              </div>
+              <p class="section-note">Le choix du mode est explicite. Breaktest ne complète ni ne réordonne une fourchette.</p>
+            </fieldset>
+
+            <div id="point-edge-fields" class="edge-mode-panel" hidden>
+              <div class="field featured-field">
+                <label for="grossEdgePercent">Rendement brut moyen supposé</label>
+                <div class="input-unit"><input id="grossEdgePercent" name="grossEdgePercent" inputmode="decimal" placeholder="ex. 2,00" aria-describedby="gross-help gross-error"><b>% / opération</b></div>
+                <small id="gross-help">Cette hypothèse doit venir de ta méthode, d’un test ou d’une mesure externe. Breaktest ne l’estime pas.</small>
+                <p id="gross-error" class="field-error" data-error-for="grossEdgePercent"></p>
+              </div>
+            </div>
+
+            <div id="range-edge-fields" class="edge-mode-panel" hidden>
+              <div class="range-intro">
+                <strong>Trois hypothèses, aucune probabilité.</strong>
+                <p>La borne basse, le scénario central et la borne haute sont saisis par toi. Ils ne forment ni un intervalle de confiance ni une prévision.</p>
+              </div>
+              <div class="form-grid range-input-grid">
+                <div class="field">
+                  <label for="grossEdgeLowPercent">Hypothèse basse</label>
+                  <div class="input-unit"><input id="grossEdgeLowPercent" name="grossEdgeLowPercent" inputmode="decimal" placeholder="ex. 0,80" aria-describedby="range-low-error"><b>% / opération</b></div>
+                  <p id="range-low-error" class="field-error" data-error-for="grossEdgeLowPercent"></p>
+                </div>
+                <div class="field featured-field">
+                  <label for="grossEdgeBasePercent">Hypothèse centrale</label>
+                  <div class="input-unit"><input id="grossEdgeBasePercent" name="grossEdgeBasePercent" inputmode="decimal" placeholder="ex. 2,00" aria-describedby="range-base-error"><b>% / opération</b></div>
+                  <p id="range-base-error" class="field-error" data-error-for="grossEdgeBasePercent"></p>
+                </div>
+                <div class="field">
+                  <label for="grossEdgeHighPercent">Hypothèse haute</label>
+                  <div class="input-unit"><input id="grossEdgeHighPercent" name="grossEdgeHighPercent" inputmode="decimal" placeholder="ex. 3,00" aria-describedby="range-high-error"><b>% / opération</b></div>
+                  <p id="range-high-error" class="field-error" data-error-for="grossEdgeHighPercent"></p>
+                </div>
+              </div>
             </div>
           </div>
         </details>
@@ -164,13 +200,25 @@
         </div>
 
         <section id="edge-section" class="result-section" hidden>
-          <div class="section-title"><h3>Ce qui reste du rendement brut</h3><p>Brut saisi − frictions = marge nette.</p></div>
+          <div class="section-title"><h3>Ce qui reste de la valeur brute unique</h3><p>Brut saisi − frictions = marge nette.</p></div>
           <div class="edge-grid">
             <article class="metric emphasis"><span>Part conservée</span><strong id="retained-edge-value">—</strong><small id="retained-edge-note">—</small></article>
             <article class="metric"><span>Marge nette</span><strong id="net-edge-value">—</strong><small id="net-edge-eur">—</small></article>
             <article class="metric"><span>Part absorbée</span><strong id="absorbed-edge-value">—</strong><small>du rendement brut saisi</small></article>
             <article class="metric"><span>Rendement brut saisi</span><strong id="gross-edge-value">—</strong><small id="gross-edge-eur">—</small></article>
           </div>
+        </section>
+
+        <section id="range-section" class="result-section" hidden>
+          <div class="section-title"><h3>Stabilité dans la fourchette saisie</h3><p>Hypothèses utilisateur — aucune probabilité.</p></div>
+          <p id="range-summary" class="range-summary"></p>
+          <div class="range-grid" aria-label="Marges basse, centrale et haute">
+            <article class="range-card" data-range="low"><span>Hypothèse basse</span><strong id="range-low-net">—</strong><small id="range-low-detail">—</small></article>
+            <article class="range-card central" data-range="base"><span>Hypothèse centrale</span><strong id="range-base-net">—</strong><small id="range-base-detail">—</small></article>
+            <article class="range-card" data-range="high"><span>Hypothèse haute</span><strong id="range-high-net">—</strong><small id="range-high-detail">—</small></article>
+          </div>
+          <p id="range-floor-note" class="interpretation-note"></p>
+          <p id="range-shape-note" class="range-shape-note"></p>
         </section>
 
         <section id="constraint-section" class="result-section" hidden>
@@ -195,8 +243,7 @@
             </div>
             <p id="equal-order-note" class="interpretation-note"></p>
             <div class="section-title compact-title"><h3>Sensibilité à la taille</h3><p>Les autres hypothèses restent constantes.</p></div>
-            <div id="sensitivity-chart" class="sensitivity-chart" role="img" aria-label="Évolution du seuil brut nécessaire selon la taille d'ordre"></div>
-            <p class="interpretation-note">Quand le montant augmente, le seuil converge vers le plancher variable. Ce plancher reste incompressible sous les hypothèses saisies.</p>
+            <div id="sensitivity-chart" class="sensitivity-chart" role="img" aria-label="Évolution du seuil brut selon la taille d’ordre"></div>
           </div>
         </details>
 
@@ -205,6 +252,7 @@
           <div class="disclosure-content">
             <dl class="evidence-list">
               <div><dt>Version du calcul</dt><dd id="calculation-version">—</dd></div>
+              <div><dt>Mode d’hypothèse</dt><dd id="evidence-mode">—</dd></div>
               <div><dt>Provenance</dt><dd id="evidence-provenance">—</dd></div>
               <div><dt>Convention</dt><dd id="side-convention">—</dd></div>
               <div><dt>Projection annuelle</dt><dd>Arithmétique, sans capitalisation ni positions simultanées.</dd></div>
@@ -221,5 +269,6 @@
   <div id="result-live" class="sr-only" aria-live="polite"></div>
   <script src="engine.js"></script>
   <script src="app.js"></script>
+  <script src="result_freshness.js"></script>
 </body>
 </html>

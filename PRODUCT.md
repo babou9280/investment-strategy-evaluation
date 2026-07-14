@@ -1,208 +1,359 @@
 # Breaktest — définition actuelle du produit
 
 - Direction validée : 13 juillet 2026
-- Raffinement produit actif : 13 juillet 2026
-- Phase : conception et prototype interne avant validation commerciale externe
-- Nom de travail : Breaktest Cost Intelligence
+- Raffinement actif : Capital Efficiency et Edge Survival
+- Extension stratégique validée : Breaktest Cost Gate, 14 juillet 2026
+- Phase : prototype interne, revue hostile et validation technique avant tout test commercial externe
+- Nom de travail actuel : **Breaktest Cost Intelligence**
+- Nom de travail futur : **Breaktest Cost Gate**
 
-## Vision
+## 1. Vision
 
-Breaktest devient une application web installable qui aide les investisseurs particuliers à comprendre si un avantage brut, une méthode répétable ou un plan d'investissement conserve une marge économique après commissions, change, spread, slippage, frais fixes et rotation.
+Breaktest aide un investisseur autonome à comprendre si une méthode, une opération répétée ou un avantage brut conserve une marge économique après les frictions réellement pertinentes pour son scénario.
 
-Le calcul des coûts reste nécessaire, mais n'est plus considéré comme une proposition de valeur suffisante à lui seul.
+La promesse n'est plus « additionner des frais ».
 
-## Promesse actuelle
+> Breaktest montre le rendement brut nécessaire pour couvrir les frictions, ce qui reste d'un avantage lorsqu'il est fourni, ce qui peut être dilué par la taille et ce qui constitue un plancher structurel.
 
-> Montrer si un avantage brut survit aux frictions avec le capital réel de l'utilisateur — et quelles contraintes économiques doivent être satisfaites pour qu'il subsiste.
+Breaktest ne recommande pas un instrument, un courtier, une taille, une fréquence ou une transaction. Il ne prédit aucun rendement et n'exécute aucun ordre.
 
-Breaktest ne recommande pas un instrument, ne prédit pas un rendement et n'exécute pas d'ordre. Il transforme les paramètres saisis ou, plus tard, les transactions importées en conséquences économiques explicites.
+À terme, Cost Gate devra appliquer ce noyau à un trade envisagé avant envoi, en tenant compte du capital libre, de la taille proposée, de la liquidité et de la qualité des données, sans transformer automatiquement l'analyse en recommandation.
 
-## Utilisateur cible initial
+## 2. Utilisateur cible initial
 
-Investisseur ou trader autonome :
+Investisseur ou trader autonome qui :
 
-- capital approximatif de 2 000 à 50 000 EUR ;
-- plusieurs opérations, versements ou rééquilibrages par mois ;
-- applique une méthode répétable, même simple ;
-- connaît ou peut estimer un rendement brut moyen par opération, ou souhaite connaître le seuil brut imposé par ses coûts ;
-- exposition possible à plusieurs devises, marchés ou courtiers ;
-- utilise déjà un courtier, un tableur ou un outil de suivi ;
-- veut comprendre sa performance nette sans recevoir de recommandation personnalisée.
+- dispose généralement d'environ 2 000 à 50 000 EUR ;
+- effectue plusieurs opérations, versements ou rééquilibrages ;
+- utilise une méthode répétable, même simple ;
+- subit des commissions, frais de change, spread, slippage ou rotation significatifs ;
+- souhaite distinguer performance brute, frictions et marge nette ;
+- peut parfois fournir une hypothèse brute par opération, mais doit aussi pouvoir utiliser le produit sans cette valeur.
 
-Les capitaux plus faibles constituent un public gratuit pertinent, mais ne sont pas supposés être la principale source de revenu.
+Les très petits capitaux restent un canal gratuit pertinent, mais ne sont pas supposés être le principal segment payeur.
 
-## Problème initial reformulé
+## 3. Problème utilisateur
 
-Les grilles tarifaires indiquent des frais isolés, mais ne répondent pas facilement aux questions suivantes :
+Une grille tarifaire ou un total de frais ne répond pas directement à ces questions :
 
-- quel rendement brut minimal une opération doit-elle produire pour seulement couvrir les frictions ?
-- quelle part d'un avantage brut est absorbée ?
-- une augmentation de la taille peut-elle réellement diluer le problème ?
-- existe-t-il un plancher de coût variable qu'aucune taille d'ordre ne peut éliminer ?
-- quelle taille minimale permet de conserver une part explicite de l'avantage ?
-- quelle fréquence reste sous un budget annuel de friction défini par l'utilisateur ?
-- les coûts affichés par le journal se réconcilient-ils avec le résultat net ?
+- quel rendement brut minimal couvre les frictions de cette opération ?
+- quelle partie du coût peut être diluée par une taille supérieure ?
+- quel plancher proportionnel subsiste quelle que soit la taille ?
+- quelle part d'une hypothèse brute reste nette ?
+- la conclusion demeure-t-elle stable dans une fourchette d'hypothèses ?
+- une contrainte de taille est-elle mathématiquement atteignable ?
+- une fréquence reste-t-elle sous un budget de friction défini par l'utilisateur ?
+- une frontière mathématique dépasse-t-elle potentiellement le capital réellement disponible ?
+- un trade envisagé reste-t-il cohérent avec le cash libre, la liquidité et les données disponibles ?
 
-Le projet académique d'origine a illustré ce mécanisme : une prime brute pouvait subsister alors que la viabilité nette se détériorait sous l'effet du budget de friction et d'une rotation plus élevée. Cet exemple démontre le mécanisme, pas la demande commerciale.
+La faisabilité du capital est documentée mais non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
-## Architecture de valeur
+La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md` et reste non implémentée.
 
-### 1. Géométrie de friction
+## 4. Architecture de valeur
 
-- coût fixe et coût variable ;
+### 4.1 Géométrie de friction
+
+Le produit sépare :
+
+- coût fixe en euros ;
+- coût variable proportionnel ;
+- coût total par opération ;
 - seuil brut de couverture ;
 - plancher variable ;
-- coût par opération, annuel et relatif au capital ;
-- sensibilité à la taille et à la fréquence.
+- sensibilité du seuil à la taille ;
+- coût annuel uniquement lorsque la fréquence est explicitement fournie.
 
-### 2. Edge Survival
+Le coût en euros explique le diagnostic ; il n'est pas le résultat principal.
 
-Lorsque l'utilisateur fournit un avantage brut attendu ou historique :
+### 4.2 Edge Survival — valeur ponctuelle
 
-- marge nette après friction ;
+Lorsque l'utilisateur fournit une valeur brute compatible :
+
+- marge nette en taux et en euros ;
 - part absorbée et part conservée ;
-- PnL brut et net par opération ;
-- taille minimale de couverture ;
-- taille minimale pour conserver une part cible ;
-- impossibilité structurelle lorsque les coûts variables dépassent la capacité de l'avantage.
+- taille frontière pour une marge positive ;
+- taille frontière pour conserver une part choisie ;
+- cas structurellement impossible lorsque le brut ne dépasse pas le plancher variable ;
+- rendement brut requis pour une marge nette cible.
 
-### 3. Frontière de capital et de fréquence
+Une valeur brute positive sans cible de rétention conserve un état explicite. Une égalité numérique au seuil n'est jamais présentée comme une marge positive.
 
-Lorsque le capital et un budget de friction sont disponibles :
+### 4.3 Edge Survival Envelope — fourchette
 
-- budget annuel consommé ;
-- fréquence frontière sous ce budget ;
-- grille taille × fréquence ;
-- scénarios de stress transparents.
+L'utilisateur peut fournir trois hypothèses ordonnées : basse, centrale et haute.
 
-Aucune frontière n'est une recommandation. Chaque résultat dépend des hypothèses saisies et doit conserver son dénominateur, sa formule et sa provenance.
+Breaktest montre :
 
-## Expérience cible
+- les trois marges nettes ;
+- si toute la fourchette dépasse le seuil ;
+- si elle traverse le seuil ;
+- si même la borne haute ne le couvre pas ;
+- sa relation au plancher variable ;
+- les frontières conditionnelles par hypothèse lorsque la question choisie le permet.
 
-### Avant une transaction ou un cycle de stratégie
+Cette fourchette est une analyse de sensibilité déterministe. Elle n'est ni une probabilité, ni une prévision, ni un intervalle de confiance.
 
-1. Saisir capital, montant moyen, fréquence et coûts.
-2. Distinguer coûts fixes, coûts variables et hypothèses de microstructure.
-3. Choisir entre : fournir un avantage brut ou calculer uniquement le seuil nécessaire.
-4. Lire d'abord le seuil brut ou la part de l'avantage conservée.
-5. Comprendre ce qui est diluable avec la taille et ce qui constitue un plancher.
-6. Tester des contraintes de taille, fréquence ou budget sans recommandation automatique.
-7. Partager un résumé des hypothèses et résultats.
+### 4.4 Contraintes inverses
 
-### Après les transactions — uniquement après preuve de demande
+Le produit peut résoudre une seule question avancée à la fois :
 
-1. Importer un historique.
-2. Séparer performance brute, nette observée et scénario simulé.
-3. Ventiler commissions, change, spread, slippage estimé et turnover.
-4. Dériver l'avantage brut depuis les données avec incertitude visible.
-5. Suivre la part d'avantage absorbée dans le temps.
-6. Comparer comptes, marchés, devises et tailles d'ordre.
+- taille frontière pour une marge nette positive ;
+- taille frontière pour une rétention cible ;
+- fréquence frontière sous un budget annuel ;
+- rendement brut requis pour une marge nette cible.
 
-## Produit d'entrée révisé à valider
+Ces sorties décrivent des conditions sous hypothèses. Elles ne constituent aucune prescription.
 
-Le premier produit externe ne doit plus être publié tant que le noyau de valeur n'a pas été testé en interne.
+### 4.5 Faisabilité du capital — couche future
 
-Le prototype interne autorisé comprend :
+Une frontière mathématique peut dépasser le cash réellement disponible ou ignorer le chevauchement de positions.
 
-- moteur déterministe Capital Efficiency ;
-- seuil brut de couverture ;
-- plancher variable ;
-- marge nette et Edge Survival lorsque l'avantage brut est fourni ;
-- tailles minimales calculées ;
-- budget annuel et fréquence frontière ;
-- sensibilité non prescriptive ;
-- scénarios synthétiques ;
-- tests quantitatifs et navigateur.
+La future couche devra distinguer capital de référence, capital alloué, cash disponible, nominal réservé et exposition. Elle devra réutiliser la réservation chronologique du capital déjà validée dans le moteur historique.
 
-Le produit payant complet n'est pas encore construit.
+Cette couche est documentée, non implémentée et conditionnée à une preuve d'utilité utilisateur.
 
-## Actifs techniques réutilisables
+### 4.6 Cost Gate — couche pré-trade future
 
-Le prototype canonique existant reste un actif :
+Cost Gate devra réunir, pour un trade envisagé :
 
-- import CSV local ;
-- scénarios de coûts ;
-- séparation brut/net et observé/simulé ;
+- frictions explicites et implicites ;
+- capital de référence, cash libre et nominal déjà réservé ;
+- taille proposée ;
+- avantage brut ponctuel ou fourchette fournie ;
+- liquidité, spread, type d'ordre et fraîcheur des données lorsque ces informations seront légalement et techniquement disponibles ;
+- contraintes définies par l'utilisateur.
+
+Les résultats de travail restent analytiques :
+
+- `compatible_under_assumptions` ;
+- `adjustment_required` ;
+- `structurally_non_viable` ;
+- `capital_not_feasible` ;
+- `execution_cost_risk` ;
+- `insufficient_data`.
+
+Ces états décrivent la cohérence du scénario dans le modèle. Ils ne sont ni des recommandations, ni des autorisations d'ordre, ni des prévisions.
+
+### 4.7 Data Quality Gate — préalable obligatoire
+
+Aucun résultat dépendant d'une donnée externe ne pourra être produit sans contrôle visible de :
+
+- source ;
+- timestamp et fraîcheur ;
+- instrument, place et devise ;
+- couverture ;
+- provenance observée, contractuelle, estimée ou dérivée ;
+- valeurs manquantes ou contradictoires ;
+- niveau d'incertitude ;
+- licence et droit d'utilisation.
+
+Une donnée stale, partielle, conflictuelle ou indisponible doit limiter ou bloquer la conclusion concernée.
+
+## 5. Définition de l'avantage brut
+
+L'entrée brute actuelle signifie :
+
+> moyenne brute par opération complète, gains, pertes et opérations nulles inclus, avant les coûts saisis, rapportée au nominal compatible avec le scénario.
+
+Elle ne doit pas être remplacée silencieusement par :
+
+- taux de réussite ;
+- gain moyen des seuls gagnants ;
+- CAGR ou rendement annuel ;
+- Sharpe ratio ;
+- performance totale du compte ;
+- résultat déjà net de frais ;
+- objectif personnel de rendement.
+
+Le contrat complet figure dans `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md`.
+
+## 6. Expérience produit active
+
+Le parcours reste progressif :
+
+1. saisir le scénario d'opération et les frictions ;
+2. calculer le seuil sans capital, fréquence ou avantage brut obligatoires ;
+3. ajouter facultativement capital et fréquence pour les sorties annuelles ;
+4. choisir explicitement seuil seul, valeur unique ou fourchette ;
+5. résoudre au maximum une contrainte avancée ;
+6. consulter formule, provenance, convention et limites.
+
+Règles UX actives :
+
+- aucun chiffre financier prérempli comme s'il venait de l'utilisateur ;
+- aucune sélection implicite achat simple / aller-retour ;
+- le bouton d'exemple charge une démonstration explicitement synthétique ;
+- toute modification d'entrée masque immédiatement le résultat devenu obsolète ;
+- erreurs avec focus utile ;
+- clavier, `aria-live`, mouvement réduit et responsive ;
+- vocabulaire concret avant le jargon.
+
+La future expérience Cost Gate devra rester progressive : scénario manuel d'abord, qualité des données ensuite, puis explication du facteur limitant. Elle ne doit pas devenir un mur de paramètres de microstructure.
+
+## 7. État technique des actifs
+
+### Moteur historique
+
+Actif réutilisable avec :
+
+- import/export local ;
 - validation numérique stricte ;
+- séparation observé / simulé ;
+- isolation temporelle ;
 - turnover chronologique ;
-- réservation du capital ;
+- réservation du nominal ;
 - trésorerie réalisée aux sorties ;
-- audit, provenance et export ;
-- tests reproductibles.
+- audit et provenance.
 
-La page de validation fusionnée reste une fondation d'interface et un calculateur Q0, mais elle n'est plus prête à être publiée comme proposition de valeur finale.
+Il n'est pas la feuille de route automatique du nouveau produit.
 
-Ces capacités ne doivent pas dicter la feuille de route.
+### Calculateur Q0
 
-## Positionnement
+Le calculateur descriptif `validation_site/` est techniquement validé et gelé. Sa publication a été suspendue parce que sa valeur restait trop proche d'un totalisateur de coûts.
 
-Breaktest est une couche de **capital-efficiency intelligence**, et non :
+### Capital Efficiency Lab
 
-- un journal de trading complet ;
+`capital_efficiency_lab/` contient le prototype actif :
+
+- moteur déterministe ;
+- modes seuil, point et fourchette ;
+- contraintes inverses ;
+- provenance ;
+- cas limites ;
+- tests Node et Chromium ;
+- captures de revue interne.
+
+La version moteur en cours de validation est `capital-efficiency-lab-4-optional-annual`.
+
+### Cost Gate
+
+Cost Gate est une direction stratégique documentée. Aucun moteur de données de marché, diagnostic pré-trade, compte utilisateur, stockage, réseau, connexion courtier ou exécution n'est actuellement implémenté.
+
+## 8. Positionnement
+
+Breaktest est une couche de **capital-efficiency intelligence** destinée à évoluer vers un **pre-trade cost and feasibility gate** explicable.
+
+Ce n'est pas :
+
 - un courtier ;
 - un robo-advisor ;
+- une application de signaux ;
+- un journal de trading généraliste ;
 - un comparateur sponsorisé opaque ;
 - une certification ;
-- un service de signaux ou de conseil personnalisé ;
+- un terminal institutionnel factice ;
 - un simple totalisateur de frais.
 
-## Différenciation recherchée
+## 9. Différenciation recherchée
 
 À court terme :
 
 - seuil brut et plancher variable ;
-- relation explicite entre avantage brut, capital, taille, fréquence et coûts ;
-- séparation claire entre coûts observés, contractuels et estimés ;
-- contraintes inverses calculées : taille minimale, rendement requis, fréquence frontière ;
-- calcul transparent et auditabilité ;
-- traitement local et confidentialité ;
-- neutralité vis-à-vis des courtiers.
+- analyse de survie de l'avantage ;
+- sensibilité basse / centrale / haute sans fausse statistique ;
+- contraintes inverses ;
+- provenance et domaines de validité ;
+- traitement local ;
+- calculs auditables ;
+- détection explicite des cas impossibles ;
+- expérience accessible et progressive.
 
-À long terme, uniquement si validé :
+À long terme, uniquement après validation :
 
 - dérivation de l'avantage depuis des historiques réels ;
-- intervalles d'incertitude adaptés aux données ;
+- incertitude statistique adaptée aux données ;
+- faisabilité du capital et positions simultanées ;
+- contrôle pré-trade Cost Gate ;
+- Data Quality Gate ;
 - barèmes versionnés ;
-- parseurs de nombreux courtiers ;
-- historique de coûts et d'Edge Survival ;
-- données d'exécution consenties et agrégées ;
+- parseurs multi-courtiers ;
+- historique d'Edge Survival ;
 - benchmarks indépendants ;
 - API et intégrations.
 
-L'IA et l'interface ne sont pas considérées comme des avantages défendables à elles seules.
+L'IA, l'interface et un calculateur isolé ne sont pas considérés comme des avantages défendables à eux seuls.
 
-## Non-objectifs actuels
+## 10. Livraison future
 
-- recommandation d'achat, de vente ou de conservation ;
+Les livrables remis à Ayman pour critique devront être :
+
+- réellement interactifs ;
+- utilisables hors ligne ;
+- ouverts sans serveur lourd lorsque possible ;
+- fournis en HTML autonome ou bundle ZIP local avec `index.html` ;
+- accompagnés de la méthode, des preuves, des limites, du commit exact et des empreintes.
+
+Les images restent des preuves visuelles, jamais le livrable principal.
+
+## 11. Non-objectifs actuels
+
+- recommandation d'achat, vente ou conservation ;
 - choix automatique d'un courtier ;
-- fréquence ou taille qualifiée d'optimale ;
-- allocation adaptée au profil de risque ;
-- exécution ou transmission d'ordres ;
+- taille ou fréquence qualifiée d'optimale ;
+- profilage de risque ;
+- allocation personnalisée ;
+- transmission ou exécution d'ordres ;
+- ordre limite conseillé ;
+- probabilité d'exécution ;
+- regroupement temporel automatisé ;
+- levier ou marge ;
 - données temps réel payantes ;
+- import réel dans le nouveau produit ;
+- comptes et stockage persistant ;
+- analytics, email ou paiement ;
 - application native ;
-- synchronisation courtier complète ;
-- marketplace ;
-- certification de stratégie ;
+- marketplace ou affiliation ;
 - métriques statistiques avancées sans données suffisantes ;
-- reprise de H3 à H6 sans besoin démontré.
+- reprise automatique de H3 à H6.
 
-## Gate de validation
+## 12. Gates
 
-Avant toute publication externe, le prototype doit démontrer techniquement :
+### Avant fusion technique de la PR active
 
-- formules réconciliées ;
-- cas structurellement impossibles correctement identifiés ;
-- absence de scores arbitraires ;
-- compréhension claire des hypothèses et dénominateurs ;
-- non-régression du moteur historique et du site Q0.
+- contrats réconciliés ;
+- oracles et invariants réussis ;
+- égalités et tolérances cohérentes entre modes ;
+- entrées annuelles réellement facultatives ;
+- résultats obsolètes masqués ;
+- provenance correcte ;
+- Chromium aux largeurs prévues ;
+- non-régression H1–H2/C1–C4 et Q0 ;
+- fichiers canoniques synchronisés ;
+- registre des angles morts mis à jour.
 
-Avant tout développement produit étendu, il faut ensuite obtenir une preuve réelle de :
+### Avant critique externe
 
-- révélation d'une contrainte économique nouvelle pour l'utilisateur ;
-- usage répété ;
+- package HTML hors ligne testé sur sa version exacte ;
+- Safari/iPad vérifié ;
+- compréhension sans coaching ;
+- aucune confusion entre hypothèse, prévision et conseil.
+
+### Avant prototype Cost Gate
+
+- noyau Edge Survival stabilisé ;
+- utilité du diagnostic actuel observée ;
+- contrat de faisabilité du capital validé ;
+- états pré-trade non prescriptifs testés ;
+- Data Quality Gate défini ;
+- scénario synthétique manuel avant toute donnée externe.
+
+### Avant donnée externe
+
+- source, coût, licence et couverture vérifiés ;
+- fraîcheur et fallback contractuels ;
+- sécurité et confidentialité ;
+- kill switch ;
+- décision explicite d'Ayman.
+
+### Avant développement commercial étendu
+
+- révélation d'une contrainte économique nouvelle ;
+- seconde utilisation ;
 - demande d'import ou de suivi ;
 - paiement réel ;
 - automatisation suffisante ;
-- valeur perçue supérieure au prix.
+- valeur perçue supérieure au prix ;
+- test capable de conduire à l'abandon.
 
-Les formules détaillées figurent dans `docs/standards/EDGE_SURVIVAL_CONTRACT.md`. Le noyau produit figure dans `docs/product/CAPITAL_EFFICIENCY_CORE.md`.
+La validation de Cost Gate est stratégique. Elle ne prouve ni demande, ni précision pré-trade, ni disponibilité des données, ni conformité réglementaire.

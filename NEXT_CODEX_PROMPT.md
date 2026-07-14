@@ -1,109 +1,141 @@
-# Prochaine mission Codex — revue interne Capital Efficiency
+# Prochaine mission Codex — Edge Survival Envelope
 
 ## Statut
 
-Le laboratoire Capital Efficiency est implémenté sous `capital_efficiency_lab/` et a réussi une première validation complète dans GitHub Actions.
+Le moteur Capital Efficiency, l'expérience progressive et la matrice de scénarios synthétiques sont fusionnés dans `breaktest-bootstrap`.
 
-La mission suivante n'est pas d'ajouter des fonctionnalités. Elle consiste à transformer la preuve technique en un prototype interne réellement critiquable, sans publication externe.
+La mission active étend le laboratoire avec une fourchette déterministe d'avantage brut afin de réduire la fausse précision d'une valeur ponctuelle.
 
-Branche active : `strategy/capital-efficiency-core` jusqu'à fusion éventuelle de la pull request `#20`.
+- Branche : `strategy/edge-survival-envelope`
+- Base : `breaktest-bootstrap`
+- Publication externe : interdite
+- `main` : strictement hors périmètre
 
-Ne modifie jamais `main`. Ne publie rien. Ne fusionne rien automatiquement.
+Ne fusionne rien automatiquement.
 
 ## Avant de travailler
 
 Lire intégralement :
 
 - `AGENTS.md` ;
-- `PRODUCT.md` ;
-- `QUALITY.md` ;
-- `STATE.md` ;
-- `DECISIONS.md` ;
-- `METHODOLOGY.md` ;
+- les six fichiers canoniques ;
 - `STRATEGY.md` ;
 - `MARKET_EVIDENCE.md` ;
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
 - `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
+- `docs/product/EDGE_SURVIVAL_ENVELOPE.md` ;
 - `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
 - `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
-- `docs/tasks/CAPITAL_EFFICIENCY_LAB.md` ;
-- `docs/validation/CAPITAL_EFFICIENCY_LAB.md` ;
-- le code et les tests de `capital_efficiency_lab/`.
+- `docs/standards/EDGE_RANGE_CONTRACT.md` ;
+- `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
+- `docs/tasks/EDGE_SURVIVAL_ENVELOPE.md` ;
+- les validations, revues, scénarios et fichiers de `capital_efficiency_lab/`.
 
 ## Objectif unique
 
-Effectuer une revue hostile et multidisciplinaire du laboratoire comme si le produit devait être examiné simultanément par :
+Permettre trois modes sans prédire le rendement :
 
-- un utilisateur autonome non expert ;
-- un professionnel de marché ;
-- un responsable produit fintech ;
-- un ingénieur logiciel ;
-- un évaluateur d'école de commerce ou d'ingénierie très sélective.
+1. seuil seulement ;
+2. valeur brute unique ;
+3. fourchette basse, centrale et haute fournie par l'utilisateur.
 
-La revue doit déterminer si une démonstration de 90 secondes montre réellement que Breaktest apporte davantage qu'un calculateur de frais.
+Le produit doit montrer si la conclusion survit dans toute la fourchette, traverse le seuil ou échoue dans toute la fourchette, et distinguer ce qui peut être dilué de ce que le plancher variable rend structurellement impossible.
 
-## Questions obligatoires
+## Contrat
 
-1. Le seuil brut est-il compris sans aide ?
-2. Le plancher variable et le coût fixe diluable sont-ils distingués ?
-3. La part conservée et la marge nette sont-elles réconciliées et prioritaires ?
-4. Une contrainte inverse est-elle utile, conditionnelle et non prescriptive ?
-5. Un cas structurellement impossible est-il compréhensible ?
-6. Les hypothèses, unités, dénominateurs et provenance sont-ils visibles ?
-7. Le produit évite-t-il la fausse précision et la sophistication décorative ?
-8. Le parcours permet-il une critique sérieuse de la valeur commerciale ?
-9. Le projet produit-il une preuve crédible de finance, ingénierie et entrepreneuriat sans exagération ?
-10. Quelle fonction ou formulation devrait être supprimée plutôt qu'ajoutée ?
+Implémente strictement `docs/standards/EDGE_RANGE_CONTRACT.md`.
 
-## Travail autorisé
+Exigences critiques :
 
-- corriger les défauts de calcul ou de contrat ;
-- améliorer la compréhension directe du parcours ;
-- supprimer les éléments redondants ;
-- ajouter des tests de non-régression ;
-- préparer un protocole de revue interne de cinq participants ;
-- préparer des scénarios synthétiques complémentaires strictement nécessaires ;
-- documenter les objections et critères d'abandon ;
-- vérifier Safari/iPad lorsque l'environnement le permet.
+- fourchette complète obligatoire ;
+- `G_low <= G_base <= G_high` ;
+- aucune permutation, déduction ou valeur par défaut silencieuse ;
+- valeurs négatives autorisées si explicites ;
+- égalité au seuil non qualifiée de marge positive ;
+- marges et frontières réconciliées ;
+- version moteur distincte ;
+- rétrocompatibilité du mode point ;
+- aucune valeur non finie ou `-0`.
 
-## Travail interdit
+## Expérience
 
-- publication externe ;
-- import réel ;
-- compte ou stockage persistant ;
-- données ou tarifs de courtier réels ;
-- analytics, email ou paiement ;
-- recommandation, score opaque ou sélection d'actif ;
-- statistiques avancées sans données suffisantes ;
-- reprise H3 à H6 ;
-- modification de `app/Breaktest_Studio.html` ;
-- modification fonctionnelle de `validation_site/` ;
-- développement de marketplace, affiliation ou API.
+Le parcours reste progressif :
 
-## Validation obligatoire
+- le seuil fonctionne seul ;
+- le choix valeur unique/fourchette est facultatif ;
+- la fourchette ne doit pas surcharger le premier écran ;
+- une phrase concrète précède les détails ;
+- afficher les marges basse, centrale et haute ;
+- afficher une seule contrainte inverse à la fois ;
+- montrer provenance, unités, dénominateurs et limites.
 
-Après chaque modification :
+Interdire les mots et concepts suivants comme résultat produit :
 
-- oracles Node ;
-- tests d'invariants ;
-- Chromium à 390, 768, 1024 et 1440 px ;
-- navigation clavier et focus ;
-- absence de débordement ;
-- aucune valeur `NaN`, `Infinity` ou `-0` ;
-- intégrité locale ;
-- syntaxe ;
+- probabilité de succès ;
+- intervalle de confiance ;
+- prévision Breaktest ;
+- scénario optimal ;
+- recommandation de taille, fréquence, actif ou transaction.
+
+## Tests obligatoires
+
+- oracles indépendants des trois modes ;
+- fourchette partielle et ordre invalide ;
+- bornes égales ;
+- égalité au seuil ;
+- survie complète, traversée et échec complet ;
+- relation au plancher variable ;
+- hypothèses négatives et nulles ;
+- coûts fixes nuls ;
+- invariants et monotonies ;
+- matrice synthétique existante inchangée ;
+- Chromium 390, 768, 1024 et 1440 px ;
+- clavier, focus, `aria-live` et absence de débordement ;
+- captures internes des états principaux ;
+- intégrité locale, syntaxe ;
 - non-régressions H1–H2/C1–C4 et Q0.
+
+## Standard de livraison ultérieure
+
+La mission reste en mode `work`. Ne génère pas encore de prétendu livrable final pour Ayman.
+
+Lorsque le fond sera stabilisé et qu'une décision de livraison sera explicitement prise, le livrable principal devra respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
+
+- HTML réellement navigable ;
+- fonctionnement sans internet ;
+- aucun serveur local obligatoire lorsque techniquement évitable ;
+- aucune dépendance distante ;
+- interactions et calculs réels ;
+- provenance, méthode, preuves et limites accessibles ;
+- package critique comprenant au minimum le démonstrateur produit et une vue méthodologie/preuve ;
+- captures conservées uniquement comme artefacts de test, jamais comme substitut au produit.
+
+La préparation technique du futur package est autorisée seulement si elle ne détourne pas le travail de la correction du fond. Aucun bundle à remettre à Ayman ne doit être déclaré prêt avant les gates du standard.
+
+## Interdictions
+
+- aucune donnée réelle, import, courtier ou tarif réel ;
+- aucun compte, stockage, réseau, analytics, email ou paiement ;
+- aucune publication ;
+- aucune statistique avancée ;
+- aucune modification de `app/Breaktest_Studio.html` ;
+- aucune modification fonctionnelle de `validation_site/` ;
+- aucune reprise H3 à H6 ;
+- aucun livrable limité à des images ;
+- aucune appellation `final`, `production_ready` ou `commercially_validated` sans preuves correspondantes.
+
+## Livrables de la mission actuelle
+
+- moteur et interface mis à jour sous `capital_efficiency_lab/` ;
+- tests Node et Chromium ;
+- captures de revue internes ;
+- `docs/validation/EDGE_SURVIVAL_ENVELOPE.md` ;
+- synchronisation canonique minimale fondée sur les exécutions réelles ;
+- aucun package utilisateur remis avant stabilisation rigoureuse du fond.
 
 ## Définition de terminé
 
-La revue interne est prête seulement si :
-
-- le laboratoire est techniquement vert sur le head exact ;
-- les limites et preuves sont synchronisées ;
-- un protocole court permet d'obtenir des observations réelles sans orienter les réponses ;
-- aucune nouvelle affirmation commerciale n'est ajoutée ;
-- les défauts connus sont classés en blocants, importants ou différables ;
-- la prochaine décision demandée à Ayman est unique et réellement nécessaire.
+La mission est terminée uniquement si le head exact est entièrement vert, que les captures ont été inspectées, que la fourchette réduit réellement la fausse précision sans alourdir le parcours, qu'aucune affirmation statistique, commerciale ou réglementaire n'est ajoutée et que la future livraison HTML hors ligne reste conforme au standard sans être produite prématurément.

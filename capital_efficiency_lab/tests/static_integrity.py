@@ -2,7 +2,13 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-files = [ROOT / 'index.html', ROOT / 'styles.css', ROOT / 'engine.js', ROOT / 'app.js']
+files = [
+    ROOT / 'index.html',
+    ROOT / 'styles.css',
+    ROOT / 'engine.js',
+    ROOT / 'app.js',
+    ROOT / 'result_freshness.js',
+]
 for file in files:
     if not file.exists():
         raise AssertionError(f'Missing file: {file}')
