@@ -20,7 +20,8 @@ Pour toute modification matérielle :
 6. créer une règle permanente si le défaut peut revenir ;
 7. ajouter un test ou une preuve ;
 8. propager aux calculs, interface, documents et livrables ;
-9. ne jamais confondre absence de défaut détecté et exhaustivité.
+9. ne jamais confondre absence de défaut détecté et exhaustivité ;
+10. pour toute capture pleine page, ne jamais prendre une assertion DOM avant capture pour preuve du rendu assemblé : inspecter l'image exacte de l'artefact final aux largeurs cibles.
 
 ## 3. Classification
 
@@ -92,8 +93,8 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-002 | P0 | Produit | L'utilisateur peut ne pas disposer d'un avantage brut défendable | Edge Survival inutilisable | open | Tester seuil, point et fourchette ; mesurer source réelle de G |
 | BS-003 | P0 | Finance | Certaines frictions réelles restent hors modèle | Seuil sous-estimé | open | Inventaire par instrument et juridiction avant donnée réelle |
 | BS-004 | P0 | UX / réglementation | Une frontière mathématique peut être comprise comme recommandation | Mauvais usage et risque juridique | mitigated | Revue de langage et observation sans coaching |
-| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | validated | `result_freshness.js`, tests navigateur exact-head et run `29330727579` |
-| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | validated | Oracles point/range, égalité exacte et voisinage des seuils dans le run `29330727579` |
+| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | validated | `result_freshness.js`, tests navigateur exact-head et run `29331116076` |
+| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | validated | Oracles point/range, égalité exacte et voisinage des seuils dans le run `29331116076` |
 | BS-007 | P1 | UX | Densité mobile trop élevée | Abandon | open | Inspection 390/768 et compréhension en moins de 90 secondes |
 | BS-008 | P1 | Navigateur | Safari/iPad non prouvé | Livrable inutilisable par Ayman | open | Exécution réelle avant livraison |
 | BS-009 | P1 | Business | Calcul utile sans usage répété | Faible rétention | open | Deuxième usage non sollicité et demande d'import |
@@ -120,7 +121,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-030 | P1 | Cost Gate / responsabilité | Erreur de source ou calcul sans processus d'incident | Perte de confiance et risque juridique | open | Version, journal d'incident, rollback et communication |
 | BS-031 | P2 | Cost Gate / concurrence | Courtier reproduisant un simple contrôle de frais | Fonction banalisée | open | Différenciation par provenance, capital, sensibilité et réconciliation ex post |
 | BS-032 | P2 | Cost Gate / confidentialité | Portefeuille et intentions d'ordre exposés | Risque utilisateur | open | Local-first, minimisation, modèle de menace et consentement |
-| BS-033 | P1 | Validation visuelle | Capture full-page reproduisant artificiellement éléments fixed/sticky | Fausse critique de l'interface | validated | Overrides strictement capture-only, vrai skip-link testé au clavier et artefacts du run `29330727579` inspectés |
+| BS-033 | P1 | Validation visuelle | Une assertion DOM avant capture ne prouve pas le rendu final pleine page assemblé | CI verte mais preuve visuelle encore fausse | validated | Géométrie vérifiée avant masquage, `display: none` capture-only, styles restaurés, premier `Tab` préservé et images exactes 390/1 440 du run `29331116076` inspectées (`sha256:3109774af4802345abc4a32c4bdf0034db1adf9f970059eb1c5f5daab2c8c9fc`) |
 | BS-034 | P0 | Cost Gate / personnalisation | Contraintes personnalisées glissant vers suitability ou conseil | Changement de régime réglementaire | open | Contrat de personnalisation limité aux paramètres explicites, revue juridique avant données/utilisateurs réels |
 | BS-035 | P0 | Cost Gate / coûts | Tarif dépendant du plan, palier, volume, juridiction ou statut fiscal mal appliqué | Seuil pré-trade faux | open | Barème versionné avec conditions d'éligibilité et refus si contexte incomplet |
 | BS-036 | P0 | Cost Gate / capital | Ordres en attente, cash non réglé, marge ou emprunt de titres ignorés | Faisabilité fausse | open | Snapshot de capital avec statuts de règlement et périmètre instruments explicite |
@@ -150,6 +151,7 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 16. L'avantage brut est-il aligné avec l'instrument, l'horizon et le scénario d'exécution ?
 17. La personnalisation reste-t-elle une application de contraintes explicites, sans profilage de suitability ?
 18. Les coûts conditionnels au plan, au volume et à la juridiction sont-ils correctement identifiés ?
+19. Les images pleine page exactes ont-elles été inspectées, au-delà des seules assertions DOM et du statut CI ?
 
 ## 7. Règle de clôture
 
