@@ -52,6 +52,16 @@ with sync_playwright() as p:
         page.set_default_timeout(10000)
         page.goto(URL)
 
+        # Le skip link reste réellement accessible au premier Tab. La
+        # neutralisation utilisée par les captures ne doit jamais dégrader ce
+        # comportement utilisateur.
+        page.keyboard.press('Tab')
+        assert page.evaluate(
+            'document.activeElement && document.activeElement.classList.contains("skip-link")'
+        )
+        assert page.locator('.skip-link').is_visible()
+        page.evaluate('document.activeElement && document.activeElement.blur()')
+
         assert not page.locator('#annual-details').get_attribute('open')
         assert not page.locator('#edge-details').get_attribute('open')
         assert not page.locator('#constraint-details').get_attribute('open')
@@ -138,8 +148,13 @@ with sync_playwright() as p:
         page.locator('#grossEdgeHighPercent').fill('1,10')
         page.get_by_role('button', name='Tester la stabilité dans la fourchette').click()
         page.locator('#results').wait_for(state='visible')
+        primary_text = page.locator('#primary-result').inner_text()
+        assert 'Aucune hypothèse ne produit de marge positive' in primary_text
+        assert 'Aucune hypothèse ne couvre les frictions' not in primary_text
         assert 'identiques' in page.locator('#range-shape-note').inner_text()
         assert 'ne dépasse pas le seuil' in page.locator('#range-summary').inner_text()
+        for selector in ('#range-low-net', '#range-base-net', '#range-high-net'):
+            assert page.locator(selector).inner_text().strip().startswith('0,00')
         assert_results_clear_of_sticky_header(page)
         assert_no_nonfinite(page)
 
