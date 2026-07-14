@@ -29,6 +29,10 @@ break_even = 1,10 %
 
 Le nominal est économique pour le cycle. Le cash immédiat n'est dérivé que dans les scénarios qui définissent explicitement sa base.
 
+Lorsque la faisabilité du capital est évaluée, le scénario fournit aussi une allocation de stratégie et son capital déjà engagé. Le cash total du compte n'est jamais supposé entièrement disponible pour la stratégie.
+
+Toute conclusion Edge Survival dépendante de `G` exige une clé d'alignement `edge_aligned` selon `GROSS_EDGE_ALIGNMENT_KEY.md`.
+
 ## 3. Scénarios
 
 ### CG-01 — seuil seul, aucune hypothèse brute
@@ -53,8 +57,22 @@ Entrées :
 
 ```text
 G = 2,00 %
-free_settled_cash = 1 000 EUR
-entry_cash_requirement = 505 EUR
+gross_edge_alignment_state = edge_aligned
+notional_basis = expected_execution_consideration
+entry_asset_consideration = 500 EUR
+spread_reference_price_status = included
+slippage_reference_price_status = included
+entry_commission = 1 EUR
+entry_fx_cash_cost = 1,25 EUR
+entry_cash_requirement = 502,25 EUR
+
+available_settled_cash = 1 000 EUR
+available_settled_cash_basis = gross_before_declared_holds
+cash_hold_ledger = []
+user_defined_cash_reserve = 0 EUR
+strategy_capital = 1 000 EUR
+strategy_capital_committed = 0 EUR
+capital_feasibility_cash = 1 000 EUR
 snapshot = manual_assumptions_only
 ```
 
@@ -69,8 +87,7 @@ external_market_data = not_assessed
 summary = no_incompatibility_detected_under_assumptions
 ```
 
-La synthèse précise que la liquidité réelle et l'exécution ne sont pas évaluées.
-
+La synthèse précise que la liquidité réelle, l'actualité de marché et l'exécution ne sont pas évaluées.
 ### CG-03 — exact seuil
 
 Entrées :
@@ -113,8 +130,9 @@ Entrées :
 
 ```text
 G = 2,00 %
-free_settled_cash = 400 EUR
-entry_cash_requirement = 505 EUR
+gross_edge_alignment_state = edge_aligned
+capital_feasibility_cash = 400 EUR
+entry_cash_requirement = 502,25 EUR
 ```
 
 Attendus :
@@ -126,51 +144,59 @@ summary = capital_not_feasible
 ```
 
 Les deux constats restent visibles. Aucun dépôt, levier ou redimensionnement automatique n'est proposé.
-
 ### CG-06 — coût du cycle distinct du cash immédiat
 
 Entrées :
 
 ```text
-operation_scope = round_trip
-lifecycle_friction = 5,50 EUR
+operation_scope = complete_round_trip
+notional_basis = expected_execution_consideration
+entry_asset_consideration = 500 EUR
+spread_reference_price_status = included
+slippage_reference_price_status = included
+
 entry_commission = 1 EUR
 entry_fx_cash_cost = 1,25 EUR
-entry_asset_consideration = 500 EUR
-exit_costs = 2,75 EUR futurs
+future_exit_commission = 1 EUR
+future_exit_fx_cost = 1,25 EUR
+lifecycle_embedded_spread_slippage = 1 EUR
+lifecycle_friction = 5,50 EUR
 ```
 
 Attendus :
 
 ```text
 entry_cash_requirement = 502,25 EUR
+future_exit_explicit_fees = 2,25 EUR
 lifecycle_friction = 5,50 EUR
 ```
 
-Les frais de sortie futurs ne sont pas ajoutés au cash immédiat. Le test doit détecter tout calcul utilisant `505,50 EUR` comme besoin immédiat sans base supplémentaire.
+Le prix attendu de l'actif contient déjà les effets de prix déclarés à l'entrée : spread et slippage ne sont donc pas ajoutés comme lignes de cash. Ils restent dans la mesure économique du cycle parce que `G` est défini avant toutes les frictions modélisées.
 
+Les frais de sortie futurs ne sont pas ajoutés au cash immédiat. L'oracle doit détecter `505,50 EUR`, `505 EUR` ou toute autre somme qui réintroduit des coûts futurs ou incorporés sans base explicite.
 ### CG-07 — spread déjà incorporé au prix ask
 
 Entrées :
 
 ```text
 notional_basis = reference_ask_price
-spread_included_in_reference_price = true
+spread_reference_price_status = included
+slippage_reference_price_status = excluded
 ```
 
 Attendus :
 
-- le spread reste dans l'analyse économique si la méthode le mesure ;
+- le spread peut rester dans l'analyse économique si `G` utilise une base avant spread ;
 - il n'est pas ajouté une deuxième fois à l'engagement cash ;
+- le slippage n'est ajouté au cash que si sa méthode et sa base le justifient ;
 - aucune double soustraction.
-
 ### CG-08 — base de nominal conflictuelle
 
 Entrées :
 
 ```text
 notional_basis = reference_ask_price
-spread_included_in_reference_price = unknown
+spread_reference_price_status = unknown
 ```
 
 Attendus :
@@ -180,11 +206,10 @@ capital_feasibility = conflicted
 finding_code = cash_basis_conflicted
 ```
 
-Les calculs de coût indépendants restent disponibles.
+`unknown` n'est pas transformé en `false`. Les calculs de coût indépendants restent disponibles.
+### CG-09 — quote synthétique stale
 
-### CG-09 — quote stale
-
-Entrées : quote externe expirée ; commissions contractuelles actuelles.
+Entrées : quote `synthetic_demo` expirée ; commissions contractuelles synthétiques encore valides.
 
 Attendus :
 
@@ -193,11 +218,10 @@ data_quality.quote = stale
 commission_cost = calculable
 complete_execution_cost = insufficient_data
 snapshot = snapshot_expired
-summary = insufficient_data
+summary = snapshot_unusable
 ```
 
-La quote stale n'est jamais remplacée par zéro ni qualifiée d'actuelle.
-
+Cette quote sert uniquement à falsifier la politique de fraîcheur. Elle n'est ni réelle ni externe. Elle n'est jamais remplacée par zéro ni qualifiée d'actuelle.
 ### CG-10 — conflit instrument / place / devise
 
 Entrées : coût contractuel pour un instrument ou une place différents du scénario.
@@ -215,33 +239,38 @@ Aucun coût total n'est calculé depuis la source conflictuelle.
 
 Entrées :
 
-- coûts pour aller-retour actions EUR ;
-- `G` provenant d'un rendement annuel de portefeuille ou d'un autre instrument.
+- coûts pour un aller-retour long sur une action EUR ;
+- `G` provenant d'un rendement annuel de portefeuille, d'un autre instrument, d'un autre dénominateur ou de prix d'exécution déjà nets de spread/slippage.
 
 Attendus :
 
 ```text
-edge_input = invalid
+gross_edge_alignment_state = edge_misaligned
+edge_survival = not_assessed
 finding_code = gross_edge_basis_mismatch
 ```
 
-Aucun fallback depuis CAGR, taux de réussite ou alpha.
-
+L'instrument, la place, la direction, la portée, l'horizon, le dénominateur, la base de prix, la devise, les coûts déjà inclus, l'estimateur, la période et la version de règle sont comparés. Aucun fallback depuis CAGR, taux de réussite, alpha ou performance déjà nette.
 ### CG-12 — plusieurs violations simultanées
 
-Entrées :
+Entrées indépendantes :
 
-- quote stale ;
-- cash insuffisant ;
-- `G` sous le plancher.
+- donnée synthétique d'exécution stale, sans effet sur le barème manuel déjà utilisé par la géométrie de friction ;
+- cash de stratégie insuffisant ;
+- `G` aligné au niveau ou sous le plancher manuel.
 
 Attendus :
 
-- trois constats conservés ;
-- facteur principal choisi par politique versionnée ;
-- aucun constat supprimé ;
-- aucune phrase « trade refusé ».
+```text
+execution_data = insufficient_data
+capital_feasibility = breached
+edge_survival = structurally_unreachable
+summary = structurally_non_viable
+```
 
+Les trois constats restent actifs. L'impossibilité structurelle démontrée n'est pas masquée par une donnée manquante dans une autre couche. Si le plancher dépendait lui-même de la donnée stale, le constat structurel resterait `insufficient_data` au lieu d'être inventé.
+
+Aucun constat n'est supprimé et aucune phrase « trade refusé » n'est affichée.
 ### CG-13 — snapshot invalidé par changement de taille
 
 Après calcul, `order_notional` passe de 500 à 600 EUR.
@@ -254,26 +283,57 @@ old_findings = inactive
 recalculation_required = true
 ```
 
-### CG-14 — ordre en attente
+### CG-14 — holds et allocation de stratégie
 
-Entrées :
+Cas A — source brute avant holds :
 
 ```text
 available_settled_cash = 1 000 EUR
-pending_cash_commitments = 600 EUR
+available_settled_cash_basis = gross_before_declared_holds
+pending hold H1 = 600 EUR, included_by_source = false
 cash_reserve = 100 EUR
+strategy_capital = 1 000 EUR
+strategy_capital_committed = 0 EUR
 entry_cash_requirement = 400 EUR
 ```
 
 Attendus :
 
 ```text
-free_settled_cash = 300 EUR
+account_free_settled_cash = 300 EUR
+capital_feasibility_cash = 300 EUR
 capital_feasibility = breached
 ```
 
-Le solde brut de 1 000 EUR ne peut pas être utilisé seul.
+Cas B — la source publie déjà 400 EUR nets de H1 :
 
+```text
+available_settled_cash = 400 EUR
+available_settled_cash_basis = net_of_listed_holds
+source_included_hold_ids = [H1]
+cash_reserve = 100 EUR
+```
+
+Attendu : `H1` n'est pas soustrait une seconde fois ; le cash réconcilié reste 300 EUR.
+
+Cas C — le compte dispose de 1 000 EUR, mais la stratégie n'a plus que 350 EUR d'allocation libre :
+
+```text
+account_free_settled_cash = 1 000 EUR
+strategy_capital = 450 EUR
+strategy_capital_committed = 100 EUR
+entry_cash_requirement = 400 EUR
+```
+
+Attendus :
+
+```text
+strategy_allocation_headroom = 350 EUR
+capital_feasibility_cash = 350 EUR
+capital_feasibility = breached
+```
+
+Le solde brut du compte ne peut jamais contourner un hold déjà identifié ni l'allocation de stratégie déclarée.
 ### CG-15 — modèle non supporté
 
 Entrées : option, vente à découvert ou compte sur marge.
@@ -328,10 +388,15 @@ Pour tous les scénarios :
 - aucune donnée manquante remplacée par zéro ;
 - aucune recommandation ;
 - aucun constat supprimé par la synthèse ;
-- résultats identiques à snapshot et versions identiques ;
-- toute modification d'entrée invalide le snapshot ;
+- résultats identiques à contenu de snapshot et versions identiques ;
+- même contenu donnant le même `snapshot_id`, même si l'instance de calcul change ;
+- toute modification d'entrée invalide le snapshot et rend les anciens constats inactifs ;
 - les couches indépendantes restent calculables ;
-- le domaine non supporté reste visible.
+- aucun `hold_id` déduit deux fois ;
+- `capital_feasibility_cash <= account_free_settled_cash` et `<= strategy_allocation_headroom` ;
+- quantité, prix, devise et nominal réconciliés lorsqu'ils sont présents ;
+- toute conclusion dépendante de `G` exige `edge_aligned` ;
+- le domaine non supporté reste visible avec `unsupported_scope`.
 
 ## 5. Gate d'implémentation
 
