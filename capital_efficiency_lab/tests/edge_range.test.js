@@ -100,6 +100,23 @@ const degenerateAtThreshold = engine.compute({
 });
 assert.equal(degenerateAtThreshold.results.edgeRange.rangeShape, 'degenerate');
 assert.equal(degenerateAtThreshold.results.edgeRange.rangeState, 'fails_full_range');
+for (const key of ['low', 'base', 'high']) {
+  approx(degenerateAtThreshold.results.edgeRange[key].netEdgeRate.value, 0);
+  approx(degenerateAtThreshold.results.edgeRange[key].netEdgeEur.value, 0);
+}
+assert.equal(
+  ['low', 'base', 'high'].some(key => degenerateAtThreshold.results.edgeRange[key].netEdgeRate.value > 0),
+  false
+);
+
+const strictlyBelowThreshold = engine.compute({
+  ...base,
+  grossEdgeLowRate: 0.005,
+  grossEdgeBaseRate: 0.009,
+  grossEdgeHighRate: 0.01
+});
+assert.equal(strictlyBelowThreshold.results.edgeRange.rangeState, 'fails_full_range');
+assert.ok(strictlyBelowThreshold.results.edgeRange.high.netEdgeRate.value < 0);
 
 const underFloor = engine.compute({
   ...base,
