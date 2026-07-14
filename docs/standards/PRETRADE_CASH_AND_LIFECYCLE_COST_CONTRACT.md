@@ -91,7 +91,14 @@ entry_asset_consideration_eur
 ≈ order_quantity * reference_price_in_account_currency
 ```
 
-La tolérance, l'unité de quantité, la devise et toute transformation FX sont explicites. Un nominal saisi indépendamment ne remplace pas silencieusement ce contrôle.
+Dans la fondation synthétique actuelle, une seule valeur `reference_price_in_account_currency` alimente aussi le nominal économique. Elle impose donc en plus :
+
+```text
+scenario_notional_eur
+≈ order_quantity * reference_price_in_account_currency
+```
+
+La tolérance, l'unité de quantité, la devise et toute transformation FX sont explicites. Un nominal saisi indépendamment ne remplace pas silencieusement ce contrôle. Une future séparation entre prix mid économique et prix d'exécution devra fournir deux prix et une réconciliation explicite ; elle ne peut pas être simulée en donnant deux nominaux incompatibles à un prix unique.
 
 ### Coûts incorporés au prix
 
@@ -139,6 +146,19 @@ entry_cash_requirement_eur =
 
 Le buffer éventuel est fourni explicitement par l'utilisateur ou une politique contractuelle documentée. Breaktest ne choisit pas son niveau.
 
+Dans l'entrée normalisée de la fondation synthétique, chaque composante immédiate est fournie explicitement, y compris lorsqu'elle vaut zéro. Une absence n'est jamais transformée silencieusement en zéro.
+
+Lorsque les mêmes hypothèses existent dans les deux vues, elles se réconcilient :
+
+```text
+entry_commission_eur ≈ commission_per_side_eur
+entry_fx_cash_cost_eur ≈ scenario_notional_eur * fx_rate_per_side
+account_currency = quote_currency -> fx_rate_per_side = 0
+account_currency = quote_currency -> entry_fx_cash_cost_eur = 0
+```
+
+Une contradiction produit `cash_basis_conflicted`. La fondation actuelle ne possède pas encore de champs de cycle pour réconcilier des taxes ou frais contractuels asymétriques entre entrée et sortie. Toute valeur d'entrée non nulle dans ces deux catégories bloque donc la synthèse favorable avec `entry_fixed_costs_missing_from_lifecycle_model` ; elle ne disparaît pas du cash et n'est pas omise du seuil par défaut.
+
 Le spread et le slippage ne sont ajoutés comme cash séparé que si la base du prix prouve qu'ils ne sont pas déjà incorporés.
 
 ## 6. Composantes du cycle
@@ -179,6 +199,18 @@ source_included_hold_ids[]
 ```
 
 Chaque réservation ou engagement possède un `hold_id` stable et un statut d'inclusion. Seuls les montants prouvés non déjà retranchés par la source entrent dans `deductible_hold_ids[]`.
+
+`source_included_hold_ids[]` est la vue canonique fournie par la source. Elle doit correspondre exactement aux `hold_id` dont `included_in_available_settled_cash = true` dans le ledger : aucun identifiant inconnu, manquant ou dupliqué n'est accepté.
+
+Invariants de base :
+
+```text
+gross_before_declared_holds -> source_included_hold_ids = []
+net_of_listed_holds -> chaque hold inclus est nommé explicitement
+user_reserve -> jamais déjà retranché par la source dans ce prototype
+```
+
+La réserve utilisateur est appliquée après normalisation du cash de la source. Si la source la déclare déjà incluse, la base est conflictuelle au lieu de la soustraire une seconde fois.
 
 ```text
 account_free_settled_cash_eur =
@@ -341,12 +373,17 @@ Tester :
 - cash non réglé ;
 - ordre en attente avec source brute avant holds ;
 - source déjà nette du même ordre en attente, sans double retrait ;
+- contradiction entre base brute et hold déclaré déjà inclus ;
+- désaccord entre `source_included_hold_ids[]` et les indicateurs du ledger ;
+- réserve utilisateur déclarée déjà retranchée par la source ;
 - allocation de stratégie inférieure au cash total du compte ;
 - capital de stratégie déjà engagé ;
 - réserve utilisateur ;
 - coût nul ;
-- taxe d'entrée ;
+- taxe d'entrée non nulle sans contrepartie de cycle, bloquée comme base incomplète ;
 - change à l'entrée ;
+- contradiction entre devises identiques et change non nul ;
+- divergence commission ou change entre entrée et cycle ;
 - dérivé, short ou marge non supportés ;
 - aucun double comptage par `hold_id` ;
 - réconciliation quantité × prix × devise ;
@@ -368,6 +405,8 @@ Avant d'afficher une faisabilité de capital :
 
 ## 15. Statut
 
-Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces correctifs réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`.
+Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles de la version `1` distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces correctifs réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`, puis au head documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` dans le run `#610`.
+
+La version locale `cost-gate-foundation-2-synthetic` ajoute les réconciliations nominal, base de cash, devise et coûts entrée/cycle. Elle reste une prévalidation tant qu'un nouveau run exact-head et son artefact ne sont pas inspectés.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

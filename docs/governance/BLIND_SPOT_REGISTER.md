@@ -140,11 +140,18 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-050 | P0 | Cost Gate / avantage | Performance issue de prix exécutés traitée comme brute puis spread/slippage soustraits de nouveau | Marge nette sous-estimée | validated | Prix exécuté rejeté sans reconstruction versionnée ; seuil indépendant conservé, run `#604` |
 | BS-051 | P1 | Cost Gate / orchestration | Donnée manquante reléguant un fait dur indépendant | Facteur principal trompeur | validated | Politique dépendante des preuves et CG-12, run `#604` |
 | BS-052 | P1 | Cost Gate / provenance | Quote stale synthétique présentée comme donnée externe réellement observée | Preuve et capacité exagérées | validated | CG-09 limité à `synthetic_demo` + intégrité sans réseau, run `#604` |
-| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | validated | Réconciliation quantité × prix en EUR et conflit bloquant testés, run `#604` |
+| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | mitigated | Réconciliation étendue au nominal économique ; régression locale ajoutée, CI exact-head requise |
 | BS-054 | P0 | Cost Gate / unités | `operation_scope` incohérent avec `side_count` mais synthèse favorable produite | Frictions sous- ou surévaluées | validated | Mapping strict achat simple = 1, aller-retour = 2 ; sortie seule non supportée ; régressions exact-head, head `2ebf0e3`, run `#608` |
 | BS-055 | P1 | Cost Gate / preuve | Ordre arbitraire des holds, sources, contraintes ou exclusions changeant le `snapshot_id` ou les constats | Faux changement et audit instable | validated | Ensembles triés avant hash et évaluation ; snapshot et constats invariants par permutation, changement matériel distinct, head `2ebf0e3`, run `#608` |
 | BS-056 | P1 | Cost Gate / orchestration | Erreur de friction empêchant un constat de cash indépendant | Diagnostic incomplet | validated | Validation cash isolée des erreurs de friction ; constat cash conservé sous coût invalide, head `2ebf0e3`, run `#608` |
 | BS-057 | P1 | Cost Gate / vocabulaire | Avantage absorbé résumé comme contrainte utilisateur dépassée sans contrainte saisie | Provenance de la limite fausse | validated | `edge_not_surviving_modelled_friction` distinct ; `constraint_breach` réservé aux limites explicites, head `2ebf0e3`, run `#608` |
+| BS-058 | P0 | Cost Gate / cash | Base globale brute/nette en contradiction avec les holds déclarés inclus | Cash libre surestimé ou sous-estimé | mitigated | Liste source et indicateurs du ledger réconciliés ; contradictions et réserve déjà nette bloquées localement, CI exact-head requise |
+| BS-059 | P0 | Cost Gate / temps | Source observée après l'heure d'évaluation classée actuelle | Utilisation d'une donnée qui n'existait pas encore | mitigated | `snapshot_temporally_inconsistent` et constat bloquant ajoutés ; régression locale, CI exact-head requise |
+| BS-060 | P1 | Cost Gate / temps | Source non critique raccourcissant l'expiration de tout le snapshot | Constats indépendants invalidés trop tôt | mitigated | `expires_at_utc` limité aux sources critiques et comparaison régressive ajoutée ; CI exact-head requise |
+| BS-061 | P0 | Cost Gate / entrées | Ledger, sources ou contraintes fournis comme objet puis assimilés à une liste vide | Hold, provenance ou contrainte matérielle supprimés silencieusement | mitigated | Collections non-tableaux rejetées ; régressions locales pour holds, sources, contraintes et exclusions, CI exact-head requise |
+| BS-062 | P0 | Cost Gate / devise | Frais FX non nuls malgré une devise de compte identique à la devise de cotation | Friction et cash sans événement de change réel | mitigated | Fixture EUR/USD et conflit même devise/FX non nul testés localement, CI exact-head requise |
+| BS-063 | P0 | Cost Gate / coûts | Commission ou change d'entrée différents des hypothèses par côté du cycle | Cash immédiat et seuil décrivent deux économies incompatibles | mitigated | Réconciliation entrée/cycle ajoutée avec régressions locales, CI exact-head requise |
+| BS-064 | P0 | Cost Gate / coûts | Taxe ou frais contractuel d'entrée présent mais absent du seuil du cycle | Avantage net surestimé | mitigated | Synthèse favorable bloquée jusqu'à un modèle de cycle explicite ; régression locale, CI exact-head requise |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -179,6 +186,13 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 27. La base de prix de `G` contient-elle déjà des frictions ?
 28. Une donnée manquante masque-t-elle un fait indépendant ?
 29. Quantité, prix, devise et nominal se réconcilient-ils ?
+30. La base brute ou nette concorde-t-elle avec chaque hold inclus par la source ?
+31. Une donnée a-t-elle été observée après l'heure d'évaluation ?
+32. Seules les sources critiques pilotent-elles l'expiration agrégée ?
+33. Une collection mal formée peut-elle être assimilée silencieusement à une liste vide ?
+34. Un coût FX existe-t-il alors que compte et cotation ont la même devise ?
+35. Les coûts immédiats communs se réconcilient-ils avec les hypothèses du cycle ?
+36. Une taxe ou un frais d'entrée manque-t-il au seuil économique complet ?
 
 ## 7. Règle de clôture
 

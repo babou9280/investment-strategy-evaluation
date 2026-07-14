@@ -137,7 +137,7 @@ const scenarios = [
           provenance: 'synthetic_demo',
           instrumentId: 'SYNTH:ABC',
           venueId: 'SYNTH-X',
-          quoteCurrency: 'EUR',
+          quoteCurrency: 'USD',
           observedAtUtc: '2026-07-14T10:00:00Z',
           validUntilUtc: '2026-07-14T10:01:00Z',
           critical: true
@@ -159,7 +159,7 @@ const scenarios = [
           provenance: 'synthetic_demo',
           instrumentId: 'SYNTH:OTHER',
           venueId: 'OTHER-X',
-          quoteCurrency: 'USD',
+          quoteCurrency: 'GBP',
           observedAtUtc: '2026-07-14T10:00:00Z',
           validUntilUtc: '2026-07-14T11:00:00Z',
           critical: true
@@ -197,7 +197,7 @@ const scenarios = [
           provenance: 'synthetic_demo',
           instrumentId: 'SYNTH:ABC',
           venueId: 'SYNTH-X',
-          quoteCurrency: 'EUR',
+          quoteCurrency: 'USD',
           observedAtUtc: '2026-07-14T10:00:00Z',
           validUntilUtc: '2026-07-14T10:01:00Z',
           critical: false
@@ -241,6 +241,7 @@ const scenarios = [
         cash: {
           availableSettledCashEur: 400,
           availableSettledCashBasis: 'net_of_listed_holds',
+          sourceIncludedHoldIds: ['H1'],
           holds: [{ holdId: 'H1', holdType: 'pending_order', amountEur: 600, includedInAvailableSettledCash: true, includedInStrategyCapitalCommitted: false }],
           userDefinedCashReserveEur: 100
         }

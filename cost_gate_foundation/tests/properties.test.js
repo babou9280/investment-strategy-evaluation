@@ -46,6 +46,8 @@ const holds = [
 ];
 const reconciled = engine.compute(fixtures.baseInput({
   cash: {
+    availableSettledCashBasis: 'net_of_listed_holds',
+    sourceIncludedHoldIds: ['B'],
     holds,
     strategyCapitalCommittedEur: 50
   }
@@ -58,6 +60,8 @@ approx(reconciled.cash.capitalFeasibilityCashEur, 900);
 
 const reorderedHolds = engine.compute(fixtures.baseInput({
   cash: {
+    availableSettledCashBasis: 'net_of_listed_holds',
+    sourceIncludedHoldIds: ['B'],
     holds: holds.slice().reverse(),
     strategyCapitalCommittedEur: 50
   }
@@ -68,6 +72,8 @@ assert.deepEqual(reorderedHolds.findings, reconciled.findings);
 
 const changedHold = engine.compute(fixtures.baseInput({
   cash: {
+    availableSettledCashBasis: 'net_of_listed_holds',
+    sourceIncludedHoldIds: ['B'],
     holds: [Object.assign({}, holds[0], { amountEur: 101 }), holds[1]],
     strategyCapitalCommittedEur: 50
   }
@@ -124,7 +130,7 @@ const sourceA = {
   provenance: 'synthetic_demo',
   instrumentId: 'SYNTH:ABC',
   venueId: 'SYNTH-X',
-  quoteCurrency: 'EUR',
+  quoteCurrency: 'USD',
   observedAtUtc: '2026-07-14T10:00:00Z',
   validUntilUtc: '2026-07-14T11:00:00Z',
   critical: true

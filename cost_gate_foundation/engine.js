@@ -3,11 +3,11 @@
 const crypto = require('crypto');
 const capitalEfficiency = require('../capital_efficiency_lab/engine.js');
 
-const VERSION = 'cost-gate-foundation-1-synthetic';
-const POLICY_VERSION = 'cost-gate-findings-2';
-const SNAPSHOT_VERSION = 'cost-gate-snapshot-2';
+const VERSION = 'cost-gate-foundation-2-synthetic';
+const POLICY_VERSION = 'cost-gate-findings-3';
+const SNAPSHOT_VERSION = 'cost-gate-snapshot-3';
 const ALIGNMENT_VERSION = 'gross-edge-alignment-1';
-const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-2';
+const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-3';
 const TOLERANCE = capitalEfficiency.TOLERANCE;
 
 const SUPPORTED_INSTRUMENTS = new Set(['spot_equity', 'spot_etf']);
@@ -105,7 +105,8 @@ function canonicalStringify(value) {
 }
 
 function canonicalizeUnorderedArray(values) {
-  return (Array.isArray(values) ? values : [])
+  if (!Array.isArray(values)) throw new Error('unordered_array_required');
+  return values
     .map(canonicalize)
     .sort((left, right) => {
       const leftKey = JSON.stringify(left);
@@ -130,6 +131,9 @@ function snapshotInputPayload(input, volatileKeys) {
   const payload = canonicalize(omitKeys(input, volatileKeys));
   if (payload.cash && Array.isArray(payload.cash.holds)) {
     payload.cash.holds = canonicalizeUnorderedArray(payload.cash.holds);
+  }
+  if (payload.cash && Array.isArray(payload.cash.sourceIncludedHoldIds)) {
+    payload.cash.sourceIncludedHoldIds = canonicalizeUnorderedArray(payload.cash.sourceIncludedHoldIds);
   }
   if (Array.isArray(payload.userConstraints)) {
     payload.userConstraints = canonicalizeUnorderedArray(payload.userConstraints);
@@ -226,7 +230,8 @@ function assessAlignment(input) {
   if (key.grossOrNetBasis !== 'gross_before_all_modelled_costs' && !alignment.reconciliationVersion) {
     reasons.push('gross_or_net_basis');
   }
-  const exclusions = new Set(key.costExclusions || []);
+  const exclusions = new Set(Array.isArray(key.costExclusions) ? key.costExclusions : []);
+  if (!Array.isArray(key.costExclusions)) reasons.push('cost_exclusions_format');
   ['commission', 'fx', 'spread', 'slippage'].forEach((cost) => {
     if (!exclusions.has(cost) && !alignment.reconciliationVersion) reasons.push(`cost_exclusion:${cost}`);
   });
@@ -330,8 +335,7 @@ function computeCash(input, errors) {
   ];
   const values = {};
   numericFields.forEach((key) => {
-    const required = ['entryAssetConsiderationEur', 'availableSettledCashEur', 'strategyCapitalEur', 'strategyCapitalCommittedEur'].includes(key);
-    const item = finiteNumber(cash[key], { required, min: 0 });
+    const item = finiteNumber(cash[key], { required: true, min: 0 });
     if (!item.ok) errors[`cash.${key}`] = item.reason;
     values[key] = item.missing ? 0 : item.value;
   });
@@ -346,18 +350,65 @@ function computeCash(input, errors) {
 
   const quantity = finiteNumber(input.orderQuantity, { required: false, min: Number.MIN_VALUE });
   const price = finiteNumber(input.referencePriceEur, { required: false, min: Number.MIN_VALUE });
+  const scenarioNotional = finiteNumber(input.orderNotionalEur, { required: false, min: Number.MIN_VALUE });
   if (!quantity.ok) errors.orderQuantity = quantity.reason;
   if (!price.ok) errors.referencePriceEur = price.reason;
   if (quantity.missing !== price.missing) errors.quantityPrice = 'pair_incomplete';
-  if (!quantity.missing && !price.missing && !close(quantity.value * price.value, values.entryAssetConsiderationEur)) {
-    return { assessed: true, status: 'cash_basis_conflicted', reason: 'quantity_price_notional_mismatch' };
+  if (quantity.ok && price.ok && !quantity.missing && !price.missing) {
+    const quantityPriceNotionalEur = quantity.value * price.value;
+    if (!close(quantityPriceNotionalEur, values.entryAssetConsiderationEur)) {
+      return { assessed: true, status: 'cash_basis_conflicted', reason: 'quantity_price_entry_consideration_mismatch' };
+    }
+    if (scenarioNotional.ok && !scenarioNotional.missing && !close(quantityPriceNotionalEur, scenarioNotional.value)) {
+      return { assessed: true, status: 'cash_basis_conflicted', reason: 'quantity_price_scenario_notional_mismatch' };
+    }
   }
 
-  const holds = canonicalizeUnorderedArray(cash.holds);
+  const lifecycleCommission = finiteNumber(input.cost && input.cost.commissionPerSideEur, { required: false, min: 0 });
+  const lifecycleFxRate = finiteNumber(input.cost && input.cost.fxRatePerSide, { required: false, min: 0, max: 1 });
+  if (
+    lifecycleCommission.ok && !lifecycleCommission.missing &&
+    !close(values.entryCommissionEur, lifecycleCommission.value)
+  ) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'entry_commission_lifecycle_mismatch' };
+  }
+  if (
+    input.accountCurrency === input.quoteCurrency &&
+    ((lifecycleFxRate.ok && !lifecycleFxRate.missing && lifecycleFxRate.value > 0) || values.entryFxCashCostEur > 0)
+  ) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'same_currency_fx_cost_conflict' };
+  }
+  if (
+    lifecycleFxRate.ok && !lifecycleFxRate.missing && scenarioNotional.ok && !scenarioNotional.missing &&
+    !close(values.entryFxCashCostEur, scenarioNotional.value * lifecycleFxRate.value)
+  ) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'entry_fx_lifecycle_mismatch' };
+  }
+  if (values.entryContractualFeesEur > 0 || values.entryTaxEur > 0) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'entry_fixed_costs_missing_from_lifecycle_model' };
+  }
+
+  if (!Array.isArray(cash.holds)) errors['cash.holds'] = 'array_required';
+  if (!Array.isArray(cash.sourceIncludedHoldIds)) errors['cash.sourceIncludedHoldIds'] = 'array_required';
+  const holds = Array.isArray(cash.holds) ? canonicalizeUnorderedArray(cash.holds) : [];
+  const sourceIncludedHoldIds = Array.isArray(cash.sourceIncludedHoldIds)
+    ? cash.sourceIncludedHoldIds.slice().sort()
+    : [];
+  const sourceIncludedIds = new Set();
+  for (const holdId of sourceIncludedHoldIds) {
+    if (typeof holdId !== 'string' || !holdId) {
+      errors['cash.sourceIncludedHoldIds'] = 'non_empty_string_ids_required';
+      continue;
+    }
+    if (sourceIncludedIds.has(holdId)) errors[`cash.sourceIncludedHoldIds.${holdId}`] = 'duplicate_hold_id';
+    sourceIncludedIds.add(holdId);
+  }
   const ids = new Set();
+  const ledgerIncludedIds = new Set();
   let deductibleHoldsEur = 0;
   let strategyIncludedHoldsEur = 0;
   let userReserveHoldEur = 0;
+  let sourceIncludedUserReserve = false;
   for (const hold of holds) {
     if (!hold || typeof hold.holdId !== 'string' || !hold.holdId) {
       errors['cash.holds'] = 'hold_id_missing';
@@ -377,6 +428,10 @@ function computeCash(input, errors) {
       errors[`cash.holds.${hold.holdId}.includedInStrategyCapitalCommitted`] = 'boolean_required';
     }
     if (amount.ok && hold.holdType === 'user_reserve') userReserveHoldEur += amount.value;
+    if (hold.includedInAvailableSettledCash === true) {
+      ledgerIncludedIds.add(hold.holdId);
+      if (hold.holdType === 'user_reserve') sourceIncludedUserReserve = true;
+    }
     if (amount.ok && hold.holdType !== 'user_reserve' && !hold.includedInAvailableSettledCash) {
       deductibleHoldsEur += amount.value;
     }
@@ -392,6 +447,17 @@ function computeCash(input, errors) {
     errors['cash.strategyCapitalCommittedEur'] = 'strategy_hold_reconciliation_failed';
   }
   if (hasCashErrors()) return { assessed: true, status: 'invalid' };
+  const sourceIdsMatchLedger = sourceIncludedIds.size === ledgerIncludedIds.size &&
+    Array.from(sourceIncludedIds).every((holdId) => ledgerIncludedIds.has(holdId));
+  if (!sourceIdsMatchLedger) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'source_included_hold_ids_mismatch' };
+  }
+  if (cash.availableSettledCashBasis === 'gross_before_declared_holds' && sourceIncludedIds.size > 0) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'gross_cash_basis_contains_included_holds' };
+  }
+  if (sourceIncludedUserReserve) {
+    return { assessed: true, status: 'cash_basis_conflicted', reason: 'user_reserve_already_in_source_cash' };
+  }
   if (cash.spreadReferencePriceStatus === 'unknown' || cash.slippageReferencePriceStatus === 'unknown') {
     return { assessed: true, status: 'cash_basis_conflicted', reason: 'price_inclusion_unknown' };
   }
@@ -421,14 +487,19 @@ function computeCash(input, errors) {
     strategyAllocationHeadroomEur: normalizeNumber(strategyAllocationHeadroomEur),
     capitalFeasibilityCashEur: normalizeNumber(capitalFeasibilityCashEur),
     uniqueHoldIds: ids.size === holds.length,
+    sourceIncludedHoldIds: Array.from(sourceIncludedIds).sort(),
     holds
   };
 }
 
 function assessSources(input, errors) {
-  const sources = canonicalizeUnorderedArray(input.sources);
+  if (input.sources !== undefined && !Array.isArray(input.sources)) {
+    errors.sources = 'array_required';
+    return { status: 'snapshot_incomplete', sources: [], stale: [], criticalStale: [], future: [], conflicts: [] };
+  }
+  const sources = canonicalizeUnorderedArray(input.sources || []);
   if (!sources.length) {
-    return { status: 'manual_assumptions_only', sources: [], stale: [], conflicts: [] };
+    return { status: 'manual_assumptions_only', sources: [], stale: [], criticalStale: [], future: [], conflicts: [] };
   }
   const utcPattern = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,3})?Z$/;
   const evaluatedAt = Date.parse(input.evaluatedAtUtc || '');
@@ -437,24 +508,49 @@ function assessSources(input, errors) {
   }
   const stale = [];
   const criticalStale = [];
+  const future = [];
   const conflicts = [];
+  const sourceIds = new Set();
+  let invalidSource = false;
   sources.forEach((source, index) => {
-    if (!source || source.provenance !== 'synthetic_demo') {
+    if (!source || typeof source !== 'object' || Array.isArray(source)) {
+      errors[`sources.${index}`] = 'object_required';
+      invalidSource = true;
+      return;
+    }
+    if (typeof source.sourceId !== 'string' || !source.sourceId) {
+      errors[`sources.${index}.sourceId`] = 'non_empty_string_required';
+      invalidSource = true;
+    } else if (sourceIds.has(source.sourceId)) {
+      errors[`sources.${index}.sourceId`] = 'duplicate_source_id';
+      invalidSource = true;
+    } else {
+      sourceIds.add(source.sourceId);
+    }
+    if (source.critical !== undefined && typeof source.critical !== 'boolean') {
+      errors[`sources.${index}.critical`] = 'boolean_required';
+      invalidSource = true;
+    }
+    if (source.provenance !== 'synthetic_demo') {
       errors[`sources.${index}.provenance`] = 'external_source_forbidden';
+      invalidSource = true;
       return;
     }
     const observed = Date.parse(source.observedAtUtc || '');
     const validUntil = Date.parse(source.validUntilUtc || '');
     if (!utcPattern.test(source.observedAtUtc || '') || !utcPattern.test(source.validUntilUtc || '') || !Number.isFinite(observed) || !Number.isFinite(validUntil)) {
       errors[`sources.${index}.timestamp`] = 'valid_utc_timestamp_required';
+      invalidSource = true;
       return;
     }
     if (observed > validUntil) {
       errors[`sources.${index}.validUntilUtc`] = 'validity_precedes_observation';
+      invalidSource = true;
       return;
     }
+    const sourceId = source.sourceId || `source-${index}`;
+    if (Number.isFinite(evaluatedAt) && observed > evaluatedAt) future.push(sourceId);
     if (Number.isFinite(evaluatedAt) && evaluatedAt > validUntil) {
-      const sourceId = source.sourceId || `source-${index}`;
       stale.push(sourceId);
       if (source.critical !== false) criticalStale.push(sourceId);
     }
@@ -463,10 +559,19 @@ function assessSources(input, errors) {
     if (source.quoteCurrency && source.quoteCurrency !== input.quoteCurrency) conflicts.push('quote_currency');
   });
   return {
-    status: conflicts.length ? 'snapshot_conflicted' : criticalStale.length ? 'snapshot_expired' : 'snapshot_current',
+    status: invalidSource
+      ? 'snapshot_incomplete'
+      : future.length
+      ? 'snapshot_temporally_inconsistent'
+      : conflicts.length
+        ? 'snapshot_conflicted'
+        : criticalStale.length
+          ? 'snapshot_expired'
+          : 'snapshot_current',
     sources,
     stale: Array.from(new Set(stale)).sort(),
     criticalStale: Array.from(new Set(criticalStale)).sort(),
+    future: Array.from(new Set(future)).sort(),
     conflicts: Array.from(new Set(conflicts)).sort()
   };
 }
@@ -492,6 +597,10 @@ function buildSnapshot(input, sourceAssessment) {
   const scenarioHash = sha256(scenarioPayload);
   const inputHash = sha256(inputPayload);
   const sourceBundleHash = sha256(sourceAssessment.sources);
+  const criticalSourcesWithValidExpiry = sourceAssessment.sources.filter((source) =>
+    source && typeof source === 'object' && !Array.isArray(source) &&
+    source.critical !== false && Number.isFinite(Date.parse(source.validUntilUtc || ''))
+  );
   const versions = {
     gatePolicyVersion: POLICY_VERSION,
     costEngineVersion: capitalEfficiency.VERSION,
@@ -507,8 +616,10 @@ function buildSnapshot(input, sourceAssessment) {
     snapshotInstanceId: input.snapshotInstanceId || 'instance_not_provided',
     createdAtUtc: input.createdAtUtc || null,
     calculatedAtUtc: input.calculatedAtUtc || null,
-    expiresAtUtc: sourceAssessment.sources.length
-      ? sourceAssessment.sources.slice().sort((a, b) => Date.parse(a.validUntilUtc) - Date.parse(b.validUntilUtc))[0].validUntilUtc
+    expiresAtUtc: criticalSourcesWithValidExpiry.length
+      ? criticalSourcesWithValidExpiry
+        .slice()
+        .sort((a, b) => Date.parse(a.validUntilUtc) - Date.parse(b.validUntilUtc))[0].validUntilUtc
       : 'no_automatic_expiry',
     scenarioHash,
     inputHash,
@@ -596,12 +707,39 @@ function edgeFinding(input, alignment, friction) {
 }
 
 function constraintFindings(input) {
+  if (input.userConstraints === undefined) return [];
+  if (!Array.isArray(input.userConstraints)) return [];
   const constraints = canonicalizeUnorderedArray(input.userConstraints);
+  const ids = new Set();
   return constraints.map((constraint, index) => {
+    if (!constraint || typeof constraint !== 'object' || Array.isArray(constraint)) {
+      return finding(`invalid_userConstraints.${index}`, 'input_validity', 'invalid', 'blocking', {
+        condition: 'object_required',
+        provenance: 'user_assumption'
+      });
+    }
+    if (typeof constraint.constraintId !== 'string' || !constraint.constraintId) {
+      return finding(`invalid_userConstraints.${index}`, 'input_validity', 'invalid', 'blocking', {
+        condition: 'constraint_id_required',
+        provenance: 'user_assumption'
+      });
+    }
+    if (ids.has(constraint.constraintId)) {
+      return finding(`invalid_userConstraints.${constraint.constraintId}`, 'input_validity', 'invalid', 'blocking', {
+        condition: 'duplicate_constraint_id',
+        provenance: 'user_assumption'
+      });
+    }
+    ids.add(constraint.constraintId);
     const observed = finiteNumber(constraint.observedValue, { required: true });
     const limit = finiteNumber(constraint.limitValue, { required: true });
     if (!observed.ok || !limit.ok || constraint.operator !== 'lte') {
-      return finding(`constraint_${index}_invalid`, 'user_constraint', 'invalid', 'blocking', {
+      return finding(`invalid_userConstraints.${constraint.constraintId}`, 'input_validity', 'invalid', 'blocking', {
+        condition: !observed.ok
+          ? `observed_value_${observed.reason}`
+          : !limit.ok
+            ? `limit_value_${limit.reason}`
+            : 'unsupported_operator',
         provenance: 'user_assumption'
       });
     }
@@ -658,6 +796,17 @@ function compute(inputValue) {
   const cash = unsupported.length ? { assessed: false, status: 'unsupported_capital_model' } : computeCash(input, errors);
   const sourceAssessment = assessSources(input, errors);
 
+  if (input.userConstraints !== undefined && !Array.isArray(input.userConstraints)) {
+    errors.userConstraints = 'array_required';
+  }
+  if (typeof input.quoteCurrency !== 'string' || !input.quoteCurrency) {
+    errors.quoteCurrency = 'non_empty_string_required';
+  }
+  const costExclusions = input.grossEdgeAlignment && input.grossEdgeAlignment.key && input.grossEdgeAlignment.key.costExclusions;
+  if (costExclusions !== undefined && !Array.isArray(costExclusions)) {
+    errors['grossEdgeAlignment.key.costExclusions'] = 'array_required';
+  }
+
   Object.entries(errors).forEach(([key, reason]) => {
     findings.push(finding(`invalid_${key}`, 'input_validity', 'invalid', 'blocking', {
       condition: reason,
@@ -692,13 +841,19 @@ function compute(inputValue) {
         provenance: 'synthetic_demo'
       }));
     }
+    if (sourceAssessment.future.length) {
+      findings.push(finding('synthetic_source_observed_after_evaluation', 'data_quality', 'invalid', 'blocking', {
+        dependsOn: sourceAssessment.future,
+        provenance: 'synthetic_demo'
+      }));
+    }
     if (sourceAssessment.conflicts.length) {
       findings.push(finding('instrument_venue_currency_mismatch', 'data_quality', 'conflicted', 'blocking', {
         dependsOn: sourceAssessment.conflicts,
         provenance: 'synthetic_demo'
       }));
     }
-    if (!sourceAssessment.stale.length && !sourceAssessment.conflicts.length) {
+    if (!sourceAssessment.stale.length && !sourceAssessment.future.length && !sourceAssessment.conflicts.length) {
       findings.push(finding('synthetic_sources_current_for_evaluation_time', 'data_quality', 'satisfied', 'informational', {
         provenance: 'synthetic_demo',
         limitations: ['synthetic_only']
@@ -812,7 +967,8 @@ function compute(inputValue) {
       'no_market_data_claim',
       'no_execution',
       'no_recommendation',
-      'cash_long_spot_equity_or_etf_only'
+      'cash_long_spot_equity_or_etf_only',
+      'nonzero_entry_tax_or_contractual_fees_require_lifecycle_model'
     ]
   };
   assertFiniteTree(result);
@@ -830,7 +986,7 @@ function compareSnapshots(previousResult, currentResult) {
     return { sameContent: false, oldSnapshot: 'obsolete', oldFindingsActive: false };
   }
   const currentFindings = Array.isArray(currentResult.findings) ? currentResult.findings : [];
-  const expired = currentResult.snapshot.status === 'snapshot_expired' || currentFindings.some((item) => item.status === 'expired');
+  const expired = currentResult.snapshot.status === 'snapshot_expired';
   if (expired) {
     return { sameContent: true, oldSnapshot: 'expired', oldFindingsActive: false };
   }

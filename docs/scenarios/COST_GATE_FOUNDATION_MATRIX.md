@@ -14,8 +14,11 @@ Sauf indication contraire :
 account_model = cash_account
 position = long_cash_purchase
 account_currency = EUR
+quote_currency = USD
 provenance = synthetic_demo
 order_notional = 500 EUR
+order_quantity = 5
+reference_price_in_account_currency = 100 EUR
 side_count = 2
 commission = 1 EUR par côté
 fx = 0,25 % par côté
@@ -68,6 +71,7 @@ entry_cash_requirement = 502,25 EUR
 
 available_settled_cash = 1 000 EUR
 available_settled_cash_basis = gross_before_declared_holds
+source_included_hold_ids = []
 cash_hold_ledger = []
 user_defined_cash_reserve = 0 EUR
 strategy_capital = 1 000 EUR
@@ -75,6 +79,8 @@ strategy_capital_committed = 0 EUR
 capital_feasibility_cash = 1 000 EUR
 snapshot = manual_assumptions_only
 ```
+
+La devise de cotation synthétique USD explique le coût de change vers le compte EUR. Une cotation EUR avec ces mêmes coûts FX est conflictuelle.
 
 Attendus :
 
@@ -222,6 +228,8 @@ summary = snapshot_unusable
 ```
 
 Cette quote sert uniquement à falsifier la politique de fraîcheur. Elle n'est ni réelle ni externe. Elle n'est jamais remplacée par zéro ni qualifiée d'actuelle.
+
+Régressions temporelles associées : une source observée après `evaluated_at_utc` produit `snapshot_temporally_inconsistent` et `synthetic_source_observed_after_evaluation`. Une source non critique expirée garde son propre constat stale, mais ne raccourcit pas l'expiration agrégée portée par les sources critiques.
 ### CG-10 — conflit instrument / place / devise
 
 Entrées : coût contractuel pour un instrument ou une place différents du scénario.
@@ -290,6 +298,7 @@ Cas A — source brute avant holds :
 ```text
 available_settled_cash = 1 000 EUR
 available_settled_cash_basis = gross_before_declared_holds
+source_included_hold_ids = []
 pending hold H1 = 600 EUR, included_by_source = false
 cash_reserve = 100 EUR
 strategy_capital = 1 000 EUR
@@ -315,6 +324,16 @@ cash_reserve = 100 EUR
 ```
 
 Attendu : `H1` n'est pas soustrait une seconde fois ; le cash réconcilié reste 300 EUR.
+
+Cas de conflit — base brute mais H1 déclaré inclus, ou désaccord entre `source_included_hold_ids` et le ledger :
+
+```text
+capital_feasibility = conflicted
+finding_code = cash_basis_conflicted
+summary != no_incompatibility_detected_under_assumptions
+```
+
+Une réserve utilisateur déjà retranchée par la source est également conflictuelle, car la fondation applique cette réserve après normalisation du cash source.
 
 Cas C — le compte dispose de 1 000 EUR, mais la stratégie n'a plus que 350 EUR d'allocation libre :
 

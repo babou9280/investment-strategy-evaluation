@@ -81,6 +81,10 @@ entry_cash_requirement_eur <=
 
 `reference_capital_eur`, `account_equity` et `buying_power` ne remplacent jamais ces bases. Les holds déjà intégrés au cash fourni par la source ne sont pas soustraits une deuxième fois.
 
+La base globale, `source_included_hold_ids[]` et les indicateurs d'inclusion de chaque hold doivent se réconcilier exactement. Une base brute ne peut contenir aucun hold déclaré déjà inclus. Une collection mal formée ou une contradiction bloque la conclusion de faisabilité au lieu d'être assimilée à une liste vide.
+
+Les commissions et le change présents dans la vue cash immédiate se réconcilient avec leur composante par côté dans la vue du cycle. Des devises compte/cotation identiques imposent un change nul. Une taxe ou un frais contractuel d'entrée non modélisé dans le cycle empêche de qualifier la friction complète.
+
 Cette condition est nécessaire mais non suffisante dès que le modèle sort du périmètre cash long, qu'une allocation manque ou que plusieurs positions ne sont pas réconciliées.
 
 ### 3.4 Liquidité et exécution

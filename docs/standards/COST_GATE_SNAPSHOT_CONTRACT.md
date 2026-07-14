@@ -78,6 +78,8 @@ holding_horizon_definition
 
 Lorsque quantité et prix existent, `entry_asset_consideration_eur` doit se réconcilier avec leur produit et la transformation FX déclarée. Un nominal conflictuel invalide uniquement les sorties qui en dépendent.
 
+La devise de cotation et la devise du compte font partie de l'identité économique. Si elles sont identiques, toute hypothèse ou ligne de cash FX non nulle est conflictuelle. Les composantes immédiates normalisées sont présentes explicitement, y compris lorsqu'elles valent zéro.
+
 Toute valeur non applicable reste explicitement `not_applicable`, jamais absente sans explication.
 
 ### Hypothèses de friction
@@ -116,6 +118,8 @@ capital_status
 ```
 
 Chaque élément du `cash_hold_ledger` possède un `hold_id` unique, un type, un montant et ses indicateurs d'inclusion côté source et côté stratégie. Les anciens agrégats `reserved_cash_eur` et `pending_cash_commitments_eur` peuvent être exposés comme vues, jamais comme déductions indépendantes sans réconciliation.
+
+`source_included_hold_ids[]`, `cash_hold_ledger[]`, `sources[]`, `user_constraints[]` et `cost_exclusions[]` sont des collections typées. Un objet unique ou toute autre valeur non tableau est une entrée invalide, jamais un tableau vide implicite. Chaque source et contrainte possède un identifiant stable et non dupliqué. Les collections économiquement non ordonnées sont triées avant hash et évaluation.
 
 ### Avantage brut
 
@@ -182,6 +186,8 @@ L'expiration agrégée est la plus proche des expirations obligatoires :
 expires_at_utc = min(valid_until_utc des données critiques)
 ```
 
+Une source marquée non critique peut produire son propre constat stale, mais elle ne raccourcit pas `expires_at_utc` et n'expire pas à elle seule tous les autres constats. Si aucune source n'est critique, l'expiration agrégée est `no_automatic_expiry`.
+
 Si une politique manque, la donnée dépendante ne peut pas produire une conclusion actuelle.
 
 ## 6. Cohérence temporelle
@@ -191,6 +197,7 @@ Deux données peuvent être individuellement non stale tout en étant incompatib
 Le produit vérifie au minimum :
 
 - fuseau normalisé en UTC ;
+- `observed_at_utc <= evaluated_at_utc` pour toute donnée utilisée ;
 - absence de timestamp futur injustifié ;
 - écart maximal autorisé entre quote, profondeur, FX et capital, défini par politique ;
 - statut de marché ou session lorsque pertinent ;
@@ -198,6 +205,8 @@ Le produit vérifie au minimum :
 - absence de mélange entre cours ajusté historique et quote non ajustée.
 
 Un mélange temporel invalide uniquement les conclusions dépendantes ; les calculs indépendants restent visibles.
+
+Une source observée après l'heure d'évaluation produit `snapshot_temporally_inconsistent` et le constat bloquant `synthetic_source_observed_after_evaluation` dans la fondation synthétique. Elle n'est jamais classée `snapshot_current`.
 
 ## 7. Invalidation
 
@@ -278,7 +287,10 @@ Tester :
 - absence de boucle d'auto-hash ;
 - ordre des clés sans effet ;
 - ordre des holds, sources, contraintes et exclusions sans effet sur le snapshot ni les constats dérivés ;
-- quantité × prix × devise réconciliés ;
+- quantité × prix × devise × nominal économique réconciliés ;
+- source observée après l'évaluation refusée ;
+- expiration agrégée limitée aux sources critiques ;
+- collections et identifiants mal formés refusés ;
 - zéro contre absence ;
 - rejet de `NaN`, `Infinity` et `-0` ;
 - couche indépendante encore calculable lorsque la quote manque ;
@@ -298,6 +310,8 @@ Avant donnée externe réelle :
 
 ## 12. Statut
 
-Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2` ajoute l'ordre canonique des ensembles et l'inactivation après expiration. Elle est validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` ; la synchronisation documentaire exact-head reste requise.
+Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2`, validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` puis synchronisée par le run `#610`, ajoute l'ordre canonique des ensembles et l'inactivation après expiration.
+
+La version locale `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, et limite l'expiration agrégée aux sources critiques. Elle n'est pas encore prouvée à distance ; un nouveau head, une CI exact-head et un artefact inspecté sont requis.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

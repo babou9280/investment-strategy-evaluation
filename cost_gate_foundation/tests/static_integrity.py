@@ -44,10 +44,10 @@ if set(requires) != allowed_requires:
     raise SystemExit(f"Unexpected engine dependencies: {requires}")
 
 required_tokens = [
-    "cost-gate-foundation-1-synthetic",
-    "cost-gate-findings-2",
-    "cost-gate-snapshot-2",
-    "cost-gate-findings-catalog-2",
+    "cost-gate-foundation-2-synthetic",
+    "cost-gate-findings-3",
+    "cost-gate-snapshot-3",
+    "cost-gate-findings-catalog-3",
     "cash_account",
     "long_cash_purchase",
     "unsupported_scope",
@@ -57,6 +57,12 @@ required_tokens = [
     "no_incompatibility_detected_under_assumptions",
     "edge_not_surviving_modelled_friction",
     "operation_scope_side_count_mismatch",
+    "quantity_price_scenario_notional_mismatch",
+    "synthetic_source_observed_after_evaluation",
+    "source_included_hold_ids_mismatch",
+    "entry_commission_lifecycle_mismatch",
+    "same_currency_fx_cost_conflict",
+    "nonzero_entry_tax_or_contractual_fees_require_lifecycle_model",
     "synthetic_or_manual_only",
     "no_market_data_claim",
     "no_execution",

@@ -9,13 +9,16 @@
 - GitHub Actions version `0` : runs `29334708343` (`#604`) et `29335825348` (`#606`), `success`
 - Head fonctionnel version `1` : `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`
 - GitHub Actions version `1` : run `29338189190` (`#608`), `success`
+- Head documentaire version `1` : `9d38ce31e33b41159d0c6180205c3747c3bb6f1d`
+- GitHub Actions documentaire version `1` : run `29338812831` (`#610`), `success`
 - Moteur prouvé à distance : `cost-gate-foundation-1-synthetic`
-- Artefact version `1` : `8312898043`, digest `sha256:c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183`
+- Artefact documentaire final version `1` : `8313153630`, digest `sha256:5bb9c173f41636f484160ad5a54eb6ac28c8ef725620de6a68a593d6066abbae`
+- Révision locale en cours : `cost-gate-foundation-2-synthetic`, non encore prouvée à distance
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact. La présente mise à jour de preuve reste documentaire et exige à son tour un run exact-head avant clôture de la stabilisation.
+Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact ; le run `#610` valide sa synchronisation documentaire finale. Ces preuves ne valident pas la version `2`, qui exige un nouveau head distant, une CI exact-head et un nouvel artefact.
 
 ## Revue rétrospective de la version `0`
 
@@ -45,6 +48,28 @@ Cost Gate foundation static integrity passed: 5 local files, 72619 bytes, no net
 ```
 
 Les non-régressions numériques et statiques historiques, Q0, Capital Efficiency et Edge Survival réussissent aussi localement. Playwright et Chromium n'étaient pas présents dans cet environnement local ; GitHub Actions a donc exécuté les régressions navigateur et les captures sur le head poussé exact.
+
+## Revue exacte de la version `1` et révision `2`
+
+La revue automatisée demandée sur le head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ouvert quatre défauts :
+
+- `order_notional_eur` pouvait différer de quantité × prix alors que la friction et le cash décrivaient ensuite deux montants différents ;
+- une source observée après `evaluated_at_utc` pouvait être classée actuelle ;
+- une source non critique pouvait raccourcir `expires_at_utc` de tout le snapshot ;
+- un ledger, des sources, des contraintes ou des exclusions non-tableaux pouvaient être assimilés à une collection vide ou provoquer une erreur non contrôlée.
+
+L'audit adjacent a reproduit quatre causes supplémentaires : `gross_before_declared_holds` pouvait coexister avec un hold marqué déjà inclus et surestimer le cash libre ; le scénario de référence facturait du change malgré deux devises EUR ; commission et change d'entrée pouvaient contredire le cycle ; une taxe ou un frais d'entrée pouvait rester absent du seuil économique.
+
+La version `2` ajoute les réconciliations et refus correspondants. Les commandes ciblées réellement exécutées localement donnent :
+
+```text
+Cost Gate foundation engine tests passed
+Cost Gate foundation scenario matrix passed: CG-01 to CG-18
+Cost Gate foundation property tests passed
+Cost Gate foundation static integrity passed: 5 local files, 88735 bytes, no network or persistence capability
+```
+
+Cette exécution locale est une prévalidation, pas une preuve distante. Les quatre fils restent ouverts jusqu'au push, au run exact-head et à l'inspection de l'artefact.
 
 ## Périmètre exécuté
 
@@ -91,13 +116,22 @@ CG-14 prouve qu'un compte avec 1 000 EUR de cash ne rend pas finançable un enga
 
 Chaque réservation possède un `hold_id` unique et deux indicateurs d'inclusion. Un hold déjà retranché du cash publié par la source n'est pas déduit une seconde fois.
 
+La version `2` exige en plus que `source_included_hold_ids[]` corresponde exactement aux indicateurs du ledger. Une base brute avec un hold inclus, une liste divergente ou une réserve utilisateur déjà nette devient `cash_basis_conflicted` ; aucun cash favorable n'est calculé sur cette contradiction.
+
 Les tests couvrent :
 
 - source brute avant hold ;
 - source déjà nette du même hold ;
 - hold dupliqué ;
 - réserve utilisateur présente dans le ledger sans double retrait ;
-- réconciliation des holds déjà inclus dans le capital engagé de stratégie.
+- réconciliation des holds déjà inclus dans le capital engagé de stratégie ;
+- contradiction base brute / hold inclus ;
+- divergence liste source / ledger ;
+- réserve utilisateur déjà retranchée par la source.
+
+### Nominal économique contre quantité et prix
+
+La fondation utilise un seul prix de référence en devise du compte. Elle réconcilie donc quantité × prix avec `entry_asset_consideration_eur` et avec `order_notional_eur`. Le cas 5 × 100 EUR avec 500 EUR de cash mais 1 000 EUR de nominal économique produit désormais `cash_basis_conflicted` au lieu d'une synthèse favorable.
 
 ### Cash immédiat contre friction du cycle
 
@@ -119,6 +153,14 @@ entry_cash_requirement_eur = 502,25 EUR
 
 Les coûts futurs de sortie et les effets de prix déjà incorporés ne sont pas ajoutés au cash d'entrée. Les sommes `505 EUR` et `505,50 EUR` sont explicitement rejetées comme oracles de ce cas.
 
+La cotation synthétique est désormais USD pour un compte EUR, ce qui rend le change de 0,25 % par côté cohérent. La version `2` bloque aussi :
+
+- un coût FX non nul lorsque compte et cotation ont la même devise ;
+- une commission d'entrée différente de la commission par côté du modèle de cycle ;
+- un coût FX d'entrée différent de `nominal × taux FX par côté` ;
+- une taxe ou un frais contractuel d'entrée non nul tant que sa contrepartie de cycle n'est pas modélisée ;
+- une composante cash absente au lieu d'un zéro explicite.
+
 ### Identité du snapshot
 
 Le moteur sépare :
@@ -130,6 +172,10 @@ Le moteur sépare :
 - identifiant d'instance de calcul.
 
 Les timestamps générés et identifiants ne se hashent pas eux-mêmes. Deux instances du même contenu donnent le même `snapshot_id`. Une modification de taille donne un nouvel identifiant et rend les anciens constats inactifs. Le passage du temps peut expirer une source sans changer son contenu hashé.
+
+La version `2` refuse une source observée après l'heure d'évaluation par `snapshot_temporally_inconsistent`. L'expiration agrégée est désormais le minimum des seules sources critiques : une source non critique stale reste visible, mais ne périme pas à elle seule tous les constats ni leur comparaison.
+
+Les collections fournies comme objets au lieu de tableaux sont des entrées invalides. Leurs éléments doivent aussi être des objets valides avec identifiants stables et non dupliqués lorsqu'ils pilotent une source ou une contrainte. Les régressions couvrent `cash.holds`, `sources`, `userConstraints` et `costExclusions` afin qu'aucun hold, provenance ou contrainte ne disparaisse silencieusement.
 
 ### Alignement de l'avantage brut
 
@@ -258,6 +304,15 @@ Les logs prouvent :
 - H1–H2, C1–C4, Q0, Capital Efficiency et Edge Survival réussis ;
 - Chromium réussi à 390, 768, 1 024 et 1 440 px ;
 - captures et syntaxe réussies.
+
+La synchronisation documentaire finale de la version `1` a ensuite produit :
+
+- Run : `29338812831` (`#610`), `success` ;
+- Head : `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` ;
+- Artifact ID : `8313153630` ;
+- digest GitHub et archive téléchargée : `sha256:5bb9c173f41636f484160ad5a54eb6ac28c8ef725620de6a68a593d6066abbae`.
+
+Les captures inspectées à 390 et 1 440 px sont identiques entre les runs `#608` et `#610`. Les 25 fichiers contrôlés correspondent à leurs blobs distants sur le head `9d38ce31e33b41159d0c6180205c3747c3bb6f1d`.
 
 La capture réelle à 390 px du cas dégénéré montre le texte `Aucune hypothèse ne produit de marge positive`, les trois marges nettes à `0,00 %` et la mention que l'hypothèse haute ne dépasse pas le seuil. L'ancienne phrase est absente. La capture à 1 440 px du cas traversant, ainsi que les formulaires neutres aux deux largeurs, ne montrent ni lien d'évitement parasite, ni header dupliqué, ni coupure ou débordement visible.
 

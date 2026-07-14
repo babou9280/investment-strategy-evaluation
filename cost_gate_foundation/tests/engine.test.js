@@ -20,7 +20,7 @@ const base = fixtures.baseInput();
 const result = engine.compute(base);
 assert.equal(result.ok, true);
 assert.equal(result.scope.supported, true);
-assert.equal(result.version, 'cost-gate-foundation-1-synthetic');
+assert.equal(result.version, 'cost-gate-foundation-2-synthetic');
 
 const independentFixed = 2 * 1;
 const independentVariableRate = 2 * 0.0025 + 0.001 + 0.001;
@@ -100,6 +100,7 @@ const sourceAlreadyNetted = engine.compute(fixtures.baseInput({
   cash: {
     availableSettledCashEur: 400,
     availableSettledCashBasis: 'net_of_listed_holds',
+    sourceIncludedHoldIds: ['H1'],
     holds: [{
       holdId: 'H1',
       holdType: 'pending_order',
@@ -115,6 +116,39 @@ const sourceAlreadyNetted = engine.compute(fixtures.baseInput({
 approx(sourceAlreadyNetted.cash.deductibleHoldsEur, 0);
 approx(sourceAlreadyNetted.cash.accountFreeSettledCashEur, 300);
 
+const grossBasisWithIncludedHold = engine.compute(fixtures.baseInput({
+  cash: {
+    availableSettledCashBasis: 'gross_before_declared_holds',
+    sourceIncludedHoldIds: ['H1'],
+    holds: [{
+      holdId: 'H1',
+      holdType: 'pending_order',
+      amountEur: 600,
+      includedInAvailableSettledCash: true,
+      includedInStrategyCapitalCommitted: false
+    }]
+  }
+}));
+assert.equal(grossBasisWithIncludedHold.cash.status, 'cash_basis_conflicted');
+assert.equal(grossBasisWithIncludedHold.cash.reason, 'gross_cash_basis_contains_included_holds');
+assert.notEqual(grossBasisWithIncludedHold.summaryCode, 'no_incompatibility_detected_under_assumptions');
+
+const sourceIncludedIdsMismatch = engine.compute(fixtures.baseInput({
+  cash: {
+    availableSettledCashBasis: 'net_of_listed_holds',
+    sourceIncludedHoldIds: [],
+    holds: [{
+      holdId: 'H1',
+      holdType: 'pending_order',
+      amountEur: 600,
+      includedInAvailableSettledCash: true,
+      includedInStrategyCapitalCommitted: false
+    }]
+  }
+}));
+assert.equal(sourceIncludedIdsMismatch.cash.status, 'cash_basis_conflicted');
+assert.equal(sourceIncludedIdsMismatch.cash.reason, 'source_included_hold_ids_mismatch');
+
 const strategyCap = engine.compute(fixtures.baseInput({
   cash: {
     availableSettledCashEur: 1000,
@@ -128,7 +162,27 @@ approx(strategyCap.cash.capitalFeasibilityCashEur, 350);
 assert.equal(strategyCap.summaryCode, 'capital_not_feasible');
 
 const quantityMismatch = engine.compute(fixtures.baseInput({ orderQuantity: 4 }));
-assert.equal(finding(quantityMismatch, 'cash_basis_conflicted').condition, 'quantity_price_notional_mismatch');
+assert.equal(finding(quantityMismatch, 'cash_basis_conflicted').condition, 'quantity_price_entry_consideration_mismatch');
+
+const scenarioNotionalMismatch = engine.compute(fixtures.baseInput({ orderNotionalEur: 1000 }));
+assert.equal(finding(scenarioNotionalMismatch, 'cash_basis_conflicted').condition, 'quantity_price_scenario_notional_mismatch');
+assert.notEqual(scenarioNotionalMismatch.summaryCode, 'no_incompatibility_detected_under_assumptions');
+
+const entryCommissionMismatch = engine.compute(fixtures.baseInput({ cash: { entryCommissionEur: 0 } }));
+assert.equal(finding(entryCommissionMismatch, 'cash_basis_conflicted').condition, 'entry_commission_lifecycle_mismatch');
+
+const missingEntryCommission = engine.compute(fixtures.baseInput({ cash: { entryCommissionEur: null } }));
+assert.equal(missingEntryCommission.ok, false);
+assert.equal(finding(missingEntryCommission, 'invalid_cash.entryCommissionEur').condition, 'missing');
+
+const entryFxMismatch = engine.compute(fixtures.baseInput({ cash: { entryFxCashCostEur: 0 } }));
+assert.equal(finding(entryFxMismatch, 'cash_basis_conflicted').condition, 'entry_fx_lifecycle_mismatch');
+
+const sameCurrencyFx = engine.compute(fixtures.baseInput({ quoteCurrency: 'EUR' }));
+assert.equal(finding(sameCurrencyFx, 'cash_basis_conflicted').condition, 'same_currency_fx_cost_conflict');
+
+const unmodelledEntryTax = engine.compute(fixtures.baseInput({ cash: { entryTaxEur: 1 } }));
+assert.equal(finding(unmodelledEntryTax, 'cash_basis_conflicted').condition, 'entry_fixed_costs_missing_from_lifecycle_model');
 
 const duplicateHold = engine.compute(fixtures.baseInput({
   cash: {
@@ -164,6 +218,86 @@ assert.equal(invalidFrictionIndependentCash.ok, false);
 assert.equal(invalidFrictionIndependentCash.summaryCode, 'invalid_input');
 assert.equal(invalidFrictionIndependentCash.cash.status, 'feasible_within_declared_strategy_cash');
 assert.equal(finding(invalidFrictionIndependentCash, 'entry_cash_within_capital_feasibility_cash').status, 'satisfied');
+
+const malformedHolds = engine.compute(fixtures.baseInput({
+  cash: { holds: { holdId: 'H1', amountEur: 600 } }
+}));
+assert.equal(malformedHolds.ok, false);
+assert.equal(finding(malformedHolds, 'invalid_cash.holds').condition, 'array_required');
+assert.notEqual(malformedHolds.summaryCode, 'no_incompatibility_detected_under_assumptions');
+
+const malformedSources = engine.compute(fixtures.baseInput({
+  sources: { provenance: 'external' }
+}));
+assert.equal(malformedSources.ok, false);
+assert.equal(malformedSources.snapshot.status, 'snapshot_incomplete');
+assert.equal(finding(malformedSources, 'invalid_sources').condition, 'array_required');
+
+const malformedSourceElement = engine.compute(fixtures.baseInput({
+  sources: [null],
+  evaluatedAtUtc: '2026-07-14T10:00:00Z'
+}));
+assert.equal(malformedSourceElement.ok, false);
+assert.equal(malformedSourceElement.snapshot.status, 'snapshot_incomplete');
+assert.equal(finding(malformedSourceElement, 'invalid_sources.0').condition, 'object_required');
+assert.equal(malformedSourceElement.findings.some((item) => item.findingCode === 'snapshot_serialization_failed'), false);
+
+const duplicateSourceIds = engine.compute(fixtures.baseInput({
+  sources: [
+    {
+      sourceId: 'DUPLICATE', provenance: 'synthetic_demo', instrumentId: 'SYNTH:ABC', venueId: 'SYNTH-X',
+      quoteCurrency: 'USD', observedAtUtc: '2026-07-14T10:00:00Z', validUntilUtc: '2026-07-14T11:00:00Z', critical: true
+    },
+    {
+      sourceId: 'DUPLICATE', provenance: 'synthetic_demo', instrumentId: 'SYNTH:ABC', venueId: 'SYNTH-X',
+      quoteCurrency: 'USD', observedAtUtc: '2026-07-14T10:00:00Z', validUntilUtc: '2026-07-14T11:00:00Z', critical: true
+    }
+  ],
+  evaluatedAtUtc: '2026-07-14T10:30:00Z'
+}));
+assert.equal(duplicateSourceIds.ok, false);
+assert.equal(finding(duplicateSourceIds, 'invalid_sources.1.sourceId').condition, 'duplicate_source_id');
+
+const malformedConstraints = engine.compute(fixtures.baseInput({
+  userConstraints: { constraintId: 'silently-dropped-before' }
+}));
+assert.equal(malformedConstraints.ok, false);
+assert.equal(finding(malformedConstraints, 'invalid_userConstraints').condition, 'array_required');
+
+const malformedConstraintElement = engine.compute(fixtures.baseInput({ userConstraints: [null] }));
+assert.equal(malformedConstraintElement.ok, false);
+assert.equal(finding(malformedConstraintElement, 'invalid_userConstraints.0').condition, 'object_required');
+
+const duplicateConstraintIds = engine.compute(fixtures.baseInput({
+  userConstraints: [
+    { constraintId: 'same-id', operator: 'lte', observedValue: 1, limitValue: 2 },
+    { constraintId: 'same-id', operator: 'lte', observedValue: 2, limitValue: 3 }
+  ]
+}));
+assert.equal(duplicateConstraintIds.ok, false);
+assert.equal(finding(duplicateConstraintIds, 'invalid_userConstraints.same-id').condition, 'duplicate_constraint_id');
+
+const malformedCostExclusions = engine.compute(fixtures.baseInput({
+  grossEdgeAlignment: fixtures.alignedGrossEdge({ key: { costExclusions: { commission: true } } })
+}));
+assert.equal(malformedCostExclusions.ok, false);
+assert.equal(finding(malformedCostExclusions, 'invalid_grossEdgeAlignment.key.costExclusions').condition, 'array_required');
+
+for (const malformedCollection of [null, {}, 'not-an-array', 42, true]) {
+  const malformedCases = [
+    engine.compute(fixtures.baseInput({ cash: { holds: malformedCollection } })),
+    engine.compute(fixtures.baseInput({ cash: { sourceIncludedHoldIds: malformedCollection } })),
+    engine.compute(fixtures.baseInput({ sources: malformedCollection })),
+    engine.compute(fixtures.baseInput({ userConstraints: malformedCollection })),
+    engine.compute(fixtures.baseInput({
+      grossEdgeAlignment: fixtures.alignedGrossEdge({ key: { costExclusions: malformedCollection } })
+    }))
+  ];
+  malformedCases.forEach((malformedResult) => {
+    assert.notEqual(malformedResult.summaryCode, 'no_incompatibility_detected_under_assumptions');
+    engine.assertFiniteTree(malformedResult);
+  });
+}
 
 const roundTripWithOneSide = engine.compute(fixtures.baseInput({ cost: { sideCount: 1 } }));
 assert.equal(roundTripWithOneSide.ok, false);
@@ -229,7 +363,7 @@ const source = {
   provenance: 'synthetic_demo',
   instrumentId: 'SYNTH:ABC',
   venueId: 'SYNTH-X',
-  quoteCurrency: 'EUR',
+  quoteCurrency: 'USD',
   observedAtUtc: '2026-07-14T10:00:00Z',
   validUntilUtc: '2026-07-14T10:01:00Z'
 };
@@ -252,6 +386,46 @@ const staleAndConflicted = engine.compute(fixtures.baseInput({
 assert.equal(finding(staleAndConflicted, 'synthetic_source_stale').status, 'expired');
 assert.equal(finding(staleAndConflicted, 'instrument_venue_currency_mismatch').status, 'conflicted');
 assert.equal(staleAndConflicted.summaryCode, 'snapshot_unusable');
+
+const futureSource = engine.compute(fixtures.baseInput({
+  sources: [Object.assign({}, source, {
+    sourceId: 'SYNTH-FUTURE',
+    observedAtUtc: '2026-07-14T10:10:00Z',
+    validUntilUtc: '2026-07-14T10:20:00Z'
+  })],
+  evaluatedAtUtc: '2026-07-14T10:00:00Z'
+}));
+assert.equal(futureSource.snapshot.status, 'snapshot_temporally_inconsistent');
+assert.equal(finding(futureSource, 'synthetic_source_observed_after_evaluation').status, 'invalid');
+assert.equal(futureSource.summaryCode, 'snapshot_unusable');
+
+const criticalSource = Object.assign({}, source, {
+  sourceId: 'SYNTH-CRITICAL',
+  validUntilUtc: '2026-07-14T11:00:00Z',
+  critical: true
+});
+const nonCriticalSource = Object.assign({}, source, {
+  sourceId: 'SYNTH-NONCRITICAL',
+  validUntilUtc: '2026-07-14T10:15:00Z',
+  critical: false
+});
+const beforeNonCriticalExpiry = engine.compute(fixtures.baseInput({
+  sources: [criticalSource, nonCriticalSource],
+  evaluatedAtUtc: '2026-07-14T10:10:00Z'
+}));
+const afterNonCriticalExpiry = engine.compute(fixtures.baseInput({
+  sources: [criticalSource, nonCriticalSource],
+  evaluatedAtUtc: '2026-07-14T10:20:00Z'
+}));
+assert.equal(beforeNonCriticalExpiry.snapshot.expiresAtUtc, criticalSource.validUntilUtc);
+assert.equal(afterNonCriticalExpiry.snapshot.expiresAtUtc, criticalSource.validUntilUtc);
+assert.equal(afterNonCriticalExpiry.snapshot.status, 'snapshot_current');
+assert.equal(finding(afterNonCriticalExpiry, 'synthetic_source_stale').status, 'expired');
+assert.deepEqual(engine.compareSnapshots(beforeNonCriticalExpiry, afterNonCriticalExpiry), {
+  sameContent: true,
+  oldSnapshot: 'active',
+  oldFindingsActive: true
+});
 
 const serialized = engine.canonicalStringify({ b: 2, a: -0 });
 assert.equal(serialized, '{"a":0,"b":2}');

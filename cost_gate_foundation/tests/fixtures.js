@@ -73,7 +73,7 @@ const BASE = {
   referencePriceEur: 100,
   orderNotionalEur: 500,
   accountCurrency: 'EUR',
-  quoteCurrency: 'EUR',
+  quoteCurrency: 'USD',
   holdingHorizonDefinition: 'user_defined',
   provenance: 'synthetic_demo',
   cost: {
@@ -99,6 +99,7 @@ const BASE = {
     entrySlippageCashEur: 0,
     availableSettledCashEur: 1000,
     availableSettledCashBasis: 'gross_before_declared_holds',
+    sourceIncludedHoldIds: [],
     holds: [],
     userDefinedCashReserveEur: 0,
     strategyCapitalEur: 1000,

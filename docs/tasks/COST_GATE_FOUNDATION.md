@@ -116,7 +116,9 @@ conclusion = success
 scenarios = CG-01 à CG-18
 ```
 
-La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois nouveaux fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision `cost-gate-foundation-1-synthetic` ajoute aussi les régressions portée/côtés, ordre canonique et vocabulaire de synthèse. Son head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` a réussi le run distinct `#608` ; la synchronisation documentaire et sa CI exact-head restent requises avant clôture des fils.
+La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision `cost-gate-foundation-1-synthetic`, prouvée par le run `#608` puis synchronisée sur `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` par le run `#610`, a corrigé ces causes ainsi que portée/côtés, ordre canonique et vocabulaire de synthèse.
+
+La revue automatisée finale du head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite révélé quatre défauts supplémentaires : nominal économique non réconcilié avec quantité × prix, source observée après l'évaluation, expiration agrégée pilotée par une source non critique et collections mal formées assimilées à des listes vides. L'audit adjacent a reproduit une contradiction base brute/nette contre holds inclus. La révision `cost-gate-foundation-2-synthetic` corrige localement ces causes ; sa CI exact-head et ses artefacts restent requis avant de les déclarer validées.
 
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 
@@ -147,7 +149,14 @@ Ajouter :
 - cash et cycle distincts ;
 - source déjà nette d'un hold, sans second retrait ;
 - allocation de stratégie inférieure au cash du compte ;
-- réconciliation quantité × prix × devise ;
+- réconciliation quantité × prix × devise × nominal économique ;
+- réconciliation entre base brute/nette, liste source et indicateurs des holds ;
+- refus d'une source observée après l'heure d'évaluation ;
+- expiration agrégée limitée aux sources critiques ;
+- rejet des collections non-tableaux ;
+- cohérence devise compte/cotation et coûts FX ;
+- réconciliation commission et change entre cash d'entrée et coût du cycle ;
+- refus explicite des taxes ou frais d'entrée non modélisés dans le cycle ;
 - ordres en attente ;
 - snapshot déterministe et identité d'instance séparée ;
 - invalidation après changement ;
@@ -170,9 +179,10 @@ Ajouter :
 Révision courante :
 
 ```text
-cost-gate-foundation-1-synthetic
-cost-gate-snapshot-2
-cost-gate-findings-2
+cost-gate-foundation-2-synthetic
+cost-gate-snapshot-3
+cost-gate-findings-3
+cost-gate-findings-catalog-3
 ```
 
 Ce numéro identifie uniquement la preuve synthétique restreinte. Il ne nomme pas un produit prêt à publier.
