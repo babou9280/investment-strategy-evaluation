@@ -8,12 +8,12 @@ La direction **Breaktest Cost Gate** est validée stratégiquement. La fondation
 pull request = #24
 branch = strategy/cost-gate-foundation
 base = breaktest-bootstrap
-version 0 head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
-version 0 run = 29334708343 (#604), success
-version 1 functional head = 2ebf0e3e37852e4f3252e54149e147aa0d5712c3
-version 1 functional run = 29338189190 (#608), success
-version 1 artifact = 8312898043, digest c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183
-current engine = cost-gate-foundation-1-synthetic
+base head = 5f1281b49fde9363dcb38e0225a5d48d34589475
+version 2 functional head = faafd348da55217e96ba67efd9f9434be62725ca
+version 2 functional run = 29342135098 (#612), success
+version 2 artifact = 8314518122
+version 2 digest = 12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
+current engine = cost-gate-foundation-2-synthetic
 ```
 
 `main` reste strictement hors périmètre. Ne fusionne, ne publie et ne déploie rien automatiquement.
@@ -31,7 +31,7 @@ Reconstruire l'état GitHub actuel de la PR `#24` :
 
 Le head peut avoir évolué depuis le présent document. Une affirmation locale n'est pas une preuve distante.
 
-La revue Codex du head `be6aa09` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. Les corrections, ainsi que les régressions adjacentes portée/côtés, ordre canonique et vocabulaire de synthèse, ont réussi sur `2ebf0e3` dans le run `#608`. Vérifier le run exact-head de la synchronisation documentaire avant de répondre aux fils.
+La revue Codex du head `9d38ce3` a ouvert quatre fils sur le nominal économique, les sources futures, l'expiration pilotée par les seules sources critiques et les collections non-tableaux. Les corrections et l'audit adjacent des bases de cash, devises et coûts entrée/cycle ont réussi sur `faafd3` dans le run `#612`. Les quatre fils restent ouverts : vérifier d'abord le run exact-head de la synchronisation documentaire, puis répondre avec les preuves fonctionnelle et documentaire avant de les résoudre.
 
 ## Sources obligatoires
 
@@ -68,7 +68,12 @@ Vérifier ou corriger seulement :
 - calcul `502,25 EUR` de cash immédiat contre `5,50 EUR` de friction de cycle ;
 - plafonnement par l'allocation libre de stratégie ;
 - absence de double retrait des holds ;
+- cohérence entre base brute/nette, liste des holds inclus par la source et ledger ;
 - réconciliation quantité, prix, devise et nominal ;
+- refus d'une source future et expiration agrégée limitée aux sources critiques ;
+- rejet des collections, éléments et identifiants stables mal formés ;
+- cohérence devise/FX et coûts communs entre entrée et cycle ;
+- blocage explicite des taxes ou frais d'entrée absents du modèle de cycle ;
 - alignement complet de l'avantage brut ;
 - hash de contenu et instance séparés ;
 - invalidation des anciens constats ;
@@ -87,7 +92,7 @@ Traiter les commentaires de revue GitHub seulement après vérification que leur
 
 ## Preuve fonctionnelle déjà obtenue
 
-Le run `#604` sur `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` a exécuté :
+Le run `#612` sur `faafd348da55217e96ba67efd9f9434be62725ca` a exécuté :
 
 ```text
 Cost Gate foundation engine tests passed
@@ -96,16 +101,16 @@ Cost Gate foundation property tests passed
 Cost Gate foundation static integrity passed
 ```
 
-Il a aussi réussi le build, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, Chromium 390/768/1024/1440 et la syntaxe.
+Il a aussi réussi le build, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, Chromium 390/768/1024/1440 et la syntaxe. L'intégrité Cost Gate couvre cinq fichiers et `88 735` octets sans capacité réseau ou persistance.
 
 Artefact :
 
 ```text
-id = 8311484443
-digest = sha256:f95dfd83ba47ca1b1896dece5259a0831db96ff7156d0e194088fb40e6a24b46
+id = 8314518122
+digest = sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
 ```
 
-Cette preuve doit être réexécutée si le code ou le workflow change. Une synchronisation documentaire ultérieure exige au minimum un run exact-head réussi avant clôture de la stabilisation.
+Les logs, l'archive et les captures 390/1 440 px ont été inspectés. Le digest téléchargé correspond à GitHub et les treize blobs fonctionnels correspondent au tree distant. Cette preuve doit être réexécutée si le code ou le workflow change. La synchronisation documentaire exige son propre run exact-head avant clôture de la stabilisation.
 
 ## Interdictions
 

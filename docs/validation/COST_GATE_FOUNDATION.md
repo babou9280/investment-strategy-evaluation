@@ -11,14 +11,16 @@
 - GitHub Actions version `1` : run `29338189190` (`#608`), `success`
 - Head documentaire version `1` : `9d38ce31e33b41159d0c6180205c3747c3bb6f1d`
 - GitHub Actions documentaire version `1` : run `29338812831` (`#610`), `success`
-- Moteur prouvé à distance : `cost-gate-foundation-1-synthetic`
 - Artefact documentaire final version `1` : `8313153630`, digest `sha256:5bb9c173f41636f484160ad5a54eb6ac28c8ef725620de6a68a593d6066abbae`
-- Révision locale en cours : `cost-gate-foundation-2-synthetic`, non encore prouvée à distance
+- Head fonctionnel version `2` : `faafd348da55217e96ba67efd9f9434be62725ca`
+- GitHub Actions version `2` : run `29342135098` (`#612`), `success`
+- Moteur prouvé à distance : `cost-gate-foundation-2-synthetic`
+- Artefact fonctionnel version `2` : `8314518122`, digest `sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b`
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact ; le run `#610` valide sa synchronisation documentaire finale. Ces preuves ne valident pas la version `2`, qui exige un nouveau head distant, une CI exact-head et un nouvel artefact.
+Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact ; le run `#610` valide sa synchronisation documentaire. Le run `#612` valide la version `2` sur son head fonctionnel exact. La présente synchronisation documentaire doit elle-même réussir sur son futur head exact avant clôture de la revue.
 
 ## Revue rétrospective de la version `0`
 
@@ -69,7 +71,7 @@ Cost Gate foundation property tests passed
 Cost Gate foundation static integrity passed: 5 local files, 88735 bytes, no network or persistence capability
 ```
 
-Cette exécution locale est une prévalidation, pas une preuve distante. Les quatre fils restent ouverts jusqu'au push, au run exact-head et à l'inspection de l'artefact.
+Cette prévalidation a été confirmée à distance sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612`. Les quatre fils restent ouverts jusqu'à la synchronisation documentaire exact-head et aux réponses reliant chaque correction à cette preuve.
 
 ## Périmètre exécuté
 
@@ -241,7 +243,7 @@ Résultat :
 Cost Gate foundation engine tests passed
 Cost Gate foundation scenario matrix passed: CG-01 to CG-18
 Cost Gate foundation property tests passed
-Cost Gate foundation static integrity passed: 5 local files, 64260 bytes, no network or persistence capability
+Cost Gate foundation static integrity passed: 5 local files, 88735 bytes, no network or persistence capability
 ```
 
 ### Non-régressions
@@ -317,6 +319,34 @@ Les captures inspectées à 390 et 1 440 px sont identiques entre les runs `#608
 La capture réelle à 390 px du cas dégénéré montre le texte `Aucune hypothèse ne produit de marge positive`, les trois marges nettes à `0,00 %` et la mention que l'hypothèse haute ne dépasse pas le seuil. L'ancienne phrase est absente. La capture à 1 440 px du cas traversant, ainsi que les formulaires neutres aux deux largeurs, ne montrent ni lien d'évitement parasite, ni header dupliqué, ni coupure ou débordement visible.
 
 Le test navigateur prouve aussi que le lien d'évitement reste le premier élément atteint par Tab et visible au focus. Le script de capture focalise uniquement un élément temporaire hors écran, vérifie que le lien est déjà hors viewport, applique ses ajustements uniquement pendant la capture puis restaure les styles et supprime cet élément. Aucun CSS produit ni comportement d'accessibilité réel n'a été modifié pour les captures.
+
+### Artefact et inspection de la version `2`
+
+- Nom : `breaktest-validation-logs` ;
+- Run : `29342135098` (`#612`), `success` ;
+- Head : `faafd348da55217e96ba67efd9f9434be62725ca` ;
+- job : `87116343040`, toutes les étapes réussies ;
+- Artifact ID : `8314518122` ;
+- taille : `6 042 535` octets ;
+- digest GitHub et archive téléchargée : `sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b`.
+
+Le workflow de pull request a testé le merge commit `81fb7c39f8f4dd27aee7e116d4ab69c51117fe57`, construit explicitement avec le head `faafd348da55217e96ba67efd9f9434be62725ca` et la base `5f1281b49fde9363dcb38e0225a5d48d34589475`. Les treize blobs modifiés par la version `2` ont été comparés à leurs fichiers locaux et correspondent au tree distant `c5720516ae36994035b6bc9d5be687a3f2d895ca`.
+
+Les logs téléchargés prouvent :
+
+- moteur, CG-01 à CG-18, propriétés et intégrité Cost Gate réussis ;
+- build historique inchangé à `166 862` octets et SHA-256 `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
+- H1–H2, C1–C4, Q0, Capital Efficiency et Edge Survival réussis ;
+- Chromium réussi à 390, 768, 1 024 et 1 440 px ;
+- captures, syntaxe Python et syntaxe JavaScript réussies.
+
+Les captures suivantes ont été réellement ouvertes et inspectées :
+
+- cas dégénéré à 390 px : texte exact `Aucune hypothèse ne produit de marge positive`, trois marges nettes à `0,00 %`, égalité au seuil visible et ancienne phrase absente ;
+- page traversante complète à 390 px et 1 440 px : mise en page cohérente, sans débordement, coupure, header dupliqué ni lien d'évitement visible ;
+- formulaires neutres à 390 px et 1 440 px : champs, unités, boutons et pied de page visibles sans artefact de focus.
+
+Les empreintes des deux preuves visuelles principales sont `4462b0ca5e1dbe15b6dd5fe56e5bc5b7122d390ce630333cb634f5aa0459c06d` pour le résultat dégénéré mobile et `3a6c060ae296dd6c621d77ba41ee29b9ea27db203d80128001b0edc71daff08b` pour la page desktop complète. Cette inspection confirme des non-régressions de Capital Efficiency et Edge Survival ; elle ne prouve toujours aucune interface Cost Gate.
 
 ## Limites restantes
 

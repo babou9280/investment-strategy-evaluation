@@ -137,7 +137,7 @@ Une donnée manquante dans une couche ne masque pas un fait indépendant démont
 
 Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
 
-La preuve fonctionnelle `#604` et la synchronisation `#606` concernent la version `0`. La version `1`, qui corrige les défauts rétrospectifs de revue, a réussi au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`. Sa synchronisation documentaire exige encore son propre run exact-head avant toute clôture de la fondation.
+Les preuves `#604` à `#610` concernent les versions `0` et `1`. La version `2`, qui ajoute les réconciliations nominal, temps, collections, base de cash, devise et coûts entrée/cycle, a réussi au head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` dans le run exact `#612`. Son artefact a été inspecté. Sa synchronisation documentaire et la revue du head final restent requises avant toute clôture de la fondation.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :
@@ -187,7 +187,7 @@ Sans réseau ni données réelles :
 - refus explicite de marge, short, dérivés et bases inconnues ;
 - invalidation des snapshots et non-régressions historiques.
 
-Preuve fonctionnelle : head `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`, run `29334708343` (`#604`), scénarios CG-01 à CG-18. Cette preuve reste interne et synthétique ; la synchronisation documentaire et sa CI exact-head doivent encore clôturer la PR.
+Preuve fonctionnelle courante : head `faafd348da55217e96ba67efd9f9434be62725ca`, run `29342135098` (`#612`), scénarios CG-01 à CG-18, propriétés, intégrité et non-régressions. Cette preuve reste interne et synthétique ; la synchronisation documentaire, les fils de revue et la relecture du head final doivent encore clôturer la PR.
 
 ### Gate 2 — prototype utilisateur contrôlé
 

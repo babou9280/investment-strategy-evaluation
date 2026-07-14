@@ -312,6 +312,6 @@ Avant donnée externe réelle :
 
 Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2`, validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` puis synchronisée par le run `#610`, ajoute l'ordre canonique des ensembles et l'inactivation après expiration.
 
-La version locale `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, et limite l'expiration agrégée aux sources critiques. Elle n'est pas encore prouvée à distance ; un nouveau head, une CI exact-head et un artefact inspecté sont requis.
+La version `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, exige des identifiants stables et uniques pour les sources et contraintes, et limite l'expiration agrégée aux sources critiques. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

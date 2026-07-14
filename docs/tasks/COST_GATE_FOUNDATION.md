@@ -4,7 +4,7 @@
 
 - Branche : `strategy/cost-gate-foundation`
 - Base : `breaktest-bootstrap`
-- Phase : preuve synthétique interne exécutée ; synchronisation et revue finale de PR
+- Phase : preuve synthétique version `2` exécutée ; synchronisation documentaire et revue finale de PR
 - Publication : interdite
 - Données externes : interdites
 - `main` : hors périmètre
@@ -118,7 +118,7 @@ scenarios = CG-01 à CG-18
 
 La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision `cost-gate-foundation-1-synthetic`, prouvée par le run `#608` puis synchronisée sur `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` par le run `#610`, a corrigé ces causes ainsi que portée/côtés, ordre canonique et vocabulaire de synthèse.
 
-La revue automatisée finale du head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite révélé quatre défauts supplémentaires : nominal économique non réconcilié avec quantité × prix, source observée après l'évaluation, expiration agrégée pilotée par une source non critique et collections mal formées assimilées à des listes vides. L'audit adjacent a reproduit une contradiction base brute/nette contre holds inclus. La révision `cost-gate-foundation-2-synthetic` corrige localement ces causes ; sa CI exact-head et ses artefacts restent requis avant de les déclarer validées.
+La revue automatisée finale du head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite révélé quatre défauts supplémentaires : nominal économique non réconcilié avec quantité × prix, source observée après l'évaluation, expiration agrégée pilotée par une source non critique et collections mal formées assimilées à des listes vides. L'audit adjacent a reproduit une contradiction base brute/nette contre holds inclus, puis les incohérences devise/FX et coûts d'entrée/cycle. La révision `cost-gate-foundation-2-synthetic` corrige ces causes sur le head `faafd348da55217e96ba67efd9f9434be62725ca` ; le run exact-head `#612` (`29342135098`) et l'artefact `8314518122` inspecté les valident techniquement. La synchronisation documentaire, les réponses aux quatre fils et une dernière revue du head final restent requises.
 
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 

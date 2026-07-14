@@ -237,4 +237,14 @@
 - Décision : `cost-gate-foundation-1-synthetic` corrige les dépendances silencieuses entre couches, l'expiration des anciens constats, la coexistence stale/conflit, l'ordre canonique des ensembles et l'alignement `operation_scope` / `side_count`.
 - Politique : `edge_not_surviving_modelled_friction` décrit un avantage absorbé sans inventer une contrainte utilisateur ; `constraint_breach` reste réservé à une limite explicitement fournie.
 - Versionnement : snapshot `2`, politique de synthèse `2` et catalogue de constats `2` ; les anciennes preuves `#604` et `#606` restent des preuves de la version `0`, pas de cette correction.
-- Preuve : head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, run GitHub Actions `29338189190` (`#608`), artefact `8312898043` inspecté ; synchronisation documentaire exact-head encore requise avant de résoudre les trois fils de revue.
+- Preuve : head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, run GitHub Actions `29338189190` (`#608`), artefact `8312898043` inspecté ; synchronisation documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d`, run `#610`. Les trois fils associés ont été résolus après ces preuves.
+
+## D037 — La cohérence Cost Gate doit être réconciliée entre toutes les couches
+
+- Statut : **active comme correction technique rétrospective, 14 juillet 2026**
+- Décision : `cost-gate-foundation-2-synthetic` bloque toute synthèse favorable lorsque quantité × prix, nominal, base de cash, holds inclus, devise ou coûts communs d'entrée et de cycle décrivent des économies incompatibles.
+- Temps et provenance : une source observée après l'évaluation est invalide ; seules les sources critiques pilotent l'expiration agrégée ; collections, éléments et identifiants stables mal formés ne sont jamais assimilés silencieusement à une absence.
+- Coûts non encore modélisés : une taxe ou un frais contractuel d'entrée non nul bloque la synthèse favorable tant qu'une contrepartie explicite n'existe pas dans le modèle de cycle. Ce refus est une limite, pas une estimation fiscale.
+- Versionnement : snapshot `3`, politique de synthèse `3` et catalogue de constats `3` ; les preuves des versions `0` et `1` ne valident pas cette correction.
+- Preuve : head fonctionnel exact `faafd348da55217e96ba67efd9f9434be62725ca`, run GitHub Actions `29342135098` (`#612`), artefact `8314518122` et captures inspectés, digest `sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b`.
+- Gate : synchroniser la documentation sur un head exact, répondre aux quatre fils de revue puis faire relire le head final. Cette décision n'autorise ni donnée externe, ni interface, ni fusion.

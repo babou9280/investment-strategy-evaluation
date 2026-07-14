@@ -263,13 +263,17 @@ La preuve synthétique respecte :
 - domaine explicite `cash_account`, achat long, action/ETF au comptant ;
 - `unsupported_scope` pour marge, short, dérivés et domaines non modélisés ;
 - cash réglé réconcilié avec la base d'inclusion de chaque `hold_id` ;
+- base brute/nette, liste des holds inclus par la source et indicateurs du ledger réconciliés sans fallback ;
 - plafond de faisabilité égal au minimum entre cash libre du compte et allocation libre de stratégie ;
 - engagement cash d'entrée distinct de la friction économique du cycle ;
+- coûts communs d'entrée et de cycle réconciliés ; même devise implique un coût FX nul ; toute taxe ou frais d'entrée absent du cycle bloque la synthèse favorable ;
 - spread/slippage incorporés au prix non ajoutés une seconde fois ;
 - quantité, prix, devise et nominal réconciliés ;
 - clé d'alignement complète avant toute conclusion dépendante de `G` ;
 - hash de contenu déterministe distinct de l'identifiant d'instance ;
 - expiration temporelle possible sans mutation du hash ;
+- source future refusée et expiration agrégée pilotée uniquement par les sources critiques ;
+- collections contractuelles obligatoirement fournies comme tableaux ; élément mal formé ou identifiant stable dupliqué invalide la couche concernée ;
 - `findings[]` complets, ordonnés et attachés au snapshot ;
 - synthèse dépendante des preuves, sans perte d'un fait indépendant ;
 - anciennes conclusions inactives après mutation ;

@@ -61,7 +61,7 @@ Sortie : autorise uniquement un moteur synthétique interne.
 
 Statut de la version `0` : contrats corrigés et moteur synthétique CG-01 à CG-18 réussis au head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` dans GitHub Actions `#604`, puis documentation synchronisée au head `be6aa09d2b87bb07bd19258f393b496e522580a1` dans le run `#606`.
 
-Une revue exacte de `be6aa09` a cependant révélé trois défauts rétrospectifs et l'audit adjacent trois incohérences supplémentaires. La version `1` les corrige au head `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, validé par le run exact `#608` et son artefact inspecté. Gate 0 reste ouverte jusqu'au run exact-head de la synchronisation documentaire et à la clôture des fils de revue.
+Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'audit adjacent trois incohérences supplémentaires. La version `1` les corrige au head `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, validé par les runs exacts `#608` et `#610`. La revue suivante a ouvert quatre défauts de nominal, temps, expiration et collections ; l'audit adjacent a étendu leur correction aux bases de cash, devises et coûts entrée/cycle. La version `2` est validée techniquement au head `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` et son artefact inspecté. Gate 0 reste ouverte jusqu'à la synchronisation documentaire, la résolution des fils et la revue du head final.
 
 ### Gate 1 — valeur compréhensible sans donnée réelle
 

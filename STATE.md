@@ -23,7 +23,7 @@ GitHub Actions = 29331537069 (#556)
 conclusion = success
 ```
 
-`main` reste inchangé et hors périmètre.
+`main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
 Nouvelle branche active :
 
@@ -31,41 +31,22 @@ Nouvelle branche active :
 strategy/cost-gate-foundation
 ```
 
-Pull request active : `#24`, laissée en brouillon.
+Pull request active : `#24`, ouverte, fusionnable et laissée en brouillon. Sa base est `breaktest-bootstrap` au commit `5f1281b49fde9363dcb38e0225a5d48d34589475`.
 
-Preuve fonctionnelle Cost Gate :
+La version `1` reste historiquement prouvée par les runs `#608` et `#610`. La revue automatisée du head documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite ouvert quatre défauts : nominal non réconcilié avec quantité × prix, source future acceptée, expiration agrégée pilotée par une source non critique et collections mal formées silencieusement supprimées. L'audit adjacent a étendu la correction aux bases de cash, aux devises et aux coûts d'entrée/cycle.
 
-```text
-functional head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
-GitHub Actions = 29334708343 (#604)
-conclusion = success
-artifact = 8311484443
-digest = sha256:f95dfd83ba47ca1b1896dece5259a0831db96ff7156d0e194088fb40e6a24b46
-```
-
-Dernier head documentaire synchronisé :
+La révision `cost-gate-foundation-2-synthetic` est désormais prouvée à distance :
 
 ```text
-head = be6aa09d2b87bb07bd19258f393b496e522580a1
-GitHub Actions = 29335825348 (#606)
+functional head = faafd348da55217e96ba67efd9f9434be62725ca
+tree = c5720516ae36994035b6bc9d5be687a3f2d895ca
+GitHub Actions = 29342135098 (#612)
 conclusion = success
-artifact = 8311933256
-digest = sha256:13f4dc9fbd1add1252d85a88094cc8675152b47c4e61cdb99629efa242010030
+artifact = 8314518122
+digest = sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
 ```
 
-Une revue automatisée demandée sur ce head exact a révélé trois défauts rétrospectifs : une erreur de friction pouvait masquer un constat cash indépendant, l'expiration pouvait laisser les anciens constats actifs à hash inchangé, et une source stale pouvait masquer un conflit instrument/place/devise. L'audit adjacent a aussi détecté une incohérence possible entre portée et nombre de côtés, un hash sensible à l'ordre d'ensembles économiques et une synthèse attribuant à tort un avantage absorbé à une contrainte utilisateur.
-
-La révision `cost-gate-foundation-1-synthetic` corrige ces causes et ajoute leurs régressions. Elle est désormais prouvée à distance :
-
-```text
-functional head = 2ebf0e3e37852e4f3252e54149e147aa0d5712c3
-GitHub Actions = 29338189190 (#608)
-conclusion = success
-artifact = 8312898043
-digest = sha256:c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183
-```
-
-Les 25 blobs poussés correspondent aux fichiers testés localement. Les logs, l'archive et les captures 390/1 440 px ont été inspectés. La synchronisation documentaire de cette preuve doit encore réussir sur son propre head exact avant de traiter les fils de revue.
+Les treize blobs de cette révision correspondent au tree distant. Les jobs, logs, archive et captures 390/1 440 px ont été inspectés. Les quatre fils de revue restent ouverts jusqu'à la synchronisation documentaire exact-head et aux réponses fondées sur cette preuve.
 
 La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
@@ -218,7 +199,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Q0 ;
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
-- Cost Gate foundation version `1`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact dans le périmètre cash long déclaré ;
+- Cost Gate foundation version `2`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `faafd348` dans le périmètre cash long déclaré ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
@@ -298,11 +279,11 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Prochaine séquence
 
-1. synchroniser la documentation avec la preuve distante de la version `1` dans la PR `#24` ;
-2. exécuter la validation exact-head de cette synchronisation ;
-3. traiter puis résoudre les trois nouveaux commentaires de revue uniquement après ce dernier run ;
-4. conserver la PR en brouillon, sans fusion ni publication ;
-5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
-6. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+1. pousser la synchronisation documentaire de la version `2` dans la PR `#24` ;
+2. exécuter et inspecter la validation exact-head de cette synchronisation ;
+3. répondre puis résoudre les quatre commentaires de revue uniquement après ce run ;
+4. demander une dernière revue automatisée sur le head final et traiter tout nouveau défaut matériel ;
+5. conserver la PR en brouillon, sans fusion ni publication, jusqu'à l'accord explicite d'Ayman ;
+6. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ; aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
 
 Aucune action d'Ayman n'est requise actuellement.

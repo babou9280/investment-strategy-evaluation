@@ -407,6 +407,6 @@ Avant d'afficher une faisabilité de capital :
 
 Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles de la version `1` distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces correctifs réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`, puis au head documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` dans le run `#610`.
 
-La version locale `cost-gate-foundation-2-synthetic` ajoute les réconciliations nominal, base de cash, devise et coûts entrée/cycle. Elle reste une prévalidation tant qu'un nouveau run exact-head et son artefact ne sont pas inspectés.
+La version `cost-gate-foundation-2-synthetic` ajoute les réconciliations nominal, base de cash, devise et coûts entrée/cycle. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté. Cette preuve reste synthétique et n'établit ni solde réel, ni règle de règlement d'un courtier, ni exhaustivité fiscale.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.
