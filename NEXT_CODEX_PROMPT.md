@@ -8,10 +8,11 @@ La direction **Breaktest Cost Gate** est validée stratégiquement. La fondation
 pull request = #24
 branch = strategy/cost-gate-foundation
 base = breaktest-bootstrap
-functional head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
-functional run = 29334708343 (#604), success
-last synchronized head = be6aa09d2b87bb07bd19258f393b496e522580a1
-last synchronized run = 29335825348 (#606), success
+version 0 head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
+version 0 run = 29334708343 (#604), success
+version 1 functional head = 2ebf0e3e37852e4f3252e54149e147aa0d5712c3
+version 1 functional run = 29338189190 (#608), success
+version 1 artifact = 8312898043, digest c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183
 current engine = cost-gate-foundation-1-synthetic
 ```
 
@@ -30,7 +31,7 @@ Reconstruire l'état GitHub actuel de la PR `#24` :
 
 Le head peut avoir évolué depuis le présent document. Une affirmation locale n'est pas une preuve distante.
 
-La revue Codex du head `be6aa09` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. Vérifier aussi les corrections adjacentes sur portée/côtés, ordre canonique des ensembles et vocabulaire de synthèse. Les runs `#604` et `#606` ne valident pas la version `1`.
+La revue Codex du head `be6aa09` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. Les corrections, ainsi que les régressions adjacentes portée/côtés, ordre canonique et vocabulaire de synthèse, ont réussi sur `2ebf0e3` dans le run `#608`. Vérifier le run exact-head de la synchronisation documentaire avant de répondre aux fils.
 
 ## Sources obligatoires
 

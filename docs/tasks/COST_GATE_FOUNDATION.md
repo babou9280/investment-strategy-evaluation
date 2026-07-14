@@ -116,7 +116,7 @@ conclusion = success
 scenarios = CG-01 à CG-18
 ```
 
-La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois nouveaux fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision courante devient `cost-gate-foundation-1-synthetic` et ajoute aussi les régressions portée/côtés, ordre canonique et vocabulaire de synthèse. Elle ne réutilise pas la preuve de la version `0` : un run exact-head distinct est obligatoire.
+La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois nouveaux fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision `cost-gate-foundation-1-synthetic` ajoute aussi les régressions portée/côtés, ordre canonique et vocabulaire de synthèse. Son head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` a réussi le run distinct `#608` ; la synchronisation documentaire et sa CI exact-head restent requises avant clôture des fils.
 
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 

@@ -7,14 +7,15 @@
 - Head documentaire version `0` : `be6aa09d2b87bb07bd19258f393b496e522580a1`
 - Pull request : `#24`
 - GitHub Actions version `0` : runs `29334708343` (`#604`) et `29335825348` (`#606`), `success`
-- Moteur prouvé à distance : `cost-gate-foundation-0-synthetic`
-- Révision courante locale : `cost-gate-foundation-1-synthetic`
-- Statut de la révision `1` : correction et régressions locales ; push et run exact-head requis
+- Head fonctionnel version `1` : `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`
+- GitHub Actions version `1` : run `29338189190` (`#608`), `success`
+- Moteur prouvé à distance : `cost-gate-foundation-1-synthetic`
+- Artefact version `1` : `8312898043`, digest `sha256:c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183`
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel de la version `0`. Le run `#606` valide sa synchronisation documentaire. Aucun de ces runs ne prouve la version `1` : une affirmation locale, même accompagnée de tests locaux réussis, ne devient une preuve distante qu'après push et exécution sur le head exact.
+Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact. La présente mise à jour de preuve reste documentaire et exige à son tour un run exact-head avant clôture de la stabilisation.
 
 ## Revue rétrospective de la version `0`
 
@@ -30,9 +31,9 @@ L'audit adjacent a révélé trois autres causes :
 - l'ordre des holds, sources, contraintes ou exclusions pouvait modifier l'identité d'un snapshot économiquement identique ;
 - un avantage absorbé pouvait être résumé comme `constraint_breach` sans contrainte utilisateur explicite.
 
-La version `1` corrige ces causes sans modifier les formules économiques de seuil, de cash ou d'avantage. Elle ajoute des oracles distincts pour le cas strictement inférieur, l'égalité au seuil, la contrainte utilisateur réelle, l'expiration à hash inchangé, les constats stale et conflit simultanés, l'indépendance des couches et l'ordre des ensembles. Ces changements restent à prouver à distance.
+La version `1` corrige ces causes sans modifier les formules économiques de seuil, de cash ou d'avantage. Elle ajoute des oracles distincts pour le cas strictement inférieur, l'égalité au seuil, la contrainte utilisateur réelle, l'expiration à hash inchangé, les constats stale et conflit simultanés, l'indépendance des couches et l'ordre des ensembles. Ces changements sont prouvés à distance par le run `#608`.
 
-### Prévalidation locale de la version `1`
+### Prévalidation locale puis validation distante de la version `1`
 
 Les commandes moteur, scénarios, propriétés, syntaxe et intégrité ont été réellement exécutées sur les fichiers locaux corrigés :
 
@@ -43,7 +44,7 @@ Cost Gate foundation property tests passed
 Cost Gate foundation static integrity passed: 5 local files, 72619 bytes, no network or persistence capability
 ```
 
-Les non-régressions numériques et statiques historiques, Q0, Capital Efficiency et Edge Survival réussissent aussi localement. Playwright et Chromium ne sont pas présents dans cet environnement local ; les régressions navigateur et les captures doivent donc être exécutées par GitHub Actions sur le head poussé.
+Les non-régressions numériques et statiques historiques, Q0, Capital Efficiency et Edge Survival réussissent aussi localement. Playwright et Chromium n'étaient pas présents dans cet environnement local ; GitHub Actions a donc exécuté les régressions navigateur et les captures sur le head poussé exact.
 
 ## Périmètre exécuté
 
@@ -239,7 +240,28 @@ La synchronisation documentaire version `0` a aussi produit :
 - Head : `be6aa09d2b87bb07bd19258f393b496e522580a1` ;
 - Digest GitHub : `sha256:13f4dc9fbd1add1252d85a88094cc8675152b47c4e61cdb99629efa242010030`.
 
-Cet artefact ne remplace pas la preuve à produire pour la version `1`.
+Cet artefact historique ne prouve pas la version `1`, dont la preuve distincte figure ci-dessous.
+
+### Artefact et inspection de la version `1`
+
+- Nom : `breaktest-validation-logs` ;
+- Artifact ID : `8312898043` ;
+- Run : `29338189190` (`#608`) ;
+- Head : `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` ;
+- Digest GitHub et archive téléchargée : `sha256:c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183`.
+
+Les logs prouvent :
+
+- moteur, CG-01 à CG-18 et propriétés réussis ;
+- intégrité Cost Gate réussie sur cinq fichiers et `72 619` octets ;
+- build historique déterministe inchangé à `166 862` octets et SHA-256 `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf` ;
+- H1–H2, C1–C4, Q0, Capital Efficiency et Edge Survival réussis ;
+- Chromium réussi à 390, 768, 1 024 et 1 440 px ;
+- captures et syntaxe réussies.
+
+La capture réelle à 390 px du cas dégénéré montre le texte `Aucune hypothèse ne produit de marge positive`, les trois marges nettes à `0,00 %` et la mention que l'hypothèse haute ne dépasse pas le seuil. L'ancienne phrase est absente. La capture à 1 440 px du cas traversant, ainsi que les formulaires neutres aux deux largeurs, ne montrent ni lien d'évitement parasite, ni header dupliqué, ni coupure ou débordement visible.
+
+Le test navigateur prouve aussi que le lien d'évitement reste le premier élément atteint par Tab et visible au focus. Le script de capture focalise uniquement un élément temporaire hors écran, vérifie que le lien est déjà hors viewport, applique ses ajustements uniquement pendant la capture puis restaure les styles et supprime cet élément. Aucun CSS produit ni comportement d'accessibilité réel n'a été modifié pour les captures.
 
 ## Limites restantes
 

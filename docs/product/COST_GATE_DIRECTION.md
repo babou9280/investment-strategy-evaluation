@@ -137,7 +137,7 @@ Une donnée manquante dans une couche ne masque pas un fait indépendant démont
 
 Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
 
-La preuve fonctionnelle `#604` et la synchronisation `#606` concernent la version `0`. La version `1`, qui corrige les défauts rétrospectifs de revue, exige son propre run exact-head avant toute clôture de la fondation.
+La preuve fonctionnelle `#604` et la synchronisation `#606` concernent la version `0`. La version `1`, qui corrige les défauts rétrospectifs de revue, a réussi au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`. Sa synchronisation documentaire exige encore son propre run exact-head avant toute clôture de la fondation.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :

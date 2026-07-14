@@ -237,4 +237,4 @@
 - Décision : `cost-gate-foundation-1-synthetic` corrige les dépendances silencieuses entre couches, l'expiration des anciens constats, la coexistence stale/conflit, l'ordre canonique des ensembles et l'alignement `operation_scope` / `side_count`.
 - Politique : `edge_not_surviving_modelled_friction` décrit un avantage absorbé sans inventer une contrainte utilisateur ; `constraint_breach` reste réservé à une limite explicitement fournie.
 - Versionnement : snapshot `2`, politique de synthèse `2` et catalogue de constats `2` ; les anciennes preuves `#604` et `#606` restent des preuves de la version `0`, pas de cette correction.
-- Gate : tests locaux puis run GitHub Actions sur le head distant exact avant de résoudre les trois nouveaux fils de revue.
+- Preuve : head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, run GitHub Actions `29338189190` (`#608`), artefact `8312898043` inspecté ; synchronisation documentaire exact-head encore requise avant de résoudre les trois fils de revue.

@@ -55,7 +55,17 @@ digest = sha256:13f4dc9fbd1add1252d85a88094cc8675152b47c4e61cdb99629efa242010030
 
 Une revue automatisée demandée sur ce head exact a révélé trois défauts rétrospectifs : une erreur de friction pouvait masquer un constat cash indépendant, l'expiration pouvait laisser les anciens constats actifs à hash inchangé, et une source stale pouvait masquer un conflit instrument/place/devise. L'audit adjacent a aussi détecté une incohérence possible entre portée et nombre de côtés, un hash sensible à l'ordre d'ensembles économiques et une synthèse attribuant à tort un avantage absorbé à une contrainte utilisateur.
 
-La révision locale `cost-gate-foundation-1-synthetic` corrige ces causes et ajoute leurs régressions. Elle n'est pas encore une preuve distante : elle doit être poussée puis exécutée sur son head exact.
+La révision `cost-gate-foundation-1-synthetic` corrige ces causes et ajoute leurs régressions. Elle est désormais prouvée à distance :
+
+```text
+functional head = 2ebf0e3e37852e4f3252e54149e147aa0d5712c3
+GitHub Actions = 29338189190 (#608)
+conclusion = success
+artifact = 8312898043
+digest = sha256:c22d2973aefe1c4d2cbef06cbae12ad67a6b08342c413e0198622078752d9183
+```
+
+Les 25 blobs poussés correspondent aux fichiers testés localement. Les logs, l'archive et les captures 390/1 440 px ont été inspectés. La synchronisation documentaire de cette preuve doit encore réussir sur son propre head exact avant de traiter les fils de revue.
 
 La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
@@ -208,7 +218,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Q0 ;
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
-- Cost Gate foundation version `0`, CG-01 à CG-18, exécutée dans le périmètre cash long déclaré ; cette preuve est désormais partielle après les défauts rétrospectifs et la version `1` doit obtenir sa propre validation exact-head ;
+- Cost Gate foundation version `1`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact dans le périmètre cash long déclaré ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
@@ -288,12 +298,11 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Prochaine séquence
 
-1. finaliser localement la révision corrective et sa documentation dans la PR `#24` ;
-2. pousser la révision `cost-gate-foundation-1-synthetic` puis exécuter sa validation exact-head ;
-3. inspecter les logs et artefacts du run exact ;
-4. traiter puis résoudre les trois nouveaux commentaires de revue uniquement après preuve distante ;
-5. conserver la PR en brouillon, sans fusion ni publication ;
-6. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
-7. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+1. synchroniser la documentation avec la preuve distante de la version `1` dans la PR `#24` ;
+2. exécuter la validation exact-head de cette synchronisation ;
+3. traiter puis résoudre les trois nouveaux commentaires de revue uniquement après ce dernier run ;
+4. conserver la PR en brouillon, sans fusion ni publication ;
+5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
+6. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
 
 Aucune action d'Ayman n'est requise actuellement.

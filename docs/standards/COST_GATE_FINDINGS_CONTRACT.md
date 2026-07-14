@@ -325,6 +325,6 @@ Tester :
 
 ## 15. Statut
 
-Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. CG-12 et les régressions ciblées couvrent ces invariants localement ; un run exact-head de la version `1` du moteur reste obligatoire.
+Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. CG-12 et les régressions ciblées réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608` ; la synchronisation documentaire exact-head reste requise.
 
 Toute extension de domaine ou exposition utilisateur doit conserver ce contrat, ajouter ses propres constats et faire l'objet d'une nouvelle validation.

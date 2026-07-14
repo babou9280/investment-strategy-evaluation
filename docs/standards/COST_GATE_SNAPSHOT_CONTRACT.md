@@ -298,6 +298,6 @@ Avant donnée externe réelle :
 
 ## 12. Statut
 
-Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2` ajoute l'ordre canonique des ensembles et l'inactivation après expiration. Elle exige son propre run exact-head ; les runs `#604` et `#606` ne prouvent que la version précédente.
+Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2` ajoute l'ordre canonique des ensembles et l'inactivation après expiration. Elle est validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` ; la synchronisation documentaire exact-head reste requise.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

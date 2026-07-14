@@ -368,6 +368,6 @@ Avant d'afficher une faisabilité de capital :
 
 ## 15. Statut
 
-Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces derniers correctifs exigent leur propre run exact-head.
+Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces correctifs réussissent au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` dans le run `#608`.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

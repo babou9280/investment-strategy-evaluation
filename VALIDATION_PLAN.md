@@ -213,7 +213,7 @@ Le head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` et le run `293347
 
 Cette preuve reste synthétique. Sa synchronisation documentaire a réussi sur `be6aa09d2b87bb07bd19258f393b496e522580a1` dans le run `29335825348` (`#606`). La revue exacte de ce head a ensuite révélé des défauts d'indépendance des couches, d'expiration et de coexistence stale/conflit ; l'audit adjacent a trouvé les incohérences portée/côtés, ordre des ensembles et vocabulaire de synthèse.
 
-La version `1` corrige ces causes localement et ajoute les régressions correspondantes. Elle doit être poussée, exécutée et inspectée sur son propre head avant de remplacer la preuve partielle de la version `0`.
+La version `1` corrige ces causes et ajoute les régressions correspondantes. Le head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` a réussi le run exact `29338189190` (`#608`) ; les logs, l'artefact et les captures ont été inspectés. La synchronisation documentaire de cette preuve doit encore réussir sur son propre head avant clôture de la stabilisation.
 
 ### Prototype utilisateur hors ligne — non commencé
 

@@ -421,7 +421,7 @@ Règles :
 
 Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`, `COST_GATE_SNAPSHOT_CONTRACT.md`, `COST_GATE_FINDINGS_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md`.
 
-La révision courante utilise `cost-gate-foundation-1-synthetic`, `cost-gate-snapshot-2` et `cost-gate-findings-2`. Elle exige une preuve exact-head distincte des runs de la version `0`. Elle ne prouve aucun comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
+La révision courante utilise `cost-gate-foundation-1-synthetic`, `cost-gate-snapshot-2` et `cost-gate-findings-2`. Le head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` a réussi le run exact `#608`. Cette preuve ne couvre aucun comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
 
 ## 19. Méthodologie historique conservée
 
