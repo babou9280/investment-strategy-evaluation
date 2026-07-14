@@ -8,17 +8,17 @@ Ayman a validé successivement :
 - son approfondissement en **Capital Efficiency / Edge Survival** ;
 - la trajectoire future **Breaktest Cost Gate** le 14 juillet 2026.
 
-Cost Gate est une direction stratégique pré-trade. Elle n'annule pas Cost Intelligence ni Edge Survival : elle devra les orchestrer avec la faisabilité du capital, la liquidité et un Data Quality Gate.
+Cost Gate est une direction stratégique de contrôle pré-trade personnalisé. Elle n'annule pas Cost Intelligence ni Edge Survival : elle devra les orchestrer avec la faisabilité du capital, la qualité des données, la liquidité et les contraintes explicitement fournies par l'utilisateur.
 
-Cette direction n'est ni implémentée, ni juridiquement validée, ni commercialement validée.
+Cost Gate n'est ni implémenté, ni juridiquement validé, ni commercialement validé.
 
 ## 2. Phase active
 
-La phase active reste la stabilisation interne de la pull request `#23`, branche `strategy/edge-survival-envelope`, vers `breaktest-bootstrap`.
+La phase active est la clôture technique et documentaire de la pull request `#23`, branche `strategy/edge-survival-envelope`, vers `breaktest-bootstrap`.
 
 La PR reste en brouillon. `main` est inchangé et hors périmètre.
 
-Le travail actuel porte sur :
+Le travail couvre :
 
 - cohérence point / fourchette ;
 - égalités et tolérance ;
@@ -26,6 +26,7 @@ Le travail actuel porte sur :
 - fraîcheur des résultats ;
 - UX progressive ;
 - accessibilité et responsive ;
+- qualité des preuves visuelles ;
 - non-régressions ;
 - synchronisation canonique ;
 - recherche permanente des angles morts.
@@ -53,7 +54,7 @@ Build historique H2 :
 
 ### Calculateur Q0
 
-`validation_site/` est techniquement validé et gelé. Sa publication a été suspendue parce que sa valeur restait trop descriptive.
+`validation_site/` est techniquement validé et gelé. Sa publication a été suspendue parce que sa valeur restait principalement descriptive.
 
 ### Capital Efficiency
 
@@ -75,49 +76,85 @@ Fonctions validées techniquement :
 
 ### Edge Survival Envelope
 
-La PR `#23` ajoute et stabilise :
+La PR `#23` stabilise :
 
 - modes seuil, point et fourchette ;
-- basse / centrale / haute ;
+- hypothèses basse / centrale / haute ;
 - états de survie et de traversée ;
 - cohérence point / fourchette ;
 - définition stricte de l'avantage brut ;
 - capital et fréquence facultatifs ;
 - suppression des résultats obsolètes ;
 - formulaire initial neutre ;
-- contrats de faisabilité du capital futurs ;
-- registre des angles morts ;
+- skip link et navigation clavier ;
+- contrat de faisabilité du capital futur ;
+- registre permanent des angles morts ;
 - standard de livraison HTML hors ligne.
 
-Le dernier head technique entièrement vert avant la synchronisation Cost Gate est `2e9703280667a29e30fa55f62dc70c7ec4519255`, run GitHub Actions `29294107398` (`#502`).
+Le head fonctionnel exact inspecté est :
 
-Les commits documentaires Cost Gate exigent une nouvelle exécution exacte-head avant toute fusion.
+`714e9628e893d419474c00a9c982f25492b7a164`
 
-## 4. Direction Cost Gate documentée
+Il a réussi GitHub Actions :
 
-Documents ajoutés ou mis à jour :
+- run `29330727579` (`#540`) ;
+- conclusion `success` ;
+- artefact `breaktest-validation-logs` ;
+- digest `sha256:ba78f49b8f39ae270ffa30864ae8498a148d3157d8c8f09c040cec3ae3b6c1e2`.
+
+Le run couvre H1–H2, C1–C4, Q0, Capital Efficiency, matrice synthétique, Edge Range, cohérence point/range, entrées annuelles facultatives, intégrité locale, Chromium et captures.
+
+## 4. Défauts récents découverts et corrigés
+
+### Égalité exacte au seuil
+
+Le moteur produisait correctement une marge nulle, mais la phrase principale affirmait à tort que les frictions n'étaient pas couvertes.
+
+Correction :
+
+```text
+Aucune hypothèse ne produit de marge positive
+```
+
+La régression est protégée par oracle numérique, test navigateur et captures inspectées.
+
+### Résultat devenu obsolète
+
+Un résultat pouvait rester visible après modification d'une entrée. La couche dédiée `result_freshness.js` le masque et demande un nouveau calcul.
+
+Une duplication accidentelle de cette responsabilité dans `app.js` a été détectée puis supprimée.
+
+### Preuve visuelle trompeuse
+
+Les captures Chromium pleine page pouvaient répéter le skip link ou déplacer le header sticky pendant l'assemblage des tuiles.
+
+Le générateur applique désormais des overrides strictement limités à la capture. Le vrai skip link reste contrôlé séparément au clavier.
+
+## 5. Direction Cost Gate documentée
+
+Documents de référence :
 
 - `docs/product/COST_GATE_DIRECTION.md` ;
 - `docs/standards/COST_GATE_METHOD_CONTRACT.md` ;
 - `STRATEGY.md` ;
 - `PRODUCT.md` ;
-- `DECISIONS.md` avec D034 ;
+- `DECISIONS.md`, D034 ;
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
 - `AGENTS.md` ;
 - `docs/governance/BLIND_SPOT_REGISTER.md`.
 
-Cost Gate devra, à terme, confronter un trade envisagé :
+Cost Gate devra confronter un trade envisagé :
 
 - aux frictions ;
-- au capital et cash libres ;
-- au nominal réservé ;
+- au cash réellement disponible et au nominal réservé ;
 - à la taille proposée ;
 - à la liquidité et aux conditions de marché ;
-- aux paramètres utilisateur ;
-- à un avantage brut ou une fourchette explicitement fournis.
+- aux paramètres utilisateur explicitement fournis ;
+- à un avantage brut ou une fourchette alignés avec l'instrument, l'horizon et le scénario ;
+- à un Data Quality Gate.
 
-États analytiques de travail :
+États analytiques internes envisagés :
 
 ```text
 compatible_under_assumptions
@@ -128,9 +165,9 @@ execution_cost_risk
 insufficient_data
 ```
 
-Ils ne constituent pas une recommandation.
+Ces identifiants ne doivent pas être affichés bruts comme feu vert, verdict ou autorisation d'ordre.
 
-## 5. Data Quality Gate futur
+## 6. Data Quality Gate futur
 
 Aucune conclusion utilisant une donnée externe sans contrôle visible de :
 
@@ -143,18 +180,22 @@ Aucune conclusion utilisant une donnée externe sans contrôle visible de :
 - incertitude ;
 - fallback et kill switch.
 
-Aucune donnée externe, source temps réel ou connexion courtier n'est actuellement active.
+Aucune donnée externe, source temps réel ou connexion courtier n'est active.
 
-## 6. Ce qui est réellement validé
+## 7. Ce qui est réellement validé
 
 ### Validé techniquement
 
 - moteur historique H1–H2/C1–C4 ;
 - calculateur Q0 ;
 - noyau Capital Efficiency ;
-- parcours progressif antérieur ;
-- Edge Survival Envelope sur le dernier head technique vert cité ;
-- intégrité locale et absence de capacités réseau dans les prototypes testés.
+- parcours progressif ;
+- Edge Survival Envelope sur le head fonctionnel cité ;
+- égalité exacte au seuil ;
+- fraîcheur des résultats ;
+- intégrité locale ;
+- absence de capacités réseau dans les prototypes testés ;
+- captures internes corrigées et inspectées.
 
 ### Validé stratégiquement
 
@@ -171,23 +212,23 @@ Aucune donnée externe, source temps réel ou connexion courtier n'est actuellem
 - seconde utilisation ;
 - paiement ;
 - import réel ;
-- capacité à fournir un avantage brut ;
-- faisabilité du capital ;
+- capacité à fournir un avantage brut défendable ;
+- faisabilité complète du capital ;
 - données de marché ;
 - Data Quality Gate exécuté ;
 - précision pré-trade ;
 - cadre juridique de Cost Gate ;
+- personnalisation réglementairement acceptable ;
 - ordre limite, probabilité d'exécution ou exécution ;
 - Safari/iPad du futur package ;
-- package HTML final.
+- package HTML de critique.
 
-## 7. Travaux suspendus
+## 8. Travaux suspendus
 
-- publication ;
-- déploiement ;
+- publication et déploiement ;
 - H3 à H6 ;
 - import réel ;
-- compte et stockage ;
+- comptes et stockage ;
 - données ou tarifs réels ;
 - réseau applicatif ;
 - analytics, email et paiement ;
@@ -195,21 +236,24 @@ Aucune donnée externe, source temps réel ou connexion courtier n'est actuellem
 - marketplace, affiliation et API ;
 - recommandation, conseil, signaux et exécution ;
 - statistiques avancées sans données suffisantes ;
-- code Cost Gate hors prototype synthétique futur autorisé.
+- code Cost Gate avant une mission isolée et ses gates.
 
-## 8. Angles morts prioritaires
+## 9. Angles morts prioritaires
 
 Le registre actif couvre notamment :
 
-- avantage brut indisponible ou mal défini ;
-- frictions manquantes ;
+- avantage brut indisponible, instable ou mal aligné ;
+- frictions manquantes ou tarif conditionnel mal appliqué ;
 - frontières prises pour recommandations ;
 - capital de référence confondu avec cash libre ;
+- ordres en attente et cash non réglé ;
 - donnée stale ;
 - instrument, place ou devise mal réconciliés ;
 - profondeur ne garantissant pas l'exécution ;
-- coût des flux ;
+- exécution partielle ;
+- coût et licence des flux ;
 - faux sentiment de sécurité ;
+- personnalisation glissant vers le conseil ;
 - responsabilité en cas d'erreur ;
 - confidentialité des intentions d'ordre ;
 - concurrence gratuite ;
@@ -217,7 +261,7 @@ Le registre actif couvre notamment :
 
 Source : `docs/governance/BLIND_SPOT_REGISTER.md`.
 
-## 9. Livrable futur
+## 10. Livrable futur
 
 Le prochain livrable remis à Ayman pour critique sera :
 
@@ -230,15 +274,13 @@ Le prochain livrable remis à Ayman pour critique sera :
 
 Les captures restent des preuves de test, pas le produit remis.
 
-## 10. Prochaine séquence autorisée
+## 11. Prochaine séquence autorisée
 
-1. terminer les contrôles exact-head de la PR `#23` ;
-2. corriger toute régression issue de la synchronisation documentaire ;
-3. inspecter les artefacts et captures ;
-4. synchroniser les preuves de validation ;
-5. fusionner uniquement vers `breaktest-bootstrap` si tout est cohérent ;
-6. ne rien publier ;
-7. préparer ensuite la critique HTML hors ligne du noyau actuel ;
-8. ne commencer un prototype Cost Gate synthétique qu'après le gate utilisateur et une mission isolée.
+1. obtenir une exécution verte sur le head documentaire final de la PR `#23` ;
+2. vérifier qu'aucun fichier hors périmètre n'a changé ;
+3. fusionner uniquement vers `breaktest-bootstrap` si les preuves restent cohérentes ;
+4. ne rien publier ;
+5. préparer ensuite une mission isolée pour le noyau conceptuel Cost Gate et le futur package HTML ;
+6. ne connecter aucune donnée réelle avant les gates de qualité, droit, coût et utilité.
 
 Aucune action d'Ayman n'est requise tant qu'une décision stratégique, juridique, coûteuse, irréversible ou externe n'apparaît pas.
