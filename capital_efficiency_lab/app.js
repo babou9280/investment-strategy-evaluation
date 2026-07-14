@@ -491,13 +491,6 @@
     render(result);
   }
 
-  function invalidateCurrentResult() {
-    if (!resultsEl.hidden) {
-      resultsEl.hidden = true;
-      live.textContent = 'Les hypothèses ont changé. Recalcule pour obtenir un résultat à jour.';
-    }
-  }
-
   document.getElementById('load-demo').addEventListener('click', function () {
     fields.capitalEur.value = '5000';
     fields.orderNotionalEur.value = '500';
@@ -527,18 +520,13 @@
     run();
   });
 
-  constraintMode.addEventListener('change', function () {
-    updateConstraintVisibility();
-    invalidateCurrentResult();
-  });
+  constraintMode.addEventListener('change', updateConstraintVisibility);
   form.addEventListener('change', function (event) {
     if (event.target && event.target.name === 'edgeInputMode') updateEdgeVisibility();
     updateSubmitLabel();
-    invalidateCurrentResult();
   });
   form.addEventListener('input', function (event) {
     updateSubmitLabel();
-    invalidateCurrentResult();
     if (event.isTrusted && provenance === 'synthetic_demo') {
       provenance = 'user_assumption';
       document.getElementById('provenance-banner').innerHTML = 'Provenance actuelle : <strong>hypothèses utilisateur</strong>.';
