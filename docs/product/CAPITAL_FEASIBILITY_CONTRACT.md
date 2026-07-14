@@ -149,7 +149,6 @@ Les holds sont déduits par identifiant unique selon le contrat cash/cycle. Le p
 
 ```text
 capital_basis_missing
-capital_basis_missing
 cash_basis_missing
 feasible_within_declared_strategy_cash
 frontier_exceeds_available_capital
