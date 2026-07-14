@@ -125,7 +125,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-035 | P0 | Cost Gate / coûts | Tarif dépendant du plan, palier, volume, juridiction ou statut fiscal mal appliqué | Seuil faux | open | Barème versionné avec conditions d'éligibilité |
 | BS-036 | P0 | Cost Gate / capital | Ordres en attente, cash non réglé, marge ou emprunt ignorés | Faisabilité fausse | mitigated | Contrat cash/cycle ; moteur et source encore à tester |
 | BS-037 | P1 | Cost Gate / portefeuille | Corrélation, netting et marge portefeuille non modélisés | Généralisation abusive | accepted_limit | Premier périmètre cash long ; moteur portefeuille futur séparé |
-| BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | mitigated | `GROSS_EDGE_INPUT_CONTRACT.md` ; tests d'alignement requis |
+| BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | mitigated | `GROSS_EDGE_ALIGNMENT_KEY.md` ; moteur et tests d'alignement requis |
 | BS-039 | P1 | Cost Gate / exécution | Exécution partielle, annulation ou multi-venue changeant les frictions | Écart ex ante/ex post | open | Scénarios et réconciliation ultérieure sans probabilité inventée |
 | BS-040 | P0 | Cost Gate / capital | Coût complet aller-retour utilisé comme besoin de cash immédiat | Faisabilité surestimée ou double comptage | mitigated | Contrat cash/cycle et scénarios CG-06/CG-07 ; moteur à tester |
 | BS-041 | P0 | Cost Gate / prix | Spread ou slippage déjà incorporé au prix puis ajouté à nouveau | Cash et coût faux | mitigated | `notional_basis` et indicateurs d'inclusion ; refus des conflits |
@@ -134,6 +134,13 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-044 | P1 | Cost Gate / scope | Modèle cash long appliqué silencieusement à marge, short ou dérivé | Résultat invalide | mitigated | Domaine initial explicite et état `unsupported` |
 | BS-045 | P1 | Cost Gate / règlement | Produit de vente futur supposé disponible pour financer l'entrée | Faisabilité fausse | mitigated | Contrat cash/cycle ; aucun financement par sortie future |
 | BS-046 | P1 | Cost Gate / texte | Catalogue de constats généré librement par IA | Explication variable ou prescriptive | mitigated | Catalogue versionné déterministe ; IA non canonique |
+| BS-047 | P0 | Cost Gate / cash | Hold déjà retranché par la source puis soustrait une seconde fois | Faux cash insuffisant | mitigated | Base de cash + ledger par `hold_id` spécifiés ; moteur et oracles requis |
+| BS-048 | P0 | Cost Gate / capital | Cash total du compte utilisé malgré une allocation de stratégie plus basse | Faux diagnostic de faisabilité | mitigated | Plafond par `min(cash réconcilié, allocation libre)` ; scénario CG-14C et moteur requis |
+| BS-049 | P1 | Cost Gate / preuve | Hash du snapshot circulaire ou dépendant de l'heure du recalcul | Reproduction impossible ou faux changement | mitigated | Périmètres de hash et identifiant d'instance séparés ; tests déterministes requis |
+| BS-050 | P0 | Cost Gate / avantage | Performance issue de prix exécutés traitée comme brute puis spread/slippage soustraits de nouveau | Marge nette sous-estimée | mitigated | Clé d'alignement prix/coûts ; rejet ou reconstitution documentée |
+| BS-051 | P1 | Cost Gate / orchestration | Donnée manquante reléguant un fait dur indépendant | Facteur principal trompeur | mitigated | Politique dépendante des preuves ; scénario multi-constats et tests requis |
+| BS-052 | P1 | Cost Gate / provenance | Quote stale synthétique présentée comme donnée externe réellement observée | Preuve et capacité exagérées | mitigated | CG-09 limité à `synthetic_demo` ; aucune revendication temps réel |
+| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | mitigated | Réconciliation quantité × prix × FX ; conflit bloquant et oracles requis |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -162,6 +169,12 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 21. Le snapshot est-il encore valide au moment affiché ?
 22. Tous les constats matériels restent-ils visibles ?
 23. Le domaine cash long est-il empêché de s'étendre silencieusement ?
+24. La source a-t-elle déjà retranché chaque hold ?
+25. L'allocation de stratégie plafonne-t-elle le cash du compte ?
+26. Les hashes identifient-ils le contenu sans se hasher eux-mêmes ?
+27. La base de prix de `G` contient-elle déjà des frictions ?
+28. Une donnée manquante masque-t-elle un fait indépendant ?
+29. Quantité, prix, devise et nominal se réconcilient-ils ?
 
 ## 7. Règle de clôture
 
