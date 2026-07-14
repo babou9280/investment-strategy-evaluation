@@ -35,6 +35,7 @@ Lire intégralement :
 - `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
 - `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
 - `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/EDGE_RANGE_CONTRACT.md` ;
 - `docs/governance/BLIND_SPOT_REGISTER.md` ;
@@ -115,12 +116,15 @@ Ajouter :
 - zéro/absence/invalidité ;
 - exact seuil ;
 - sous plancher ;
-- double comptage spread ;
+- double comptage spread et performance issue de prix exécutés ;
 - cash et cycle distincts ;
+- source déjà nette d'un hold, sans second retrait ;
+- allocation de stratégie inférieure au cash du compte ;
+- réconciliation quantité × prix × devise ;
 - ordres en attente ;
-- snapshot déterministe ;
+- snapshot déterministe et identité d'instance séparée ;
 - invalidation après changement ;
-- constat multiple ;
+- constat multiple et priorité dépendante des preuves ;
 - ordre stable ;
 - domaine non supporté ;
 - absence de termes prescriptifs ;
@@ -174,7 +178,7 @@ Elle indique :
 
 La mission de fondation est terminée uniquement si :
 
-- les contrats sont cohérents ;
+- les contrats sont cohérents, y compris cash, allocation de stratégie, identité du snapshot et alignement de `G` ;
 - les angles morts nouveaux sont enregistrés ;
 - le schéma ne dépasse pas le périmètre cash long synthétique ;
 - les 18 scénarios sont démontrés si le moteur est implémenté ;
