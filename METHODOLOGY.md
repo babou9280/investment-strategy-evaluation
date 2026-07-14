@@ -389,7 +389,7 @@ Règles :
 
 ## 18. Cost Gate foundation — méthodologie contractuelle
 
-La taille frontière ne prouve pas sa faisabilité. Le périmètre initial futur est limité à un compte cash, un achat long sans levier et une action ou un ETF au comptant.
+La taille frontière ne prouve pas sa faisabilité. Le périmètre synthétique est limité à un compte cash, un achat long sans levier et une action ou un ETF au comptant.
 
 La faisabilité immédiate distingue :
 
@@ -412,14 +412,16 @@ Règles :
 - le plafond de faisabilité est le minimum entre cash réglé réconcilié et allocation de stratégie encore libre ;
 - l'engagement d'entrée exclut les coûts de sortie futurs ;
 - spread et slippage incorporés au prix ne sont pas ajoutés une deuxième fois au cash ;
+- `entry_leg` exige un côté et `complete_round_trip` deux côtés ; `exit_leg` reste hors périmètre ;
 - `G` doit être aligné sur instrument, place, direction, portée, horizon, dénominateur, prix, devise, coûts, estimateur et période ;
 - la sortie conserve `findings[]` ; une synthèse n'efface aucun constat ;
-- toute mutation rend les anciens constats inactifs ;
+- toute mutation rend les anciens constats obsolètes et toute expiration les rend inactifs même si le hash de contenu reste identique ;
+- l'ordre des holds, sources, contraintes et exclusions sans signification économique ne modifie pas le hash ;
 - marge, short, dérivés et cash réglé non identifiable restent `unsupported_scope`.
 
 Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`, `COST_GATE_SNAPSHOT_CONTRACT.md`, `COST_GATE_FINDINGS_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md`.
 
-La première preuve exécutée utilise `cost-gate-foundation-0-synthetic`. Elle démontre ces règles sur entrées manuelles ou synthétiques ; elle ne prouve pas leur comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
+La révision courante utilise `cost-gate-foundation-1-synthetic`, `cost-gate-snapshot-2` et `cost-gate-findings-2`. Elle exige une preuve exact-head distincte des runs de la version `0`. Elle ne prouve aucun comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
 
 ## 19. Méthodologie historique conservée
 

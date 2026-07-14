@@ -217,7 +217,7 @@ Cette direction :
 - ajoute à terme la faisabilité du capital, la qualité des données et la microstructure ;
 - ne transforme pas encore Breaktest en conseiller, courtier ou moteur d'exécution.
 
-La fondation conserve tous les constats dans `findings[]`. Une synthèse interne peut signaler `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`. Ce dernier nom signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées ; il ne constitue jamais un feu vert.
+La fondation conserve tous les constats dans `findings[]`. Une synthèse interne peut signaler `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `edge_not_surviving_modelled_friction`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`. `constraint_breach` reste réservé à une contrainte utilisateur explicite. La dernière formule signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées ; elle ne constitue jamais un feu vert.
 
 Aucun état ne peut être produit à partir d'une donnée externe sans **Data Quality Gate** vérifiant source, timestamp, fraîcheur, couverture, instrument, place, devise, provenance, valeurs manquantes, incertitude et droit d'utilisation.
 

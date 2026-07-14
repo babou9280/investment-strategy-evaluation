@@ -30,6 +30,15 @@ single_account_currency
 
 Un scénario d'aller-retour peut être utilisé pour l'analyse économique du cycle, mais la faisabilité de l'entrée reste une analyse distincte.
 
+La portée économique et le nombre de côtés sont indissociables :
+
+```text
+entry_leg -> side_count = 1
+complete_round_trip -> side_count = 2
+```
+
+Une contradiction invalide le calcul. `exit_leg` isolé reste hors du périmètre du moteur d'achat long.
+
 Toute autre configuration retourne `unsupported_capital_model` jusqu'à implémentation dédiée.
 
 ## 3. Trois bases à distinguer
@@ -319,7 +328,7 @@ Au minimum :
 - composants déjà incorporés au prix ;
 - couches non modélisées.
 
-## 13. Tests futurs
+## 13. Tests requis
 
 Tester :
 
@@ -341,6 +350,8 @@ Tester :
 - dérivé, short ou marge non supportés ;
 - aucun double comptage par `hold_id` ;
 - réconciliation quantité × prix × devise ;
+- achat simple à un côté et aller-retour à deux côtés ;
+- contradiction portée / côtés refusée avant synthèse favorable ;
 - aucune utilisation du produit de sortie future pour financer l'entrée.
 
 ## 14. Gate d'implémentation
@@ -357,6 +368,6 @@ Avant d'afficher une faisabilité de capital :
 
 ## 15. Statut
 
-Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie et empêchent la double déduction des holds.
+Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie, empêchent la double déduction des holds et refusent une contradiction entre portée et nombre de côtés. Ces derniers correctifs exigent leur propre run exact-head.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

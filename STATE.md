@@ -43,6 +43,20 @@ artifact = 8311484443
 digest = sha256:f95dfd83ba47ca1b1896dece5259a0831db96ff7156d0e194088fb40e6a24b46
 ```
 
+Dernier head documentaire synchronisé :
+
+```text
+head = be6aa09d2b87bb07bd19258f393b496e522580a1
+GitHub Actions = 29335825348 (#606)
+conclusion = success
+artifact = 8311933256
+digest = sha256:13f4dc9fbd1add1252d85a88094cc8675152b47c4e61cdb99629efa242010030
+```
+
+Une revue automatisée demandée sur ce head exact a révélé trois défauts rétrospectifs : une erreur de friction pouvait masquer un constat cash indépendant, l'expiration pouvait laisser les anciens constats actifs à hash inchangé, et une source stale pouvait masquer un conflit instrument/place/devise. L'audit adjacent a aussi détecté une incohérence possible entre portée et nombre de côtés, un hash sensible à l'ordre d'ensembles économiques et une synthèse attribuant à tort un avantage absorbé à une contrainte utilisateur.
+
+La révision locale `cost-gate-foundation-1-synthetic` corrige ces causes et ajoute leurs régressions. Elle n'est pas encore une preuve distante : elle doit être poussée puis exécutée sur son head exact.
+
 La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
 ## 3. Actifs validés techniquement
@@ -146,6 +160,15 @@ La revue hostile a aussi imposé :
 - rejet d'une performance issue de prix exécutés comme brut avant friction sans reconstruction ;
 - priorité des constats dépendante de leurs preuves.
 
+La stabilisation rétrospective ajoute :
+
+- cohérence obligatoire entre `entry_leg`/un côté et `complete_round_trip`/deux côtés ;
+- ordre canonique des holds, sources, contraintes et exclusions ;
+- inactivation des anciens constats dès l'expiration ;
+- coexistence des constats stale et conflit ;
+- calcul indépendant du cash malgré une erreur dans la friction ;
+- synthèse distincte pour un avantage absorbé, sans inventer une contrainte utilisateur.
+
 ## 6. Matrice synthétique
 
 `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` définit 18 scénarios, notamment :
@@ -185,7 +208,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Q0 ;
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
-- Cost Gate foundation synthétique CG-01 à CG-18 dans le périmètre cash long déclaré ;
+- Cost Gate foundation version `0`, CG-01 à CG-18, exécutée dans le périmètre cash long déclaré ; cette preuve est désormais partielle après les défauts rétrospectifs et la version `1` doit obtenir sa propre validation exact-head ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
@@ -265,11 +288,12 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Prochaine séquence
 
-1. synchroniser la documentation avec la preuve fonctionnelle — en cours dans la PR `#24` ;
-2. exécuter la validation exact-head de cette synchronisation ;
-3. traiter ou résoudre les deux commentaires de revue GitHub ;
-4. conserver la PR en brouillon, sans fusion ni publication ;
-5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
-6. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+1. finaliser localement la révision corrective et sa documentation dans la PR `#24` ;
+2. pousser la révision `cost-gate-foundation-1-synthetic` puis exécuter sa validation exact-head ;
+3. inspecter les logs et artefacts du run exact ;
+4. traiter puis résoudre les trois nouveaux commentaires de revue uniquement après preuve distante ;
+5. conserver la PR en brouillon, sans fusion ni publication ;
+6. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
+7. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
 
 Aucune action d'Ayman n'est requise actuellement.

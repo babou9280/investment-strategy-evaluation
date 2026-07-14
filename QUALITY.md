@@ -97,6 +97,7 @@ break_even_gross_rate = total_cost_eur / N
 Exigences :
 
 - commission et change sont par côté ;
+- un achat simple / `entry_leg` possède un côté et un aller-retour / `complete_round_trip` deux côtés ; toute contradiction invalide l'entrée ;
 - spread et slippage couvrent le scénario complet ;
 - aucune friction n'est comptée deux fois ;
 - le seuil reste supérieur ou égal au plancher variable ;

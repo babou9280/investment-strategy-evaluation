@@ -65,7 +65,7 @@ La phase active est la **fondation Cost Gate**, sur :
 strategy/cost-gate-foundation
 ```
 
-Objectif autorisé : stabiliser les contrats et le moteur synthétique interne `cost_gate_foundation-0-synthetic`, sans donnée externe ni interface Cost Gate dans la PR `#24`.
+Objectif autorisé : stabiliser les contrats et le moteur synthétique interne `cost_gate_foundation-1-synthetic`, sans donnée externe ni interface Cost Gate dans la PR `#24`.
 
 Travail autorisé :
 
@@ -272,6 +272,16 @@ Toute conclusion dépendante d'une donnée externe exige :
 - kill switch.
 
 Toute modification invalide le snapshot.
+
+Les invariants rétrospectifs obligatoires sont aussi :
+
+- `entry_leg` correspond à un côté et `complete_round_trip` à deux côtés ;
+- une incohérence entre portée et nombre de côtés invalide l'entrée ;
+- l'ordre des holds, sources, contraintes et exclusions économiquement non ordonnés ne change pas le snapshot ;
+- l'expiration inactive les anciens constats même si le contenu hashé n'a pas changé ;
+- stale et conflit restent deux constats indépendants ;
+- une erreur de friction ne supprime pas un constat cash calculable indépendamment ;
+- `constraint_breach` reste réservé à une contrainte utilisateur explicite.
 
 ## 9. Frontière réglementaire
 

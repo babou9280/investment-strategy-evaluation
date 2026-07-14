@@ -3,16 +3,47 @@
 ## Statut
 
 - Branche : `strategy/cost-gate-foundation`
-- Head fonctionnel exact : `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`
+- Head fonctionnel version `0` : `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`
+- Head documentaire version `0` : `be6aa09d2b87bb07bd19258f393b496e522580a1`
 - Pull request : `#24`
-- GitHub Actions : run `29334708343` (`#604`)
-- Conclusion : `success`
-- Moteur : `cost-gate-foundation-0-synthetic`
+- GitHub Actions version `0` : runs `29334708343` (`#604`) et `29335825348` (`#606`), `success`
+- Moteur prouvé à distance : `cost-gate-foundation-0-synthetic`
+- Révision courante locale : `cost-gate-foundation-1-synthetic`
+- Statut de la révision `1` : correction et régressions locales ; push et run exact-head requis
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel ci-dessus. Une exécution exact-head reste obligatoire après la synchronisation documentaire qui ajoute le présent fichier.
+Le run `#604` valide le head fonctionnel de la version `0`. Le run `#606` valide sa synchronisation documentaire. Aucun de ces runs ne prouve la version `1` : une affirmation locale, même accompagnée de tests locaux réussis, ne devient une preuve distante qu'après push et exécution sur le head exact.
+
+## Revue rétrospective de la version `0`
+
+La revue automatisée demandée sur le head exact `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois défauts :
+
+- une erreur de friction pouvait empêcher le constat cash pourtant calculable indépendamment ;
+- l'expiration d'une source pouvait laisser les anciens constats actifs lorsque le hash de contenu restait identique ;
+- une source stale pouvait masquer un conflit instrument/place/devise indépendant.
+
+L'audit adjacent a révélé trois autres causes :
+
+- `entry_leg` avec deux côtés ou `complete_round_trip` avec un seul côté restait accepté ;
+- l'ordre des holds, sources, contraintes ou exclusions pouvait modifier l'identité d'un snapshot économiquement identique ;
+- un avantage absorbé pouvait être résumé comme `constraint_breach` sans contrainte utilisateur explicite.
+
+La version `1` corrige ces causes sans modifier les formules économiques de seuil, de cash ou d'avantage. Elle ajoute des oracles distincts pour le cas strictement inférieur, l'égalité au seuil, la contrainte utilisateur réelle, l'expiration à hash inchangé, les constats stale et conflit simultanés, l'indépendance des couches et l'ordre des ensembles. Ces changements restent à prouver à distance.
+
+### Prévalidation locale de la version `1`
+
+Les commandes moteur, scénarios, propriétés, syntaxe et intégrité ont été réellement exécutées sur les fichiers locaux corrigés :
+
+```text
+Cost Gate foundation engine tests passed
+Cost Gate foundation scenario matrix passed: CG-01 to CG-18
+Cost Gate foundation property tests passed
+Cost Gate foundation static integrity passed: 5 local files, 72619 bytes, no network or persistence capability
+```
+
+Les non-régressions numériques et statiques historiques, Q0, Capital Efficiency et Edge Survival réussissent aussi localement. Playwright et Chromium ne sont pas présents dans cet environnement local ; les régressions navigateur et les captures doivent donc être exécutées par GitHub Actions sur le head poussé.
 
 ## Périmètre exécuté
 
@@ -144,7 +175,7 @@ Les 18 scénarios documentés sont exécutés :
 | CG-17 | composantes connues visibles, total complet indisponible |
 | CG-18 | aucune incompatibilité détectée, liquidité non évaluée visible |
 
-Les tests de propriétés ajoutent monotonie du seuil, plafonnement du cash, ordre stable des constats, hash indépendant de l'ordre des clés et rejet d'une clé `G` réellement incompatible malgré un statut déclaré aligné.
+Les tests de propriétés ajoutent monotonie du seuil, plafonnement du cash, ordre stable des constats, hash indépendant de l'ordre des clés et des ensembles économiquement non ordonnés, ainsi que le rejet d'une clé `G` réellement incompatible malgré un statut déclaré aligné.
 
 ## Commandes exécutées par GitHub Actions
 
@@ -200,6 +231,15 @@ Edge Survival Envelope browser tests passed: 390/768/1024/1440
 L'archive téléchargée possède le même SHA-256 que le digest GitHub.
 
 La capture Edge Survival à 390 px du cas dégénéré confirme le texte exact au seuil. La capture à 1 440 px du cas traversant confirme la mise en page desktop. Toutes deux sont sans skip link parasite, header répété, coupure ou débordement visible. Elles prouvent une non-régression de l'interface fusionnée, pas une interface Cost Gate.
+
+La synchronisation documentaire version `0` a aussi produit :
+
+- Artifact ID : `8311933256` ;
+- Run : `29335825348` (`#606`) ;
+- Head : `be6aa09d2b87bb07bd19258f393b496e522580a1` ;
+- Digest GitHub : `sha256:13f4dc9fbd1add1252d85a88094cc8675152b47c4e61cdb99629efa242010030`.
+
+Cet artefact ne remplace pas la preuve à produire pour la version `1`.
 
 ## Limites restantes
 

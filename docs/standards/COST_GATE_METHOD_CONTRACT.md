@@ -176,6 +176,7 @@ invalid_input
 unsupported_scope
 snapshot_unusable
 structurally_non_viable
+edge_not_surviving_modelled_friction
 capital_not_feasible
 execution_cost_risk
 constraint_breach
@@ -185,11 +186,11 @@ no_incompatibility_detected_under_assumptions
 
 Elles sont dérivées par la politique versionnée du contrat des constats. Elles ne remplacent jamais `findings[]` et ne sont pas affichées comme identifiants bruts dans l'interface grand public.
 
-Les anciens états `compatible_under_assumptions` et `adjustment_required` sont retirés. Une migration explicite les mappe respectivement vers `no_incompatibility_detected_under_assumptions` et vers les constats concernés, avec `constraint_breach` uniquement si une synthèse interne est nécessaire.
+Les anciens états `compatible_under_assumptions` et `adjustment_required` sont retirés. Une migration explicite les mappe respectivement vers `no_incompatibility_detected_under_assumptions` et vers les constats et synthèses réellement concernés. `constraint_breach` reste exclusivement lié à une contrainte utilisateur explicite.
 
 ### Périmètre initial
 
-Une future preuve synthétique éventuelle supporte uniquement :
+Le moteur synthétique supporte uniquement :
 
 ```text
 cash_account
@@ -197,9 +198,11 @@ long_cash_purchase
 spot_equity_or_etf
 unlevered
 manual_assumptions_or_synthetic_demo
+operation_scope = entry_leg avec side_count = 1
+  ou complete_round_trip avec side_count = 2
 ```
 
-Marge, short, dérivés, cash réglé non identifiable et toute autre structure retournent `unsupported_scope`. Aucun modèle cash long de substitution n'est lancé silencieusement.
+`exit_leg` isolé, marge, short, dérivés, cash réglé non identifiable et toute autre structure retournent `unsupported_scope`. Une contradiction entre portée et nombre de côtés retourne `invalid_input`. Aucun modèle cash long de substitution n'est lancé silencieusement.
 ## 7. Règle de prudence
 
 La sortie agrégée ne doit pas masquer les sous-diagnostics. Un utilisateur doit voir :
@@ -229,7 +232,7 @@ Toute modification d'une entrée, d'un hold, d'une allocation, d'une source ou d
 - ne mélange pas des données temporellement incompatibles sans signalement.
 
 Le passage du temps peut expirer un snapshot sans changer son hash : le statut temporel est réévalué au moment d'usage.
-## 9. Scénarios minimaux futurs
+## 9. Scénarios minimaux requis
 
 - hypothèses manuelles cohérentes, sans incompatibilité détectée et couches non évaluées visibles ;
 - avantage au seuil exact ;
@@ -270,7 +273,7 @@ Le passage du temps peut expirer un snapshot sans changer son hash : le statut t
 
 ## 11. Versionnement
 
-Toute implémentation devra exposer séparément :
+L'implémentation expose séparément :
 
 ```text
 cost_engine_version

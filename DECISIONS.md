@@ -214,7 +214,7 @@
 - Statut : **active comme direction stratégique, validée par Ayman le 14 juillet 2026 ; fondation synthétique implémentée, produit et marché non validés**
 - Décision : Breaktest doit pouvoir évoluer vers une couche de contrôle pré-trade personnalisée qui confronte un trade envisagé aux frictions, au capital et cash libres, à la taille proposée, à la liquidité, aux paramètres utilisateur et à un avantage brut ou une fourchette explicitement fournis.
 - Articulation : Cost Intelligence, Capital Efficiency et Edge Survival Envelope restent le noyau analytique de cette future couche ; leur travail en cours n'est ni annulé ni interrompu.
-- Sortie autorisée : `findings[]` conserve chaque constat. La synthèse interne peut utiliser `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`, sans afficher un feu vert.
+- Sortie autorisée : `findings[]` conserve chaque constat. La synthèse interne peut utiliser `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `edge_not_surviving_modelled_friction`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`, sans afficher un feu vert. `constraint_breach` désigne uniquement une contrainte utilisateur explicite.
 - Data Quality Gate : toute conclusion utilisant une donnée externe exige source, timestamp, fraîcheur, instrument, place, devise, couverture, provenance, valeurs manquantes, incertitude, licence et domaine de validité visibles.
 - Interdictions actuelles : aucune donnée temps réel, connexion courtier, compte, stockage, réseau, exécution, probabilité d'exécution, ordre limite conseillé ou recommandation personnalisée sans décisions et validations distinctes.
 - Frontière réglementaire : le vocabulaire « exécuter », « rejeter », « acheter », « vendre », « ordre limite conseillé », « taille optimale » ou équivalent prescriptif reste interdit avant revue juridique et produit.
@@ -230,3 +230,11 @@
 - Preuve fonctionnelle : head `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`, run GitHub Actions `29334708343` (`#604`), CG-01 à CG-18 et non-régressions réussis.
 - Limite : cette preuve est technique et synthétique. Elle ne valide ni interface, ni donnée réelle, ni utilité, ni conformité, ni offre commerciale.
 - Validation : `docs/validation/COST_GATE_FOUNDATION.md`.
+
+## D036 — La revue du head final impose une seconde version synthétique
+
+- Statut : **active comme correction technique rétrospective, 14 juillet 2026**
+- Décision : `cost-gate-foundation-1-synthetic` corrige les dépendances silencieuses entre couches, l'expiration des anciens constats, la coexistence stale/conflit, l'ordre canonique des ensembles et l'alignement `operation_scope` / `side_count`.
+- Politique : `edge_not_surviving_modelled_friction` décrit un avantage absorbé sans inventer une contrainte utilisateur ; `constraint_breach` reste réservé à une limite explicitement fournie.
+- Versionnement : snapshot `2`, politique de synthèse `2` et catalogue de constats `2` ; les anciennes preuves `#604` et `#606` restent des preuves de la version `0`, pas de cette correction.
+- Gate : tests locaux puis run GitHub Actions sur le head distant exact avant de résoudre les trois nouveaux fils de revue.

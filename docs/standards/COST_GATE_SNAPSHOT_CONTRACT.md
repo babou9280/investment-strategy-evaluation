@@ -242,7 +242,7 @@ Il ne prétend jamais que l'ordre sera exécuté au prix ou au coût estimé.
 L'implémentation synthétique définit la sérialisation canonique suivante :
 
 - clés triées ;
-- tableaux ordonnés par une clé contractuelle stable lorsque l'ordre n'a pas de sens économique ;
+- tableaux ordonnés par une représentation canonique stable avant hash et évaluation lorsque l'ordre n'a pas de sens économique ; cela couvre au minimum holds, sources, contraintes utilisateur et exclusions de coûts ;
 - taux en décimal interne ;
 - montants dans leur unité source et devise explicite ;
 - timestamps ISO 8601 UTC ;
@@ -254,13 +254,16 @@ L'implémentation synthétique définit la sérialisation canonique suivante :
 
 Le hash du package de preuve est SHA-256.
 
-La sérialisation doit publier le périmètre de chaque hash. Deux objets économiquement identiques avec un ordre de clés différent produisent le même `snapshot_id`. Deux instances calculées à des heures différentes peuvent partager ce `snapshot_id`, tout en conservant des `snapshot_instance_id` distincts.
-## 10. Tests futurs
+La sérialisation doit publier le périmètre de chaque hash. Deux objets économiquement identiques avec un ordre de clés ou d'ensembles différent produisent le même `snapshot_id`. Deux instances calculées à des heures différentes peuvent partager ce `snapshot_id`, tout en conservant des `snapshot_instance_id` distincts.
+
+Le même contenu peut passer de courant à expiré sans nouveau hash. Dans ce cas, `compareSnapshots` conserve `sameContent = true` mais impose `oldFindingsActive = false` et un état `expired`.
+## 10. Tests
 
 Tester :
 
 - snapshot entièrement manuel ;
 - quote actuelle puis expirée sans mutation silencieuse du contenu ;
+- quote expirée rendant les anciens constats inactifs malgré un hash identique ;
 - barème actuel avec quote stale ;
 - timestamp futur ;
 - fuseaux différents mais réconciliables ;
@@ -274,6 +277,7 @@ Tester :
 - deux instances identiques avec même `snapshot_id` ;
 - absence de boucle d'auto-hash ;
 - ordre des clés sans effet ;
+- ordre des holds, sources, contraintes et exclusions sans effet sur le snapshot ni les constats dérivés ;
 - quantité × prix × devise réconciliés ;
 - zéro contre absence ;
 - rejet de `NaN`, `Infinity` et `-0` ;
@@ -294,6 +298,6 @@ Avant donnée externe réelle :
 
 ## 12. Statut
 
-Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. Le run `29334708343` (`#604`) en fournit la preuve technique.
+Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2` ajoute l'ordre canonique des ensembles et l'inactivation après expiration. Elle exige son propre run exact-head ; les runs `#604` et `#606` ne prouvent que la version précédente.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

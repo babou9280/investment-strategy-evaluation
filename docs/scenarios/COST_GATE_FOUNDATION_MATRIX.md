@@ -389,13 +389,17 @@ Pour tous les scénarios :
 - aucune recommandation ;
 - aucun constat supprimé par la synthèse ;
 - résultats identiques à contenu de snapshot et versions identiques ;
+- ordre des holds, sources, contraintes et exclusions sans signification économique sans effet sur le snapshot ni les constats ;
 - même contenu donnant le même `snapshot_id`, même si l'instance de calcul change ;
 - toute modification d'entrée invalide le snapshot et rend les anciens constats inactifs ;
+- toute expiration rend les anciens constats inactifs même lorsque le contenu et le `snapshot_id` restent identiques ;
 - les couches indépendantes restent calculables ;
+- une erreur de friction ne supprime pas un constat de cash encore calculable ;
 - aucun `hold_id` déduit deux fois ;
 - `capital_feasibility_cash <= account_free_settled_cash` et `<= strategy_allocation_headroom` ;
 - quantité, prix, devise et nominal réconciliés lorsqu'ils sont présents ;
 - toute conclusion dépendante de `G` exige `edge_aligned` ;
+- `entry_leg` exige un côté et `complete_round_trip` deux côtés ;
 - le domaine non supporté reste visible avec `unsupported_scope`.
 
 ## 5. Preuve d'implémentation synthétique

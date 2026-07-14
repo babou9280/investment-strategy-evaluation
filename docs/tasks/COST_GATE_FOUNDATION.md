@@ -109,12 +109,14 @@ Le moteur doit distinguer :
 ## Preuve fonctionnelle exécutée
 
 ```text
-engine = cost-gate-foundation-0-synthetic
+première preuve distante = cost-gate-foundation-0-synthetic
 head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
 GitHub Actions = 29334708343 (#604)
 conclusion = success
 scenarios = CG-01 à CG-18
 ```
+
+La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` a ouvert trois nouveaux fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. La révision courante devient `cost-gate-foundation-1-synthetic` et ajoute aussi les régressions portée/côtés, ordre canonique et vocabulaire de synthèse. Elle ne réutilise pas la preuve de la version `0` : un run exact-head distinct est obligatoire.
 
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 
@@ -149,7 +151,13 @@ Ajouter :
 - ordres en attente ;
 - snapshot déterministe et identité d'instance séparée ;
 - invalidation après changement ;
+- inactivation après expiration à contenu identique ;
 - constat multiple et priorité dépendante des preuves ;
+- stale et conflit simultanément visibles ;
+- portée économique cohérente avec le nombre de côtés ;
+- ordre des ensembles sans effet sur le hash ;
+- cash calculable malgré une erreur indépendante de friction ;
+- avantage absorbé distinct d'une contrainte utilisateur ;
 - ordre stable ;
 - domaine non supporté ;
 - absence de termes prescriptifs ;
@@ -159,10 +167,12 @@ Ajouter :
 
 ## Versionnement envisagé
 
-Première preuve exécutée :
+Révision courante :
 
 ```text
-cost-gate-foundation-0-synthetic
+cost-gate-foundation-1-synthetic
+cost-gate-snapshot-2
+cost-gate-findings-2
 ```
 
 Ce numéro identifie uniquement la preuve synthétique restreinte. Il ne nomme pas un produit prêt à publier.

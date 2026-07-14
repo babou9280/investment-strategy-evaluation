@@ -20,7 +20,7 @@ const base = fixtures.baseInput();
 const result = engine.compute(base);
 assert.equal(result.ok, true);
 assert.equal(result.scope.supported, true);
-assert.equal(result.version, 'cost-gate-foundation-0-synthetic');
+assert.equal(result.version, 'cost-gate-foundation-1-synthetic');
 
 const independentFixed = 2 * 1;
 const independentVariableRate = 2 * 0.0025 + 0.001 + 0.001;
@@ -49,7 +49,7 @@ const exactThreshold = engine.compute(fixtures.baseInput({ grossEdgeRate: indepe
 const exactFinding = finding(exactThreshold, 'no_strictly_positive_margin');
 assert.equal(exactFinding.status, 'breached');
 approx(exactFinding.observedValue, 0);
-assert.equal(exactThreshold.summaryCode, 'constraint_breach');
+assert.equal(exactThreshold.summaryCode, 'edge_not_surviving_modelled_friction');
 
 const belowFloor = engine.compute(fixtures.baseInput({ grossEdgeRate: independentVariableRate - 0.001 }));
 assert.equal(finding(belowFloor, 'gross_edge_not_above_variable_floor').status, 'structurally_unreachable');
@@ -67,6 +67,19 @@ approx(range.friction.edgeResults.edgeRange.low.netEdgeRate.value, -0.003);
 approx(range.friction.edgeResults.edgeRange.base.netEdgeRate.value, 0.009);
 approx(range.friction.edgeResults.edgeRange.high.netEdgeRate.value, 0.019);
 assert.equal(finding(range, 'gross_edge_range_crosses_break_even').status, 'breached');
+assert.equal(range.summaryCode, 'edge_not_surviving_modelled_friction');
+
+const explicitConstraintBreach = engine.compute(fixtures.baseInput({
+  userConstraints: [{
+    constraintId: 'declared_friction_budget',
+    operator: 'lte',
+    observedValue: 0.04,
+    limitValue: 0.03,
+    unit: 'decimal_rate'
+  }]
+}));
+assert.equal(explicitConstraintBreach.summaryCode, 'constraint_breach');
+assert.equal(finding(explicitConstraintBreach, 'declared_friction_budget').status, 'breached');
 
 const partialRange = engine.compute(fixtures.baseInput({
   grossEdgeRate: null,
@@ -144,6 +157,36 @@ approx(partial.friction.knownCostEur, 5);
 assert.equal(finding(partial, 'friction_components_missing').status, 'insufficient_data');
 assert.equal(finding(partial, 'complete_friction_required_for_edge').status, 'insufficient_data');
 
+const invalidFrictionIndependentCash = engine.compute(fixtures.baseInput({
+  cost: { commissionPerSideEur: -1 }
+}));
+assert.equal(invalidFrictionIndependentCash.ok, false);
+assert.equal(invalidFrictionIndependentCash.summaryCode, 'invalid_input');
+assert.equal(invalidFrictionIndependentCash.cash.status, 'feasible_within_declared_strategy_cash');
+assert.equal(finding(invalidFrictionIndependentCash, 'entry_cash_within_capital_feasibility_cash').status, 'satisfied');
+
+const roundTripWithOneSide = engine.compute(fixtures.baseInput({ cost: { sideCount: 1 } }));
+assert.equal(roundTripWithOneSide.ok, false);
+assert.equal(roundTripWithOneSide.summaryCode, 'invalid_input');
+assert.equal(finding(roundTripWithOneSide, 'invalid_cost.sideCount').condition, 'operation_scope_side_count_mismatch');
+assert.notEqual(roundTripWithOneSide.summaryCode, 'no_incompatibility_detected_under_assumptions');
+
+const entryLegWithTwoSides = engine.compute(fixtures.baseInput({
+  operationScope: 'entry_leg',
+  grossEdgeAlignment: fixtures.alignedGrossEdge({ key: { operationScope: 'entry_leg' } }),
+  cost: { sideCount: 2 }
+}));
+assert.equal(entryLegWithTwoSides.ok, false);
+assert.equal(finding(entryLegWithTwoSides, 'invalid_cost.sideCount').condition, 'operation_scope_side_count_mismatch');
+
+const unsupportedExitLeg = engine.compute(fixtures.baseInput({
+  operationScope: 'exit_leg',
+  grossEdgeAlignment: fixtures.alignedGrossEdge({ key: { operationScope: 'exit_leg' } }),
+  cost: { sideCount: 1 }
+}));
+assert.equal(unsupportedExitLeg.summaryCode, 'unsupported_scope');
+assert.ok(unsupportedExitLeg.scope.unsupportedFields.includes('operation_scope'));
+
 const unsupported = engine.compute(fixtures.baseInput({
   accountModel: 'margin_account',
   positionModel: 'short_sale',
@@ -196,6 +239,19 @@ assert.equal(fresh.snapshot.status, 'snapshot_current');
 assert.equal(stale.snapshot.status, 'snapshot_expired');
 assert.equal(fresh.snapshot.snapshotId, stale.snapshot.snapshotId);
 assert.equal(stale.summaryCode, 'snapshot_unusable');
+assert.deepEqual(engine.compareSnapshots(fresh, stale), {
+  sameContent: true,
+  oldSnapshot: 'expired',
+  oldFindingsActive: false
+});
+
+const staleAndConflicted = engine.compute(fixtures.baseInput({
+  sources: [Object.assign({}, source, { instrumentId: 'SYNTH:OTHER' })],
+  evaluatedAtUtc: '2026-07-14T10:02:00Z'
+}));
+assert.equal(finding(staleAndConflicted, 'synthetic_source_stale').status, 'expired');
+assert.equal(finding(staleAndConflicted, 'instrument_venue_currency_mismatch').status, 'conflicted');
+assert.equal(staleAndConflicted.summaryCode, 'snapshot_unusable');
 
 const serialized = engine.canonicalStringify({ b: 2, a: -0 });
 assert.equal(serialized, '{"a":0,"b":2}');

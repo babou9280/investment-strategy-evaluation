@@ -121,6 +121,7 @@ invalid_input
 unsupported_scope
 snapshot_unusable
 structurally_non_viable
+edge_not_surviving_modelled_friction
 capital_not_feasible
 execution_cost_risk
 constraint_breach
@@ -128,11 +129,15 @@ insufficient_data
 no_incompatibility_detected_under_assumptions
 ```
 
+`edge_not_surviving_modelled_friction` signifie que l'avantage aligné fourni ne produit pas de marge positive dans le scénario, sans prétendre à une impossibilité structurelle. `constraint_breach` reste réservé à une contrainte utilisateur explicite.
+
 `no_incompatibility_detected_under_assumptions` remplace l'ancien vocabulaire trop proche d'un feu vert. Il signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches effectivement couvertes par le snapshot. Les couches non évaluées restent visibles.
 
 Une donnée manquante dans une couche ne masque pas un fait indépendant démontré ailleurs. La politique versionnée choisit le premier message, mais conserve tous les constats.
 
 Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
+
+La preuve fonctionnelle `#604` et la synchronisation `#606` concernent la version `0`. La version `1`, qui corrige les défauts rétrospectifs de revue, exige son propre run exact-head avant toute clôture de la fondation.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :

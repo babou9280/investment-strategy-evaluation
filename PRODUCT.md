@@ -126,7 +126,7 @@ Le moteur synthétique isolé orchestre déjà les dimensions disponibles dans u
 
 La sortie future conserve plusieurs constats explicables dans `findings[]` : géométrie de friction, alignement de l'avantage, cash et allocation de stratégie, qualité des données, exécution, contraintes utilisateur et limites de périmètre.
 
-Une synthèse interne peut choisir un facteur principal parmi `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` et `no_incompatibility_detected_under_assumptions`.
+Une synthèse interne peut choisir un facteur principal parmi `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `edge_not_surviving_modelled_friction`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` et `no_incompatibility_detected_under_assumptions`.
 
 Cette dernière formule signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées. Les couches non évaluées restent visibles. Aucun identifiant interne n'est une recommandation, une autorisation d'ordre ou une prévision.
 

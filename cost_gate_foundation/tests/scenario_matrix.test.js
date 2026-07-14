@@ -63,6 +63,7 @@ const scenarios = [
       const item = byCode(result, 'no_strictly_positive_margin');
       approx(item.observedValue, 0);
       assert.equal(item.status, 'breached');
+      assert.equal(result.summaryCode, 'edge_not_surviving_modelled_friction');
       return result;
     }
   },

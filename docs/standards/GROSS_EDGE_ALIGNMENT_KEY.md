@@ -245,7 +245,7 @@ Elle reste non vérifiée.
 
 Aucun message ne suggère une valeur de remplacement.
 
-## 9. Tests futurs
+## 9. Tests requis
 
 - clé exactement alignée ;
 - autre instrument ;

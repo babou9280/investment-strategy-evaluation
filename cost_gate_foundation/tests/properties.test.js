@@ -56,6 +56,24 @@ approx(reconciled.cash.accountFreeSettledCashEur, 900);
 approx(reconciled.cash.strategyAllocationHeadroomEur, 950);
 approx(reconciled.cash.capitalFeasibilityCashEur, 900);
 
+const reorderedHolds = engine.compute(fixtures.baseInput({
+  cash: {
+    holds: holds.slice().reverse(),
+    strategyCapitalCommittedEur: 50
+  }
+}));
+assert.equal(reorderedHolds.snapshot.snapshotId, reconciled.snapshot.snapshotId);
+assert.deepEqual(reorderedHolds.cash.holds, reconciled.cash.holds);
+assert.deepEqual(reorderedHolds.findings, reconciled.findings);
+
+const changedHold = engine.compute(fixtures.baseInput({
+  cash: {
+    holds: [Object.assign({}, holds[0], { amountEur: 101 }), holds[1]],
+    strategyCapitalCommittedEur: 50
+  }
+}));
+assert.notEqual(changedHold.snapshot.snapshotId, reconciled.snapshot.snapshotId);
+
 const reserveLedger = engine.compute(fixtures.baseInput({
   cash: {
     holds: [{ holdId: 'R1', holdType: 'user_reserve', amountEur: 100, includedInAvailableSettledCash: false, includedInStrategyCapitalCommitted: false }],
@@ -94,10 +112,56 @@ reordered.cost = {
 const reorderedResult = engine.compute(reordered);
 assert.equal(reorderedResult.snapshot.snapshotId, aligned.snapshot.snapshotId);
 
+const reversedExclusions = engine.compute(fixtures.baseInput({
+  grossEdgeAlignment: fixtures.alignedGrossEdge({
+    key: { costExclusions: ['slippage', 'spread', 'fx', 'commission'] }
+  })
+}));
+assert.equal(reversedExclusions.snapshot.snapshotId, aligned.snapshot.snapshotId);
+
+const sourceA = {
+  sourceId: 'SYNTH-A',
+  provenance: 'synthetic_demo',
+  instrumentId: 'SYNTH:ABC',
+  venueId: 'SYNTH-X',
+  quoteCurrency: 'EUR',
+  observedAtUtc: '2026-07-14T10:00:00Z',
+  validUntilUtc: '2026-07-14T11:00:00Z',
+  critical: true
+};
+const sourceB = Object.assign({}, sourceA, { sourceId: 'SYNTH-B' });
+const sourceOrderA = engine.compute(fixtures.baseInput({
+  sources: [sourceA, sourceB],
+  evaluatedAtUtc: '2026-07-14T10:30:00Z'
+}));
+const sourceOrderB = engine.compute(fixtures.baseInput({
+  sources: [sourceB, sourceA],
+  evaluatedAtUtc: '2026-07-14T10:30:00Z'
+}));
+assert.equal(sourceOrderA.snapshot.snapshotId, sourceOrderB.snapshot.snapshotId);
+assert.deepEqual(sourceOrderA.snapshot.sourceBundleHash, sourceOrderB.snapshot.sourceBundleHash);
+assert.deepEqual(sourceOrderA.findings, sourceOrderB.findings);
+
+const constraintA = { constraintId: 'A', operator: 'lte', observedValue: 1, limitValue: 2, unit: 'EUR' };
+const constraintB = { constraintId: 'B', operator: 'lte', observedValue: 2, limitValue: 3, unit: 'EUR' };
+const constraintOrderA = engine.compute(fixtures.baseInput({ userConstraints: [constraintA, constraintB] }));
+const constraintOrderB = engine.compute(fixtures.baseInput({ userConstraints: [constraintB, constraintA] }));
+assert.equal(constraintOrderA.snapshot.snapshotId, constraintOrderB.snapshot.snapshotId);
+assert.deepEqual(constraintOrderA.findings, constraintOrderB.findings);
+
+const anonymousConstraintA = { operator: 'lte', observedValue: 1, limitValue: 2, unit: 'EUR' };
+const anonymousConstraintB = { operator: 'lte', observedValue: 2, limitValue: 3, unit: 'EUR' };
+const anonymousConstraintOrderA = engine.compute(fixtures.baseInput({ userConstraints: [anonymousConstraintA, anonymousConstraintB] }));
+const anonymousConstraintOrderB = engine.compute(fixtures.baseInput({ userConstraints: [anonymousConstraintB, anonymousConstraintA] }));
+assert.equal(anonymousConstraintOrderA.snapshot.snapshotId, anonymousConstraintOrderB.snapshot.snapshotId);
+assert.deepEqual(anonymousConstraintOrderA.findings, anonymousConstraintOrderB.findings);
+
 const findings = aligned.findings;
 assert.equal(new Set(findings.map((item) => item.findingId)).size, findings.length);
 assert.equal(findings.every((item) => item.snapshotId === aligned.snapshot.snapshotId), true);
 engine.assertFiniteTree(reconciled);
 engine.assertFiniteTree(actualKeyMismatch);
+engine.assertFiniteTree(reorderedHolds);
+engine.assertFiniteTree(sourceOrderA);
 
 console.log('Cost Gate foundation property tests passed');

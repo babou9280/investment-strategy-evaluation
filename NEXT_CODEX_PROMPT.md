@@ -10,7 +10,9 @@ branch = strategy/cost-gate-foundation
 base = breaktest-bootstrap
 functional head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
 functional run = 29334708343 (#604), success
-engine = cost-gate-foundation-0-synthetic
+last synchronized head = be6aa09d2b87bb07bd19258f393b496e522580a1
+last synchronized run = 29335825348 (#606), success
+current engine = cost-gate-foundation-1-synthetic
 ```
 
 `main` reste strictement hors périmètre. Ne fusionne, ne publie et ne déploie rien automatiquement.
@@ -27,6 +29,8 @@ Reconstruire l'état GitHub actuel de la PR `#24` :
 6. différence entre preuve fonctionnelle et synchronisation documentaire.
 
 Le head peut avoir évolué depuis le présent document. Une affirmation locale n'est pas une preuve distante.
+
+La revue Codex du head `be6aa09` a ouvert trois fils sur l'indépendance du cash, l'expiration et la coexistence stale/conflit. Vérifier aussi les corrections adjacentes sur portée/côtés, ordre canonique des ensembles et vocabulaire de synthèse. Les runs `#604` et `#606` ne valident pas la version `1`.
 
 ## Sources obligatoires
 
@@ -67,7 +71,13 @@ Vérifier ou corriger seulement :
 - alignement complet de l'avantage brut ;
 - hash de contenu et instance séparés ;
 - invalidation des anciens constats ;
+- inactivation après expiration malgré un hash de contenu identique ;
 - priorité des constats dépendante des preuves ;
+- coexistence des constats stale et conflit ;
+- cohérence `operation_scope` / `side_count` ;
+- ordre des ensembles sans effet sur le snapshot ;
+- indépendance du cash face à une erreur de friction ;
+- distinction entre avantage absorbé et contrainte utilisateur ;
 - refus de marge, short, dérivés et provenance externe ;
 - absence de réseau, persistance, recommandation et exécution ;
 - non-régressions historiques, Q0, Capital Efficiency et Edge Survival.

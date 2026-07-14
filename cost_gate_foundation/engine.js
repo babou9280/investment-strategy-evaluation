@@ -3,11 +3,11 @@
 const crypto = require('crypto');
 const capitalEfficiency = require('../capital_efficiency_lab/engine.js');
 
-const VERSION = 'cost-gate-foundation-0-synthetic';
-const POLICY_VERSION = 'cost-gate-findings-1';
-const SNAPSHOT_VERSION = 'cost-gate-snapshot-1';
+const VERSION = 'cost-gate-foundation-1-synthetic';
+const POLICY_VERSION = 'cost-gate-findings-2';
+const SNAPSHOT_VERSION = 'cost-gate-snapshot-2';
 const ALIGNMENT_VERSION = 'gross-edge-alignment-1';
-const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-1';
+const FINDINGS_CATALOG_VERSION = 'cost-gate-findings-catalog-2';
 const TOLERANCE = capitalEfficiency.TOLERANCE;
 
 const SUPPORTED_INSTRUMENTS = new Set(['spot_equity', 'spot_etf']);
@@ -20,6 +20,10 @@ const NOTIONAL_BASES = new Set([
   'expected_execution_consideration',
   'observed_execution_consideration'
 ]);
+const OPERATION_SCOPE_SIDE_COUNT = Object.freeze({
+  entry_leg: 1,
+  complete_round_trip: 2
+});
 const LAYER_ORDER = [
   'input_validity',
   'scope_limit',
@@ -100,6 +104,16 @@ function canonicalStringify(value) {
   return JSON.stringify(canonicalize(value));
 }
 
+function canonicalizeUnorderedArray(values) {
+  return (Array.isArray(values) ? values : [])
+    .map(canonicalize)
+    .sort((left, right) => {
+      const leftKey = JSON.stringify(left);
+      const rightKey = JSON.stringify(right);
+      return leftKey < rightKey ? -1 : leftKey > rightKey ? 1 : 0;
+    });
+}
+
 function sha256(value) {
   return crypto.createHash('sha256').update(canonicalStringify(value), 'utf8').digest('hex');
 }
@@ -110,6 +124,21 @@ function omitKeys(value, keys) {
     if (!keys.has(key)) out[key] = value[key];
   });
   return out;
+}
+
+function snapshotInputPayload(input, volatileKeys) {
+  const payload = canonicalize(omitKeys(input, volatileKeys));
+  if (payload.cash && Array.isArray(payload.cash.holds)) {
+    payload.cash.holds = canonicalizeUnorderedArray(payload.cash.holds);
+  }
+  if (Array.isArray(payload.userConstraints)) {
+    payload.userConstraints = canonicalizeUnorderedArray(payload.userConstraints);
+  }
+  const costExclusions = payload.grossEdgeAlignment && payload.grossEdgeAlignment.key && payload.grossEdgeAlignment.key.costExclusions;
+  if (Array.isArray(costExclusions)) {
+    payload.grossEdgeAlignment.key.costExclusions = canonicalizeUnorderedArray(costExclusions);
+  }
+  return payload;
 }
 
 function finding(code, layer, status, materiality, details) {
@@ -146,6 +175,7 @@ function validateDomain(input) {
   if (input.positionModel !== 'long_cash_purchase') unsupported.push('position_model');
   if (!SUPPORTED_INSTRUMENTS.has(input.instrumentType)) unsupported.push('instrument_type');
   if (input.side !== 'long') unsupported.push('side');
+  if (!Object.prototype.hasOwnProperty.call(OPERATION_SCOPE_SIDE_COUNT, input.operationScope)) unsupported.push('operation_scope');
   if (input.accountCurrency !== 'EUR') unsupported.push('account_currency');
   if (!SUPPORTED_PROVENANCE.has(input.provenance)) unsupported.push('provenance');
   return unsupported;
@@ -221,6 +251,12 @@ function computeFriction(input, alignment, errors) {
   Object.entries(classified).forEach(([key, item]) => {
     if (!item.ok) errors[`cost.${key}`] = item.reason;
   });
+  if (
+    classified.sideCount.ok &&
+    OPERATION_SCOPE_SIDE_COUNT[input.operationScope] !== classified.sideCount.value
+  ) {
+    errors['cost.sideCount'] = 'operation_scope_side_count_mismatch';
+  }
   if (Object.keys(errors).length) return { complete: false, classified, missing: [], result: null };
 
   const missing = ['commissionPerSideEur', 'fxRatePerSide', 'spreadTotalRate', 'slippageTotalRate']
@@ -272,6 +308,8 @@ function computeFriction(input, alignment, errors) {
 
 function computeCash(input, errors) {
   if (!input.cash) return { assessed: false, status: 'not_assessed' };
+  const initialErrorCount = Object.keys(errors).length;
+  const hasCashErrors = () => Object.keys(errors).length > initialErrorCount;
   const cash = input.cash;
   if (!NOTIONAL_BASES.has(cash.notionalBasis)) errors['cash.notionalBasis'] = 'unsupported_or_missing';
   if (!PRICE_INCLUSION.has(cash.spreadReferencePriceStatus)) errors['cash.spreadReferencePriceStatus'] = 'invalid';
@@ -297,7 +335,7 @@ function computeCash(input, errors) {
     if (!item.ok) errors[`cash.${key}`] = item.reason;
     values[key] = item.missing ? 0 : item.value;
   });
-  if (Object.keys(errors).length) return { assessed: true, status: 'invalid' };
+  if (hasCashErrors()) return { assessed: true, status: 'invalid' };
 
   if (cash.spreadReferencePriceStatus === 'included' && values.entrySpreadCashEur !== 0) {
     return { assessed: true, status: 'cash_basis_conflicted', reason: 'spread_counted_twice' };
@@ -315,7 +353,7 @@ function computeCash(input, errors) {
     return { assessed: true, status: 'cash_basis_conflicted', reason: 'quantity_price_notional_mismatch' };
   }
 
-  const holds = Array.isArray(cash.holds) ? cash.holds : [];
+  const holds = canonicalizeUnorderedArray(cash.holds);
   const ids = new Set();
   let deductibleHoldsEur = 0;
   let strategyIncludedHoldsEur = 0;
@@ -353,7 +391,7 @@ function computeCash(input, errors) {
   if (strategyIncludedHoldsEur > values.strategyCapitalCommittedEur && !close(strategyIncludedHoldsEur, values.strategyCapitalCommittedEur)) {
     errors['cash.strategyCapitalCommittedEur'] = 'strategy_hold_reconciliation_failed';
   }
-  if (Object.keys(errors).length) return { assessed: true, status: 'invalid' };
+  if (hasCashErrors()) return { assessed: true, status: 'invalid' };
   if (cash.spreadReferencePriceStatus === 'unknown' || cash.slippageReferencePriceStatus === 'unknown') {
     return { assessed: true, status: 'cash_basis_conflicted', reason: 'price_inclusion_unknown' };
   }
@@ -383,12 +421,12 @@ function computeCash(input, errors) {
     strategyAllocationHeadroomEur: normalizeNumber(strategyAllocationHeadroomEur),
     capitalFeasibilityCashEur: normalizeNumber(capitalFeasibilityCashEur),
     uniqueHoldIds: ids.size === holds.length,
-    holds: canonicalize(holds)
+    holds
   };
 }
 
 function assessSources(input, errors) {
-  const sources = Array.isArray(input.sources) ? input.sources : [];
+  const sources = canonicalizeUnorderedArray(input.sources);
   if (!sources.length) {
     return { status: 'manual_assumptions_only', sources: [], stale: [], conflicts: [] };
   }
@@ -426,7 +464,7 @@ function assessSources(input, errors) {
   });
   return {
     status: conflicts.length ? 'snapshot_conflicted' : criticalStale.length ? 'snapshot_expired' : 'snapshot_current',
-    sources: canonicalize(sources),
+    sources,
     stale: Array.from(new Set(stale)).sort(),
     criticalStale: Array.from(new Set(criticalStale)).sort(),
     conflicts: Array.from(new Set(conflicts)).sort()
@@ -450,7 +488,7 @@ function buildSnapshot(input, sourceAssessment) {
     accountCurrency: input.accountCurrency,
     quoteCurrency: input.quoteCurrency
   };
-  const inputPayload = omitKeys(input, volatile);
+  const inputPayload = snapshotInputPayload(input, volatile);
   const scenarioHash = sha256(scenarioPayload);
   const inputHash = sha256(inputPayload);
   const sourceBundleHash = sha256(sourceAssessment.sources);
@@ -558,7 +596,7 @@ function edgeFinding(input, alignment, friction) {
 }
 
 function constraintFindings(input) {
-  const constraints = Array.isArray(input.userConstraints) ? input.userConstraints : [];
+  const constraints = canonicalizeUnorderedArray(input.userConstraints);
   return constraints.map((constraint, index) => {
     const observed = finiteNumber(constraint.observedValue, { required: true });
     const limit = finiteNumber(constraint.limitValue, { required: true });
@@ -586,10 +624,12 @@ function deriveSummary(findings, snapshot, friction, cash) {
     return 'snapshot_unusable';
   }
   if (has((item) => item.status === 'structurally_unreachable')) return 'structurally_non_viable';
+  if (has((item) => item.layer === 'edge_survival' && item.status === 'breached')) {
+    return 'edge_not_surviving_modelled_friction';
+  }
   if (has((item) => item.layer === 'capital_feasibility' && item.status === 'breached')) return 'capital_not_feasible';
   if (has((item) => item.layer === 'execution_cost' && item.status === 'breached')) return 'execution_cost_risk';
   if (has((item) => item.layer === 'user_constraint' && item.status === 'breached')) return 'constraint_breach';
-  if (has((item) => item.layer === 'edge_survival' && item.status === 'breached')) return 'constraint_breach';
   if (has((item) => ['invalid', 'conflicted', 'insufficient_data', 'expired', 'obsolete'].includes(item.status))) return 'insufficient_data';
 
   const edgeSatisfied = has((item) => item.layer === 'edge_survival' && item.status === 'satisfied');
@@ -645,21 +685,25 @@ function compute(inputValue) {
       provenance: input.provenance,
       limitations: ['no_current_market_claim']
     }));
-  } else if (sourceAssessment.stale.length) {
-    findings.push(finding('synthetic_source_stale', 'data_quality', 'expired', 'blocking', {
-      dependsOn: sourceAssessment.stale,
-      provenance: 'synthetic_demo'
-    }));
-  } else if (sourceAssessment.status === 'snapshot_conflicted') {
-    findings.push(finding('instrument_venue_currency_mismatch', 'data_quality', 'conflicted', 'blocking', {
-      dependsOn: sourceAssessment.conflicts,
-      provenance: 'synthetic_demo'
-    }));
   } else {
-    findings.push(finding('synthetic_sources_current_for_evaluation_time', 'data_quality', 'satisfied', 'informational', {
-      provenance: 'synthetic_demo',
-      limitations: ['synthetic_only']
-    }));
+    if (sourceAssessment.stale.length) {
+      findings.push(finding('synthetic_source_stale', 'data_quality', 'expired', 'blocking', {
+        dependsOn: sourceAssessment.stale,
+        provenance: 'synthetic_demo'
+      }));
+    }
+    if (sourceAssessment.conflicts.length) {
+      findings.push(finding('instrument_venue_currency_mismatch', 'data_quality', 'conflicted', 'blocking', {
+        dependsOn: sourceAssessment.conflicts,
+        provenance: 'synthetic_demo'
+      }));
+    }
+    if (!sourceAssessment.stale.length && !sourceAssessment.conflicts.length) {
+      findings.push(finding('synthetic_sources_current_for_evaluation_time', 'data_quality', 'satisfied', 'informational', {
+        provenance: 'synthetic_demo',
+        limitations: ['synthetic_only']
+      }));
+    }
   }
 
   if (friction.complete && friction.result) {
@@ -716,6 +760,7 @@ function compute(inputValue) {
     if (summaryCode === 'unsupported_scope') return item.layer === 'scope_limit';
     if (summaryCode === 'snapshot_unusable') return item.layer === 'data_quality' || item.layer === 'snapshot_integrity';
     if (summaryCode === 'structurally_non_viable') return item.status === 'structurally_unreachable';
+    if (summaryCode === 'edge_not_surviving_modelled_friction') return item.layer === 'edge_survival' && item.status === 'breached';
     if (summaryCode === 'capital_not_feasible') return item.layer === 'capital_feasibility' && item.status === 'breached';
     if (summaryCode === 'constraint_breach') return item.status === 'breached';
     if (summaryCode === 'invalid_input') return item.layer === 'input_validity';
@@ -781,11 +826,20 @@ function compareSnapshots(previousResult, currentResult) {
     previousResult.snapshot.snapshotId &&
     previousResult.snapshot.snapshotId === currentResult.snapshot.snapshotId
   );
-  return {
-    sameContent: same,
-    oldSnapshot: same ? 'active' : 'obsolete',
-    oldFindingsActive: same
-  };
+  if (!same) {
+    return { sameContent: false, oldSnapshot: 'obsolete', oldFindingsActive: false };
+  }
+  const currentFindings = Array.isArray(currentResult.findings) ? currentResult.findings : [];
+  const expired = currentResult.snapshot.status === 'snapshot_expired' || currentFindings.some((item) => item.status === 'expired');
+  if (expired) {
+    return { sameContent: true, oldSnapshot: 'expired', oldFindingsActive: false };
+  }
+  const unusable = ['snapshot_conflicted', 'snapshot_temporally_inconsistent', 'snapshot_incomplete'].includes(currentResult.snapshot.status) ||
+    currentFindings.some((item) => ['obsolete', 'conflicted'].includes(item.status));
+  if (unusable) {
+    return { sameContent: true, oldSnapshot: 'unusable', oldFindingsActive: false };
+  }
+  return { sameContent: true, oldSnapshot: 'active', oldFindingsActive: true };
 }
 
 function assertFiniteTree(value, path) {

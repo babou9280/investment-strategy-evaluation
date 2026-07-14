@@ -99,6 +99,7 @@ invalid_input
 unsupported_scope
 snapshot_unusable
 structurally_non_viable
+edge_not_surviving_modelled_friction
 capital_not_feasible
 execution_cost_risk
 constraint_breach
@@ -118,11 +119,12 @@ Ordre de priorité :
 2. `unsupported_scope` lorsque le modèle demandé n'est pas implémenté ;
 3. `snapshot_unusable` lorsque l'intégrité du snapshot global est expirée, obsolète ou conflictuelle ;
 4. `structurally_non_viable` lorsqu'une impossibilité structurelle est démontrée par des entrées encore valides ;
-5. `capital_not_feasible` lorsqu'un dépassement du plafond de cash réconcilié et alloué est démontré ;
-6. `execution_cost_risk` lorsqu'un risque matériel d'exécution est démontré ;
-7. `constraint_breach` pour une contrainte utilisateur explicite dépassée ;
-8. `insufficient_data` lorsque la conclusion la plus forte restante dépend d'une donnée absente, stale ou conflictuelle ;
-9. `no_incompatibility_detected_under_assumptions`.
+5. `edge_not_surviving_modelled_friction` lorsque l'avantage aligné est au niveau ou sous le seuil sans être au niveau ou sous le plancher structurel ;
+6. `capital_not_feasible` lorsqu'un dépassement du plafond de cash réconcilié et alloué est démontré ;
+7. `execution_cost_risk` lorsqu'un risque matériel d'exécution est démontré ;
+8. `constraint_breach` pour une contrainte utilisateur explicite dépassée ;
+9. `insufficient_data` lorsque la conclusion la plus forte restante dépend d'une donnée absente, stale ou conflictuelle ;
+10. `no_incompatibility_detected_under_assumptions`.
 
 Si un constat prioritaire dépend précisément de la donnée manquante, il n'est pas activé : sa couche reste `insufficient_data`. Cet ordre choisit le premier message sans supprimer, réordonner arbitrairement ou rendre inactifs les autres constats matériels.
 
@@ -135,7 +137,7 @@ compatible_under_assumptions
   -> no_incompatibility_detected_under_assumptions
 
 adjustment_required
-  -> finding(s) explicite(s) + constraint_breach si la synthèse est nécessaire
+  -> finding(s) explicite(s) + synthèse correspondant réellement à la couche
 ```
 
 Aucun de ces identifiants n'est un titre destiné à l'utilisateur. Les migrations historiques doivent appliquer ce mapping explicitement ; elles ne peuvent pas entretenir deux vocabulaires concurrents.
@@ -297,7 +299,7 @@ Les codes techniques ne sont visibles que dans la vue méthode/preuve, pas comme
 
 L'IA peut ultérieurement expliquer un résultat déjà calculé, sans modifier les constats ni ajouter une conclusion.
 
-## 14. Tests futurs
+## 14. Tests requis
 
 Tester :
 
@@ -323,6 +325,6 @@ Tester :
 
 ## 15. Statut
 
-Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. CG-12 prouve que plusieurs constats indépendants restent présents lorsque la synthèse choisit un facteur principal.
+Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. CG-12 et les régressions ciblées couvrent ces invariants localement ; un run exact-head de la version `1` du moteur reste obligatoire.
 
 Toute extension de domaine ou exposition utilisateur doit conserver ce contrat, ajouter ses propres constats et faire l'objet d'une nouvelle validation.

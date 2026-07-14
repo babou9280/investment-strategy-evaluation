@@ -54,7 +54,12 @@ La PR active `#24` porte la fondation Cost Gate. Avant toute interface ou critiq
 - holds identifiés et non déduits deux fois ;
 - quantité, prix, devise et nominal réconciliés ;
 - snapshot déterministe et anciens constats inactifs après mutation ;
+- anciens constats inactifs après expiration même à contenu identique ;
 - `findings[]` conservés sous violations multiples ;
+- stale et conflit simultanément visibles ;
+- portée achat simple / aller-retour cohérente avec un / deux côtés ;
+- ordre des ensembles sans effet sur le snapshot ;
+- couches cash et friction validées indépendamment ;
 - CG-01 à CG-18 et propriétés réussis ;
 - aucune donnée réelle, réseau, stockage, recommandation ou exécution ;
 - non-régressions H1–H2/C1–C4, Q0, Capital Efficiency et Edge Survival ;
@@ -195,7 +200,7 @@ Ne jamais demander seulement « aimerais-tu ce produit ? ».
 
 La validation stratégique du 14 juillet 2026 autorise une progression par gates, pas un produit connecté ni une recommandation.
 
-### Fondation contractuelle et moteur synthétique — preuve technique obtenue
+### Fondation contractuelle et moteur synthétique — preuve version `0` partielle
 
 Le head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` et le run `29334708343` (`#604`) couvrent :
 
@@ -206,7 +211,9 @@ Le head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` et le run `293347
 - alignement complet de l'avantage brut ;
 - scénarios CG-01 à CG-18 et non-régressions.
 
-Cette preuve reste synthétique. La synchronisation documentaire et sa CI exact-head doivent encore être vérifiées avant clôture de la PR `#24`.
+Cette preuve reste synthétique. Sa synchronisation documentaire a réussi sur `be6aa09d2b87bb07bd19258f393b496e522580a1` dans le run `29335825348` (`#606`). La revue exacte de ce head a ensuite révélé des défauts d'indépendance des couches, d'expiration et de coexistence stale/conflit ; l'audit adjacent a trouvé les incohérences portée/côtés, ordre des ensembles et vocabulaire de synthèse.
+
+La version `1` corrige ces causes localement et ajoute les régressions correspondantes. Elle doit être poussée, exécutée et inspectée sur son propre head avant de remplacer la preuve partielle de la version `0`.
 
 ### Prototype utilisateur hors ligne — non commencé
 

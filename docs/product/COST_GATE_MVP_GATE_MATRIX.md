@@ -59,7 +59,9 @@ Preuves requises :
 
 Sortie : autorise uniquement un moteur synthétique interne.
 
-Statut au head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` : contrats corrigés et moteur synthétique CG-01 à CG-18 réussis dans GitHub Actions `#604`. La synchronisation documentaire et la revue finale de la PR restent à valider sur leur head exact avant de considérer Gate 0 clôturé.
+Statut de la version `0` : contrats corrigés et moteur synthétique CG-01 à CG-18 réussis au head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` dans GitHub Actions `#604`, puis documentation synchronisée au head `be6aa09d2b87bb07bd19258f393b496e522580a1` dans le run `#606`.
+
+Une revue exacte de `be6aa09` a cependant révélé trois défauts rétrospectifs et l'audit adjacent trois incohérences supplémentaires. La version `1` les corrige localement ; Gate 0 reste ouverte jusqu'à son push, son run exact-head, l'inspection des preuves et la clôture des fils de revue.
 
 ### Gate 1 — valeur compréhensible sans donnée réelle
 
