@@ -18,16 +18,20 @@ gross_edge_alignment_key = {
   venue_scope,
   direction,
   operation_scope,
-  entry_rule,
-  exit_rule,
+  entry_rule_id,
+  exit_rule_id,
+  signal_timing,
   holding_horizon_definition,
   return_denominator,
   price_basis,
   currency_basis,
+  fx_treatment,
   gross_or_net_basis,
   cost_exclusions,
   estimator,
-  sample_period,
+  sample_start,
+  sample_end,
+  observation_count,
   strategy_rule_version
 }
 ```
@@ -175,17 +179,21 @@ edge_scope_unsupported
 
 Seul `edge_aligned` autorise une conclusion Edge Survival dépendante de `G`.
 
-Le seuil de couverture reste calculable sans `G` si ses propres entrées sont valides.
+`edge_aligned` exige que chaque champ obligatoire soit `aligned` ou explicitement `not_applicable`. Un champ `missing`, `conflicted`, `unsupported` ou `mismatched` empêche cette conclusion.
+
+Le seuil de couverture reste calculable sans `G` si ses propres entrées sont valides. La clé rejetée reste visible avec les champs précis en cause.
 
 ## 5. Transformations autorisées
 
 Une transformation n'est permise que si :
 
 - formule documentée ;
+- source et destination de chaque champ de la clé publiées ;
 - unités compatibles ;
 - hypothèses visibles ;
 - provenance conservée ;
 - aucune composante de coût comptée deux fois ;
+- réconciliation explicite de toute performance `partially_net` ;
 - test indépendant ;
 - version de transformation.
 
@@ -202,7 +210,9 @@ Exemple : convertir une somme de PnL bruts en taux capital-pondéré peut être 
 - performance portefeuille vers instrument unique ;
 - short vers long ;
 - horizon journalier vers aller-retour multi-jour ;
-- prix exécutés vers brut frictionless sans reconstitution.
+- prix exécutés vers brut frictionless sans reconstitution ;
+- moyenne d'univers vers instrument exact sans méthode de transfert ;
+- période ou estimateur absent comblé par défaut.
 
 ## 7. Fourchette
 
@@ -248,7 +258,8 @@ Aucun message ne suggère une valeur de remplacement.
 - spread déjà inclus ;
 - change déjà inclus ;
 - dénominateur portefeuille ;
-- estimateur absent ;
+- estimateur ou période absent ;
+- quantité/prix/nominal incompatible avec le dénominateur ;
 - fourchette avec clés différentes ;
 - transformation documentée ;
 - seuil encore disponible malgré `G` rejeté ;
