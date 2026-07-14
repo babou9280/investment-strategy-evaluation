@@ -2,42 +2,42 @@
 
 ## 1. Direction active
 
-Ayman a validé successivement :
+Ayman a validé :
 
 - **Breaktest Cost Intelligence** le 13 juillet 2026 ;
 - son approfondissement en **Capital Efficiency / Edge Survival** ;
-- la trajectoire future **Breaktest Cost Gate** le 14 juillet 2026.
+- **Breaktest Cost Gate**, contrôle pré-trade personnalisé, le 14 juillet 2026.
 
-Cost Gate est une direction stratégique de contrôle pré-trade personnalisé. Elle n'annule pas Cost Intelligence ni Edge Survival : elle devra les orchestrer avec la faisabilité du capital, la qualité des données, la liquidité et les contraintes explicitement fournies par l'utilisateur.
+Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestrer avec la faisabilité du cash, la qualité des données, le risque de coût d'exécution et les contraintes explicitement fournies par l'utilisateur.
 
-Cost Gate n'est ni implémenté, ni juridiquement validé, ni commercialement validé.
+Cost Gate est validé stratégiquement. Il n'est ni fonctionnel, ni juridiquement validé, ni commercialement validé.
 
-## 2. Phase active
+## 2. État GitHub
 
-La phase active est la clôture technique et documentaire de la pull request `#23`, branche `strategy/edge-survival-envelope`, vers `breaktest-bootstrap`.
+La pull request `#23` — Edge Survival Envelope — a été fusionnée par squash dans `breaktest-bootstrap` :
 
-La PR reste en brouillon. `main` est inchangé et hors périmètre.
+```text
+merge commit = 5f1281b49fde9363dcb38e0225a5d48d34589475
+exact head = 2c9663b1325b23e11b3ca1c855fe7f320f8e6595
+GitHub Actions = 29331537069 (#556)
+conclusion = success
+```
 
-Le travail couvre :
+`main` reste inchangé et hors périmètre.
 
-- cohérence point / fourchette ;
-- égalités et tolérance ;
-- entrées annuelles facultatives ;
-- fraîcheur des résultats ;
-- UX progressive ;
-- accessibilité et responsive ;
-- qualité des preuves visuelles ;
-- non-régressions ;
-- synchronisation canonique ;
-- recherche permanente des angles morts.
+Nouvelle branche active :
 
-## 3. État des actifs
+```text
+strategy/cost-gate-foundation
+```
+
+La phase est documentaire et synthétique : contrats, revue hostile, matrice de scénarios et éventuel moteur local isolé. Aucune donnée externe ni publication.
+
+## 3. Actifs validés techniquement
 
 ### Moteur historique
 
-`app/Breaktest_Studio.html` reste l'actif historique provisoire.
-
-Validation conservée :
+`app/Breaktest_Studio.html` conserve :
 
 - H1 et H2 ;
 - C1 à C4 ;
@@ -47,240 +47,201 @@ Validation conservée :
 - trésorerie réalisée aux sorties ;
 - bases observées et simulées séparées.
 
-Build historique H2 :
+Build historique :
 
-- taille : `166 862` octets ;
-- SHA-256 : `dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf`.
+```text
+taille = 166 862 octets
+SHA-256 = dfce9e53b7aefdbcdda126c490baa5dc669ea31e87f521f949280f75cf49dacf
+```
 
-### Calculateur Q0
+### Q0 Cost Intelligence
 
-`validation_site/` est techniquement validé et gelé. Sa publication a été suspendue parce que sa valeur restait principalement descriptive.
+`validation_site/` est techniquement validé et gelé. Sa publication reste suspendue car sa valeur était principalement descriptive.
 
-### Capital Efficiency
+### Capital Efficiency et Edge Survival
 
-La PR `#20` a fusionné le noyau au commit `b68b0257e9ea506c98a607976bbdd9456c890dcc`.
-
-Fonctions validées techniquement :
+Sont techniquement validés dans le périmètre synthétique documenté :
 
 - seuil brut ;
 - plancher variable ;
-- coût fixe et variable ;
+- coûts fixes et variables ;
 - marge nette ;
 - absorption et rétention ;
 - contraintes inverses ;
-- cas structurellement impossible ;
-- coûts fixes nuls ;
-- budget annuel ;
-- cible nette ;
-- monotonie et convergence.
-
-### Edge Survival Envelope
-
-La PR `#23` stabilise :
-
-- modes seuil, point et fourchette ;
-- hypothèses basse / centrale / haute ;
-- états de survie et de traversée ;
-- cohérence point / fourchette ;
-- définition stricte de l'avantage brut ;
+- impossibilité structurelle ;
+- point et fourchette basse/centrale/haute ;
+- cohérence point/fourchette ;
 - capital et fréquence facultatifs ;
-- suppression des résultats obsolètes ;
-- formulaire initial neutre ;
-- skip link et navigation clavier ;
-- contrat de faisabilité du capital futur ;
-- registre permanent des angles morts ;
-- standard de livraison HTML hors ligne.
+- résultat obsolète masqué ;
+- exact seuil sans fausse marge positive ;
+- formulaire neutre ;
+- accessibilité clavier ;
+- responsive Chromium ;
+- intégrité locale.
 
-Le head fonctionnel exact inspecté est :
+La fusion de la PR `#23` valide techniquement ce périmètre. Elle ne prouve ni compréhension réelle, ni utilité, ni marché.
 
-`7b6f608231aa2e9ef6a2f8071ff32c2067808d9a`
+## 4. Défauts rétrospectifs corrigés avant fusion
 
-Il a réussi GitHub Actions :
+- texte faux à l'égalité exacte au seuil ;
+- résultat ancien restant visible après modification ;
+- duplication accidentelle de la logique d'invalidation ;
+- artefacts de skip link et header sticky dans les captures full-page ;
+- preuve visuelle séparée du comportement clavier réel.
 
-- run `29331116076` (`#546`) ;
-- conclusion `success` ;
-- artefact `breaktest-validation-logs` ;
-- digest `sha256:3109774af4802345abc4a32c4bdf0034db1adf9f970059eb1c5f5daab2c8c9fc`.
+Chaque correction possède un test ou une preuve correspondante.
 
-Le run couvre H1–H2, C1–C4, Q0, Capital Efficiency, matrice synthétique, Edge Range, cohérence point/range, entrées annuelles facultatives, intégrité locale, Chromium et captures.
+## 5. Fondation Cost Gate en cours
 
-## 4. Défauts récents découverts et corrigés
-
-### Égalité exacte au seuil
-
-Le moteur produisait correctement une marge nulle, mais la phrase principale affirmait à tort que les frictions n'étaient pas couvertes.
-
-Correction :
-
-```text
-Aucune hypothèse ne produit de marge positive
-```
-
-La régression est protégée par oracle numérique, test navigateur et captures inspectées.
-
-### Résultat devenu obsolète
-
-Un résultat pouvait rester visible après modification d'une entrée. La couche dédiée `result_freshness.js` le masque et demande un nouveau calcul.
-
-Une duplication accidentelle de cette responsabilité dans `app.js` a été détectée puis supprimée.
-
-### Preuve visuelle trompeuse
-
-Les captures Chromium pleine page pouvaient répéter le skip link ou déplacer le header sticky pendant l'assemblage des tuiles.
-
-Le générateur neutralise uniquement le focus de capture, vérifie géométriquement que le skip link réel est déjà hors du viewport, le retire temporairement du rendu, normalise le header pendant l'assemblage, puis restaure exactement les styles dans un bloc `finally`. Le vrai skip link reste le premier élément atteint par `Tab` dans les tests navigateur. Les images finales 390 et 1 440 pixels du run exact ont été inspectées, car une assertion DOM seule ne prouve pas le rendu pleine page.
-
-## 5. Direction Cost Gate documentée
-
-Documents de référence :
+Documents déjà présents ou ajoutés :
 
 - `docs/product/COST_GATE_DIRECTION.md` ;
+- `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
+- `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md` ;
 - `docs/standards/COST_GATE_METHOD_CONTRACT.md` ;
-- `STRATEGY.md` ;
-- `PRODUCT.md` ;
-- `DECISIONS.md`, D034 ;
-- `BUSINESS_MODEL.md` ;
-- `VALIDATION_PLAN.md` ;
-- `AGENTS.md` ;
-- `docs/governance/BLIND_SPOT_REGISTER.md`.
+- `docs/standards/COST_GATE_PERSONALIZATION_BOUNDARY.md` ;
+- `docs/standards/COST_GATE_SNAPSHOT_CONTRACT.md` ;
+- `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
+- `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
+- `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
+- `docs/tasks/COST_GATE_FOUNDATION.md`.
 
-Cost Gate devra confronter un trade envisagé :
+La fondation impose notamment :
 
-- aux frictions ;
-- au cash réellement disponible et au nominal réservé ;
-- à la taille proposée ;
-- à la liquidité et aux conditions de marché ;
-- aux paramètres utilisateur explicitement fournis ;
-- à un avantage brut ou une fourchette alignés avec l'instrument, l'horizon et le scénario ;
-- à un Data Quality Gate.
+- personnalisation limitée aux contraintes explicites ;
+- aucun profil de risque ou suitability implicite ;
+- snapshot versionné et invalidé à chaque changement ;
+- donnée stale ou conflictuelle non utilisée comme actuelle ;
+- cash réglé distinct du capital de référence ;
+- coût du cycle distinct du besoin de cash immédiat ;
+- prix mid/ask/exécuté et spread incorporé explicitement distingués ;
+- constats multiples conservés ;
+- aucune synthèse transformée en feu vert ;
+- périmètre initial cash long, actions et ETF au comptant ;
+- instruments, marge, short et dérivés non supportés au premier stade.
 
-États analytiques internes envisagés :
+## 6. Matrice synthétique
 
-```text
-compatible_under_assumptions
-adjustment_required
-structurally_non_viable
-capital_not_feasible
-execution_cost_risk
-insufficient_data
-```
+`docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` définit 18 scénarios, notamment :
 
-Ces identifiants ne doivent pas être affichés bruts comme feu vert, verdict ou autorisation d'ordre.
-
-## 6. Data Quality Gate futur
-
-Aucune conclusion utilisant une donnée externe sans contrôle visible de :
-
-- source et licence ;
-- timestamp, fuseau et fraîcheur ;
-- instrument, place et devise ;
-- couverture ;
-- provenance ;
-- valeurs manquantes ou conflictuelles ;
-- incertitude ;
-- fallback et kill switch.
-
-Aucune donnée externe, source temps réel ou connexion courtier n'est active.
-
-## 7. Ce qui est réellement validé
-
-### Validé techniquement
-
-- moteur historique H1–H2/C1–C4 ;
-- calculateur Q0 ;
-- noyau Capital Efficiency ;
-- parcours progressif ;
-- Edge Survival Envelope sur le head fonctionnel cité ;
+- seuil sans avantage ;
+- avantage positif et cash suffisant ;
 - égalité exacte au seuil ;
-- fraîcheur des résultats ;
-- intégrité locale ;
-- absence de capacités réseau dans les prototypes testés ;
-- captures internes corrigées et inspectées.
+- avantage sous le plancher ;
+- avantage survivant mais cash insuffisant ;
+- frais de sortie exclus du cash immédiat ;
+- spread déjà incorporé au prix ;
+- base de nominal conflictuelle ;
+- quote stale ;
+- conflit instrument/place/devise ;
+- avantage brut mal aligné ;
+- plusieurs violations simultanées ;
+- snapshot invalidé ;
+- ordre en attente ;
+- modèle non supporté ;
+- sous-calcul utile malgré donnée manquante.
 
-### Validé stratégiquement
+Aucun de ces scénarios n'est encore déclaré implémenté.
+
+## 7. Ce qui est validé
+
+### Stratégiquement
 
 - Cost Intelligence ;
-- Capital Efficiency comme proposition de valeur ;
+- Capital Efficiency ;
+- Cost Gate comme trajectoire pré-trade ;
 - livrables HTML hors ligne ;
-- revue multidisciplinaire permanente des angles morts ;
-- Cost Gate comme trajectoire pré-trade.
+- recherche permanente des angles morts.
 
-### Non validé
+### Techniquement
 
-- demande commerciale ;
-- compréhension réelle sans coaching ;
-- seconde utilisation ;
-- paiement ;
-- import réel ;
-- capacité à fournir un avantage brut défendable ;
-- faisabilité complète du capital ;
+- moteur historique H1–H2/C1–C4 ;
+- Q0 ;
+- Capital Efficiency ;
+- Edge Survival Envelope fusionné ;
+- absence de réseau et persistance dans les prototypes contrôlés.
+
+## 8. Ce qui n'est pas validé
+
+- moteur Cost Gate ;
 - données de marché ;
 - Data Quality Gate exécuté ;
+- snapshot réel ;
+- faisabilité réelle d'un compte ;
 - précision pré-trade ;
-- cadre juridique de Cost Gate ;
-- personnalisation réglementairement acceptable ;
-- ordre limite, probabilité d'exécution ou exécution ;
+- personnalisation juridiquement acceptable ;
+- compréhension sans coaching ;
+- usage répété ;
+- paiement ;
+- coût et licence des données ;
+- comparaison ex ante/ex post ;
 - Safari/iPad du futur package ;
 - package HTML de critique.
 
-## 8. Travaux suspendus
-
-- publication et déploiement ;
-- H3 à H6 ;
-- import réel ;
-- comptes et stockage ;
-- données ou tarifs réels ;
-- réseau applicatif ;
-- analytics, email et paiement ;
-- connexion courtier ;
-- marketplace, affiliation et API ;
-- recommandation, conseil, signaux et exécution ;
-- statistiques avancées sans données suffisantes ;
-- code Cost Gate avant une mission isolée et ses gates.
-
 ## 9. Angles morts prioritaires
 
-Le registre actif couvre notamment :
+Le registre couvre notamment :
 
-- avantage brut indisponible, instable ou mal aligné ;
-- frictions manquantes ou tarif conditionnel mal appliqué ;
-- frontières prises pour recommandations ;
-- capital de référence confondu avec cash libre ;
-- ordres en attente et cash non réglé ;
+- avantage brut absent, fragile ou mal aligné ;
+- frictions omises ;
+- tarif conditionnel mal appliqué ;
+- capital confondu avec cash réglé ;
+- ordres en attente et réservations ;
+- frais de sortie confondus avec cash immédiat ;
+- spread compté deux fois ;
 - donnée stale ;
-- instrument, place ou devise mal réconciliés ;
-- profondeur ne garantissant pas l'exécution ;
+- mapping instrument/place/devise ;
 - exécution partielle ;
-- coût et licence des flux ;
-- faux sentiment de sécurité ;
+- profondeur ne garantissant pas l'exécution ;
 - personnalisation glissant vers le conseil ;
-- responsabilité en cas d'erreur ;
+- coût et licence des flux ;
 - confidentialité des intentions d'ordre ;
-- concurrence gratuite ;
+- responsabilité et incident ;
+- substitution gratuite par un courtier ;
 - crédibilité du travail assisté par IA.
 
 Source : `docs/governance/BLIND_SPOT_REGISTER.md`.
 
-## 10. Livrable futur
+## 10. Travaux suspendus
 
-Le prochain livrable remis à Ayman pour critique sera :
+- publication et déploiement ;
+- H3 à H6 ;
+- import réel ;
+- compte et stockage ;
+- réseau ;
+- donnée ou tarif réel ;
+- broker ou fournisseur ;
+- analytics, email et paiement ;
+- marketplace, affiliation et API ;
+- recommandation, conseil, signal ou exécution ;
+- levier, marge, short et dérivés ;
+- probabilité d'exécution ;
+- interface Cost Gate finale.
 
-- un HTML autonome interactif ou un ZIP local avec `index.html` ;
-- utilisable hors ligne ;
-- sans dépendance distante ;
-- accompagné de méthode, preuves, limites, version et SHA-256 ;
-- testé sur le package exact ;
-- vérifié sur Safari/iPad lorsque possible.
+## 11. Livrable futur
 
-Les captures restent des preuves de test, pas le produit remis.
+Le prochain livrable de critique sera un HTML autonome interactif ou un ZIP local avec `index.html`, utilisable hors ligne, avec :
 
-## 11. Prochaine séquence autorisée
+- moteur réellement validé ;
+- méthode et preuves ;
+- limites ;
+- versions ;
+- manifeste et SHA-256 ;
+- tests sur le package exact ;
+- vérification Safari/iPad lorsque possible.
 
-1. vérifier l'exécution du head documentaire final de la PR `#23` et consigner la preuve dans la conversation de la PR ;
-2. vérifier qu'aucun fichier hors périmètre n'a changé ;
-3. fusionner uniquement vers `breaktest-bootstrap` si les preuves restent cohérentes ;
-4. ne rien publier ;
-5. préparer ensuite une mission isolée pour le noyau conceptuel Cost Gate et le futur package HTML ;
-6. ne connecter aucune donnée réelle avant les gates de qualité, droit, coût et utilité.
+Les captures restent des preuves, pas le produit remis.
 
-Aucune action d'Ayman n'est requise tant qu'une décision stratégique, juridique, coûteuse, irréversible ou externe n'apparaît pas.
+## 12. Prochaine séquence
+
+1. revue hostile des contrats Cost Gate ;
+2. correction des contradictions et du registre ;
+3. décision autonome sur la nécessité d'un moteur synthétique isolé ;
+4. oracles CG-01 à CG-18 si implémentation ;
+5. non-régressions historiques et Edge Survival ;
+6. validation exact-head ;
+7. HTML hors ligne seulement après fondation cohérente ;
+8. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+
+Aucune action d'Ayman n'est requise actuellement.
