@@ -11,12 +11,13 @@ Cost Gate évalue la cohérence économique d'un scénario pré-trade sous des h
 Le diagnostic est une fonction de :
 
 ```text
-scenario
+scenario_snapshot
 cost_model
 capital_state
-edge_assumption
+gross_edge_alignment
 market_data_state
 user_constraints
+versioned_policy
 ```
 
 Aucune sortie ne peut être plus forte que la composante la moins fiable.
@@ -49,33 +50,38 @@ gross_edge_high_rate
 
 Aucune valeur n'est inventée.
 
+Toute conclusion dépendante de l'avantage exige `edge_aligned` selon `GROSS_EDGE_ALIGNMENT_KEY.md`. Une valeur mal alignée n'empêche pas le calcul indépendant du seuil, mais laisse Edge Survival `not_assessed`.
+
 ### 3.3 Capital
 
-Future couche :
+La couche initiale réutilise `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` :
 
 ```text
-reference_capital_eur
+available_settled_cash_eur
+available_settled_cash_basis
+cash_hold_ledger[]
+user_defined_cash_reserve_eur
+account_free_settled_cash_eur
 strategy_capital_eur
-available_cash_eur
-reserved_notional_eur
-proposed_order_notional_eur
+strategy_capital_committed_eur
+strategy_allocation_headroom_eur
+capital_feasibility_cash_eur
+entry_cash_requirement_eur
 ```
 
-Contraintes minimales :
+La condition supportée est :
 
 ```text
-available_cash_eur >= 0
-reserved_notional_eur >= 0
-proposed_order_notional_eur > 0
+entry_cash_requirement_eur <=
+  min(
+    account_free_settled_cash_eur,
+    strategy_allocation_headroom_eur
+  )
 ```
 
-Sans levier modélisé :
+`reference_capital_eur`, `account_equity` et `buying_power` ne remplacent jamais ces bases. Les holds déjà intégrés au cash fourni par la source ne sont pas soustraits une deuxième fois.
 
-```text
-proposed_order_notional_eur <= available_cash_eur
-```
-
-Cette condition est nécessaire mais non suffisante si plusieurs positions ou ordres concurrents existent.
+Cette condition est nécessaire mais non suffisante dès que le modèle sort du périmètre cash long, qu'une allocation manque ou que plusieurs positions ne sont pas réconciliées.
 
 ### 3.4 Liquidité et exécution
 
@@ -130,65 +136,70 @@ Règles :
 - `data_ready` nécessaire pour toute conclusion dépendante de la donnée ;
 - l'absence de donnée n'empêche pas les calculs indépendants de cette donnée.
 
-## 5. Hiérarchie de diagnostic
+## 5. Graphe de dépendances
 
-Le diagnostic doit être construit dans cet ordre :
+Le moteur suit cette séquence de construction, sans en faire une priorité aveugle du message principal :
 
-1. validité des entrées ;
-2. qualité des données ;
-3. géométrie de friction ;
-4. survie de l'avantage ;
-5. faisabilité du capital ;
-6. risque de coût d'exécution ;
-7. contraintes utilisateur ;
-8. explication et limites.
+1. valider le domaine, les entrées et l'intégrité du snapshot ;
+2. normaliser chaque source et sa qualité ;
+3. calculer les couches dont les dépendances sont satisfaites ;
+4. produire tous les `findings[]` indépendants ;
+5. choisir une synthèse interne selon `COST_GATE_FINDINGS_CONTRACT.md` ;
+6. expliquer constats, hypothèses, provenance et limites.
 
-Une couche invalide ne doit pas contaminer les couches indépendantes, mais doit bloquer les conclusions qui en dépendent.
+Dépendances minimales :
 
-## 6. États analytiques
+- géométrie de friction : coût, unité, portée et nominal réconciliés ;
+- Edge Survival : géométrie complète et clé de `G` alignée ;
+- cash immédiat : base de prix, cash réglé, holds et allocation de stratégie ;
+- exécution : données temporelles et domaine explicitement couverts ;
+- synthèse favorable : aucune incompatibilité active dans le domaine revendiqué.
+
+Une couche invalide ou insuffisante ne contamine pas les couches indépendantes. Inversement, une donnée manquante dans une couche ne masque pas un fait dur déjà démontré ailleurs.
+## 6. Sortie analytique
+
+La sortie canonique est :
 
 ```text
-compatible_under_assumptions
-adjustment_required
+findings[]
+primary_factor
+summary_code
+unassessed_layers[]
+snapshot_status
+limitations[]
+```
+
+Les synthèses internes autorisées sont :
+
+```text
+invalid_input
+unsupported_scope
+snapshot_unusable
 structurally_non_viable
 capital_not_feasible
 execution_cost_risk
+constraint_breach
 insufficient_data
-invalid_input
+no_incompatibility_detected_under_assumptions
 ```
 
-### `compatible_under_assumptions`
+Elles sont dérivées par la politique versionnée du contrat des constats. Elles ne remplacent jamais `findings[]` et ne sont pas affichées comme identifiants bruts dans l'interface grand public.
 
-Conditions nécessaires envisagées :
+Les anciens états `compatible_under_assumptions` et `adjustment_required` sont retirés. Une migration explicite les mappe respectivement vers `no_incompatibility_detected_under_assumptions` et vers les constats concernés, avec `constraint_breach` uniquement si une synthèse interne est nécessaire.
 
-- données nécessaires `data_ready` ou aucune donnée externe requise ;
-- avantage au-dessus du seuil selon le mode choisi ;
-- capital faisable ;
-- contraintes utilisateur satisfaites ;
-- aucun risque d'exécution matériel non résolu dans le modèle.
+### Périmètre initial
 
-Cet état ne signifie pas « bon trade » ou « exécuter ».
+Une future preuve synthétique éventuelle supporte uniquement :
 
-### `adjustment_required`
+```text
+cash_account
+long_cash_purchase
+spot_equity_or_etf
+unlevered
+manual_assumptions_or_synthetic_demo
+```
 
-Une contrainte n'est pas satisfaite mais une frontière mathématique finie existe. L'interface explique la frontière sans recommander de la suivre.
-
-### `structurally_non_viable`
-
-Le scénario ne peut pas satisfaire la contrainte dans le modèle, notamment lorsque l'avantage est au niveau ou sous le plancher variable.
-
-### `capital_not_feasible`
-
-Une frontière ou taille proposée dépasse les ressources autorisées dans le modèle sans levier implicite.
-
-### `execution_cost_risk`
-
-Les hypothèses de spread, slippage, profondeur ou type d'ordre produisent un risque de coût non résolu. Aucun calcul de probabilité n'est implicite.
-
-### `insufficient_data`
-
-Les données requises sont manquantes, stale, conflictuelles ou non couvertes.
-
+Marge, short, dérivés, cash réglé non identifiable et toute autre structure retournent `unsupported_scope`. Aucun modèle cash long de substitution n'est lancé silencieusement.
 ## 7. Règle de prudence
 
 La sortie agrégée ne doit pas masquer les sous-diagnostics. Un utilisateur doit voir :
@@ -203,20 +214,24 @@ La sortie agrégée ne doit pas masquer les sous-diagnostics. Un utilisateur doi
 
 Aucun score global opaque.
 
-## 8. Temps et atomicité
+## 8. Temps, identité et atomicité
 
-Une analyse pré-trade est valide uniquement pour un snapshot identifié.
+Une analyse pré-trade est active uniquement pour un snapshot identifié selon `COST_GATE_SNAPSHOT_CONTRACT.md`.
 
-Toute modification d'une entrée ou mise à jour d'une donnée :
+`snapshot_id` identifie le contenu canonique reproductible ; `snapshot_instance_id` distingue une occurrence de calcul. Les timestamps générés et les identifiants ne se hashent pas eux-mêmes.
+
+Toute modification d'une entrée, d'un hold, d'une allocation, d'une source ou d'une version :
 
 - invalide le diagnostic précédent ;
+- rend les anciens constats inactifs ;
 - exige un recalcul ;
-- conserve la version et le timestamp du snapshot ;
-- ne mélange pas des données de timestamps incompatibles sans signalement.
+- conserve versions, provenance et timestamps ;
+- ne mélange pas des données temporellement incompatibles sans signalement.
 
+Le passage du temps peut expirer un snapshot sans changer son hash : le statut temporel est réévalué au moment d'usage.
 ## 9. Scénarios minimaux futurs
 
-- données complètes et scénario compatible ;
+- hypothèses manuelles cohérentes, sans incompatibilité détectée et couches non évaluées visibles ;
 - avantage au seuil exact ;
 - avantage sous plancher ;
 - taille frontière supérieure au cash ;
@@ -226,8 +241,12 @@ Toute modification d'une entrée ou mise à jour d'une donnée :
 - spread manquant mais calculs de commission encore disponibles ;
 - profondeur insuffisante ;
 - ordre limite non exécuté : limite explicitée, aucune probabilité inventée ;
+- source de cash brute puis déjà nette du même hold, sans double retrait ;
+- allocation de stratégie inférieure au cash du compte ;
 - plusieurs ordres concurrents pour le même cash ;
 - capital modifié entre analyse et décision ;
+- avantage brut mal aligné alors que le seuil reste calculable ;
+- domaine marge, short ou dérivé refusé ;
 - source indisponible ;
 - coût de données non couvert par le modèle économique.
 
@@ -259,6 +278,9 @@ edge_engine_version
 capital_engine_version
 data_quality_version
 cost_gate_policy_version
+findings_catalog_version
+snapshot_contract_version
+gross_edge_alignment_version
 ```
 
 Un changement de logique d'état, de tolérance, de source ou de domaine de validité impose une nouvelle version.
@@ -270,6 +292,7 @@ Un changement de logique d'état, de tolérance, de source ou de domaine de vali
 - aucun ordre limite conseillé ;
 - aucune probabilité d'exécution inventée ;
 - aucun levier implicite ;
+- aucun fallback vers le modèle cash long pour un domaine non supporté ;
 - aucune donnée stale cachée ;
 - aucune conclusion sans provenance ;
 - aucun feu vert ou rouge simpliste supprimant les explications ;
