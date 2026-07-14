@@ -41,6 +41,32 @@ def submit_range(page, low, base, high):
     wait_for_settled_results(page)
 
 
+def neutralize_capture_focus(page):
+    """Remove capture-only focus without changing real keyboard behavior."""
+    page.evaluate(
+        """() => {
+            const active = document.activeElement;
+            if (active && typeof active.blur === 'function') active.blur();
+            window.scrollTo(0, 0);
+        }"""
+    )
+    page.wait_for_timeout(50)
+    skip_link = page.locator(".skip-link")
+    assert skip_link.count() == 1
+    rect = skip_link.evaluate(
+        """element => {
+            const box = element.getBoundingClientRect();
+            return {top: box.top, bottom: box.bottom, left: box.left, right: box.right};
+        }"""
+    )
+    assert rect["bottom"] <= 0 or rect["right"] <= 0, rect
+
+
+def full_page_capture(page, path):
+    neutralize_capture_focus(page)
+    page.screenshot(path=str(path), full_page=True)
+
+
 with sync_playwright() as p:
     browser = p.chromium.launch(headless=True)
 
@@ -58,10 +84,7 @@ with sync_playwright() as p:
 
         # La première capture montre volontairement un formulaire neutre, sans
         # hypothèses financières préremplies ou scénario implicitement choisi.
-        page.screenshot(
-            path=str(OUTPUT / f"{name}-threshold-form.png"),
-            full_page=True,
-        )
+        full_page_capture(page, OUTPUT / f"{name}-threshold-form.png")
 
         fill_cost_scenario(page)
         page.get_by_role("button", name="Calculer le seuil brut").click()
@@ -85,10 +108,7 @@ with sync_playwright() as p:
         page.locator("#constraintMode").select_option("positive")
 
         submit_range(page, "0,80", "2,00", "3,00")
-        page.screenshot(
-            path=str(OUTPUT / f"{name}-range-cross-full.png"),
-            full_page=True,
-        )
+        full_page_capture(page, OUTPUT / f"{name}-range-cross-full.png")
         page.locator("#results").screenshot(
             path=str(OUTPUT / f"{name}-range-cross-results.png")
         )
