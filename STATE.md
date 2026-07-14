@@ -93,14 +93,14 @@ La PR `#23` stabilise :
 
 Le head fonctionnel exact inspecté est :
 
-`714e9628e893d419474c00a9c982f25492b7a164`
+`7b6f608231aa2e9ef6a2f8071ff32c2067808d9a`
 
 Il a réussi GitHub Actions :
 
-- run `29330727579` (`#540`) ;
+- run `29331116076` (`#546`) ;
 - conclusion `success` ;
 - artefact `breaktest-validation-logs` ;
-- digest `sha256:ba78f49b8f39ae270ffa30864ae8498a148d3157d8c8f09c040cec3ae3b6c1e2`.
+- digest `sha256:3109774af4802345abc4a32c4bdf0034db1adf9f970059eb1c5f5daab2c8c9fc`.
 
 Le run couvre H1–H2, C1–C4, Q0, Capital Efficiency, matrice synthétique, Edge Range, cohérence point/range, entrées annuelles facultatives, intégrité locale, Chromium et captures.
 
@@ -128,7 +128,7 @@ Une duplication accidentelle de cette responsabilité dans `app.js` a été dét
 
 Les captures Chromium pleine page pouvaient répéter le skip link ou déplacer le header sticky pendant l'assemblage des tuiles.
 
-Le générateur applique désormais des overrides strictement limités à la capture. Le vrai skip link reste contrôlé séparément au clavier.
+Le générateur neutralise uniquement le focus de capture, vérifie géométriquement que le skip link réel est déjà hors du viewport, le retire temporairement du rendu, normalise le header pendant l'assemblage, puis restaure exactement les styles dans un bloc `finally`. Le vrai skip link reste le premier élément atteint par `Tab` dans les tests navigateur. Les images finales 390 et 1 440 pixels du run exact ont été inspectées, car une assertion DOM seule ne prouve pas le rendu pleine page.
 
 ## 5. Direction Cost Gate documentée
 
@@ -276,7 +276,7 @@ Les captures restent des preuves de test, pas le produit remis.
 
 ## 11. Prochaine séquence autorisée
 
-1. obtenir une exécution verte sur le head documentaire final de la PR `#23` ;
+1. vérifier l'exécution du head documentaire final de la PR `#23` et consigner la preuve dans la conversation de la PR ;
 2. vérifier qu'aucun fichier hors périmètre n'a changé ;
 3. fusionner uniquement vers `breaktest-bootstrap` si les preuves restent cohérentes ;
 4. ne rien publier ;
