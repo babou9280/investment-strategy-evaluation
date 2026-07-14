@@ -92,8 +92,8 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-002 | P0 | Produit | L'utilisateur peut ne pas disposer d'un avantage brut défendable | Edge Survival inutilisable | open | Tester seuil, point et fourchette ; mesurer source réelle de G |
 | BS-003 | P0 | Finance | Certaines frictions réelles restent hors modèle | Seuil sous-estimé | open | Inventaire par instrument et juridiction avant donnée réelle |
 | BS-004 | P0 | UX / réglementation | Une frontière mathématique peut être comprise comme recommandation | Mauvais usage et risque juridique | mitigated | Revue de langage et observation sans coaching |
-| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | mitigated | Tests navigateur exact-head et inspection manuelle |
-| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | mitigated | Oracles point/range et voisinage des seuils |
+| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | validated | `result_freshness.js`, tests navigateur exact-head et run `29330727579` |
+| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | validated | Oracles point/range, égalité exacte et voisinage des seuils dans le run `29330727579` |
 | BS-007 | P1 | UX | Densité mobile trop élevée | Abandon | open | Inspection 390/768 et compréhension en moins de 90 secondes |
 | BS-008 | P1 | Navigateur | Safari/iPad non prouvé | Livrable inutilisable par Ayman | open | Exécution réelle avant livraison |
 | BS-009 | P1 | Business | Calcul utile sans usage répété | Faible rétention | open | Deuxième usage non sollicité et demande d'import |
@@ -108,7 +108,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-018 | P2 | International | Frais, devise, fiscalité et droit varient | Généralisation abusive | deferred | Périmètre pays/instrument explicite |
 | BS-019 | P3 | Supply chain | Runtime CI évolutif | Pipeline interrompu | deferred | Surveiller dépréciations et versions |
 | BS-020 | P0 | Cost Gate / données | Donnée de marché stale utilisée comme actuelle | Diagnostic pré-trade faux | open | Data Quality Gate avec timestamp, fraîcheur, kill switch et tests |
-| BS-021 | P0 | Cost Gate / réglementation | `compatible` interprété comme autorisation d'exécuter | Recommandation implicite | open | Revue juridique, test utilisateur et langage non prescriptif |
+| BS-021 | P0 | Cost Gate / réglementation | `compatible` interprété comme autorisation d'exécuter | Recommandation implicite | open | État interne non affiché brut, revue juridique, test utilisateur et langage non prescriptif |
 | BS-022 | P0 | Cost Gate / capital | Capital de référence confondu avec cash disponible | Trade déclaré faisable à tort | open | Capital Feasibility, positions simultanées et invariants C1/C4 |
 | BS-023 | P0 | Cost Gate / microstructure | Profondeur visible ou spread ne garantit pas l'exécution | Coût réel supérieur au diagnostic | open | Domaine de validité, hypothèses de taille et comparaison ex post |
 | BS-024 | P0 | Cost Gate / données | Instrument, place ou devise mal réconciliés | Mauvaise donnée appliquée | open | Identifiants canoniques, mapping testé et refus des conflits |
@@ -120,6 +120,13 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-030 | P1 | Cost Gate / responsabilité | Erreur de source ou calcul sans processus d'incident | Perte de confiance et risque juridique | open | Version, journal d'incident, rollback et communication |
 | BS-031 | P2 | Cost Gate / concurrence | Courtier reproduisant un simple contrôle de frais | Fonction banalisée | open | Différenciation par provenance, capital, sensibilité et réconciliation ex post |
 | BS-032 | P2 | Cost Gate / confidentialité | Portefeuille et intentions d'ordre exposés | Risque utilisateur | open | Local-first, minimisation, modèle de menace et consentement |
+| BS-033 | P1 | Validation visuelle | Capture full-page reproduisant artificiellement éléments fixed/sticky | Fausse critique de l'interface | validated | Overrides strictement capture-only, vrai skip-link testé au clavier et artefacts du run `29330727579` inspectés |
+| BS-034 | P0 | Cost Gate / personnalisation | Contraintes personnalisées glissant vers suitability ou conseil | Changement de régime réglementaire | open | Contrat de personnalisation limité aux paramètres explicites, revue juridique avant données/utilisateurs réels |
+| BS-035 | P0 | Cost Gate / coûts | Tarif dépendant du plan, palier, volume, juridiction ou statut fiscal mal appliqué | Seuil pré-trade faux | open | Barème versionné avec conditions d'éligibilité et refus si contexte incomplet |
+| BS-036 | P0 | Cost Gate / capital | Ordres en attente, cash non réglé, marge ou emprunt de titres ignorés | Faisabilité fausse | open | Snapshot de capital avec statuts de règlement et périmètre instruments explicite |
+| BS-037 | P1 | Cost Gate / portefeuille | Corrélation, netting et marge portefeuille non modélisés | Risque sous-estimé | deferred | Interdire la généralisation avant moteur portefeuille dédié |
+| BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | open | Contrat d'alignement de G : unité, horizon, côté, instrument, univers et provenance |
+| BS-039 | P1 | Cost Gate / exécution | Exécution partielle, annulation ou multi-venue changeant les frictions | Écart ex ante/ex post | open | Scénarios d'exécution explicites et réconciliation ultérieure, sans probabilité inventée |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -140,6 +147,9 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 13. Pour Cost Gate, les données sont-elles fraîches, licenciées et correctement réconciliées ?
 14. Un état peut-il être compris comme autorisation d'ordre ?
 15. Le cash libre et les positions simultanées sont-ils réellement modélisés ?
+16. L'avantage brut est-il aligné avec l'instrument, l'horizon et le scénario d'exécution ?
+17. La personnalisation reste-t-elle une application de contraintes explicites, sans profilage de suitability ?
+18. Les coûts conditionnels au plan, au volume et à la juridiction sont-ils correctement identifiés ?
 
 ## 7. Règle de clôture
 
