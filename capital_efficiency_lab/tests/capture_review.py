@@ -42,12 +42,22 @@ def submit_range(page, low, base, high):
 
 
 def neutralize_capture_focus(page):
-    """Remove capture-only focus without changing real keyboard behavior."""
+    """Neutralize screenshot-only focus without changing product behavior.
+
+    Chromium's full-page capture may bring the first focusable link back into
+    the rendered viewport even after blur. The temporary inline override is
+    applied only while the screenshot is taken, then removed. Keyboard tests
+    independently verify that the real skip link remains the first Tab stop.
+    """
     page.evaluate(
         """() => {
             const active = document.activeElement;
             if (active && typeof active.blur === 'function') active.blur();
             window.scrollTo(0, 0);
+            const skip = document.querySelector('.skip-link');
+            skip.dataset.capturePreviousTop = skip.style.getPropertyValue('top');
+            skip.dataset.capturePreviousPriority = skip.style.getPropertyPriority('top');
+            skip.style.setProperty('top', '-80px', 'important');
         }"""
     )
     page.wait_for_timeout(50)
@@ -62,9 +72,29 @@ def neutralize_capture_focus(page):
     assert rect["bottom"] <= 0 or rect["right"] <= 0, rect
 
 
+def restore_capture_focus_style(page):
+    page.evaluate(
+        """() => {
+            const skip = document.querySelector('.skip-link');
+            const previousTop = skip.dataset.capturePreviousTop || '';
+            const previousPriority = skip.dataset.capturePreviousPriority || '';
+            if (previousTop) {
+                skip.style.setProperty('top', previousTop, previousPriority);
+            } else {
+                skip.style.removeProperty('top');
+            }
+            delete skip.dataset.capturePreviousTop;
+            delete skip.dataset.capturePreviousPriority;
+        }"""
+    )
+
+
 def full_page_capture(page, path):
     neutralize_capture_focus(page)
-    page.screenshot(path=str(path), full_page=True)
+    try:
+        page.screenshot(path=str(path), full_page=True)
+    finally:
+        restore_capture_focus_style(page)
 
 
 with sync_playwright() as p:
