@@ -124,16 +124,11 @@ Cost Gate devra réunir, pour un trade envisagé :
 - liquidité, spread, type d'ordre et fraîcheur des données lorsque ces informations seront légalement et techniquement disponibles ;
 - contraintes définies par l'utilisateur.
 
-Les résultats de travail restent analytiques :
+La sortie future conserve plusieurs constats explicables dans `findings[]` : géométrie de friction, alignement de l'avantage, cash et allocation de stratégie, qualité des données, exécution, contraintes utilisateur et limites de périmètre.
 
-- `compatible_under_assumptions` ;
-- `adjustment_required` ;
-- `structurally_non_viable` ;
-- `capital_not_feasible` ;
-- `execution_cost_risk` ;
-- `insufficient_data`.
+Une synthèse interne peut choisir un facteur principal parmi `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` et `no_incompatibility_detected_under_assumptions`.
 
-Ces états décrivent la cohérence du scénario dans le modèle. Ils ne sont ni des recommandations, ni des autorisations d'ordre, ni des prévisions.
+Cette dernière formule signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées. Les couches non évaluées restent visibles. Aucun identifiant interne n'est une recommandation, une autorisation d'ordre ou une prévision.
 
 ### 4.7 Data Quality Gate — préalable obligatoire
 
