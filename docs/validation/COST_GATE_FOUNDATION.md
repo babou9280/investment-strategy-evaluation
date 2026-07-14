@@ -14,13 +14,19 @@
 - Artefact documentaire final version `1` : `8313153630`, digest `sha256:5bb9c173f41636f484160ad5a54eb6ac28c8ef725620de6a68a593d6066abbae`
 - Head fonctionnel version `2` : `faafd348da55217e96ba67efd9f9434be62725ca`
 - GitHub Actions version `2` : run `29342135098` (`#612`), `success`
-- Moteur prouvé à distance : `cost-gate-foundation-2-synthetic`
 - Artefact fonctionnel version `2` : `8314518122`, digest `sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b`
+- Head documentaire version `2` : `6cfc43e4bbb015c8512c0ae26aad02d04503c897`
+- GitHub Actions documentaire version `2` : run `29343483769` (`#614`), `success`
+- Artefact documentaire version `2` : `8315079343`, digest `sha256:e4d864fa200f0d4c5b922ae2dcf87500ac85846e00fe7aa79edee20c7fb1f105`
+- Head fonctionnel version `3` : `753152d9cce1feabba48e54b32b4eed2ce3f5e07`
+- GitHub Actions version `3` : run `29345208179` (`#616`), `success`
+- Moteur prouvé à distance : `cost-gate-foundation-3-synthetic`
+- Artefact fonctionnel version `3` : `8315786779`, digest `sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614`
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Le run `#608` valide la version `1` sur son head fonctionnel exact ; le run `#610` valide sa synchronisation documentaire. Le run `#612` valide la version `2` sur son head fonctionnel exact. La présente synchronisation documentaire doit elle-même réussir sur son futur head exact avant clôture de la revue.
+Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Les runs `#608`/`#610` et `#612`/`#614` valident respectivement les versions `1` et `2`, puis leur synchronisation. Le run `#616` valide la version `3` sur son head fonctionnel exact. La présente synchronisation documentaire doit elle-même réussir sur son futur head exact avant clôture de la revue.
 
 ## Revue rétrospective de la version `0`
 
@@ -71,7 +77,29 @@ Cost Gate foundation property tests passed
 Cost Gate foundation static integrity passed: 5 local files, 88735 bytes, no network or persistence capability
 ```
 
-Cette prévalidation a été confirmée à distance sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612`. Les quatre fils restent ouverts jusqu'à la synchronisation documentaire exact-head et aux réponses reliant chaque correction à cette preuve.
+Cette prévalidation a été confirmée à distance sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612`, puis sa synchronisation documentaire par le run `#614`. Les quatre fils ont été résolus avec ces preuves ; les neuf fils inline de la PR sont désormais résolus.
+
+## Revue hostile indépendante et révision `3`
+
+Une dernière revue automatisée a été demandée sur le head exact `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, mais le service a répondu que le quota de revue était atteint. Aucun avis automatisé n'a donc été inventé ou assimilé à une réussite.
+
+La revue hostile indépendante a reproduit quatre défauts adjacents :
+
+- le conflit même devise / FX non nul dépendait de la présence de la vue cash ;
+- une taxe ou un frais contractuel d'entrée absent du cycle bloquait la synthèse globale, mais la friction et Edge Survival pouvaient encore paraître complets ;
+- une heure d'évaluation invalide ajoutait une erreur sans rendre le snapshot incomplet ni les anciens constats inactifs à hash identique ;
+- une source sans instrument, place, devise ou booléen critique explicite pouvait encore recevoir un constat d'actualité.
+
+La correction a aussi ajouté une régression explicite pour conserver la règle existante : une source non critique stale ne raccourcit pas l'expiration agrégée, mais ne peut pas coexister avec un constat affirmant que toutes les sources sont actuelles.
+
+La version `3` a été prévalidée localement puis confirmée à distance sur le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` par le run `#616` :
+
+```text
+Cost Gate foundation engine tests passed
+Cost Gate foundation scenario matrix passed: CG-01 to CG-18
+Cost Gate foundation property tests passed
+Cost Gate foundation static integrity passed: 5 local files, 94064 bytes, no network or persistence capability
+```
 
 ## Périmètre exécuté
 
@@ -155,12 +183,13 @@ entry_cash_requirement_eur = 502,25 EUR
 
 Les coûts futurs de sortie et les effets de prix déjà incorporés ne sont pas ajoutés au cash d'entrée. Les sommes `505 EUR` et `505,50 EUR` sont explicitement rejetées comme oracles de ce cas.
 
-La cotation synthétique est désormais USD pour un compte EUR, ce qui rend le change de 0,25 % par côté cohérent. La version `2` bloque aussi :
+La cotation synthétique est désormais USD pour un compte EUR, ce qui rend le change de 0,25 % par côté cohérent. Les versions `2` et `3` bloquent aussi :
 
 - un coût FX non nul lorsque compte et cotation ont la même devise ;
+- ce même conflit dans la friction même lorsque la vue cash est absente, tout en conservant valide le cas FX nul ;
 - une commission d'entrée différente de la commission par côté du modèle de cycle ;
 - un coût FX d'entrée différent de `nominal × taux FX par côté` ;
-- une taxe ou un frais contractuel d'entrée non nul tant que sa contrepartie de cycle n'est pas modélisée ;
+- une taxe ou un frais contractuel d'entrée non nul tant que sa contrepartie de cycle n'est pas modélisée ; la friction devient incomplète et Edge Survival reste indisponible ;
 - une composante cash absente au lieu d'un zéro explicite.
 
 ### Identité du snapshot
@@ -175,7 +204,9 @@ Le moteur sépare :
 
 Les timestamps générés et identifiants ne se hashent pas eux-mêmes. Deux instances du même contenu donnent le même `snapshot_id`. Une modification de taille donne un nouvel identifiant et rend les anciens constats inactifs. Le passage du temps peut expirer une source sans changer son contenu hashé.
 
-La version `2` refuse une source observée après l'heure d'évaluation par `snapshot_temporally_inconsistent`. L'expiration agrégée est désormais le minimum des seules sources critiques : une source non critique stale reste visible, mais ne périme pas à elle seule tous les constats ni leur comparaison.
+La version `2` refuse une source observée après l'heure d'évaluation par `snapshot_temporally_inconsistent`. L'expiration agrégée est le minimum des seules sources critiques : une source non critique stale reste visible, mais ne périme pas à elle seule tous les constats ni leur comparaison.
+
+La version `3` exige en plus instrument, place, devise de cotation et booléen critique non ambigus pour chaque source. Une heure d'évaluation absente ou invalide rend le snapshot incomplet ; à contenu identique, `compareSnapshots` rend alors les anciens constats inutilisables. Aucun constat positif d'actualité globale n'est émis pour une source incomplète, une heure invalide ou une collection contenant une source stale.
 
 Les collections fournies comme objets au lieu de tableaux sont des entrées invalides. Leurs éléments doivent aussi être des objets valides avec identifiants stables et non dupliqués lorsqu'ils pilotent une source ou une contrainte. Les régressions couvrent `cash.holds`, `sources`, `userConstraints` et `costExclusions` afin qu'aucun hold, provenance ou contrainte ne disparaisse silencieusement.
 
@@ -347,6 +378,23 @@ Les captures suivantes ont été réellement ouvertes et inspectées :
 - formulaires neutres à 390 px et 1 440 px : champs, unités, boutons et pied de page visibles sans artefact de focus.
 
 Les empreintes des deux preuves visuelles principales sont `4462b0ca5e1dbe15b6dd5fe56e5bc5b7122d390ce630333cb634f5aa0459c06d` pour le résultat dégénéré mobile et `3a6c060ae296dd6c621d77ba41ee29b9ea27db203d80128001b0edc71daff08b` pour la page desktop complète. Cette inspection confirme des non-régressions de Capital Efficiency et Edge Survival ; elle ne prouve toujours aucune interface Cost Gate.
+
+### Artefact et inspection de la version `3`
+
+- Nom : `breaktest-validation-logs` ;
+- Run : `29345208179` (`#616`), `success` ;
+- Head : `753152d9cce1feabba48e54b32b4eed2ce3f5e07` ;
+- tree : `574ec387391a995cec167149cc099e87c1f92c02` ;
+- job : `87126973528`, toutes les étapes réussies ;
+- Artifact ID : `8315786779` ;
+- taille : `6 042 535` octets ;
+- digest GitHub et archive téléchargée : `sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614`.
+
+Le workflow de pull request a testé le merge commit `eaf069558b191fde3c80740858641a19b5ae23c6`. La comparaison GitHub le place un commit au-dessus du head fonctionnel, sans différence de fichier, et la base reste exactement `5f1281b49fde9363dcb38e0225a5d48d34589475`. Les dix blobs de la version `3` correspondent aux empreintes locales et au tree distant.
+
+Les logs téléchargés prouvent : moteur, CG-01 à CG-18, propriétés, intégrité `94 064` octets, build historique, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, navigateurs 390/768/1 024/1 440, captures et syntaxes réussis.
+
+Les 24 captures sont bit à bit identiques à celles du run documentaire `#614`. Les captures dégénérée mobile, traversantes complètes 390/1 440 et formulaires neutres 390/1 440 ont été réellement ouvertes. Le texte exact, les trois marges nulles, l'égalité au seuil, le responsive, le footer, le header unique et l'absence de lien d'évitement parasite ou de débordement restent conformes. Les empreintes principales restent `4462b0ca5e1dbe15b6dd5fe56e5bc5b7122d390ce630333cb634f5aa0459c06d` et `3a6c060ae296dd6c621d77ba41ee29b9ea27db203d80128001b0edc71daff08b`.
 
 ## Limites restantes
 

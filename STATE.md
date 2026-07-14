@@ -33,20 +33,22 @@ strategy/cost-gate-foundation
 
 Pull request active : `#24`, ouverte, fusionnable et laissée en brouillon. Sa base est `breaktest-bootstrap` au commit `5f1281b49fde9363dcb38e0225a5d48d34589475`.
 
-La version `1` reste historiquement prouvée par les runs `#608` et `#610`. La revue automatisée du head documentaire `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite ouvert quatre défauts : nominal non réconcilié avec quantité × prix, source future acceptée, expiration agrégée pilotée par une source non critique et collections mal formées silencieusement supprimées. L'audit adjacent a étendu la correction aux bases de cash, aux devises et aux coûts d'entrée/cycle.
+Les versions `1` et `2` restent historiquement prouvées par les runs `#608` à `#614`. Les neuf fils de revue inline ont été résolus après vérification des corrections, des heads exacts et des artefacts. Une dernière revue automatisée a été demandée sur `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, mais n'a pas été exécutée faute de quota.
 
-La révision `cost-gate-foundation-2-synthetic` est désormais prouvée à distance :
+La revue hostile indépendante a ensuite révélé quatre défauts adjacents : contrôle même devise/FX dépendant du cash, friction encore qualifiée complète malgré une taxe ou un frais d'entrée absent du cycle, heure d'évaluation invalide laissant le snapshot paraître actuel, et identité ou caractère critique de source incomplets. Elle a aussi verrouillé le risque de contradiction entre source stale et constat positif d'actualité globale.
+
+La révision `cost-gate-foundation-3-synthetic` est prouvée à distance :
 
 ```text
-functional head = faafd348da55217e96ba67efd9f9434be62725ca
-tree = c5720516ae36994035b6bc9d5be687a3f2d895ca
-GitHub Actions = 29342135098 (#612)
+functional head = 753152d9cce1feabba48e54b32b4eed2ce3f5e07
+tree = 574ec387391a995cec167149cc099e87c1f92c02
+GitHub Actions = 29345208179 (#616)
 conclusion = success
-artifact = 8314518122
-digest = sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
+artifact = 8315786779
+digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 ```
 
-Les treize blobs de cette révision correspondent au tree distant. Les jobs, logs, archive et captures 390/1 440 px ont été inspectés. Les quatre fils de revue restent ouverts jusqu'à la synchronisation documentaire exact-head et aux réponses fondées sur cette preuve.
+Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` doit encore réussir sur son propre head exact.
 
 La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
@@ -199,7 +201,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Q0 ;
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
-- Cost Gate foundation version `2`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `faafd348` dans le périmètre cash long déclaré ;
+- Cost Gate foundation version `3`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `753152d9` dans le périmètre cash long déclaré ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
@@ -279,11 +281,10 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Prochaine séquence
 
-1. pousser la synchronisation documentaire de la version `2` dans la PR `#24` ;
+1. pousser la synchronisation documentaire de la version `3` dans la PR `#24` ;
 2. exécuter et inspecter la validation exact-head de cette synchronisation ;
-3. répondre puis résoudre les quatre commentaires de revue uniquement après ce run ;
-4. demander une dernière revue automatisée sur le head final et traiter tout nouveau défaut matériel ;
-5. conserver la PR en brouillon, sans fusion ni publication, jusqu'à l'accord explicite d'Ayman ;
-6. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ; aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+3. mettre à jour la preuve de PR et vérifier qu'aucun fil de revue n'est rouvert ;
+4. conserver la PR en brouillon, sans fusion ni publication, jusqu'à l'accord explicite d'Ayman ;
+5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ; aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
 
 Aucune action d'Ayman n'est requise actuellement.

@@ -9,11 +9,12 @@ pull request = #24
 branch = strategy/cost-gate-foundation
 base = breaktest-bootstrap
 base head = 5f1281b49fde9363dcb38e0225a5d48d34589475
-version 2 functional head = faafd348da55217e96ba67efd9f9434be62725ca
-version 2 functional run = 29342135098 (#612), success
-version 2 artifact = 8314518122
-version 2 digest = 12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
-current engine = cost-gate-foundation-2-synthetic
+version 3 functional head = 753152d9cce1feabba48e54b32b4eed2ce3f5e07
+version 3 functional tree = 574ec387391a995cec167149cc099e87c1f92c02
+version 3 functional run = 29345208179 (#616), success
+version 3 artifact = 8315786779
+version 3 digest = 67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
+current engine = cost-gate-foundation-3-synthetic
 ```
 
 `main` reste strictement hors périmètre. Ne fusionne, ne publie et ne déploie rien automatiquement.
@@ -31,7 +32,7 @@ Reconstruire l'état GitHub actuel de la PR `#24` :
 
 Le head peut avoir évolué depuis le présent document. Une affirmation locale n'est pas une preuve distante.
 
-La revue Codex du head `9d38ce3` a ouvert quatre fils sur le nominal économique, les sources futures, l'expiration pilotée par les seules sources critiques et les collections non-tableaux. Les corrections et l'audit adjacent des bases de cash, devises et coûts entrée/cycle ont réussi sur `faafd3` dans le run `#612`. Les quatre fils restent ouverts : vérifier d'abord le run exact-head de la synchronisation documentaire, puis répondre avec les preuves fonctionnelle et documentaire avant de les résoudre.
+Les neuf fils de revue inline ont été résolus après preuves exact-head. Une dernière revue automatisée demandée sur `6cfc43e4bbb015c8512c0ae26aad02d04503c897` n'a pas été exécutée faute de quota. La revue hostile indépendante a alors trouvé quatre défauts adjacents : même devise/FX dépendant du cash, friction faussement complète avec taxe ou frais d'entrée, heure d'évaluation invalide et identité/criticité de source incomplète. La version `3` les corrige et verrouille aussi l'absence de constat d'actualité contradictoire pour une source non critique stale. Vérifier la synchronisation documentaire exact-head avant toute décision de fusion.
 
 ## Sources obligatoires
 
@@ -73,7 +74,11 @@ Vérifier ou corriger seulement :
 - refus d'une source future et expiration agrégée limitée aux sources critiques ;
 - rejet des collections, éléments et identifiants stables mal formés ;
 - cohérence devise/FX et coûts communs entre entrée et cycle ;
-- blocage explicite des taxes ou frais d'entrée absents du modèle de cycle ;
+- conflit même devise/FX refusé même sans vue cash, avec cas FX nul valide ;
+- blocage explicite des taxes ou frais d'entrée absents du modèle de cycle, friction incomplète et Edge Survival indisponible ;
+- identité, place, devise, caractère critique et heure d'évaluation obligatoires pour une source ;
+- anciens constats inactifs lorsque l'heure d'évaluation est invalide à contenu identique ;
+- aucune source stale accompagnée d'un constat positif d'actualité globale ;
 - alignement complet de l'avantage brut ;
 - hash de contenu et instance séparés ;
 - invalidation des anciens constats ;
@@ -92,7 +97,7 @@ Traiter les commentaires de revue GitHub seulement après vérification que leur
 
 ## Preuve fonctionnelle déjà obtenue
 
-Le run `#612` sur `faafd348da55217e96ba67efd9f9434be62725ca` a exécuté :
+Le run `#616` sur `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a exécuté :
 
 ```text
 Cost Gate foundation engine tests passed
@@ -101,16 +106,16 @@ Cost Gate foundation property tests passed
 Cost Gate foundation static integrity passed
 ```
 
-Il a aussi réussi le build, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, Chromium 390/768/1024/1440 et la syntaxe. L'intégrité Cost Gate couvre cinq fichiers et `88 735` octets sans capacité réseau ou persistance.
+Il a aussi réussi le build, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, Chromium 390/768/1024/1440 et la syntaxe. L'intégrité Cost Gate couvre cinq fichiers et `94 064` octets sans capacité réseau ou persistance.
 
 Artefact :
 
 ```text
-id = 8314518122
-digest = sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b
+id = 8315786779
+digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 ```
 
-Les logs, l'archive et les captures 390/1 440 px ont été inspectés. Le digest téléchargé correspond à GitHub et les treize blobs fonctionnels correspondent au tree distant. Cette preuve doit être réexécutée si le code ou le workflow change. La synchronisation documentaire exige son propre run exact-head avant clôture de la stabilisation.
+Les logs, l'archive et les captures 390/1 440 px ont été inspectés. Le digest téléchargé correspond à GitHub, les dix blobs fonctionnels correspondent au tree distant `574ec387391a995cec167149cc099e87c1f92c02` et les 24 captures sont identiques à la preuve précédente. Cette preuve doit être réexécutée si le code ou le workflow change. La synchronisation documentaire exige son propre run exact-head avant clôture de la stabilisation.
 
 ## Interdictions
 

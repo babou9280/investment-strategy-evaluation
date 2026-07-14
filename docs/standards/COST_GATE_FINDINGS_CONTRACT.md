@@ -332,8 +332,8 @@ Tester :
 
 ## 15. Statut
 
-Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. La version `3` ajoute les constats bloquants de cohérence temporelle, cash et coûts. CG-12 et les régressions ciblées réussissent au head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` dans le run `#612` ; l'artefact a été inspecté. La synchronisation documentaire exact-head reste requise avant clôture de la PR.
+Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. La version `2` ajoute une synthèse propre à l'avantage absorbé, réserve `constraint_breach` aux contraintes utilisateur explicites et conserve stale et conflit comme constats indépendants. La version `3` ajoute les constats bloquants de cohérence temporelle, cash et coûts. CG-12 et les régressions ciblées réussissent au head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` dans le run `#612`, puis au head documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897` dans le run `#614` ; les artefacts ont été inspectés.
 
-La révision locale de politique et catalogue `4` empêche un constat Edge Survival sur une friction connue incomplète, exige une évaluation temporelle et une identité de source valides, et interdit le constat positif d'actualité globale dès qu'une source est stale. Cette révision n'est pas encore une preuve distante.
+La politique et le catalogue `4` empêchent un constat Edge Survival sur une friction connue incomplète, exigent une évaluation temporelle et une identité de source valides, et interdisent le constat positif d'actualité globale dès qu'une source est stale. Le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run `#616` et son artefact a été inspecté.
 
 Toute extension de domaine ou exposition utilisateur doit conserver ce contrat, ajouter ses propres constats et faire l'objet d'une nouvelle validation.

@@ -137,7 +137,7 @@ Une donnée manquante dans une couche ne masque pas un fait indépendant démont
 
 Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
 
-Les preuves `#604` à `#610` concernent les versions `0` et `1`. La version `2`, qui ajoute les réconciliations nominal, temps, collections, base de cash, devise et coûts entrée/cycle, a réussi au head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` dans le run exact `#612`. Son artefact a été inspecté. Sa synchronisation documentaire et la revue du head final restent requises avant toute clôture de la fondation.
+Les preuves `#604` à `#614` concernent les versions `0` à `2`. La version `3` empêche une friction faussement complète, refuse le change entre devises identiques sans dépendre du cash, exige une identité de source et une heure d'évaluation valides, et inactive les anciens constats lorsque cette heure est invalide. Elle a réussi au head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` dans le run exact `#616`. Son artefact et ses captures ont été inspectés. Sa synchronisation documentaire reste requise avant toute clôture de la fondation.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :
@@ -187,7 +187,7 @@ Sans réseau ni données réelles :
 - refus explicite de marge, short, dérivés et bases inconnues ;
 - invalidation des snapshots et non-régressions historiques.
 
-Preuve fonctionnelle courante : head `faafd348da55217e96ba67efd9f9434be62725ca`, run `29342135098` (`#612`), scénarios CG-01 à CG-18, propriétés, intégrité et non-régressions. Cette preuve reste interne et synthétique ; la synchronisation documentaire, les fils de revue et la relecture du head final doivent encore clôturer la PR.
+Preuve fonctionnelle courante : head `753152d9cce1feabba48e54b32b4eed2ce3f5e07`, run `29345208179` (`#616`), scénarios CG-01 à CG-18, propriétés, intégrité et non-régressions. Cette preuve reste interne et synthétique ; la synchronisation documentaire exacte doit encore clôturer la stabilisation avant toute décision de fusion.
 
 ### Gate 2 — prototype utilisateur contrôlé
 

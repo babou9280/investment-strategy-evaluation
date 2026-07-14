@@ -247,4 +247,14 @@
 - Coûts non encore modélisés : une taxe ou un frais contractuel d'entrée non nul bloque la synthèse favorable tant qu'une contrepartie explicite n'existe pas dans le modèle de cycle. Ce refus est une limite, pas une estimation fiscale.
 - Versionnement : snapshot `3`, politique de synthèse `3` et catalogue de constats `3` ; les preuves des versions `0` et `1` ne valident pas cette correction.
 - Preuve : head fonctionnel exact `faafd348da55217e96ba67efd9f9434be62725ca`, run GitHub Actions `29342135098` (`#612`), artefact `8314518122` et captures inspectés, digest `sha256:12b2b247607237b3b5ce2725bd4fbb49a5f6c4b67122ad6f52530b3f29bcda9b`.
-- Gate : synchroniser la documentation sur un head exact, répondre aux quatre fils de revue puis faire relire le head final. Cette décision n'autorise ni donnée externe, ni interface, ni fusion.
+- Gate : la synchronisation documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897` a réussi dans le run `#614` et les quatre fils ont été résolus avec preuves. La relecture automatisée suivante n'a pas été exécutée faute de quota ; la revue hostile indépendante a conduit à D038. Cette décision n'autorise ni donnée externe, ni interface, ni fusion.
+
+## D038 — Une couche incomplète ne peut pas conserver un constat favorable dépendant
+
+- Statut : **active comme correction technique rétrospective, 14 juillet 2026**
+- Décision : `cost-gate-foundation-3-synthetic` invalide un coût FX non nul entre devises identiques même sans cash, rend la friction incomplète lorsqu'une taxe ou un frais d'entrée manque au cycle, et bloque alors tout constat Edge Survival dépendant du total.
+- Temps et provenance : chaque source exige instrument, place, devise et booléen critique explicites ; une heure d'évaluation invalide rend le snapshot incomplet et les anciens constats inutilisables, même à hash de contenu identique.
+- Explication : une source non critique stale peut laisser actifs les constats indépendants, mais ne peut jamais coexister avec un constat affirmant que toutes les sources sont actuelles.
+- Versionnement : snapshot `4`, politique de synthèse `4` et catalogue de constats `4` ; les preuves des versions antérieures ne valident pas ces garde-fous.
+- Preuve : head fonctionnel exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07`, tree `574ec387391a995cec167149cc099e87c1f92c02`, run GitHub Actions `29345208179` (`#616`), artefact `8315786779` inspecté, digest `sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614`.
+- Gate : la synchronisation documentaire doit réussir sur son propre head exact. La revue automatisée finale demandée sur la version `2` n'a pas été exécutée faute de quota ; la revue hostile indépendante a produit cette correction. Aucune donnée externe, interface ou fusion n'est autorisée par cette décision.

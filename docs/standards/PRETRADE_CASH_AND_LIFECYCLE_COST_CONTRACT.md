@@ -412,6 +412,6 @@ Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundat
 
 La version `cost-gate-foundation-2-synthetic` ajoute les réconciliations nominal, base de cash, devise et coûts entrée/cycle. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté. Cette preuve reste synthétique et n'établit ni solde réel, ni règle de règlement d'un courtier, ni exhaustivité fiscale.
 
-La révision locale `cost-gate-foundation-3-synthetic` étend le conflit même devise/FX à la friction sans dépendre de la présence du cash et rend explicitement incomplète la friction lorsqu'une taxe ou un frais contractuel d'entrée n'a pas de contrepartie de cycle. Elle reste une prévalidation jusqu'à un head distant, une CI exact-head et un artefact inspecté.
+La révision `cost-gate-foundation-3-synthetic` étend le conflit même devise/FX à la friction sans dépendre de la présence du cash et rend explicitement incomplète la friction lorsqu'une taxe ou un frais contractuel d'entrée n'a pas de contrepartie de cycle. Elle est validée techniquement sur le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` par le run `#616` et l'artefact `8315786779` inspecté. Cette preuve reste synthétique.
 
 Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

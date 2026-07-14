@@ -200,7 +200,7 @@ Ne jamais demander seulement « aimerais-tu ce produit ? ».
 
 La validation stratégique du 14 juillet 2026 autorise une progression par gates, pas un produit connecté ni une recommandation.
 
-### Fondation contractuelle et moteur synthétique — preuve version `2` technique
+### Fondation contractuelle et moteur synthétique — preuve version `3` technique
 
 Le head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` et le run `29334708343` (`#604`) couvrent :
 
@@ -215,7 +215,9 @@ Cette preuve reste synthétique. Sa synchronisation documentaire a réussi sur `
 
 La version `1` corrige ces causes et ajoute les régressions correspondantes. Le head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` a réussi le run exact `29338189190` (`#608`) et sa synchronisation documentaire le run `#610`.
 
-La revue exacte de ce dernier head a révélé quatre défauts supplémentaires de nominal, temps, expiration et collections. La version `2` y ajoute les réconciliations de base de cash, devise et coûts entrée/cycle. Le head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` a réussi le run exact `29342135098` (`#612`) ; logs, artefact et captures ont été inspectés. Cette preuve reste technique et synthétique. La synchronisation documentaire, les réponses de revue et la relecture du head final restent nécessaires avant fusion.
+La revue exacte de ce dernier head a révélé quatre défauts supplémentaires de nominal, temps, expiration et collections. La version `2` y ajoute les réconciliations de base de cash, devise et coûts entrée/cycle. Le head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` a réussi le run exact `29342135098` (`#612`) ; sa synchronisation documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897` a réussi le run `#614` et les fils associés ont été résolus.
+
+La relecture automatisée finale de la version `2` n'a pas été exécutée faute de quota. La revue hostile indépendante a trouvé quatre défauts adjacents de complétude FX/coûts et d'intégrité temporelle/provenance. La version `3` les corrige et ajoute une régression contre les constats d'actualité contradictoires. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `29345208179` (`#616`) ; jobs, logs, artefact, digest et captures ont été inspectés. Cette preuve reste technique et synthétique. La synchronisation documentaire exact-head reste nécessaire avant toute décision de fusion.
 
 ### Prototype utilisateur hors ligne — non commencé
 

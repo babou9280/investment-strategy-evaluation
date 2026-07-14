@@ -68,6 +68,7 @@ Règles :
 - ne jamais remplacer silencieusement une valeur invalide ;
 - conserver tout fallback et sa provenance ;
 - pouvoir réconcilier un agrégat avec ses lignes sources ;
+- exiger une identité, une place, une devise, un caractère critique et une heure d'évaluation explicites avant de qualifier une source d'actuelle ;
 - ne jamais préremplir une hypothèse synthétique en la qualifiant de saisie utilisateur.
 
 ## 5. Validation numérique stricte
@@ -100,6 +101,8 @@ Exigences :
 - un achat simple / `entry_leg` possède un côté et un aller-retour / `complete_round_trip` deux côtés ; toute contradiction invalide l'entrée ;
 - spread et slippage couvrent le scénario complet ;
 - aucune friction n'est comptée deux fois ;
+- une friction déclarée complète couvre toutes les composantes connues ; une taxe ou un frais d'entrée sans contrepartie de cycle la rend incomplète et bloque Edge Survival ;
+- des devises compte/cotation identiques imposent un coût FX nul, indépendamment de la présence d'une vue cash ;
 - le seuil reste supérieur ou égal au plancher variable ;
 - la fréquence ne modifie pas le seuil par opération ;
 - la sensibilité à la taille converge vers le plancher variable lorsque le coût fixe existe ;

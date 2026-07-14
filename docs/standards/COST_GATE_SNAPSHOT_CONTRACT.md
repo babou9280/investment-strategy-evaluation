@@ -317,8 +317,8 @@ Avant donnée externe réelle :
 
 Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. La version `cost-gate-snapshot-2`, validée au head fonctionnel `2ebf0e3e37852e4f3252e54149e147aa0d5712c3` par le run `#608` puis synchronisée par le run `#610`, ajoute l'ordre canonique des ensembles et l'inactivation après expiration.
 
-La version `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, exige des identifiants stables et uniques pour les sources et contraintes, et limite l'expiration agrégée aux sources critiques. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612` (`29342135098`) et l'artefact `8314518122` inspecté.
+La version `cost-gate-snapshot-3` refuse les sources futures et collections mal formées, exige des identifiants stables et uniques pour les sources et contraintes, et limite l'expiration agrégée aux sources critiques. Elle est validée techniquement sur le head exact `faafd348da55217e96ba67efd9f9434be62725ca` par le run `#612`, puis synchronisée sur `6cfc43e4bbb015c8512c0ae26aad02d04503c897` par le run `#614` ; les artefacts ont été inspectés.
 
-La révision locale `cost-gate-snapshot-4` exige l'identité complète et le caractère critique explicite de chaque source, invalide une heure d'évaluation absente ou incorrecte et retire le faux constat global d'actualité lorsqu'une source non critique est stale. Elle reste une prévalidation jusqu'à une CI distante exact-head et son artefact inspecté.
+La révision `cost-gate-snapshot-4` exige l'identité complète et le caractère critique explicite de chaque source, invalide une heure d'évaluation absente ou incorrecte et retire le faux constat global d'actualité lorsqu'une source non critique est stale. Elle est validée techniquement sur le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` par le run `#616` et son artefact inspecté.
 
 Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.
