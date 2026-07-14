@@ -78,7 +78,7 @@ Seuils de décision initiaux :
 - au moins 3 sur 5 déclarent une situation réelle dans laquelle ils auraient utilisé le contrôle ;
 - au moins 3 sur 5 savent quelles entrées ils peuvent fournir et lesquelles leur manquent.
 
-Ces seuils sont des gates de prototype, pas des preuves de marché.
+Ces seuils sont préenregistrés comme règles internes de falsification du prototype. Avec cinq participants — surtout s'ils proviennent d'un échantillon de convenance — ils ne permettent aucune généralisation statistique ni preuve de marché. Tout changement après observation doit être documenté comme tel.
 
 ### Gate 2 — capacité à fournir les entrées
 
@@ -146,7 +146,8 @@ Une donnée externe ne devient jamais implicitement plus fiable qu'une hypothès
 Preuves :
 
 - cash réglé distinct de l'equity et du buying power ;
-- ordres en attente ;
+- ordres en attente et ledger de holds sans double retrait ;
+- allocation de stratégie plafonnant le cash total du compte ;
 - réservations ;
 - cash immédiat distinct du coût du cycle ;
 - périmètre cash long ;
@@ -233,8 +234,9 @@ La preuve est le dossier exécutable, les contrats, les tests et les limites —
 Après Gate 0 :
 
 - un moteur synthétique interne peut orchestrer des constats sans donnée réelle ;
-- un HTML offline peut servir à la critique ;
 - aucun état ne déclenche ou recommande un ordre ;
 - aucune intégration externe n'est activée.
+
+Un HTML offline n'est autorisé qu'après réussite des oracles CG-01 à CG-18, des non-régressions et d'une exécution exact-head. Il sert alors à la critique de Gate 1 ; les captures seules ne constituent pas ce prototype.
 
 Après Gate 1 et Gate 2 seulement, décider si la saisie manuelle mérite d'être approfondie ou si la valeur dépend d'une dérivation depuis données réelles.
