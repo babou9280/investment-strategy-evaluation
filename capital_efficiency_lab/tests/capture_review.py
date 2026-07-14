@@ -44,15 +44,25 @@ def submit_range(page, low, base, high):
 def neutralize_capture_focus(page):
     """Neutralize screenshot-only focus without changing product behavior.
 
-    Chromium's full-page capture may bring the first focusable link back into
-    the rendered viewport even after blur. The temporary inline override is
-    applied only while the screenshot is taken, then removed. Keyboard tests
-    independently verify that the real skip link remains the first Tab stop.
+    Chromium's full-page capture may move focus back to the first link when no
+    element remains focused. A temporary off-screen focus sink is retained for
+    the duration of the screenshot. The skip link is also forced outside the
+    viewport only for the capture. Keyboard tests independently verify the real
+    first-Tab behavior.
     """
     page.evaluate(
         """() => {
-            const active = document.activeElement;
-            if (active && typeof active.blur === 'function') active.blur();
+            const oldSink = document.getElementById('capture-focus-sink');
+            if (oldSink) oldSink.remove();
+
+            const sink = document.createElement('span');
+            sink.id = 'capture-focus-sink';
+            sink.tabIndex = -1;
+            sink.setAttribute('aria-hidden', 'true');
+            sink.style.cssText = 'position:fixed;left:-10000px;top:-10000px;width:1px;height:1px;overflow:hidden;';
+            document.body.appendChild(sink);
+            sink.focus({preventScroll: true});
+
             window.scrollTo(0, 0);
             const skip = document.querySelector('.skip-link');
             skip.dataset.capturePreviousTop = skip.style.getPropertyValue('top');
@@ -61,6 +71,7 @@ def neutralize_capture_focus(page):
         }"""
     )
     page.wait_for_timeout(50)
+    assert page.evaluate("document.activeElement && document.activeElement.id") == "capture-focus-sink"
     skip_link = page.locator(".skip-link")
     assert skip_link.count() == 1
     rect = skip_link.evaluate(
@@ -85,6 +96,9 @@ def restore_capture_focus_style(page):
             }
             delete skip.dataset.capturePreviousTop;
             delete skip.dataset.capturePreviousPriority;
+
+            const sink = document.getElementById('capture-focus-sink');
+            if (sink) sink.remove();
         }"""
     )
 
