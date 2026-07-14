@@ -1,13 +1,14 @@
-# Prochaine mission Codex — Edge Survival Envelope
+# Prochaine mission Codex — fondation Cost Gate
 
 ## Statut
 
-Le moteur Capital Efficiency, l'expérience progressive et la matrice de scénarios synthétiques sont fusionnés dans `breaktest-bootstrap`.
+Edge Survival Envelope est fusionné dans `breaktest-bootstrap` par la pull request `#23`.
 
-La mission active étend le laboratoire avec une fourchette déterministe d'avantage brut afin de réduire la fausse précision d'une valeur ponctuelle.
+La direction **Breaktest Cost Gate — contrôle pré-trade personnalisé** est validée stratégiquement. Elle complète Cost Intelligence, Capital Efficiency et Edge Survival ; elle ne les remplace pas.
 
-- Branche : `strategy/edge-survival-envelope`
+- Branche : `strategy/cost-gate-foundation`
 - Base : `breaktest-bootstrap`
+- Phase : contrats et preuve synthétique interne
 - Publication externe : interdite
 - `main` : strictement hors périmètre
 
@@ -20,122 +21,149 @@ Lire intégralement :
 - `AGENTS.md` ;
 - les six fichiers canoniques ;
 - `STRATEGY.md` ;
-- `MARKET_EVIDENCE.md` ;
 - `BUSINESS_MODEL.md` ;
 - `VALIDATION_PLAN.md` ;
-- `docs/product/CAPITAL_EFFICIENCY_CORE.md` ;
-- `docs/product/EDGE_SURVIVAL_ENVELOPE.md` ;
-- `docs/product/WORLD_CLASS_PLATFORM_THESIS.md` ;
-- `docs/product/DIFFERENTIATION_AND_EVIDENCE_PLAN.md` ;
-- `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
+- `docs/product/COST_GATE_DIRECTION.md` ;
+- `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
+- `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md` ;
+- `docs/standards/COST_GATE_METHOD_CONTRACT.md` ;
+- `docs/standards/COST_GATE_PERSONALIZATION_BOUNDARY.md` ;
+- `docs/standards/COST_GATE_SNAPSHOT_CONTRACT.md` ;
+- `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
+- `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/EDGE_RANGE_CONTRACT.md` ;
-- `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
-- `docs/tasks/EDGE_SURVIVAL_ENVELOPE.md` ;
-- les validations, revues, scénarios et fichiers de `capital_efficiency_lab/`.
+- `docs/governance/BLIND_SPOT_REGISTER.md` ;
+- `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
+- `docs/tasks/COST_GATE_FOUNDATION.md` ;
+- les validations Edge Survival fusionnées.
 
 ## Objectif unique
 
-Permettre trois modes sans prédire le rendement :
+Construire une fondation déterministe permettant de détecter et d'expliquer plusieurs incompatibilités pré-trade sous des hypothèses synthétiques, sans donnée actuelle, recommandation ou exécution.
 
-1. seuil seulement ;
-2. valeur brute unique ;
-3. fourchette basse, centrale et haute fournie par l'utilisateur.
+La fondation doit distinguer :
 
-Le produit doit montrer si la conclusion survit dans toute la fourchette, traverse le seuil ou échoue dans toute la fourchette, et distinguer ce qui peut être dilué de ce que le plancher variable rend structurellement impossible.
+- friction économique du cycle ;
+- besoin de cash immédiat ;
+- seuil et Edge Survival ;
+- faisabilité du cash ;
+- qualité ou absence de données ;
+- contraintes explicites ;
+- domaine non supporté ;
+- constats multiples et synthèse interne.
 
-## Contrat
+## Première étape obligatoire
 
-Implémente strictement `docs/standards/EDGE_RANGE_CONTRACT.md`.
+Effectuer une revue hostile des nouveaux contrats avant code :
 
-Exigences critiques :
+- contradictions ;
+- doublons ;
+- unités et dénominateurs ;
+- double comptage ;
+- base du nominal ;
+- frais déjà incorporés au prix ;
+- cash réglé, réservations et ordres en attente ;
+- personnalisation contre suitability ;
+- snapshot et temps de contrôle / temps d'usage ;
+- perte de constats dans une synthèse ;
+- alignement de l'avantage brut ;
+- angles morts réglementaires, sécurité, données, business et UX.
 
-- fourchette complète obligatoire ;
-- `G_low <= G_base <= G_high` ;
-- aucune permutation, déduction ou valeur par défaut silencieuse ;
-- valeurs négatives autorisées si explicites ;
-- égalité au seuil non qualifiée de marge positive ;
-- marges et frontières réconciliées ;
-- version moteur distincte ;
-- rétrocompatibilité du mode point ;
-- aucune valeur non finie ou `-0`.
+Corriger les contrats et le registre avant toute implémentation.
 
-## Expérience
+## Implémentation autorisée après revue
 
-Le parcours reste progressif :
+Créer au besoin un dossier isolé :
 
-- le seuil fonctionne seul ;
-- le choix valeur unique/fourchette est facultatif ;
-- la fourchette ne doit pas surcharger le premier écran ;
-- une phrase concrète précède les détails ;
-- afficher les marges basse, centrale et haute ;
-- afficher une seule contrainte inverse à la fois ;
-- montrer provenance, unités, dénominateurs et limites.
+```text
+cost_gate_foundation/
+```
 
-Interdire les mots et concepts suivants comme résultat produit :
+Périmètre :
 
-- probabilité de succès ;
-- intervalle de confiance ;
-- prévision Breaktest ;
-- scénario optimal ;
-- recommandation de taille, fréquence, actif ou transaction.
+```text
+cash_account
+long_cash_purchase
+actions_et_etf_au_comptant
+hypothèses_manuelles_ou_synthetic_demo
+```
+
+Le moteur peut exposer :
+
+- validation stricte ;
+- snapshot manuel déterministe ;
+- orchestration des moteurs validés ;
+- `findings[]` ;
+- synthèse interne non affichée comme feu vert ;
+- domaine non supporté ;
+- oracles indépendants.
+
+## Matrice obligatoire
+
+Démontrer CG-01 à CG-18 dans `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md`.
+
+Points critiques :
+
+- exact seuil : coût couvert, aucune marge positive ;
+- sous plancher : impossibilité structurelle ;
+- avantage positif avec cash insuffisant ;
+- cash immédiat distinct des coûts de sortie futurs ;
+- spread déjà inclus au prix sans double comptage ;
+- quote stale ;
+- conflit instrument/place/devise ;
+- avantage brut mal aligné ;
+- violations simultanées conservées ;
+- snapshot invalidé ;
+- ordre en attente ;
+- instruments et comptes non supportés ;
+- sous-calcul utile malgré une donnée manquante.
 
 ## Tests obligatoires
 
-- oracles indépendants des trois modes ;
-- fourchette partielle et ordre invalide ;
-- bornes égales ;
-- égalité au seuil ;
-- survie complète, traversée et échec complet ;
-- relation au plancher variable ;
-- hypothèses négatives et nulles ;
-- coûts fixes nuls ;
-- invariants et monotonies ;
-- matrice synthétique existante inchangée ;
-- Chromium 390, 768, 1024 et 1440 px ;
-- clavier, focus, `aria-live` et absence de débordement ;
-- captures internes des états principaux ;
-- intégrité locale, syntaxe ;
-- non-régressions H1–H2/C1–C4 et Q0.
-
-## Standard de livraison ultérieure
-
-La mission reste en mode `work`. Ne génère pas encore de prétendu livrable final pour Ayman.
-
-Lorsque le fond sera stabilisé et qu'une décision de livraison sera explicitement prise, le livrable principal devra respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
-
-- HTML réellement navigable ;
-- fonctionnement sans internet ;
-- aucun serveur local obligatoire lorsque techniquement évitable ;
-- aucune dépendance distante ;
-- interactions et calculs réels ;
-- provenance, méthode, preuves et limites accessibles ;
-- package critique comprenant au minimum le démonstrateur produit et une vue méthodologie/preuve ;
-- captures conservées uniquement comme artefacts de test, jamais comme substitut au produit.
-
-La préparation technique du futur package est autorisée seulement si elle ne détourne pas le travail de la correction du fond. Aucun bundle à remettre à Ayman ne doit être déclaré prêt avant les gates du standard.
+- oracles explicites indépendants ;
+- strict numeric validation ;
+- zéro, absence et invalidité ;
+- déterminisme et hash ;
+- aucune valeur non finie ;
+- ordre stable des constats ;
+- aucune perte de constat ;
+- aucune recommandation ou vocabulaire d'autorisation ;
+- aucune donnée externe revendiquée ;
+- non-régressions H1–H2/C1–C4, Q0, Capital Efficiency et Edge Survival ;
+- intégrité locale et syntaxe.
 
 ## Interdictions
 
-- aucune donnée réelle, import, courtier ou tarif réel ;
-- aucun compte, stockage, réseau, analytics, email ou paiement ;
-- aucune publication ;
-- aucune statistique avancée ;
-- aucune modification de `app/Breaktest_Studio.html` ;
-- aucune modification fonctionnelle de `validation_site/` ;
-- aucune reprise H3 à H6 ;
-- aucun livrable limité à des images ;
-- aucune appellation `final`, `production_ready` ou `commercially_validated` sans preuves correspondantes.
+- aucune donnée ou tarif réel ;
+- aucun réseau, fournisseur, broker ou Alpaca ;
+- aucun compte, import ou stockage ;
+- aucune analytics, email ou paiement ;
+- aucun profil de risque ;
+- aucun actif, courtier, ordre, taille ou fréquence recommandé ;
+- aucun levier, marge, short ou dérivé simulé ;
+- aucune probabilité d'exécution ;
+- aucune interface finale ou publication ;
+- aucune modification fonctionnelle des actifs fusionnés ;
+- aucune reprise H3–H6 ;
+- aucune modification de `main`.
 
-## Livrables de la mission actuelle
+## Livraison ultérieure
 
-- moteur et interface mis à jour sous `capital_efficiency_lab/` ;
-- tests Node et Chromium ;
-- captures de revue internes ;
-- `docs/validation/EDGE_SURVIVAL_ENVELOPE.md` ;
-- synchronisation canonique minimale fondée sur les exécutions réelles ;
-- aucun package utilisateur remis avant stabilisation rigoureuse du fond.
+Ne remets pas encore de livrable à Ayman.
+
+Après validation de la fondation, le prochain artefact de critique sera un HTML réellement interactif et hors ligne conforme à `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md`, puis testé sur le package exact.
 
 ## Définition de terminé
 
-La mission est terminée uniquement si le head exact est entièrement vert, que les captures ont été inspectées, que la fourchette réduit réellement la fausse précision sans alourdir le parcours, qu'aucune affirmation statistique, commerciale ou réglementaire n'est ajoutée et que la future livraison HTML hors ligne reste conforme au standard sans être produite prématurément.
+La fondation est terminée uniquement si :
+
+- les contrats sont cohérents ;
+- les angles morts sont mis à jour ;
+- le périmètre cash long synthétique est respecté ;
+- les scénarios sont démontrés si le moteur est créé ;
+- toutes les non-régressions réussissent sur le head exact ;
+- aucune affirmation juridique, commerciale ou temps réel n'est ajoutée ;
+- les fichiers canoniques distinguent stratégie, preuve technique et inconnues ;
+- le prochain gate est une critique de compréhension et de valeur, pas une connexion de données.
