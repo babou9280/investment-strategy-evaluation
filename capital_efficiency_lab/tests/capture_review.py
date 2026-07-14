@@ -42,17 +42,18 @@ def submit_range(page, low, base, high):
 
 
 def prepare_full_page_capture(page):
-    """Remove Playwright stitching artefacts without changing product code.
+    """Neutralize capture-owned focus and Chromium stitching artefacts only.
 
-    Chromium may repaint fixed/sticky elements in multiple tiles during a
-    full-page screenshot. A focused skip link and sticky header can therefore
-    appear in a position that no user would see. Capture-only inline overrides
-    hide the skip link and place the header in normal document flow. They are
-    restored immediately after the screenshot. Keyboard behavior remains
-    covered independently by the browser suite.
+    The real skip link must remain the first keyboard target in the product.
+    Before removing it from the screenshot render tree, this helper proves that
+    the unfocused link is already outside the current viewport. Capture-only
+    inline overrides are restored byte-for-byte after the screenshot.
     """
     page.evaluate(
         """() => {
+            const active = document.activeElement;
+            if (active && typeof active.blur === 'function') active.blur();
+
             const oldSink = document.getElementById('capture-focus-sink');
             if (oldSink) oldSink.remove();
 
@@ -64,65 +65,99 @@ def prepare_full_page_capture(page):
             document.body.appendChild(sink);
             sink.focus({preventScroll: true});
             window.scrollTo(0, 0);
-
-            const skip = document.querySelector('.skip-link');
-            skip.dataset.capturePreviousVisibility = skip.style.getPropertyValue('visibility');
-            skip.dataset.capturePreviousVisibilityPriority = skip.style.getPropertyPriority('visibility');
-            skip.style.setProperty('visibility', 'hidden', 'important');
-
-            const topbar = document.querySelector('.topbar');
-            topbar.dataset.capturePreviousPosition = topbar.style.getPropertyValue('position');
-            topbar.dataset.capturePreviousPositionPriority = topbar.style.getPropertyPriority('position');
-            topbar.style.setProperty('position', 'static', 'important');
         }"""
     )
     page.wait_for_timeout(50)
-    assert page.evaluate("document.activeElement && document.activeElement.id") == "capture-focus-sink"
-    assert page.locator(".skip-link").evaluate(
-        "element => getComputedStyle(element).visibility"
-    ) == "hidden"
-    assert page.locator(".topbar").evaluate(
-        "element => getComputedStyle(element).position"
-    ) == "static"
 
-
-def restore_full_page_capture(page):
-    page.evaluate(
+    state = page.evaluate(
         """() => {
             const skip = document.querySelector('.skip-link');
-            const oldVisibility = skip.dataset.capturePreviousVisibility || '';
-            const oldVisibilityPriority = skip.dataset.capturePreviousVisibilityPriority || '';
-            if (oldVisibility) {
-                skip.style.setProperty('visibility', oldVisibility, oldVisibilityPriority);
-            } else {
-                skip.style.removeProperty('visibility');
-            }
-            delete skip.dataset.capturePreviousVisibility;
-            delete skip.dataset.capturePreviousVisibilityPriority;
-
             const topbar = document.querySelector('.topbar');
-            const oldPosition = topbar.dataset.capturePreviousPosition || '';
-            const oldPositionPriority = topbar.dataset.capturePreviousPositionPriority || '';
-            if (oldPosition) {
-                topbar.style.setProperty('position', oldPosition, oldPositionPriority);
-            } else {
-                topbar.style.removeProperty('position');
-            }
-            delete topbar.dataset.capturePreviousPosition;
-            delete topbar.dataset.capturePreviousPositionPriority;
+            if (!skip || !topbar) throw new Error('Capture target missing');
 
-            const sink = document.getElementById('capture-focus-sink');
-            if (sink) sink.remove();
+            const rect = skip.getBoundingClientRect();
+            return {
+                focusedId: document.activeElement && document.activeElement.id,
+                skipStyle: skip.getAttribute('style'),
+                topbarStyle: topbar.getAttribute('style'),
+                skipRect: {
+                    top: rect.top,
+                    right: rect.right,
+                    bottom: rect.bottom,
+                    left: rect.left,
+                },
+                viewportWidth: window.innerWidth,
+                viewportHeight: window.innerHeight,
+            };
         }"""
     )
 
+    assert state["focusedId"] == "capture-focus-sink"
+    rect = state["skipRect"]
+    assert (
+        rect["bottom"] <= 0
+        or rect["top"] >= state["viewportHeight"]
+        or rect["right"] <= 0
+        or rect["left"] >= state["viewportWidth"]
+    ), f"Skip link intersects viewport before capture-only hiding: {rect}"
+
+    page.evaluate(
+        """() => {
+            const skip = document.querySelector('.skip-link');
+            const topbar = document.querySelector('.topbar');
+            skip.style.setProperty('display', 'none', 'important');
+            topbar.style.setProperty('position', 'static', 'important');
+        }"""
+    )
+    assert page.locator(".skip-link").evaluate(
+        "element => getComputedStyle(element).display"
+    ) == "none"
+    assert page.locator(".topbar").evaluate(
+        "element => getComputedStyle(element).position"
+    ) == "static"
+    return state
+
+
+def restore_full_page_capture(page, state):
+    page.evaluate(
+        """state => {
+            const restoreStyle = (element, previousStyle) => {
+                if (previousStyle === null) {
+                    element.removeAttribute('style');
+                } else {
+                    element.setAttribute('style', previousStyle);
+                }
+            };
+
+            const skip = document.querySelector('.skip-link');
+            const topbar = document.querySelector('.topbar');
+            restoreStyle(skip, state.skipStyle);
+            restoreStyle(topbar, state.topbarStyle);
+
+            const sink = document.getElementById('capture-focus-sink');
+            if (sink) sink.remove();
+        }""",
+        state,
+    )
+
+    restored = page.evaluate(
+        """() => ({
+            skipStyle: document.querySelector('.skip-link').getAttribute('style'),
+            topbarStyle: document.querySelector('.topbar').getAttribute('style'),
+            focusSinkPresent: Boolean(document.getElementById('capture-focus-sink')),
+        })"""
+    )
+    assert restored["skipStyle"] == state["skipStyle"]
+    assert restored["topbarStyle"] == state["topbarStyle"]
+    assert restored["focusSinkPresent"] is False
+
 
 def full_page_capture(page, path):
-    prepare_full_page_capture(page)
+    state = prepare_full_page_capture(page)
     try:
         page.screenshot(path=str(path), full_page=True)
     finally:
-        restore_full_page_capture(page)
+        restore_full_page_capture(page, state)
 
 
 with sync_playwright() as p:
