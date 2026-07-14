@@ -75,21 +75,34 @@ notional_basis =
 
 Sans `notional_basis`, Cost Gate ne dérive pas automatiquement le cash immédiat depuis le nominal.
 
-### Risque de double comptage
-
-Si le nominal est calculé au prix ask ou à un prix d'exécution attendu, une partie ou la totalité du spread peut déjà être incorporée.
-
-Si le nominal est calculé au mid, le spread et le slippage peuvent modifier le cash requis.
-
-Le modèle doit exposer :
+Lorsque quantité et prix sont présents, le snapshot doit aussi réconcilier :
 
 ```text
-spread_included_in_reference_price
-slippage_included_in_reference_price
+entry_asset_consideration_eur
+≈ order_quantity * reference_price_in_account_currency
 ```
 
-Toute incohérence retourne `cash_basis_conflicted`.
+La tolérance, l'unité de quantité, la devise et toute transformation FX sont explicites. Un nominal saisi indépendamment ne remplace pas silencieusement ce contrôle.
 
+### Coûts incorporés au prix
+
+Pour chaque composante sensible au prix :
+
+```text
+spread_reference_price_status =
+  included | excluded | unknown | not_applicable
+
+slippage_reference_price_status =
+  included | excluded | unknown | not_applicable
+```
+
+Un booléen brut est normalisé vers cet enum avant calcul. `unknown` n'est jamais assimilé à `excluded`.
+
+Si le nominal est calculé au prix ask ou à un prix d'exécution attendu, une partie ou la totalité du spread ou du slippage peut déjà être incorporée. Ces montants ne sont alors pas ajoutés une deuxième fois à l'engagement cash.
+
+Ils peuvent néanmoins rester dans la décomposition économique du cycle lorsque `G` est défini avant ces frictions. Les deux vues ne constituent pas un double comptage : l'une décrit le cash payé, l'autre mesure l'écart économique par rapport à une base brute explicitement alignée.
+
+Toute incohérence, inclusion inconnue ou absence de relation quantité-prix retourne `cash_basis_conflicted` pour les sorties qui en dépendent.
 ## 5. Composantes immédiates
 
 Dans le périmètre cash long, l'engagement immédiat peut comprendre :
@@ -144,31 +157,72 @@ Les frais de sortie futurs ne sont pas automatiquement soustraits du cash dispon
 
 ## 7. Faisabilité immédiate
 
-Définir :
+### 7.1 Normaliser le cash de la source
+
+Une source de cash doit déclarer :
 
 ```text
-free_settled_cash_eur =
+available_settled_cash_eur
+available_settled_cash_basis =
+  gross_before_declared_holds
+  | net_of_listed_holds
+source_included_hold_ids[]
+```
+
+Chaque réservation ou engagement possède un `hold_id` stable et un statut d'inclusion. Seuls les montants prouvés non déjà retranchés par la source entrent dans `deductible_hold_ids[]`.
+
+```text
+account_free_settled_cash_eur =
   available_settled_cash_eur
-  - reserved_cash_eur
-  - pending_cash_commitments_eur
+  - sum(amount_eur des deductible_hold_ids)
   - user_defined_cash_reserve_eur
 ```
+
+Un même `hold_id` ne peut apparaître qu'une fois dans le ledger de déduction. Si la base de la source ou l'inclusion d'un hold est inconnue, l'état est `cash_basis_missing` ou `cash_basis_conflicted` ; le moteur ne soustrait pas « par prudence » une seconde fois.
+
+### 7.2 Respecter l'allocation déclarée à la stratégie
+
+Lorsque l'utilisateur déclare une allocation plus basse que son cash de compte :
+
+```text
+strategy_capital_eur
+strategy_capital_committed_eur
+strategy_allocation_headroom_eur =
+  strategy_capital_eur - strategy_capital_committed_eur
+
+capital_feasibility_cash_eur =
+  min(
+    account_free_settled_cash_eur,
+    strategy_allocation_headroom_eur
+  )
+```
+
+Les engagements déjà comptés dans le cash du compte peuvent aussi être présents dans `strategy_capital_committed_eur` : ce n'est pas une double soustraction, car les deux montants créent deux plafonds indépendants combinés par `min`, jamais par addition.
+
+`reference_capital_eur` ne remplace pas `strategy_capital_eur`. Si l'allocation de stratégie ou son capital déjà engagé est nécessaire mais absent, la faisabilité de stratégie reste non évaluée. Le moteur ne suppose jamais que 100 % du compte est affecté au scénario.
+
+### 7.3 État
 
 Invariants :
 
 ```text
 available_settled_cash_eur >= 0
-reserved_cash_eur >= 0
-pending_cash_commitments_eur >= 0
 user_defined_cash_reserve_eur >= 0
+strategy_capital_eur >= 0
+strategy_capital_committed_eur >= 0
+account_free_settled_cash_eur est fini
+strategy_allocation_headroom_eur est fini
+aucun hold_id déduit deux fois
 ```
+
+`account_free_settled_cash_eur` ou `strategy_allocation_headroom_eur` peut être négatif ; cela produit un constat de dépassement, pas un nombre non fini.
 
 État :
 
 ```text
 entry_cash_feasibility =
-  feasible_within_declared_settled_cash
-  insufficient_declared_settled_cash
+  feasible_within_declared_strategy_cash
+  insufficient_declared_strategy_cash
   cash_basis_missing
   cash_basis_conflicted
   unsupported_capital_model
@@ -177,11 +231,10 @@ entry_cash_feasibility =
 La condition :
 
 ```text
-entry_cash_requirement_eur <= free_settled_cash_eur
+entry_cash_requirement_eur <= capital_feasibility_cash_eur
 ```
 
-signifie uniquement que l'engagement immédiat tient dans le cash déclaré selon le snapshot. Elle ne signifie ni prudence, ni adéquation, ni conseil.
-
+signifie uniquement que l'engagement immédiat tient à la fois dans le cash réglé réconcilié et dans l'allocation de stratégie déclarée du snapshot. Elle ne signifie ni prudence, ni adéquation, ni conseil.
 ## 8. Cash réglé contre cash affiché
 
 Ne jamais confondre :
@@ -202,18 +255,33 @@ Si une source ne permet pas de distinguer le cash réglé, l'état est `cash_bas
 
 Tout ordre d'achat non exécuté ou partiellement exécuté peut réserver du cash.
 
-Le snapshot doit distinguer :
+Le snapshot conserve un ledger à composants mutuellement exclusifs :
 
 ```text
-pending_order_reserved_cash_eur
-open_position_reserved_cash_eur
-other_strategy_reserved_cash_eur
+hold_id
+hold_type =
+  pending_order
+  | open_position
+  | other_strategy
+  | user_reserve
+amount_eur
+included_in_available_settled_cash
+included_in_strategy_capital_committed
 ```
 
-La somme se réconcilie avec `reserved_cash_eur` ou `pending_cash_commitments_eur` selon la convention choisie.
+Chaque montant est rattaché à un seul `hold_id`. Les agrégats tels que `reserved_cash_eur` ou `pending_cash_commitments_eur` sont des vues de réconciliation, jamais deux sources à soustraire ensemble sans leurs identifiants.
+
+Invariants :
+
+```text
+sum(unique account-side holds not already included)
+  == sum(deductible_hold_ids)
+
+aucun hold_id n'est compté dans deux catégories account-side
+aucun montant pending n'est soustrait à la fois comme reserved et pending
+```
 
 Aucune réservation ne peut être ignorée parce qu'elle n'a pas encore produit de PnL.
-
 ## 10. Sortie future et produit de cession
 
 Cost Gate ne suppose pas que le produit d'une vente future financera l'entrée actuelle, sauf séquence et règlement explicitement modélisés.
@@ -262,13 +330,17 @@ Tester :
 - cash exactement égal au besoin ;
 - cash inférieur d'un centime ;
 - cash non réglé ;
-- ordre en attente ;
+- ordre en attente avec source brute avant holds ;
+- source déjà nette du même ordre en attente, sans double retrait ;
+- allocation de stratégie inférieure au cash total du compte ;
+- capital de stratégie déjà engagé ;
 - réserve utilisateur ;
 - coût nul ;
 - taxe d'entrée ;
 - change à l'entrée ;
 - dérivé, short ou marge non supportés ;
-- aucun double comptage ;
+- aucun double comptage par `hold_id` ;
+- réconciliation quantité × prix × devise ;
 - aucune utilisation du produit de sortie future pour financer l'entrée.
 
 ## 14. Gate d'implémentation
@@ -278,8 +350,8 @@ Avant d'afficher une faisabilité de capital :
 1. fixer le périmètre cash long ;
 2. définir `notional_basis` ;
 3. séparer coût incorporé au prix et coût ajouté ;
-4. disposer du cash réglé et des réservations ;
-5. tester la réconciliation avec C1 et C4 ;
+4. disposer du cash réglé, de sa base d'inclusion, des réservations et de l'allocation de stratégie ;
+5. tester la réconciliation par `hold_id` avec C1 et C4 ;
 6. vérifier les conventions de règlement de la source ;
 7. ne pas présenter l'état comme recommandation.
 
