@@ -10,7 +10,7 @@ Ayman a validé :
 
 Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestrer avec la faisabilité du cash, la qualité des données, le risque de coût d'exécution et les contraintes explicitement fournies par l'utilisateur.
 
-Cost Gate est validé stratégiquement. Il n'est ni fonctionnel, ni juridiquement validé, ni commercialement validé.
+Cost Gate est validé stratégiquement. Sa fondation synthétique est fonctionnelle dans un domaine technique restreint ; le produit connecté, l'interface, les données réelles, le droit et le marché ne sont pas validés.
 
 ## 2. État GitHub
 
@@ -31,7 +31,19 @@ Nouvelle branche active :
 strategy/cost-gate-foundation
 ```
 
-La phase est documentaire et synthétique : contrats, revue hostile, matrice de scénarios et éventuel moteur local isolé. Aucune donnée externe ni publication.
+Pull request active : `#24`, laissée en brouillon.
+
+Preuve fonctionnelle Cost Gate :
+
+```text
+functional head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
+GitHub Actions = 29334708343 (#604)
+conclusion = success
+artifact = 8311484443
+digest = sha256:f95dfd83ba47ca1b1896dece5259a0831db96ff7156d0e194088fb40e6a24b46
+```
+
+La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
 ## 3. Actifs validés techniquement
 
@@ -104,8 +116,10 @@ Documents déjà présents ou ajoutés :
 - `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
 - `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
 - `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
-- `docs/tasks/COST_GATE_FOUNDATION.md`.
+- `docs/tasks/COST_GATE_FOUNDATION.md` ;
+- `docs/validation/COST_GATE_FOUNDATION.md`.
 
 La fondation impose notamment :
 
@@ -120,6 +134,17 @@ La fondation impose notamment :
 - aucune synthèse transformée en feu vert ;
 - périmètre initial cash long, actions et ETF au comptant ;
 - instruments, marge, short et dérivés non supportés au premier stade.
+
+Le moteur `cost_gate_foundation/` exécute maintenant ce contrat pour des hypothèses manuelles ou `synthetic_demo`. Il réutilise le moteur Capital Efficiency sans le modifier.
+
+La revue hostile a aussi imposé :
+
+- plafonnement par le minimum entre cash réglé réconcilié et allocation libre de stratégie ;
+- ledger de holds par identifiant, sans second retrait d'un montant déjà inclus par la source ;
+- séparation entre hash de contenu et identifiant d'instance ;
+- réconciliation quantité × prix × devise ;
+- rejet d'une performance issue de prix exécutés comme brut avant friction sans reconstruction ;
+- priorité des constats dépendante de leurs preuves.
 
 ## 6. Matrice synthétique
 
@@ -142,7 +167,7 @@ La fondation impose notamment :
 - modèle non supporté ;
 - sous-calcul utile malgré donnée manquante.
 
-Aucun de ces scénarios n'est encore déclaré implémenté.
+Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.test.js` et ont réussi sur le head fonctionnel et le run exact cités ci-dessus.
 
 ## 7. Ce qui est validé
 
@@ -160,11 +185,13 @@ Aucun de ces scénarios n'est encore déclaré implémenté.
 - Q0 ;
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
+- Cost Gate foundation synthétique CG-01 à CG-18 dans le périmètre cash long déclaré ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
 
-- moteur Cost Gate ;
+- produit ou interface Cost Gate ;
+- moteur Cost Gate sur donnée, compte ou ordre réels ;
 - données de marché ;
 - Data Quality Gate exécuté ;
 - snapshot réel ;
@@ -187,10 +214,13 @@ Le registre couvre notamment :
 - frictions omises ;
 - tarif conditionnel mal appliqué ;
 - capital confondu avec cash réglé ;
+- cash du compte contournant une allocation de stratégie plus basse ;
 - ordres en attente et réservations ;
+- hold déjà retranché puis déduit une seconde fois ;
 - frais de sortie confondus avec cash immédiat ;
 - spread compté deux fois ;
 - donnée stale ;
+- identité de snapshot circulaire ou dépendante de l'heure du recalcul ;
 - mapping instrument/place/devise ;
 - exécution partielle ;
 - profondeur ne garantissant pas l'exécution ;
@@ -235,13 +265,11 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Prochaine séquence
 
-1. revue hostile des contrats Cost Gate ;
-2. correction des contradictions et du registre ;
-3. décision autonome sur la nécessité d'un moteur synthétique isolé ;
-4. oracles CG-01 à CG-18 si implémentation ;
-5. non-régressions historiques et Edge Survival ;
-6. validation exact-head ;
-7. HTML hors ligne seulement après fondation cohérente ;
-8. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+1. synchroniser la documentation avec la preuve fonctionnelle — en cours dans la PR `#24` ;
+2. exécuter la validation exact-head de cette synchronisation ;
+3. traiter ou résoudre les deux commentaires de revue GitHub ;
+4. conserver la PR en brouillon, sans fusion ni publication ;
+5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ;
+6. aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
 
 Aucune action d'Ayman n'est requise actuellement.

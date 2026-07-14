@@ -46,9 +46,9 @@ Une grille tarifaire ou un total de frais ne répond pas directement à ces ques
 - une frontière mathématique dépasse-t-elle potentiellement le capital réellement disponible ?
 - un trade envisagé reste-t-il cohérent avec le cash libre, la liquidité et les données disponibles ?
 
-La faisabilité du capital est documentée mais non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+La faisabilité immédiate du cash est démontrée dans le moteur synthétique isolé de la PR `#24`. La faisabilité générale du portefeuille, des positions simultanées et des comptes réels reste non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
-La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md` et reste non implémentée.
+La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée ; le produit Cost Gate, ses données et son interface ne le sont pas.
 
 ## 4. Architecture de valeur
 
@@ -105,17 +105,17 @@ Le produit peut résoudre une seule question avancée à la fois :
 
 Ces sorties décrivent des conditions sous hypothèses. Elles ne constituent aucune prescription.
 
-### 4.5 Faisabilité du capital — couche future
+### 4.5 Faisabilité du capital — fondation partielle
 
 Une frontière mathématique peut dépasser le cash réellement disponible ou ignorer le chevauchement de positions.
 
-La future couche devra distinguer capital de référence, capital alloué, cash disponible, nominal réservé et exposition. Elle devra réutiliser la réservation chronologique du capital déjà validée dans le moteur historique.
+La fondation synthétique distingue déjà capital de référence, allocation de stratégie, cash réglé, holds et engagement immédiat. La future couche générale devra encore couvrir exposition, positions simultanées et réservation chronologique du capital déjà validée dans le moteur historique.
 
-Cette couche est documentée, non implémentée et conditionnée à une preuve d'utilité utilisateur.
+Cette fondation est une preuve technique interne. Elle ne prouve ni lecture d'un compte réel, ni utilité utilisateur, ni capacité de portefeuille.
 
-### 4.6 Cost Gate — couche pré-trade future
+### 4.6 Cost Gate — fondation synthétique et couche pré-trade future
 
-Cost Gate devra réunir, pour un trade envisagé :
+Le moteur synthétique isolé orchestre déjà les dimensions disponibles dans un périmètre cash long strict. Le futur produit devra réunir, pour un trade envisagé :
 
 - frictions explicites et implicites ;
 - capital de référence, cash libre et nominal déjà réservé ;
@@ -223,7 +223,11 @@ La version moteur en cours de validation est `capital-efficiency-lab-4-optional-
 
 ### Cost Gate
 
-Cost Gate est une direction stratégique documentée. Aucun moteur de données de marché, diagnostic pré-trade, compte utilisateur, stockage, réseau, connexion courtier ou exécution n'est actuellement implémenté.
+Cost Gate reste une direction stratégique non commercialement validée. Un moteur de fondation isolé, `cost_gate_foundation/`, orchestre désormais des hypothèses manuelles ou `synthetic_demo` dans le seul périmètre compte cash, achat long, action/ETF au comptant.
+
+Cette preuve technique produit des `findings[]`, réconcilie cash immédiat et coût du cycle, plafonne la faisabilité par l'allocation de stratégie et invalide les snapshots modifiés. Elle ne constitue ni une interface produit, ni un moteur de données de marché, ni une lecture de compte réel.
+
+Aucun compte utilisateur, stockage, réseau, donnée réelle, connexion courtier, recommandation ou exécution n'est implémenté.
 
 ## 8. Positionnement
 
@@ -351,4 +355,4 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 - valeur perçue supérieure au prix ;
 - test capable de conduire à l'abandon.
 
-La validation de Cost Gate est stratégique. Elle ne prouve ni demande, ni précision pré-trade, ni disponibilité des données, ni conformité réglementaire.
+La direction Cost Gate est stratégique et sa fondation synthétique est techniquement démontrée dans son domaine restreint. Cela ne prouve ni demande, ni précision sur données réelles, ni disponibilité des données, ni conformité réglementaire.

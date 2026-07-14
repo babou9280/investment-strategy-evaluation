@@ -3,10 +3,10 @@
 ## 1. Statut
 
 - Validation fondateur : **14 juillet 2026**
-- Statut : **direction stratégique active, non implémentée et non commercialement validée**
+- Statut : **direction stratégique active ; fondation synthétique implémentée, produit et marché non validés**
 - Nom de travail : **Breaktest Cost Gate**
 - Relation avec l'existant : extension future de Breaktest Cost Intelligence, Capital Efficiency et Edge Survival Envelope
-- Autorisation immédiate : documentation, contrats, recherche d'angles morts et validation conceptuelle
+- Autorisation immédiate : documentation, contrats, recherche d'angles morts et moteur synthétique isolé sans interface
 - Non autorisé à ce stade : données réelles, réseau, compte, stockage, connexion courtier, exécution, recommandation personnalisée ou vocabulaire prescriptif
 
 ## 2. Problème visé
@@ -162,7 +162,7 @@ Le produit peut expliquer qu'une hypothèse est compatible, qu'une contrainte n'
 
 ## 10. Séquence de développement conditionnelle
 
-### Gate 0 — réconcilier la fondation
+### Gate 0 — réconcilier la fondation — exécuté dans la PR `#24`
 
 - Edge Survival Envelope fusionné et conservé comme non-régression ;
 - revue hostile des contrats Cost Gate ;
@@ -172,7 +172,7 @@ Le produit peut expliquer qu'une hypothèse est compatible, qu'une contrainte n'
 - snapshot déterministe et constats multiples ;
 - matrice synthétique corrigée avant code.
 
-### Gate 1 — moteur Cost Gate synthétique isolé
+### Gate 1 — moteur Cost Gate synthétique isolé — preuve fonctionnelle exécutée
 
 Sans réseau ni données réelles :
 
@@ -181,6 +181,8 @@ Sans réseau ni données réelles :
 - calculs et constats CG-01 à CG-18 par oracles indépendants ;
 - refus explicite de marge, short, dérivés et bases inconnues ;
 - invalidation des snapshots et non-régressions historiques.
+
+Preuve fonctionnelle : head `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`, run `29334708343` (`#604`), scénarios CG-01 à CG-18. Cette preuve reste interne et synthétique ; la synchronisation documentaire et sa CI exact-head doivent encore clôturer la PR.
 
 ### Gate 2 — prototype utilisateur contrôlé
 
@@ -262,4 +264,4 @@ La différenciation ne vient pas d'un feu vert ou rouge. Elle peut venir de :
 
 ## 14. Règle d'autorité
 
-La validation de Cost Gate est stratégique : elle fixe la trajectoire future. Elle ne transforme aucune hypothèse en fonctionnalité, aucune source en donnée disponible, aucun état en recommandation autorisée et aucune ambition en preuve commerciale.
+La validation de Cost Gate est stratégique ; la fondation synthétique possède en plus une preuve technique restreinte. Ni l'une ni l'autre ne transforme une hypothèse en donnée disponible, un constat en recommandation autorisée ou une ambition en preuve commerciale.

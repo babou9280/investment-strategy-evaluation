@@ -267,4 +267,6 @@ Aucun message ne suggère une valeur de remplacement.
 
 ## 10. Statut
 
-Contrat de conception non implémenté. Il doit être intégré aux scénarios Cost Gate avant toute dérivation automatique de l'avantage brut.
+La clé complète est implémentée dans le moteur synthétique et couverte notamment par CG-02 et CG-11. Un statut déclaré `edge_aligned` ne contourne pas une incompatibilité réelle de la clé.
+
+Aucune dérivation automatique d'avantage brut n'est autorisée. Toute nouvelle source, transformation ou agrégation exige une provenance et une validation distinctes.

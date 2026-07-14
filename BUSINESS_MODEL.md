@@ -2,7 +2,7 @@
 
 - Statut : hypothèses à tester
 - Direction : Breaktest Capital Efficiency
-- Extension stratégique : Breaktest Cost Gate, non implémentée
+- Extension stratégique : Breaktest Cost Gate ; fondation synthétique implémentée, offre non validée
 - Date initiale : 13 juillet 2026
 - Dernier raffinement : 14 juillet 2026
 

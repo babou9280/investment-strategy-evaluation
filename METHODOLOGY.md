@@ -8,9 +8,9 @@ Breaktest conserve cinq niveaux méthodologiques séparés :
 2. **calculateur Q0** : coût descriptif pré-transaction, techniquement validé mais non publié ;
 3. **Capital Efficiency** : seuil, plancher, survie ponctuelle et contraintes inverses ;
 4. **Edge Survival Envelope** : sensibilité déterministe basse / centrale / haute, fusionnée après validation technique interne ;
-5. **Cost Gate foundation** : orchestration future de snapshots, cash, alignement de l'avantage et constats multiples ; contrats en revue hostile, sans moteur validé à ce stade.
+5. **Cost Gate foundation** : orchestration synthétique de snapshots, cash, alignement de l'avantage et constats multiples ; moteur isolé techniquement démontré par CG-01 à CG-18, sans donnée réelle ni interface.
 
-Aucune couche n'est commercialement validée. La présence d'un contrat Cost Gate ne prouve pas son implémentation.
+Aucune couche n'est commercialement validée. La preuve Cost Gate couvre seulement le domaine cash long synthétique déclaré.
 
 ## 2. Principes généraux
 
@@ -417,7 +417,9 @@ Règles :
 - toute mutation rend les anciens constats inactifs ;
 - marge, short, dérivés et cash réglé non identifiable restent `unsupported_scope`.
 
-Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`, `COST_GATE_SNAPSHOT_CONTRACT.md`, `COST_GATE_FINDINGS_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md`. Aucune de ces règles n'est une recommandation ni une preuve d'implémentation.
+Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`, `COST_GATE_SNAPSHOT_CONTRACT.md`, `COST_GATE_FINDINGS_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md`.
+
+La première preuve exécutée utilise `cost-gate-foundation-0-synthetic`. Elle démontre ces règles sur entrées manuelles ou synthétiques ; elle ne prouve pas leur comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
 
 ## 19. Méthodologie historique conservée
 

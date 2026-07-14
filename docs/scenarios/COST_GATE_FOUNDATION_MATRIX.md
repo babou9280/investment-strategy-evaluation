@@ -2,7 +2,7 @@
 
 ## 1. Rôle
 
-Cette matrice définit les premiers oracles conceptuels d'un futur moteur Cost Gate. Elle n'utilise aucune donnée réelle et n'autorise aucune implémentation externe.
+Cette matrice définit les oracles indépendants exécutés par le moteur synthétique Cost Gate. Elle n'utilise aucune donnée réelle et n'autorise aucune implémentation externe.
 
 Chaque scénario doit produire plusieurs constats indépendants plutôt qu'un verdict simpliste.
 
@@ -398,8 +398,10 @@ Pour tous les scénarios :
 - toute conclusion dépendante de `G` exige `edge_aligned` ;
 - le domaine non supporté reste visible avec `unsupported_scope`.
 
-## 5. Gate d'implémentation
+## 5. Preuve d'implémentation synthétique
 
-Cette matrice doit être relue contre les contrats de personnalisation, snapshot, cash/cycle et findings avant tout code.
+La matrice a été relue contre les contrats de personnalisation, snapshot, cash/cycle, alignement de `G` et findings avant l'implémentation.
 
-Une future implémentation doit utiliser des oracles explicites, pas recopier ses propres fonctions internes dans les tests.
+Les scénarios CG-01 à CG-18 utilisent des résultats attendus explicites et des contrôles indépendants des fonctions internes. Ils ont réussi sur le head `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`, run `29334708343` (`#604`).
+
+Cette exécution prouve uniquement le domaine synthétique déclaré. Toute extension de domaine ou donnée externe exige de nouveaux oracles et un gate distinct.

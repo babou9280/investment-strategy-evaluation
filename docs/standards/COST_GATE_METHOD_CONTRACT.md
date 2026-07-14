@@ -2,7 +2,7 @@
 
 ## 1. Statut
 
-Ce contrat décrit la méthodologie future de Breaktest Cost Gate. Il ne prouve aucune fonctionnalité implémentée.
+Ce contrat décrit la méthodologie de Breaktest Cost Gate. Son sous-ensemble cash long synthétique est implémenté et testé dans `cost_gate_foundation/` ; les données réelles, l'interface et les domaines étendus restent hors preuve.
 
 ## 2. Principe
 

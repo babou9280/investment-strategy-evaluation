@@ -4,7 +4,7 @@
 
 - Branche : `strategy/cost-gate-foundation`
 - Base : `breaktest-bootstrap`
-- Phase : contrats et preuve synthétique interne
+- Phase : preuve synthétique interne exécutée ; synchronisation et revue finale de PR
 - Publication : interdite
 - Données externes : interdites
 - `main` : hors périmètre
@@ -106,6 +106,31 @@ Le moteur doit distinguer :
 - contraintes explicites ;
 - constats multiples.
 
+## Preuve fonctionnelle exécutée
+
+```text
+engine = cost-gate-foundation-0-synthetic
+head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
+GitHub Actions = 29334708343 (#604)
+conclusion = success
+scenarios = CG-01 à CG-18
+```
+
+Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
+
+La preuve couvre aussi :
+
+- cash du compte plafonné par l'allocation libre de stratégie ;
+- holds déjà inclus non retranchés une seconde fois ;
+- 502,25 EUR de cash immédiat distincts de 5,50 EUR de friction du cycle ;
+- hash de contenu distinct de l'identifiant d'instance ;
+- avantage brut issu de prix exécutés rejeté sans reconstruction ;
+- quantité, prix, devise et nominal réconciliés ;
+- fait dur indépendant non masqué par une donnée manquante ;
+- anciens constats inactifs après mutation.
+
+La validation détaillée figure dans `docs/validation/COST_GATE_FOUNDATION.md`.
+
 ## Tests requis
 
 Implémenter les scénarios CG-01 à CG-18 avec oracles explicites.
@@ -134,13 +159,13 @@ Ajouter :
 
 ## Versionnement envisagé
 
-Première preuve conforme :
+Première preuve exécutée :
 
 ```text
 cost-gate-foundation-0-synthetic
 ```
 
-Ce numéro ne doit être utilisé qu'après implémentation et tests réussis.
+Ce numéro identifie uniquement la preuve synthétique restreinte. Il ne nomme pas un produit prêt à publier.
 
 ## Documentation de validation
 

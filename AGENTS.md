@@ -24,12 +24,14 @@ Avant toute modification matérielle, lire intégralement :
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/EDGE_RANGE_CONTRACT.md` ;
 - `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `docs/standards/COST_GATE_METHOD_CONTRACT.md` ;
 - `docs/standards/COST_GATE_PERSONALIZATION_BOUNDARY.md` ;
 - `docs/standards/COST_GATE_SNAPSHOT_CONTRACT.md` ;
 - `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
 - `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
 - `docs/governance/BLIND_SPOT_REGISTER.md` ;
+- `docs/validation/COST_GATE_FOUNDATION.md` lorsqu'il existe ;
 - `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
 - la mission, les scénarios, validations, revues, code et tests concernés.
 
@@ -63,7 +65,7 @@ La phase active est la **fondation Cost Gate**, sur :
 strategy/cost-gate-foundation
 ```
 
-Objectif autorisé : contrats cohérents, revue hostile, matrice synthétique et éventuel moteur interne sans donnée externe.
+Objectif autorisé : stabiliser les contrats et le moteur synthétique interne `cost_gate_foundation-0-synthetic`, sans donnée externe ni interface Cost Gate dans la PR `#24`.
 
 Travail autorisé :
 
@@ -72,7 +74,7 @@ Travail autorisé :
 - séparer cash immédiat et coût du cycle ;
 - définir snapshot, invalidation et provenance ;
 - définir constats multiples et synthèse non prescriptive ;
-- construire, après revue, une preuve synthétique locale ;
+- maintenir et falsifier la preuve synthétique locale ;
 - ajouter oracles, invariants et non-régressions ;
 - préparer sans livrer prématurément le futur HTML hors ligne ;
 - synchroniser les fichiers canoniques avec les preuves exécutées.
@@ -207,6 +209,7 @@ Références obligatoires :
 - `COST_GATE_SNAPSHOT_CONTRACT.md` ;
 - `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
 - `COST_GATE_FINDINGS_CONTRACT.md` ;
+- `GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `COST_GATE_MVP_GATE_MATRIX.md` ;
 - `COST_GATE_FOUNDATION_MATRIX.md`.
 
@@ -226,6 +229,8 @@ Tout autre modèle retourne `unsupported`.
 Ne jamais confondre :
 
 - capital de référence et cash réglé libre ;
+- cash total du compte et allocation libre de stratégie ;
+- hold déjà inclus par la source et hold à déduire ;
 - nominal économique et engagement cash immédiat ;
 - coût d'entrée et coût du cycle complet ;
 - prix mid, ask, prix attendu et prix observé ;
@@ -341,7 +346,7 @@ Les captures sont des preuves, jamais le livrable. Ne pas produire le package pr
 - `app/Breaktest_Studio.html` : actif historique provisoire.
 - `validation_site/` : Q0 fusionné et gelé.
 - `capital_efficiency_lab/` : Edge Survival fusionné et protégé.
-- `cost_gate_foundation/` : futur moteur synthétique isolé, seulement après revue des contrats.
+- `cost_gate_foundation/` : moteur synthétique isolé actif, sans interface ni donnée réelle ; toute extension exige un contrat et des oracles.
 - `source_material/` : archives.
 - `main` : strictement hors périmètre.
 - Chaque mission utilise une branche isolée et une PR vers `breaktest-bootstrap`.

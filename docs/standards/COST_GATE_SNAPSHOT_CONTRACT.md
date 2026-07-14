@@ -239,7 +239,7 @@ Il ne prétend jamais que l'ordre sera exécuté au prix ou au coût estimé.
 
 ## 9. Sérialisation et hash
 
-La future implémentation définit une sérialisation canonique :
+L'implémentation synthétique définit la sérialisation canonique suivante :
 
 - clés triées ;
 - tableaux ordonnés par une clé contractuelle stable lorsque l'ordre n'a pas de sens économique ;
@@ -294,4 +294,6 @@ Avant donnée externe réelle :
 
 ## 12. Statut
 
-Contrat de conception non implémenté. Il ne prouve aucune capacité temps réel.
+Le sous-ensemble synthétique est implémenté dans `cost_gate_foundation/` : sérialisation canonique, hashes de scénario/entrées/sources/contenu, identité d'instance séparée, mutation et expiration. Le run `29334708343` (`#604`) en fournit la preuve technique.
+
+Ce contrat et cette preuve n'établissent aucune capacité temps réel, aucune persistance et aucune qualité de source externe.

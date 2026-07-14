@@ -43,20 +43,24 @@ Les personnes sans avantage brut utilisent le mode seuil. Elles ne doivent jamai
 
 ## 4. Gate interne de la PR active
 
-Avant toute critique externe :
+Edge Survival a satisfait son gate interne dans la PR `#23` fusionnée.
 
-- contrats Edge Survival et Edge Range réconciliés ;
-- égalités et tolérances cohérentes entre modes ;
-- capital et fréquence réellement facultatifs ;
-- résultat obsolète masqué après modification ;
-- aucune valeur synthétique préremplie comme donnée utilisateur ;
-- cas seuil exact distingué d'une marge positive ;
-- oracles Node et invariants verts ;
-- Chromium 390, 768, 1024 et 1440 px ;
-- clavier, focus, `aria-live`, mouvement réduit et absence de débordement ;
-- non-régressions H1–H2/C1–C4 et Q0 ;
-- fichiers canoniques et registre des angles morts synchronisés ;
-- package HTML hors ligne ultérieur non fabriqué prématurément.
+La PR active `#24` porte la fondation Cost Gate. Avant toute interface ou critique externe :
+
+- contrats cash, snapshot, findings, méthode et alignement de `G` réconciliés ;
+- périmètre strict compte cash, achat long, action/ETF au comptant ;
+- cash immédiat distinct de la friction du cycle ;
+- cash du compte plafonné par l'allocation libre de stratégie ;
+- holds identifiés et non déduits deux fois ;
+- quantité, prix, devise et nominal réconciliés ;
+- snapshot déterministe et anciens constats inactifs après mutation ;
+- `findings[]` conservés sous violations multiples ;
+- CG-01 à CG-18 et propriétés réussis ;
+- aucune donnée réelle, réseau, stockage, recommandation ou exécution ;
+- non-régressions H1–H2/C1–C4, Q0, Capital Efficiency et Edge Survival ;
+- fichiers canoniques, validation et registre synchronisés ;
+- threads de revue traités ;
+- package HTML Cost Gate non fabriqué dans cette PR.
 
 Une CI verte prouve seulement les comportements testés.
 
@@ -189,99 +193,60 @@ Ne jamais demander seulement « aimerais-tu ce produit ? ».
 
 ## 10. Direction Cost Gate : validation séparée
 
-La validation stratégique du 14 juillet 2026 n'autorise pas l'implémentation immédiate. Cost Gate suit des gates distincts.
+La validation stratégique du 14 juillet 2026 autorise une progression par gates, pas un produit connecté ni une recommandation.
 
-### CG0 — noyau
+### Fondation contractuelle et moteur synthétique — preuve technique obtenue
 
-- Edge Survival stabilisé ;
-- utilité actuelle observée ;
-- package hors ligne testé ;
-- absence de confusion avec une recommandation.
+Le head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` et le run `29334708343` (`#604`) couvrent :
 
-### CG1 — problème pré-trade
+- contrats réconciliés après revue hostile ;
+- domaine strict cash long, action/ETF au comptant ;
+- cash immédiat, allocation de stratégie et holds ;
+- snapshot déterministe et constats multiples ;
+- alignement complet de l'avantage brut ;
+- scénarios CG-01 à CG-18 et non-régressions.
 
-Vérifier auprès d'utilisateurs qualifiés :
+Cette preuve reste synthétique. La synchronisation documentaire et sa CI exact-head doivent encore être vérifiées avant clôture de la PR `#24`.
 
-- fréquence réelle des analyses avant ordre ;
-- décisions où coûts, capital libre ou liquidité posent problème ;
-- outils utilisés aujourd'hui ;
-- coût d'une erreur ;
-- acceptation d'une saisie manuelle ;
-- réaction à un résultat `insufficient_data`.
+### Prototype utilisateur hors ligne — non commencé
 
-Kill criteria : problème rare, usage uniquement curieux ou saisie plus coûteuse que la décision.
-
-### CG2 — prototype synthétique manuel
-
-Sans réseau ni donnée réelle :
+Sur une mission et une branche distinctes, sans réseau ni donnée réelle :
 
 - scénario de trade manuel ;
 - cash libre et nominal réservé ;
 - point ou fourchette brute ;
-- hypothèses synthétiques de liquidité ;
+- hypothèses synthétiques explicitement étiquetées ;
 - états non prescriptifs ;
-- Data Quality Gate simulé et identifié.
+- aucune couche Cost Gate simulée comme donnée réelle.
 
-Mesurer :
+Mesurer auprès d'utilisateurs qualifiés :
 
-- compréhension ;
+- fréquence réelle des analyses avant ordre ;
 - facteur limitant correctement identifié ;
+- compréhension des couches non évaluées ;
 - absence de faux feu vert ;
-- modification volontaire d'un scénario ;
-- répétition d'usage.
+- effort et acceptation de la saisie ;
+- réaction à `insufficient_data` ;
+- modification puis répétition volontaire d'un scénario.
 
-### CG3 — faisabilité du capital
+Critères d'arrêt : problème rare, usage uniquement curieux, saisie plus coûteuse que la décision ou confusion persistante avec une recommandation.
 
-Avant toute donnée externe :
+### Capacité à fournir les entrées et faisabilité générale — non validées
 
-- capital de référence, capital de stratégie, cash disponible et nominal réservé séparés ;
-- positions simultanées ;
-- aucun levier implicite ;
-- réutilisation des invariants C1/C4 ;
-- cas de concurrence du capital ;
-- validation utilisateur de l'utilité.
+- commissions, change, spread et slippage réellement disponibles ;
+- avantage brut compatible réellement disponible ;
+- cash réglé, holds et allocation compris ;
+- positions simultanées et concurrence du capital ;
+- réutilisation des invariants C1/C4 au-delà du cas immédiat ;
+- aucune inférence de levier ou de capital fictif.
 
-### CG4 — Data Quality Gate
+### Donnée externe, droit et économie — non autorisés
 
-Pour chaque source potentielle :
+Avant toute source : licence, coût, couverture, fraîcheur, fuseau, instrument, place, devise, valeurs manquantes, conflits, fallback, kill switch, sécurité et confidentialité doivent être décidés et testés. Aucune conclusion dépendante d'une donnée externe sans état `data_ready`.
 
-- source et licence ;
-- timestamp, fraîcheur et fuseau ;
-- instrument, place et devise ;
-- couverture et valeurs manquantes ;
-- cohérence inter-sources ;
-- fallback et kill switch ;
-- coût par utilisateur ;
-- sécurité et confidentialité.
+Avant tout test public ou vocabulaire plus personnalisé : revue information/recommandation, responsabilité, communication d'erreur, conditions d'utilisation, conflits d'intérêts, volonté de payer, coût des données et taux de faux blocage ou faux sentiment de sécurité.
 
-Aucune conclusion dépendante d'une donnée externe sans état `data_ready`.
-
-### CG5 — source externe limitée
-
-Après décision explicite d'Ayman :
-
-- une seule source ;
-- univers restreint ;
-- aucune exécution ;
-- comparaison hypothèse utilisateur / donnée observée ;
-- mesure des données stale et indisponibles ;
-- aucune promesse de précision générale.
-
-### CG6 — juridique et commercial
-
-Avant vocabulaire ou action prescriptive :
-
-- revue information / recommandation ;
-- responsabilité et communication d'erreur ;
-- conditions d'utilisation ;
-- conflits d'intérêts ;
-- volonté de payer ;
-- coût des données et support ;
-- taux de faux blocage et faux sentiment de sécurité.
-
-### CG7 — intégration ou exécution
-
-Hors périmètre. Exige une décision stratégique, juridique, technique et économique distincte.
+Toute source externe limitée, connexion ou exécution exige ensuite une décision explicite distincte d'Ayman. L'intégration et l'exécution restent hors périmètre.
 
 ## 11. Mesures futures Cost Gate
 
@@ -316,12 +281,10 @@ Hors périmètre. Exige une décision stratégique, juridique, technique et éco
 
 Uniquement :
 
-- correction des défauts de la PR #23 ;
-- tests, oracles et revue hostile ;
-- synchronisation documentaire ;
-- scénarios synthétiques indispensables ;
-- préparation du protocole utilisateur ;
-- package HTML hors ligne après stabilisation ;
-- définition conceptuelle de Cost Gate et de ses gates.
+- stabilisation du moteur synthétique Cost Gate et de ses contrats dans la PR `#24` ;
+- tests, oracles, revue hostile et non-régressions ;
+- synchronisation documentaire avec les preuves exact-head ;
+- préparation documentaire du futur protocole utilisateur ;
+- package HTML hors ligne seulement dans une mission séparée après clôture de la fondation.
 
 Restent interdits : données externes, import réel, compte, stockage, réseau applicatif, analytics actif, email, paiement, connexion courtier, recommandation, ordre limite conseillé, transmission et exécution.

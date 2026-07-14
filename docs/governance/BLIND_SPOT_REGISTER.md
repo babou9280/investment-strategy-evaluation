@@ -127,20 +127,20 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-037 | P1 | Cost Gate / portefeuille | Corrélation, netting et marge portefeuille non modélisés | Généralisation abusive | accepted_limit | Premier périmètre cash long ; moteur portefeuille futur séparé |
 | BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | mitigated | `GROSS_EDGE_ALIGNMENT_KEY.md` ; moteur et tests d'alignement requis |
 | BS-039 | P1 | Cost Gate / exécution | Exécution partielle, annulation ou multi-venue changeant les frictions | Écart ex ante/ex post | open | Scénarios et réconciliation ultérieure sans probabilité inventée |
-| BS-040 | P0 | Cost Gate / capital | Coût complet aller-retour utilisé comme besoin de cash immédiat | Faisabilité surestimée ou double comptage | mitigated | Contrat cash/cycle et scénarios CG-06/CG-07 ; moteur à tester |
-| BS-041 | P0 | Cost Gate / prix | Spread ou slippage déjà incorporé au prix puis ajouté à nouveau | Cash et coût faux | mitigated | `notional_basis` et indicateurs d'inclusion ; refus des conflits |
-| BS-042 | P0 | Cost Gate / temps | Snapshot valide au calcul mais obsolète au moment d'usage | Faux sentiment d'actualité | mitigated | Contrat snapshot, expiration et invalidation ; implémentation à tester |
-| BS-043 | P1 | Cost Gate / orchestration | Synthèse unique supprimant plusieurs constats matériels | Diagnostic incomplet | mitigated | `findings[]` obligatoire et scénarios multi-violations |
-| BS-044 | P1 | Cost Gate / scope | Modèle cash long appliqué silencieusement à marge, short ou dérivé | Résultat invalide | mitigated | Domaine initial explicite et état `unsupported` |
+| BS-040 | P0 | Cost Gate / capital | Coût complet aller-retour utilisé comme besoin de cash immédiat | Faisabilité surestimée ou double comptage | validated | 502,25 EUR contre 5,50 EUR, CG-06/CG-07, run `#604` ; données réelles restent hors scope |
+| BS-041 | P0 | Cost Gate / prix | Spread ou slippage déjà incorporé au prix puis ajouté à nouveau | Cash et coût faux | validated | Conflit et double ajout testés dans le moteur synthétique, run `#604` |
+| BS-042 | P0 | Cost Gate / temps | Snapshot valide au calcul mais obsolète au moment d'usage | Faux sentiment d'actualité | validated | Hash déterministe, expiration et mutation CG-09/CG-13, run `#604` |
+| BS-043 | P1 | Cost Gate / orchestration | Synthèse unique supprimant plusieurs constats matériels | Diagnostic incomplet | validated | `findings[]` et priorité dépendante des preuves, CG-12, run `#604` |
+| BS-044 | P1 | Cost Gate / scope | Modèle cash long appliqué silencieusement à marge, short ou dérivé | Résultat invalide | validated | `unsupported_scope` démontré par CG-15, run `#604` |
 | BS-045 | P1 | Cost Gate / règlement | Produit de vente futur supposé disponible pour financer l'entrée | Faisabilité fausse | mitigated | Contrat cash/cycle ; aucun financement par sortie future |
 | BS-046 | P1 | Cost Gate / texte | Catalogue de constats généré librement par IA | Explication variable ou prescriptive | mitigated | Catalogue versionné déterministe ; IA non canonique |
-| BS-047 | P0 | Cost Gate / cash | Hold déjà retranché par la source puis soustrait une seconde fois | Faux cash insuffisant | mitigated | Base de cash + ledger par `hold_id` spécifiés ; moteur et oracles requis |
-| BS-048 | P0 | Cost Gate / capital | Cash total du compte utilisé malgré une allocation de stratégie plus basse | Faux diagnostic de faisabilité | mitigated | Plafond par `min(cash réconcilié, allocation libre)` ; scénario CG-14C et moteur requis |
-| BS-049 | P1 | Cost Gate / preuve | Hash du snapshot circulaire ou dépendant de l'heure du recalcul | Reproduction impossible ou faux changement | mitigated | Périmètres de hash et identifiant d'instance séparés ; tests déterministes requis |
-| BS-050 | P0 | Cost Gate / avantage | Performance issue de prix exécutés traitée comme brute puis spread/slippage soustraits de nouveau | Marge nette sous-estimée | mitigated | Clé d'alignement prix/coûts ; rejet ou reconstitution documentée |
-| BS-051 | P1 | Cost Gate / orchestration | Donnée manquante reléguant un fait dur indépendant | Facteur principal trompeur | mitigated | Politique dépendante des preuves ; scénario multi-constats et tests requis |
-| BS-052 | P1 | Cost Gate / provenance | Quote stale synthétique présentée comme donnée externe réellement observée | Preuve et capacité exagérées | mitigated | CG-09 limité à `synthetic_demo` ; aucune revendication temps réel |
-| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | mitigated | Réconciliation quantité × prix × FX ; conflit bloquant et oracles requis |
+| BS-047 | P0 | Cost Gate / cash | Hold déjà retranché par la source puis soustrait une seconde fois | Faux cash insuffisant | validated | Sources brute/nette, hold dupliqué et réserve testés, CG-14 + propriétés, run `#604` |
+| BS-048 | P0 | Cost Gate / capital | Cash total du compte utilisé malgré une allocation de stratégie plus basse | Faux diagnostic de faisabilité | validated | Plafond `min(cash réconcilié, allocation libre)` et CG-14C, run `#604` |
+| BS-049 | P1 | Cost Gate / preuve | Hash du snapshot circulaire ou dépendant de l'heure du recalcul | Reproduction impossible ou faux changement | validated | Hash de contenu, instance séparée et ordre des clés testés, run `#604` |
+| BS-050 | P0 | Cost Gate / avantage | Performance issue de prix exécutés traitée comme brute puis spread/slippage soustraits de nouveau | Marge nette sous-estimée | validated | Prix exécuté rejeté sans reconstruction versionnée ; seuil indépendant conservé, run `#604` |
+| BS-051 | P1 | Cost Gate / orchestration | Donnée manquante reléguant un fait dur indépendant | Facteur principal trompeur | validated | Politique dépendante des preuves et CG-12, run `#604` |
+| BS-052 | P1 | Cost Gate / provenance | Quote stale synthétique présentée comme donnée externe réellement observée | Preuve et capacité exagérées | validated | CG-09 limité à `synthetic_demo` + intégrité sans réseau, run `#604` |
+| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | validated | Réconciliation quantité × prix en EUR et conflit bloquant testés, run `#604` |
 
 ## 6. Gate de revue multidisciplinaire
 

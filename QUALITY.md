@@ -185,7 +185,7 @@ Une frontière ne peut être affichée que si :
 - une contrainte impossible produit `structurally_unreachable`, jamais `Infinity` ;
 - la formulation reste descriptive et non prescriptive.
 
-Une frontière mathématique n'établit pas encore sa faisabilité avec le capital disponible. Cette couche future suit `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+Une frontière mathématique n'établit pas sa faisabilité avec le capital disponible. Le moteur Cost Gate synthétique peut la comparer au cash déclaré et à l'allocation libre dans son domaine cash long ; la faisabilité générale du portefeuille reste régie par `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
 ## 11. Résultats et fraîcheur
 
@@ -255,7 +255,28 @@ Le moteur historique conserve :
 
 Toute évolution du nouveau produit doit préserver ces non-régressions lorsque les composants sont partagés.
 
-## 15. Sécurité et confidentialité
+## 15. Fondation Cost Gate
+
+La preuve synthétique respecte :
+
+- domaine explicite `cash_account`, achat long, action/ETF au comptant ;
+- `unsupported_scope` pour marge, short, dérivés et domaines non modélisés ;
+- cash réglé réconcilié avec la base d'inclusion de chaque `hold_id` ;
+- plafond de faisabilité égal au minimum entre cash libre du compte et allocation libre de stratégie ;
+- engagement cash d'entrée distinct de la friction économique du cycle ;
+- spread/slippage incorporés au prix non ajoutés une seconde fois ;
+- quantité, prix, devise et nominal réconciliés ;
+- clé d'alignement complète avant toute conclusion dépendante de `G` ;
+- hash de contenu déterministe distinct de l'identifiant d'instance ;
+- expiration temporelle possible sans mutation du hash ;
+- `findings[]` complets, ordonnés et attachés au snapshot ;
+- synthèse dépendante des preuves, sans perte d'un fait indépendant ;
+- anciennes conclusions inactives après mutation ;
+- aucune donnée réelle, génération libre par IA ou phrase prescriptive dans le moteur canonique.
+
+La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiques. Elle ne valide ni donnée actuelle, interface, compréhension, conseil, exécution, droit ou marché.
+
+## 16. Sécurité et confidentialité
 
 Le prototype interne reste local-only :
 
@@ -271,7 +292,7 @@ Le prototype interne reste local-only :
 
 Avant tout import réel : modèle de menace, XSS, fichiers hostiles, CSV injection, limites de taille et confidentialité doivent être traités.
 
-## 16. Livraison hors ligne
+## 17. Livraison hors ligne
 
 Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
 
@@ -286,7 +307,7 @@ Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVER
 
 Les captures sont des preuves de revue, pas le livrable principal.
 
-## 17. Recherche d'angles morts
+## 18. Recherche d'angles morts
 
 Toute tâche matérielle applique `docs/governance/BLIND_SPOT_REGISTER.md`.
 
@@ -306,7 +327,7 @@ Chercher au minimum :
 
 Une CI verte est une preuve technique partielle, jamais une preuve d'exhaustivité, d'utilité, de conformité ou de demande.
 
-## 18. Validation commerciale
+## 19. Validation commerciale
 
 - Un compliment n'est pas une activation.
 - Une activation n'est pas une seconde utilisation.
@@ -317,7 +338,7 @@ Une CI verte est une preuve technique partielle, jamais une preuve d'exhaustivit
 - Ne jamais fabriquer avis, compteurs, partenaires ou rareté.
 - Le protocole doit pouvoir conclure à l'abandon.
 
-## 19. Gate de fusion
+## 20. Gate de fusion
 
 Avant fusion d'une évolution :
 

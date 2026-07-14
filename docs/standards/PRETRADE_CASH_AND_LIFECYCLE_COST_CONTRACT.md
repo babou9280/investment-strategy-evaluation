@@ -357,4 +357,6 @@ Avant d'afficher une faisabilité de capital :
 
 ## 15. Statut
 
-Contrat de conception non implémenté. Il complète `CAPITAL_FEASIBILITY_CONTRACT.md` sans autoriser de connexion de compte ou d'ordre réel.
+Le sous-ensemble cash long synthétique est implémenté dans `cost_gate_foundation/`. Les oracles distinguent `502,25 EUR` de cash immédiat et `5,50 EUR` de friction du cycle, plafonnent le cash par l'allocation libre de stratégie et empêchent la double déduction des holds.
+
+Cette preuve ne comporte aucune connexion de compte, donnée réelle ou capacité d'ordre. Le contrat complète `CAPITAL_FEASIBILITY_CONTRACT.md` pour le domaine immédiat uniquement.

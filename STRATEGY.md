@@ -5,8 +5,8 @@
 - Extension stratégique : 14 juillet 2026
 - Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
 - Nom de travail actuel : **Breaktest Cost Intelligence**
-- Nom de travail de la couche future : **Breaktest Cost Gate**
-- Phase actuelle : conception et prototype interne avant validation commerciale externe
+- Nom de travail de la couche pré-trade : **Breaktest Cost Gate**
+- Phase actuelle : fondation synthétique interne avant prototype utilisateur et validation commerciale externe
 
 ## 1. Direction
 
@@ -134,8 +134,8 @@ Breaktest est une couche indépendante de **capital-efficiency intelligence** : 
 1. **Capital Efficiency Lab interne** — valider les formules, les contraintes inverses et l'expérience de valeur.
 2. **Prototype utilisateur contrôlé** — vérifier que le seuil, le plancher variable et la part d'avantage conservée révèlent une information réellement utile.
 3. **Cost Tracker** — valider l'import, la récurrence et le paiement annuel.
-4. **Capital Feasibility** — distinguer capital de référence, capital alloué, cash disponible et nominal réservé.
-5. **Cost Gate synthétique** — tester un contrôle pré-trade manuel sans données externes ni recommandation.
+4. **Capital Feasibility synthétique** — distinguer capital de référence, capital alloué, cash disponible et nominal réservé ; fondation immédiate exécutée, portefeuille encore futur.
+5. **Cost Gate synthétique** — moteur interne exécuté sans données externes ni recommandation ; interface utilisateur encore future.
 6. **Base de barèmes et parseurs** — réduire la saisie manuelle.
 7. **Data Quality Gate et donnée externe limitée** — une source et un univers restreints, après décision explicite.
 8. **Benchmarks anonymisés** — comparer les coûts réellement observés, sous consentement.
@@ -143,7 +143,7 @@ Breaktest est une couche indépendante de **capital-efficiency intelligence** : 
 10. **API et widgets** — distribuer le moteur chez des médias, communautés et fintechs.
 11. **Infrastructure de transaction-cost intelligence** — données, benchmarks et intégrations B2B.
 
-Les étapes 4 à 11 sont des options conditionnelles. Elles ne sont autorisées qu'après preuves d'usage, de volume, de qualité des données, de consentement, de viabilité économique et de conformité juridique.
+L'extension des étapes 4 et 5 au-delà du domaine synthétique, ainsi que les étapes 6 à 11, reste conditionnelle. Elle exige les preuves d'usage, de volume, de qualité des données, de consentement, de viabilité économique et de conformité juridique correspondant à chaque gate.
 
 ## 8. Défensibilité recherchée
 
@@ -203,7 +203,7 @@ Le code existant demeure un actif technique réutilisable. Le coût déjà engag
 
 ## 12. Direction stratégique Cost Gate
 
-Le 14 juillet 2026, Ayman a validé une trajectoire future vers **Breaktest Cost Gate**, couche de contrôle pré-trade personnalisée.
+Le 14 juillet 2026, Ayman a validé une trajectoire vers **Breaktest Cost Gate**, couche de contrôle pré-trade personnalisée. La fondation synthétique est depuis exécutée dans un domaine cash long strict ; le produit utilisateur reste futur.
 
 La question de travail devient :
 
@@ -217,10 +217,10 @@ Cette direction :
 - ajoute à terme la faisabilité du capital, la qualité des données et la microstructure ;
 - ne transforme pas encore Breaktest en conseiller, courtier ou moteur d'exécution.
 
-La sortie future conserve tous les constats dans `findings[]`. Une synthèse interne peut signaler `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`. Ce dernier nom signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées ; il ne constitue jamais un feu vert.
+La fondation conserve tous les constats dans `findings[]`. Une synthèse interne peut signaler `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`. Ce dernier nom signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches évaluées ; il ne constitue jamais un feu vert.
 
 Aucun état ne peut être produit à partir d'une donnée externe sans **Data Quality Gate** vérifiant source, timestamp, fraîcheur, couverture, instrument, place, devise, provenance, valeurs manquantes, incertitude et droit d'utilisation.
 
 Le vocabulaire « exécuter », « rejeter », « ordre limite conseillé », « taille optimale » ou tout équivalent prescriptif reste interdit avant validation juridique, réglementaire et produit distincte.
 
-La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. Cette validation est stratégique, pas technique, commerciale ou juridique.
+La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement et sa fondation seulement techniquement dans un domaine synthétique ; rien n'est encore validé commercialement, juridiquement ou sur donnée réelle.

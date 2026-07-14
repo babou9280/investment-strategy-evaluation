@@ -160,22 +160,17 @@ capital_reservation_required
 
 Aucun état ne doit être transformé en score opaque.
 
-## 10. Tests futurs
+## 10. Tests
 
-Tester au minimum :
+La fondation synthétique couvre déjà cash absent, égalité et dépassement, allocation partielle, réserve, holds, absence de réduction silencieuse et absence de suggestion de levier.
 
-- capital absent ;
-- capital égal au nominal ;
-- nominal supérieur au capital ;
+Restent futurs pour la couche portefeuille :
+
 - frontière inférieure, égale ou supérieure au capital ;
-- allocation partielle ;
-- réserve de cash ;
 - positions non chevauchantes ;
 - positions chevauchantes ;
 - pertes réalisées réduisant le capital libre ;
 - dates invalides ;
-- absence de réduction silencieuse ;
-- aucune suggestion de levier ;
 - réconciliation avec le moteur historique de réservation du capital.
 
 ## 11. Gate d'implémentation

@@ -1,20 +1,34 @@
-# Prochaine mission Codex — fondation Cost Gate
+# Prochaine mission Codex — stabilisation finale de Cost Gate foundation
 
 ## Statut
 
-Edge Survival Envelope est fusionné dans `breaktest-bootstrap` par la pull request `#23`.
+La direction **Breaktest Cost Gate** est validée stratégiquement. La fondation synthétique est implémentée, mais la pull request reste en brouillon.
 
-La direction **Breaktest Cost Gate — contrôle pré-trade personnalisé** est validée stratégiquement. Elle complète Cost Intelligence, Capital Efficiency et Edge Survival ; elle ne les remplace pas.
+```text
+pull request = #24
+branch = strategy/cost-gate-foundation
+base = breaktest-bootstrap
+functional head = cfa88e861c2ad0715b183af2bac2368a2d7bbdb4
+functional run = 29334708343 (#604), success
+engine = cost-gate-foundation-0-synthetic
+```
 
-- Branche : `strategy/cost-gate-foundation`
-- Base : `breaktest-bootstrap`
-- Phase : contrats et preuve synthétique interne
-- Publication externe : interdite
-- `main` : strictement hors périmètre
+`main` reste strictement hors périmètre. Ne fusionne, ne publie et ne déploie rien automatiquement.
 
-Ne fusionne rien automatiquement.
+## Première action obligatoire
 
-## Avant de travailler
+Reconstruire l'état GitHub actuel de la PR `#24` :
+
+1. head, base, brouillon et mergeability ;
+2. fichiers réellement présents ;
+3. commentaires et threads de revue ;
+4. dernier run associé au head exact ;
+5. artefact, logs et digest ;
+6. différence entre preuve fonctionnelle et synchronisation documentaire.
+
+Le head peut avoir évolué depuis le présent document. Une affirmation locale n'est pas une preuve distante.
+
+## Sources obligatoires
 
 Lire intégralement :
 
@@ -26,144 +40,95 @@ Lire intégralement :
 - `docs/product/COST_GATE_DIRECTION.md` ;
 - `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
 - `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md` ;
-- `docs/standards/COST_GATE_METHOD_CONTRACT.md` ;
-- `docs/standards/COST_GATE_PERSONALIZATION_BOUNDARY.md` ;
-- `docs/standards/COST_GATE_SNAPSHOT_CONTRACT.md` ;
-- `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
-- `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
+- tous les contrats Cost Gate sous `docs/standards/` ;
 - `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` ;
+- `docs/standards/GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
 - `docs/standards/EDGE_RANGE_CONTRACT.md` ;
 - `docs/governance/BLIND_SPOT_REGISTER.md` ;
 - `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
 - `docs/tasks/COST_GATE_FOUNDATION.md` ;
+- `docs/validation/COST_GATE_FOUNDATION.md` ;
+- le moteur et tous les tests sous `cost_gate_foundation/` ;
+- le workflow GitHub Actions ;
 - les validations Edge Survival fusionnées.
 
 ## Objectif unique
 
-Construire une fondation déterministe permettant de détecter et d'expliquer plusieurs incompatibilités pré-trade sous des hypothèses synthétiques, sans donnée actuelle, recommandation ou exécution.
+Terminer la stabilisation de la PR `#24` sans étendre le produit.
 
-La fondation doit distinguer :
+Vérifier ou corriger seulement :
 
-- friction économique du cycle ;
-- besoin de cash immédiat ;
-- seuil et Edge Survival ;
-- faisabilité du cash ;
-- qualité ou absence de données ;
-- contraintes explicites ;
-- domaine non supporté ;
-- constats multiples et synthèse interne.
+- cohérence code–contrats–scénarios–canonicals ;
+- calcul `502,25 EUR` de cash immédiat contre `5,50 EUR` de friction de cycle ;
+- plafonnement par l'allocation libre de stratégie ;
+- absence de double retrait des holds ;
+- réconciliation quantité, prix, devise et nominal ;
+- alignement complet de l'avantage brut ;
+- hash de contenu et instance séparés ;
+- invalidation des anciens constats ;
+- priorité des constats dépendante des preuves ;
+- refus de marge, short, dérivés et provenance externe ;
+- absence de réseau, persistance, recommandation et exécution ;
+- non-régressions historiques, Q0, Capital Efficiency et Edge Survival.
 
-## Première étape obligatoire
+Traiter les commentaires de revue GitHub seulement après vérification que leur cause est réellement corrigée sur le head distant.
 
-Effectuer une revue hostile des nouveaux contrats avant code :
+## Preuve fonctionnelle déjà obtenue
 
-- contradictions ;
-- doublons ;
-- unités et dénominateurs ;
-- double comptage ;
-- base du nominal ;
-- frais déjà incorporés au prix ;
-- cash réglé, réservations et ordres en attente ;
-- personnalisation contre suitability ;
-- snapshot et temps de contrôle / temps d'usage ;
-- perte de constats dans une synthèse ;
-- alignement de l'avantage brut ;
-- angles morts réglementaires, sécurité, données, business et UX.
-
-Corriger les contrats et le registre avant toute implémentation.
-
-## Implémentation autorisée après revue
-
-Créer au besoin un dossier isolé :
+Le run `#604` sur `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` a exécuté :
 
 ```text
-cost_gate_foundation/
+Cost Gate foundation engine tests passed
+Cost Gate foundation scenario matrix passed: CG-01 to CG-18
+Cost Gate foundation property tests passed
+Cost Gate foundation static integrity passed
 ```
 
-Périmètre :
+Il a aussi réussi le build, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, Chromium 390/768/1024/1440 et la syntaxe.
+
+Artefact :
 
 ```text
-cash_account
-long_cash_purchase
-actions_et_etf_au_comptant
-hypothèses_manuelles_ou_synthetic_demo
+id = 8311484443
+digest = sha256:f95dfd83ba47ca1b1896dece5259a0831db96ff7156d0e194088fb40e6a24b46
 ```
 
-Le moteur peut exposer :
-
-- validation stricte ;
-- snapshot manuel déterministe ;
-- orchestration des moteurs validés ;
-- `findings[]` ;
-- synthèse interne non affichée comme feu vert ;
-- domaine non supporté ;
-- oracles indépendants.
-
-## Matrice obligatoire
-
-Démontrer CG-01 à CG-18 dans `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md`.
-
-Points critiques :
-
-- exact seuil : coût couvert, aucune marge positive ;
-- sous plancher : impossibilité structurelle ;
-- avantage positif avec cash insuffisant ;
-- cash immédiat distinct des coûts de sortie futurs ;
-- spread déjà inclus au prix sans double comptage ;
-- quote stale ;
-- conflit instrument/place/devise ;
-- avantage brut mal aligné ;
-- violations simultanées conservées ;
-- snapshot invalidé ;
-- ordre en attente ;
-- instruments et comptes non supportés ;
-- sous-calcul utile malgré une donnée manquante.
-
-## Tests obligatoires
-
-- oracles explicites indépendants ;
-- strict numeric validation ;
-- zéro, absence et invalidité ;
-- déterminisme et hash ;
-- aucune valeur non finie ;
-- ordre stable des constats ;
-- aucune perte de constat ;
-- aucune recommandation ou vocabulaire d'autorisation ;
-- aucune donnée externe revendiquée ;
-- non-régressions H1–H2/C1–C4, Q0, Capital Efficiency et Edge Survival ;
-- intégrité locale et syntaxe.
+Cette preuve doit être réexécutée si le code ou le workflow change. Une synchronisation documentaire ultérieure exige au minimum un run exact-head réussi avant clôture de la stabilisation.
 
 ## Interdictions
 
+- aucune interface Cost Gate dans la PR `#24` ;
+- aucun HTML final remis à Ayman ;
 - aucune donnée ou tarif réel ;
 - aucun réseau, fournisseur, broker ou Alpaca ;
 - aucun compte, import ou stockage ;
 - aucune analytics, email ou paiement ;
-- aucun profil de risque ;
-- aucun actif, courtier, ordre, taille ou fréquence recommandé ;
+- aucun profil de risque ou suitability ;
+- aucune recommandation d'actif, courtier, ordre, taille ou fréquence ;
 - aucun levier, marge, short ou dérivé simulé ;
 - aucune probabilité d'exécution ;
-- aucune interface finale ou publication ;
-- aucune modification fonctionnelle des actifs fusionnés ;
+- aucune modification fonctionnelle de `capital_efficiency_lab/`, Q0 ou moteur historique ;
 - aucune reprise H3–H6 ;
-- aucune modification de `main`.
+- aucune modification de `main` ;
+- aucune fusion automatique.
 
-## Livraison ultérieure
+## Gate suivant, hors de cette mission
 
-Ne remets pas encore de livrable à Ayman.
+Après clôture séparée de la fondation et décision explicite, le prochain artefact pourra être un HTML Cost Gate réellement interactif et hors ligne sur une nouvelle branche.
 
-Après validation de la fondation, le prochain artefact de critique sera un HTML réellement interactif et hors ligne conforme à `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md`, puis testé sur le package exact.
+Ce futur gate devra tester compréhension, effort de saisie et confusion avec une recommandation. Il ne devra toujours contenir aucune donnée externe.
 
 ## Définition de terminé
 
-La fondation est terminée uniquement si :
+La stabilisation de la PR `#24` est terminée uniquement si :
 
-- les contrats sont cohérents ;
-- les angles morts sont mis à jour ;
-- le périmètre cash long synthétique est respecté ;
-- les scénarios sont démontrés si le moteur est créé ;
-- toutes les non-régressions réussissent sur le head exact ;
-- aucune affirmation juridique, commerciale ou temps réel n'est ajoutée ;
-- les fichiers canoniques distinguent stratégie, preuve technique et inconnues ;
-- le prochain gate est une critique de compréhension et de valeur, pas une connexion de données.
+- code et documents sont visibles sur GitHub ;
+- le head exact final possède une CI verte ;
+- logs, jobs et artefact ont été inspectés ;
+- CG-01 à CG-18 restent verts ;
+- commentaires de revue corrigés sont résolus ;
+- fichiers canoniques et registre reflètent le niveau de preuve réel ;
+- la PR reste en brouillon ;
+- les limites juridiques, commerciales, utilisateur et données restent explicites ;
+- aucun hors-périmètre n'a été ajouté.

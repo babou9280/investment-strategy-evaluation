@@ -59,9 +59,13 @@ Preuves requises :
 
 Sortie : autorise uniquement un moteur synthétique interne.
 
+Statut au head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` : contrats corrigés et moteur synthétique CG-01 à CG-18 réussis dans GitHub Actions `#604`. La synchronisation documentaire et la revue finale de la PR restent à valider sur leur head exact avant de considérer Gate 0 clôturé.
+
 ### Gate 1 — valeur compréhensible sans donnée réelle
 
 Prototype : HTML hors ligne, hypothèses manuelles et scénarios synthétiques.
+
+Statut : non commencé. Aucun HTML Cost Gate n'est présent dans la PR `#24`.
 
 Questions :
 

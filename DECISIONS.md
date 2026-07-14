@@ -203,7 +203,7 @@
 
 ## D033 — Une frontière mathématique ne prouve pas la faisabilité du capital
 
-- Statut : active comme limite et direction future, non implémentée
+- Statut : active ; faisabilité immédiate démontrée dans le périmètre synthétique cash long, faisabilité générale non implémentée
 - Décision : distinguer capital de référence, capital alloué, cash disponible, nominal réservé et exposition avant de qualifier une taille frontière de faisable.
 - Conséquence : le produit actuel ne doit ni supposer un levier, ni affirmer qu'une frontière tient dans le capital disponible.
 - Contrat futur : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
@@ -211,7 +211,7 @@
 
 ## D034 — Breaktest Cost Gate devient la trajectoire pré-trade validée
 
-- Statut : **active comme direction stratégique, validée par Ayman le 14 juillet 2026 ; non implémentée et non commercialement validée**
+- Statut : **active comme direction stratégique, validée par Ayman le 14 juillet 2026 ; fondation synthétique implémentée, produit et marché non validés**
 - Décision : Breaktest doit pouvoir évoluer vers une couche de contrôle pré-trade personnalisée qui confronte un trade envisagé aux frictions, au capital et cash libres, à la taille proposée, à la liquidité, aux paramètres utilisateur et à un avantage brut ou une fourchette explicitement fournis.
 - Articulation : Cost Intelligence, Capital Efficiency et Edge Survival Envelope restent le noyau analytique de cette future couche ; leur travail en cours n'est ni annulé ni interrompu.
 - Sortie autorisée : `findings[]` conserve chaque constat. La synthèse interne peut utiliser `invalid_input`, `unsupported_scope`, `snapshot_unusable`, `structurally_non_viable`, `capital_not_feasible`, `execution_cost_risk`, `constraint_breach`, `insufficient_data` ou `no_incompatibility_detected_under_assumptions`, sans afficher un feu vert.
@@ -220,3 +220,13 @@
 - Frontière réglementaire : le vocabulaire « exécuter », « rejeter », « acheter », « vendre », « ordre limite conseillé », « taille optimale » ou équivalent prescriptif reste interdit avant revue juridique et produit.
 - Contrat de direction : `docs/product/COST_GATE_DIRECTION.md`.
 - Gates : Edge Survival fusionné ; réconciliation hostile des contrats ; éventuel moteur synthétique cash long avec oracles ; prototype utilisateur local ; Data Quality Gate, validation économique et revue juridique avant toute extension externe.
+
+## D035 — La première preuve Cost Gate reste un moteur synthétique isolé
+
+- Statut : **active comme décision technique interne, 14 juillet 2026**
+- Décision : la PR `#24` démontre les contrats Cost Gate dans `cost_gate_foundation/`, sans ajouter d'interface, de donnée externe, de compte, de stockage, de réseau ni de capacité d'ordre.
+- Domaine exécuté : compte cash, achat long sans levier, action ou ETF au comptant, devise de compte EUR, hypothèses manuelles ou `synthetic_demo`.
+- Invariants : cash immédiat distinct de la friction du cycle, cash plafonné par l'allocation libre de stratégie, holds non déduits deux fois, quantité/prix/devise réconciliés, avantage brut réellement aligné, snapshots déterministes et constats multiples conservés.
+- Preuve fonctionnelle : head `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`, run GitHub Actions `29334708343` (`#604`), CG-01 à CG-18 et non-régressions réussis.
+- Limite : cette preuve est technique et synthétique. Elle ne valide ni interface, ni donnée réelle, ni utilité, ni conformité, ni offre commerciale.
+- Validation : `docs/validation/COST_GATE_FOUNDATION.md`.

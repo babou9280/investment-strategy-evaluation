@@ -323,4 +323,6 @@ Tester :
 
 ## 15. Statut
 
-Contrat de conception non implémenté. Toute future implémentation doit versionner le catalogue des constats et la politique de priorité.
+Le catalogue et la politique de priorité du périmètre synthétique sont implémentés et versionnés dans `cost_gate_foundation/`. CG-12 prouve que plusieurs constats indépendants restent présents lorsque la synthèse choisit un facteur principal.
+
+Toute extension de domaine ou exposition utilisateur doit conserver ce contrat, ajouter ses propres constats et faire l'objet d'une nouvelle validation.
