@@ -267,3 +267,13 @@
 - Portée : Gate 0 est clôturée techniquement dans le domaine synthétique déclaré. Cette clôture ne valide ni interface, ni compréhension, ni donnée réelle, ni droit, ni marché.
 - Suite : Gate 1 peut être un prototype HTML hors ligne de critique, sur une branche et une PR distinctes, uniquement après validation explicite d'Ayman. La fusion de la fondation ne vaut pas autorisation implicite de construire ce prototype.
 - Protection : `main` reste exactement au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee`.
+
+## D040 — Gate 1 Cost Gate est autorisée comme critique hors ligne falsifiable
+
+- Statut : **active, validée par Ayman le 15 juillet 2026**
+- Décision : construire sur `strategy/cost-gate-offline-critique`, depuis `breaktest-bootstrap` au commit `56fb50954afd7394baf1689e0f1b7220a1fd73fc`, un prototype HTML hors ligne `internal_review` utilisant le moteur fusionné.
+- Objectif : tester compréhension, facteur limitant, effort de saisie, couches non évaluées et confusion avec une recommandation ; la construction technique n'est pas la réussite de Gate 1.
+- Préenregistrement : cinq participants qualifiés, script neutre, mesures, seuils et règles d'arrêt sont figés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md` avant code d'interface et avant toute observation.
+- Seuils : 4/5 identifient le facteur principal ; 0/5 interprètent l'état favorable comme recommandation ou autorisation ; 3/5 identifient un usage réel ; 3/5 distinguent les entrées disponibles et manquantes ; 4/5 obtiennent un premier résultat en 180 secondes ou moins.
+- Limites : aucune donnée externe, connexion, compte, stockage, analytics, recommandation, probabilité, exécution ou publication. Les résultats de cinq personnes ne prouvent ni marché, ni droit, ni volonté de payer.
+- Protection : nouvelle pull request vers `breaktest-bootstrap` ; `main` reste strictement hors périmètre.

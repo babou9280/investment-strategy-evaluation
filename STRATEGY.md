@@ -6,7 +6,7 @@
 - Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail de la couche pré-trade : **Breaktest Cost Gate**
-- Phase actuelle : fondation synthétique interne fusionnée ; prototype utilisateur hors ligne soumis à une décision distincte avant toute validation externe
+- Phase actuelle : Gate 1 autorisée ; prototype utilisateur hors ligne en construction contrôlée, sans donnée réelle ni validation externe acquise
 
 ## 1. Direction
 
@@ -223,4 +223,4 @@ Aucun état ne peut être produit à partir d'une donnée externe sans **Data Qu
 
 Le vocabulaire « exécuter », « rejeter », « ordre limite conseillé », « taille optimale » ou tout équivalent prescriptif reste interdit avant validation juridique, réglementaire et produit distincte.
 
-La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement et sa fondation seulement techniquement dans un domaine synthétique ; rien n'est encore validé commercialement, juridiquement ou sur donnée réelle.
+La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement, sa fondation seulement techniquement dans un domaine synthétique et Gate 1 seulement autorisée comme expérience de compréhension. Rien n'est encore validé commercialement, juridiquement, par des utilisateurs ou sur donnée réelle.

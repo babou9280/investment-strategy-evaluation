@@ -6,7 +6,8 @@ Ayman a validé :
 
 - **Breaktest Cost Intelligence** le 13 juillet 2026 ;
 - son approfondissement en **Capital Efficiency / Edge Survival** ;
-- **Breaktest Cost Gate**, contrôle pré-trade personnalisé, le 14 juillet 2026.
+- **Breaktest Cost Gate**, contrôle pré-trade personnalisé, le 14 juillet 2026 ;
+- **Gate 1 Cost Gate**, prototype de critique hors ligne sans donnée réelle, le 15 juillet 2026.
 
 Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestrer avec la faisabilité du cash, la qualité des données, le risque de coût d'exécution et les contraintes explicitement fournies par l'utilisateur.
 
@@ -37,6 +38,19 @@ digest = sha256:50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996
 
 Le tree du commit fusionné est identique au tree du head final validé. `breaktest-bootstrap` pointe exactement sur ce commit.
 
+La pull request `#25` — clôture documentaire de la fondation — a ensuite été fusionnée par squash dans `breaktest-bootstrap` :
+
+```text
+merge commit = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
+exact final head = a8c30aaf5c2527af514b40ae62d3d6f36f63f020
+GitHub Actions = 29414217937 (#621)
+conclusion = success
+artifact = 8342414560
+digest = sha256:f81f47fb6e4252d4afa230f84e8fedba56f3ed8eb53d66d1ae43e5d18ca12afa
+```
+
+Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Au moment du préenregistrement, aucun prototype ni résultat utilisateur n'existe encore.
+
 `main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
 Les versions `1` et `2` restent historiquement prouvées par les runs `#608` à `#614`. Les neuf fils de revue inline ont été résolus après vérification des corrections, des heads exacts et des artefacts. Une dernière revue automatisée a été demandée sur `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, mais n'a pas été exécutée faute de quota.
@@ -56,7 +70,7 @@ digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 
 Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` a ensuite réussi sur son head exact `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, avant la fusion.
 
-La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
+La phase reste synthétique et hors ligne : moteur local isolé, contrats, revue hostile et préparation d'une interface de critique. Aucune donnée externe, connexion ou publication.
 
 ## 3. Actifs validés techniquement
 
@@ -285,8 +299,8 @@ Le prochain livrable de critique sera un HTML autonome interactif ou un ZIP loca
 
 Les captures restent des preuves, pas le produit remis.
 
-## 12. Prochaine décision
+## 12. Mission active
 
-Gate 0 est clôturée. Le prochain travail fonctionnel possible est Gate 1 : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
+Gate 0 est clôturée. Gate 1 est explicitement autorisée : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
 
-Cette mission exige une validation explicite d'Ayman et une branche séparée. Elle n'autorise toujours aucune donnée externe, connexion, recommandation, exécution ou publication.
+La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La construction technique ne clôt pas Gate 1 : cinq observations qualifiées réelles restent nécessaires. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.

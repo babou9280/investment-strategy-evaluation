@@ -69,7 +69,7 @@ Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'aud
 
 Prototype : HTML hors ligne, hypothèses manuelles et scénarios synthétiques.
 
-Statut : non commencé et soumis à une validation explicite d'Ayman. Aucun HTML Cost Gate n'est présent dans la fondation fusionnée.
+Statut : **autorisée par Ayman le 15 juillet 2026 et active sur `strategy/cost-gate-offline-critique`**. Le protocole et les seuils sont préenregistrés avant code et avant observation dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Aucun résultat utilisateur n'est encore disponible.
 
 Questions :
 
@@ -245,6 +245,6 @@ Après Gate 0 :
 - aucun état ne déclenche ou recommande un ordre ;
 - aucune intégration externe n'est activée.
 
-Un HTML offline n'est autorisé qu'après réussite des oracles CG-01 à CG-18, des non-régressions, d'une exécution exact-head, de la clôture de Gate 0 et d'une validation explicite d'Ayman. Il sert alors à la critique de Gate 1 ; les captures seules ne constituent pas ce prototype.
+Un HTML offline est autorisé après réussite des oracles CG-01 à CG-18, des non-régressions, d'une exécution exact-head, de la clôture de Gate 0 et de la validation explicite d'Ayman obtenue le 15 juillet 2026. Il sert uniquement à la critique de Gate 1 ; les captures seules ne constituent pas ce prototype.
 
 Après Gate 1 et Gate 2 seulement, décider si la saisie manuelle mérite d'être approfondie ou si la valeur dépend d'une dérivation depuis données réelles.

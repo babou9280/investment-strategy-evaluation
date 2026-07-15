@@ -57,18 +57,19 @@ L'incertitude est déclarée, jamais comblée par invention.
 
 ## 2. Phase active
 
-Les pull requests `#23` et `#24` sont fusionnées dans `breaktest-bootstrap`.
+Les pull requests `#23`, `#24` et `#25` sont fusionnées dans `breaktest-bootstrap`.
 
-La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Aucune mission fonctionnelle suivante n'est active tant qu'Ayman n'a pas explicitement validé Gate 1.
+La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026.
 
-Le prochain travail fonctionnel possible est un **prototype HTML hors ligne de critique**, sur une nouvelle branche et une nouvelle pull request. Il doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
+La mission fonctionnelle active est un **prototype HTML hors ligne de critique** sur `strategy/cost-gate-offline-critique`, destiné à une nouvelle pull request vers `breaktest-bootstrap`. Il doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
 
-Avant cette décision, le travail autorisé se limite à :
+Le travail autorisé se limite à :
 
 - corriger un défaut démontré dans les actifs fusionnés ;
 - maintenir les contrats, preuves et fichiers canoniques ;
 - rechercher et enregistrer les angles morts ;
-- préparer le protocole de Gate 1 sans construire le prototype.
+- préenregistrer puis exécuter le protocole de Gate 1 ;
+- construire, tester et inspecter le prototype `internal_review` et son package exact.
 
 Travail suspendu :
 

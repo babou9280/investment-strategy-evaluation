@@ -1,80 +1,63 @@
-# Prochaine mission Codex — décision Gate 1 Cost Gate
+# Prochaine mission Codex — Gate 1 Cost Gate hors ligne
 
-## Statut
+## Statut reconstruit
 
-La direction **Breaktest Cost Gate** est validée stratégiquement. Sa fondation synthétique interne est clôturée et fusionnée ; aucun produit utilisateur Cost Gate n'est encore construit.
+La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée et la fondation synthétique interne est fusionnée. Ayman a explicitement validé Gate 1 le 15 juillet 2026.
 
 ```text
 foundation pull request = #24, merged
-foundation final head = 3fb6341d51ff46b70dd774546955fbb1c66a400e
-foundation final tree = 62ad8094cfee5aff31e2d65fdd56da2ba057f5dc
-foundation final run = 29346211285 (#618), success
-foundation artifact = 8316213225
-foundation digest = 50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996
-breaktest-bootstrap merge = e61d166d81da54a7d4ee596db2c2447fcb418eb2
+foundation merge = e61d166d81da54a7d4ee596db2c2447fcb418eb2
+documentation pull request = #25, merged
+breaktest-bootstrap base = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
+active branch = strategy/cost-gate-offline-critique
 current engine = cost-gate-foundation-3-synthetic
 main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
 ```
 
-La preuve est technique, quantitative, synthétique et interne. Elle ne valide ni interface, ni compréhension, ni donnée réelle, ni droit, ni marché.
+Vérifier ces identifiants sur GitHub à chaque reprise. Une affirmation locale n'est pas une preuve distante.
 
-## Première action obligatoire
+## Objectif unique
 
-Reconstruire l'état GitHub actuel avant toute action :
+Construire et falsifier un prototype HTML hors ligne `internal_review` qui permet à un investisseur autonome de :
 
-1. head réel de `breaktest-bootstrap` et de `main` ;
-2. état fusionné de la PR `#24` ;
-3. éventuelle nouvelle branche ou PR ;
-4. derniers commentaires, runs et preuves exact-head ;
-5. cohérence des fichiers canoniques avec cet état.
+- saisir des hypothèses sans valeur financière préremplie ;
+- charger volontairement une démonstration `synthetic_demo` clairement marquée ;
+- distinguer seuil, avantage brut, cash et qualité des données ;
+- identifier le facteur principal ;
+- voir tous les constats et les couches non évaluées ;
+- comprendre qu'un état favorable n'est ni une recommandation ni une autorisation.
 
-Le dépôt GitHub reste la source de vérité. Les identifiants ci-dessus sont des preuves historiques à vérifier, pas des hypothèses à imposer.
+La réussite technique ne clôt pas Gate 1.
 
-## Autorité documentaire
+## Autorité de validation
 
-Lire intégralement les sources exigées par `AGENTS.md`, notamment :
+Lire les sources exigées par `AGENTS.md`, puis utiliser :
 
-- les fichiers canoniques ;
-- `STRATEGY.md`, `BUSINESS_MODEL.md` et `VALIDATION_PLAN.md` ;
-- `docs/product/COST_GATE_DIRECTION.md` ;
-- `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
-- les contrats Cost Gate ;
-- `docs/governance/BLIND_SPOT_REGISTER.md` ;
-- `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
-- `docs/validation/COST_GATE_FOUNDATION.md` ;
-- `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
-- le moteur et les tests sous `cost_gate_foundation/`.
+- `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md` pour le protocole utilisateur préenregistré ;
+- `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md` pour les scénarios techniques ;
+- `docs/product/COST_GATE_MVP_GATE_MATRIX.md` comme autorité unique des gates ;
+- les contrats Cost Gate et le moteur fusionné comme autorités financières.
 
-`COST_GATE_MVP_GATE_MATRIX.md` est l'autorité unique pour les identifiants de gate. Ne pas créer une numérotation parallèle.
+Les seuils préenregistrés ne peuvent pas être modifiés silencieusement après observation.
 
-## Décision nécessaire
+## Exigences techniques
 
-Gate 0 est clôturée. Gate 1 — valeur compréhensible sans donnée réelle — n'est pas encore autorisée.
+- moteur navigateur dérivé automatiquement du moteur fusionné, avec parité prouvée ;
+- aucune formule financière recopiée dans la présentation ;
+- résultat obsolète masqué dès toute modification ;
+- distinction persistante entre saisie vide, `synthetic_demo` et démo modifiée ;
+- point, fourchette et mode seuil sans performance inventée ;
+- tous les `findings[]`, dépendances, limites et `unassessedLayers` accessibles ;
+- provenance, version, snapshot et expiration visibles ;
+- erreurs explicites, aucun fallback silencieux ;
+- aucun `NaN`, `Infinity` ou `-0` ;
+- clavier, focus, annonces et mouvement réduit ;
+- responsive à 390, 768, 1 024 et 1 440 px ;
+- ouverture réelle sous `file://` ;
+- package exact, manifeste et SHA-256 vérifiés ;
+- CI et artefacts inspectés sur le head distant exact.
 
-Recommandation : construire sur une branche et une PR distinctes un prototype HTML hors ligne de critique, réellement interactif, utilisant uniquement les hypothèses manuelles ou `synthetic_demo` du moteur fusionné.
-
-Demander à Ayman uniquement : `valide` ou `refuse`.
-
-Ne créer ni branche fonctionnelle ni interface avant sa validation explicite.
-
-## Si Gate 1 est validée
-
-Objectif unique : tester si un investisseur autonome comprend la valeur du contrôle, distingue seuil, avantage, cash et qualité des données, identifie le facteur limitant et ne prend jamais un état favorable pour une recommandation.
-
-Le prototype doit :
-
-- fonctionner hors ligne en HTML autonome ou ZIP local avec `index.html` ;
-- utiliser le moteur fusionné, sans réécriture divergente des formules ;
-- proposer un parcours progressif réalisable en moins de trois minutes ;
-- distinguer hypothèse utilisateur et `synthetic_demo` ;
-- afficher unités, provenance, snapshot, expiration et couches non évaluées ;
-- conserver tous les `findings[]` ;
-- éviter feu vert, achat, vente, exécuter, rejeter, taille optimale ou recommandation ;
-- être accessible au clavier, responsive et sans dépendance distante ;
-- inclure oracles, tests navigateur, captures de preuve et contrôle du package exact ;
-- préenregistrer le protocole de cinq participants et ses critères d'abandon avant observation.
-
-## Interdictions maintenues
+## Interdictions
 
 - aucune modification de `main` ;
 - aucune donnée ou tarification réelle ;
@@ -85,16 +68,10 @@ Le prototype doit :
 - aucune probabilité d'exécution ;
 - aucun levier, marge, short ou dérivé ;
 - aucune publication ;
-- aucun package présenté comme produit final ou commercialement validé.
+- aucun package qualifié de final, prêt à produire ou commercialement validé.
 
-## Définition de terminé de Gate 1
+## Clôture de Gate 1
 
-La construction technique ne suffit pas. Gate 1 n'est terminée qu'après :
+Après preuve technique du package exact, observer cinq participants qualifiés selon le protocole préenregistré. Consigner résultats, aides, abandons, confusions et limites sans invention, puis décider de continuer, corriger, réduire, réorienter ou abandonner.
 
-- package exact construit, ouvert, testé et inspecté ;
-- CI verte sur le head distant exact ;
-- moteur et non-régressions préservés ;
-- protocole préenregistré avant utilisateurs ;
-- cinq tests qualifiés réellement observés ;
-- résultats, abandons, confusions et limites consignés sans invention ;
-- décision documentée de continuer, corriger, réorienter ou abandonner.
+Ne demander l'aide d'Ayman que lorsqu'un recrutement ou une observation humaine devient réellement indispensable.

@@ -1,11 +1,11 @@
 # Breaktest — plan de validation
 
 - Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
-- Prochain test proposé : **Gate 1 Cost Gate hors ligne**, non commencé et soumis à validation explicite
-- Statut : Gate 0 fusionnée ; publication, données externes et paiement suspendus
+- Test actif : **Gate 1 Cost Gate hors ligne**, autorisé le 15 juillet 2026 et préenregistré avant observation
+- Statut : Gate 0 fusionnée ; branche `strategy/cost-gate-offline-critique` créée ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
-## 1. Prochaine question décisive si Gate 1 est validée
+## 1. Question décisive de Gate 1
 
 > Des investisseurs autonomes comprennent-ils, sans coaching, la valeur d'un contrôle qui sépare seuil, avantage, cash et qualité des données, sans le prendre pour une recommandation ?
 
@@ -219,9 +219,9 @@ La revue exacte de ce dernier head a révélé quatre défauts supplémentaires 
 
 La relecture automatisée finale de la version `2` n'a pas été exécutée faute de quota. La revue hostile indépendante a trouvé quatre défauts adjacents de complétude FX/coûts et d'intégrité temporelle/provenance. La version `3` les corrige et ajoute une régression contre les constats d'actualité contradictoires. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `29345208179` (`#616`) ; jobs, logs, artefact, digest et captures ont été inspectés. Sa synchronisation documentaire a réussi sur `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, puis la PR `#24` a été fusionnée par squash au commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`. Cette preuve reste technique et synthétique.
 
-### Prototype utilisateur hors ligne — non commencé
+### Prototype utilisateur hors ligne — autorisé, résultats non observés
 
-Sur une mission et une branche distinctes, sans réseau ni donnée réelle :
+Sur `strategy/cost-gate-offline-critique`, sans réseau ni donnée réelle :
 
 - scénario de trade manuel ;
 - cash libre et nominal réservé ;
@@ -241,6 +241,8 @@ Mesurer auprès d'utilisateurs qualifiés :
 - modification puis répétition volontaire d'un scénario.
 
 Critères d'arrêt : problème rare, usage uniquement curieux, saisie plus coûteuse que la décision ou confusion persistante avec une recommandation.
+
+Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Aucun résultat utilisateur n'est consigné avant exécution réelle.
 
 ### Capacité à fournir les entrées et faisabilité générale — non validées
 
@@ -290,10 +292,10 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 ## 13. Développement autorisé actuellement
 
-La fondation est clôturée. Aucun développement fonctionnel suivant n'est autorisé implicitement par sa fusion.
+La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026 ; cette autorisation est limitée au prototype de critique hors ligne.
 
-Avant décision d'Ayman, seuls la maintenance démontrée, la synchronisation des preuves, la recherche d'angles morts et la préparation documentaire du protocole utilisateur sont autorisés.
+Sont autorisés : préenregistrement du protocole, interface locale utilisant le moteur fusionné, hypothèses manuelles ou `synthetic_demo`, oracles, tests navigateur, captures de preuve et package `internal_review` exact.
 
-Après validation explicite, Gate 1 pourra construire un package HTML hors ligne dans une mission séparée, uniquement pour critique de compréhension et avec des hypothèses manuelles ou synthétiques.
+Gate 1 ne sera pas déclarée réussie avant cinq observations qualifiées réelles et application des seuils préenregistrés.
 
 Restent interdits : données externes, import réel, compte, stockage, réseau applicatif, analytics actif, email, paiement, connexion courtier, recommandation, ordre limite conseillé, transmission et exécution.

@@ -98,7 +98,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-008 | P1 | Navigateur | Safari/iPad non prouvé | Livrable inutilisable par Ayman | open | Exécution réelle avant livraison |
 | BS-009 | P1 | Business | Calcul utile sans usage répété | Faible rétention | open | Deuxième usage non sollicité et demande d'import |
 | BS-010 | P1 | Données | Hypothèses de coûts difficiles à saisir | Garbage in, garbage out | open | Test sans assistance et sources documentées |
-| BS-011 | P1 | Validation | Testeurs proches surévaluent le produit | Faux signal | open | Recrutement qualifié distinct et protocole neutre |
+| BS-011 | P1 | Validation | Testeurs proches surévaluent le produit | Faux signal | mitigated | Protocole neutre et proximité consignée dans `COST_GATE_OFFLINE_CRITIQUE.md` ; recrutement et observations réels encore requis |
 | BS-012 | P1 | Livraison | Bundle offline divergeant du moteur | Démo fausse | open | Moteur unique, manifeste, hashes et tests du package exact |
 | BS-013 | P1 | Sécurité | Imports futurs : XSS, CSV injection, fichiers hostiles | Atteinte locale | deferred | Modèle de menace avant import |
 | BS-014 | P1 | Gouvernance | CI verte prise pour validation produit | Surconfiance | mitigated | Séparation technique, UX, marché et droit |
@@ -156,6 +156,11 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-066 | P0 | Cost Gate / temps | Heure d'évaluation absente ou invalide laissant les anciens constats actifs à hash identique | Ancien diagnostic réutilisé sans instant de contrôle valide | validated | Snapshot incomplet et anciens constats inutilisables à hash identique ; head `753152d`, run `#616` |
 | BS-067 | P1 | Cost Gate / explication | Régression pouvant faire coexister une source non critique stale et « toutes les sources actuelles » | Explication contradictoire et confiance dégradée | validated | Régression explicite sans expiration des constats indépendants ; head `753152d`, run `#616` |
 | BS-068 | P1 | Gouvernance / gates | Numérotation parallèle entre la direction Cost Gate et la matrice MVP | Mauvaise phase lancée ou preuve attribuée au mauvais gate | validated | `COST_GATE_MVP_GATE_MATRIX.md` devient l'autorité unique ; `AGENTS.md` et la direction imposent sa réutilisation sans renumérotation |
+| BS-069 | P0 | Cost Gate / fraîcheur UX | Résultat Cost Gate restant visible après modification d'une hypothèse | Snapshot affiché avec des entrées différentes | open | Masquage immédiat, message de recalcul et régression navigateur CGU-09 |
+| BS-070 | P0 | Cost Gate / explication | Synthèse d'interface cachant un constat matériel ou une couche non évaluée | Faux sentiment de compatibilité complète | open | Tous les `findings[]` et `unassessedLayers` accessibles ; parité et régression CGU-11/CGU-13 |
+| BS-071 | P1 | Cost Gate / provenance | Démonstration synthétique modifiée requalifiée en donnée utilisateur ou réelle | Provenance fausse et ancrage masqué | open | Étiquette persistante « démonstration synthétique modifiée », saisie vide distincte et CGU-01/CGU-10 |
+| BS-072 | P1 | Livraison / preuve | Package construit depuis un commit ou moteur différent de celui déclaré | Prototype exact non reproductible | open | Build déterministe, commit source explicite, hashes du moteur, manifeste et contrôle CGU-13/CGU-17 |
+| BS-073 | P1 | Cost Gate / UX | Parcours sous trois minutes obtenu en cachant des hypothèses financières matérielles | Rapidité trompeuse et conclusion sur une base invisible | open | Hypothèses fixées visibles, couches non évaluées proches du résultat et observation CGU-12 + protocole Gate 1 |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -201,6 +206,11 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 38. L'heure d'évaluation est-elle valide avant d'activer ou de réactiver des constats ?
 39. Un constat positif d'actualité contredit-il une source stale encore visible ?
 40. Les identifiants de gate correspondent-ils à la matrice d'autorité sans numérotation parallèle ?
+41. Un résultat disparaît-il dès qu'une hypothèse Cost Gate change ?
+42. L'interface conserve-t-elle chaque constat et chaque couche non évaluée ?
+43. Une démonstration modifiée conserve-t-elle sa provenance synthétique ?
+44. Le package prouve-t-il le moteur et le commit exacts qu'il déclare ?
+45. La rapidité du parcours repose-t-elle sur des simplifications visibles plutôt que sur des hypothèses cachées ?
 
 ## 7. Règle de clôture
 
