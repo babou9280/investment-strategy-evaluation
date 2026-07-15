@@ -6,6 +6,7 @@ const fixtures = require('../../cost_gate_foundation/tests/fixtures.js');
 const presenter = require('../src/presenter.js');
 
 const provenance = { code: 'synthetic_demo', label: 'Démonstration synthétique', detail: 'Valeurs fictives.' };
+assert.equal(presenter.FINDING_LABELS.snapshot_serialization_failed, 'Le snapshot n’a pas pu être construit de manière fiable.');
 
 function view(input) {
   const result = engine.compute(input);

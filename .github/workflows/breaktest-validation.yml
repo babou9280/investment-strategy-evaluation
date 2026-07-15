@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -52,6 +54,7 @@ jobs:
         run: |
           set -o pipefail
           {
+            test "$(git rev-parse HEAD)" = "$BREAKTEST_SOURCE_COMMIT"
             python3 scripts/build_breaktest.py
             python3 cost_gate_critique/build.py \
               --source-commit "$BREAKTEST_SOURCE_COMMIT" \

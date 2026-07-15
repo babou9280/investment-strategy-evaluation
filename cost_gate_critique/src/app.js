@@ -11,6 +11,7 @@
   const resultContent = document.getElementById('result-content');
   const staleBanner = document.getElementById('stale-banner');
   const errorSummary = document.getElementById('error-summary');
+  const errorSummaryTitle = document.getElementById('error-summary-title');
   const errorList = document.getElementById('error-list');
   const liveRegion = document.getElementById('live-region');
   const provenanceBanner = document.getElementById('provenance-banner');
@@ -109,7 +110,8 @@
     clearErrors();
     hideResult(false);
     setProvenance('demo', false);
-    form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const reducedMotion = globalThis.matchMedia && globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    form.scrollIntoView({ behavior: reducedMotion ? 'auto' : 'smooth', block: 'start' });
   }
 
   function toggleEdgePanels() {
@@ -130,6 +132,7 @@
 
   function clearErrors() {
     errorSummary.hidden = true;
+    errorSummaryTitle.textContent = 'Le scénario contient des entrées à corriger';
     errorList.replaceChildren();
     form.querySelectorAll('[aria-invalid="true"]').forEach((control) => {
       control.removeAttribute('aria-invalid');
@@ -165,6 +168,20 @@
     hideResult(false);
     errorSummary.focus();
     liveRegion.textContent = `${Object.keys(errors).length} entrée(s) à corriger.`;
+  }
+
+  function renderRuntimeError() {
+    clearErrors();
+    hideResult(false);
+    errorSummaryTitle.textContent = 'Le calcul a rencontré une erreur technique';
+    errorList.append(createText(
+      'li',
+      '',
+      'Le moteur a refusé ce scénario. Aucun résultat n’est affiché et aucune entrée financière n’est désignée comme fautive.'
+    ));
+    errorSummary.hidden = false;
+    errorSummary.focus();
+    liveRegion.textContent = 'Le moteur a refusé ce scénario. Aucun résultat n’est affiché.';
   }
 
   function collectFields() {
@@ -405,8 +422,7 @@
       engine.assertFiniteTree(result);
       renderResult(result);
     } catch (error) {
-      renderErrors({ orderNotionalEur: 'internal_error' });
-      liveRegion.textContent = 'Le moteur a refusé ce scénario. Aucun résultat n’est affiché.';
+      renderRuntimeError();
     }
   });
 

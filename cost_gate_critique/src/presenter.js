@@ -37,6 +37,7 @@
 
   const FINDING_LABELS = Object.freeze({
     unsupported_scope: 'Le scénario sort du périmètre cash long pris en charge.',
+    snapshot_serialization_failed: 'Le snapshot n’a pas pu être construit de manière fiable.',
     external_market_data_not_assessed: 'Aucune donnée de marché actuelle n’est évaluée.',
     synthetic_source_stale: 'Une source synthétique est expirée pour l’heure d’évaluation.',
     synthetic_source_observed_after_evaluation: 'Une source est postérieure à l’heure d’évaluation.',

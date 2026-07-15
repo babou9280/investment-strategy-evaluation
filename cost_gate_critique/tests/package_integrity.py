@@ -46,6 +46,9 @@ with zipfile.ZipFile(ARCHIVE) as archive:
 
 with tempfile.TemporaryDirectory() as temporary:
     output = Path(temporary) / "rebuild"
+    output.mkdir()
+    sentinel = output / "unrelated-sentinel.txt"
+    sentinel.write_text("preserve me\n", encoding="utf-8")
     subprocess.run(
         [
             "python3",
@@ -62,8 +65,28 @@ with tempfile.TemporaryDirectory() as temporary:
         check=True,
         stdout=subprocess.DEVNULL,
     )
+    assert sentinel.read_text(encoding="utf-8") == "preserve me\n", "Build deleted an unrelated output file"
     rebuilt = output / ARCHIVE.name
     assert sha256(rebuilt) == sha256(ARCHIVE), "Archive build is not deterministic"
+
+    mismatch = subprocess.run(
+        [
+            "python3",
+            str(PROJECT / "build.py"),
+            "--source-commit",
+            "0" * 40,
+            "--generated-at",
+            manifest["generated_at_utc"],
+            "--browser-under-test",
+            manifest["browser_under_test"],
+            "--output",
+            str(Path(temporary) / "mismatch"),
+        ],
+        capture_output=True,
+        text=True,
+    )
+    assert mismatch.returncode != 0, "Build accepted a source commit different from checked-out HEAD"
+    assert "does not match checked-out HEAD" in mismatch.stderr
 
 assert (PACKAGE / manifest["entrypoint"]).is_file()
 assert manifest["source_commit"] == "WORKTREE" or len(manifest["source_commit"]) == 40

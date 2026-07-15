@@ -89,6 +89,20 @@ with sync_playwright() as playwright:
     assert page.evaluate("document.activeElement.id") == "main-content"
     assert page.evaluate("getComputedStyle(document.documentElement).scrollBehavior") == "auto"
 
+    page.evaluate("""() => {
+      const form = document.getElementById('scenario-form');
+      form.__originalScrollIntoView = form.scrollIntoView;
+      form.scrollIntoView = options => { form.dataset.testScrollBehavior = options.behavior; };
+    }""")
+    page.get_by_role("button", name="Charger la démonstration synthétique").click()
+    assert page.locator("#scenario-form").get_attribute("data-test-scroll-behavior") == "auto"
+    page.evaluate("""() => {
+      const form = document.getElementById('scenario-form');
+      form.scrollIntoView = form.__originalScrollIntoView;
+      delete form.__originalScrollIntoView;
+      delete form.dataset.testScrollBehavior;
+    }""")
+
     submit_demo(page)
     assert "Démonstration synthétique chargée" in page.locator("#provenance-text").inner_text()
     assert page.locator("#result-title").inner_text() == "Aucune incompatibilité n’a été détectée dans les couches évaluées"
@@ -154,6 +168,21 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name="Analyser ce scénario").click()
     assert page.locator("#result-title").inner_text() == "Le seuil est calculé, mais l’avantage brut n’est pas évalué"
     assert not page.locator(".edge-result-card").count()
+
+    page.get_by_role("button", name="Charger la démonstration synthétique").click()
+    page.evaluate("""() => {
+      BreaktestCostGate.__originalCompute = BreaktestCostGate.compute;
+      BreaktestCostGate.compute = () => { throw new Error('simulated_engine_failure'); };
+    }""")
+    page.get_by_role("button", name="Analyser ce scénario").click()
+    assert page.locator("#error-summary-title").inner_text() == "Le calcul a rencontré une erreur technique"
+    assert "aucune entrée financière n’est désignée comme fautive" in page.locator("#error-summary").inner_text()
+    assert not page.locator('[aria-invalid="true"]').count()
+    assert page.locator("#results").is_hidden()
+    page.evaluate("""() => {
+      BreaktestCostGate.compute = BreaktestCostGate.__originalCompute;
+      delete BreaktestCostGate.__originalCompute;
+    }""")
 
     page.get_by_role("button", name="Saisir des hypothèses vides").click()
     page.get_by_role("button", name="Analyser ce scénario").click()

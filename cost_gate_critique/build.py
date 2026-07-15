@@ -9,6 +9,7 @@ import json
 import re
 import shutil
 import stat
+import subprocess
 import zipfile
 from pathlib import Path
 
@@ -116,6 +117,32 @@ def validate_args(args: argparse.Namespace) -> None:
         raise SystemExit("--browser-under-test must identify the actual browser target")
 
 
+def validate_source_commit(repo_root: Path, source_commit: str) -> None:
+    if source_commit == "WORKTREE":
+        return
+    try:
+        actual = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=repo_root,
+            check=True,
+            capture_output=True,
+            text=True,
+        ).stdout.strip()
+    except (OSError, subprocess.CalledProcessError) as error:
+        raise SystemExit("Cannot verify --source-commit against the checked-out repository") from error
+    if actual != source_commit:
+        raise SystemExit(f"--source-commit {source_commit} does not match checked-out HEAD {actual}")
+
+
+def clear_previous_package(package_dir: Path, zip_path: Path) -> None:
+    if package_dir.is_symlink() or package_dir.is_file():
+        package_dir.unlink()
+    elif package_dir.is_dir():
+        shutil.rmtree(package_dir)
+    if zip_path.exists() or zip_path.is_symlink():
+        zip_path.unlink()
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--source-commit", required=True)
@@ -130,15 +157,16 @@ def main() -> int:
     source_dir = project_dir / "src"
     dist_dir = (args.output or (project_dir / "dist")).resolve()
     package_dir = dist_dir / PACKAGE_NAME
-    if dist_dir.exists():
-        shutil.rmtree(dist_dir)
+    zip_path = dist_dir / f"{PACKAGE_NAME}-internal-review.zip"
+    validate_source_commit(repo_root, args.source_commit)
+    clear_previous_package(package_dir, zip_path)
     (package_dir / "assets").mkdir(parents=True)
 
     tokens = {
         "SOURCE_COMMIT": args.source_commit,
         "GENERATED_AT": args.generated_at,
         "DELIVERABLE_VERSION": DELIVERABLE_VERSION,
-        "BROWSER_UNDER_TEST": args.browser_under_test,
+        "BROWSER_UNDER_TEST": args.browser_under_test.strip(),
     }
 
     engine_bundle, component_hashes = build_engine_bundle(repo_root, source_dir)
@@ -166,7 +194,7 @@ def main() -> int:
         "source_commit": args.source_commit,
         "generated_at_utc": args.generated_at,
         "entrypoint": "index.html",
-        "browser_under_test": args.browser_under_test,
+        "browser_under_test": args.browser_under_test.strip(),
         "browser_claim": "Target recorded; success requires the external exact-run evidence that tested this unchanged package.",
         "viewport_targets_px": [390, 768, 1024, 1440],
         "engine_versions": {
@@ -191,7 +219,6 @@ def main() -> int:
     }
     write_utf8(package_dir / "MANIFEST.json", json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
 
-    zip_path = dist_dir / f"{PACKAGE_NAME}-internal-review.zip"
     deterministic_zip(package_dir, zip_path)
     total_bytes = sum(path.stat().st_size for path in package_dir.rglob("*") if path.is_file())
     print(f"Built {package_dir}")
