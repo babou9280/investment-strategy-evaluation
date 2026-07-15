@@ -69,7 +69,7 @@ Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'aud
 
 Prototype : HTML hors ligne, hypothèses manuelles et scénarios synthétiques.
 
-Statut : **autorisée par Ayman le 15 juillet 2026 et active sur `strategy/cost-gate-offline-critique`**. Le protocole et les seuils sont préenregistrés avant code et avant observation dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Le prototype et son package exact sont techniquement exécutés au head `7ce11bde2195fdb5c95cb184263072b2314e4b6e`, run `#633`. Aucun résultat utilisateur n'est encore disponible et Gate 1 n'est pas clôturée.
+Statut : **autorisée par Ayman le 15 juillet 2026 et active sur `strategy/cost-gate-offline-critique`**. Le protocole et les seuils sont préenregistrés avant code et avant observation dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Le prototype et son package exact sont techniquement exécutés au head `7177da36e3c8473e275c4455e23aa3a27e00dc89`, run `#639`. Aucun résultat utilisateur n'est encore disponible et Gate 1 n'est pas clôturée.
 
 Questions :
 

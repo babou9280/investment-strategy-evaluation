@@ -5,19 +5,19 @@
 - Pull request : `#26`, ouverte en brouillon vers `breaktest-bootstrap`.
 - Branche : `strategy/cost-gate-offline-critique`.
 - Base : `56fb50954afd7394baf1689e0f1b7220a1fd73fc`.
-- Head fonctionnel exact : `7ce11bde2195fdb5c95cb184263072b2314e4b6e`.
-- Tree fonctionnel : `7046eb366a62aa5b12b55414367fe7e116c341e2`.
-- GitHub Actions : run `29417944829` (`#633`), job `87360744261`, `success`.
-- Artefact : `8343971281`, 8 797 175 octets.
-- Digest de l'artefact : `sha256:b4b2259ca3fda6cbb4bef2135d7e7d4c1a5ec011f791036a3e36a4bf17b80778`.
-- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 39 362 octets.
-- SHA-256 de l'archive interne : `6464cfac98b56705bbb8a66a2c6a323120498578fb2fb2e80e6fcbd955400e6e`.
+- Head fonctionnel exact : `7177da36e3c8473e275c4455e23aa3a27e00dc89`.
+- Tree fonctionnel : `d8b7cfe6d7e48036cd285814004df6b66255e872`.
+- GitHub Actions : run `29419443905` (`#639`), job `87365839681`, `success`.
+- Artefact : `8344601740`, 8 798 213 octets.
+- Digest de l'artefact : `sha256:5fca497e1b85e4ca019bb4f7ccdca62cab03f0fdb6c97d52ecf78766ac768d68`.
+- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 39 371 octets.
+- SHA-256 de l'archive interne : `bc7ab780a4bd7d57b9f6ec66ec7a5f296efbe314629fdc4517f61ac78ddcfd63`.
 - Moteur : `cost-gate-foundation-3-synthetic`.
 - Nature de la preuve : technique, quantitative, synthétique, responsive et interne.
 - Participants réellement observés : **0 sur 5**.
 - Statut de Gate 1 : **preuve technique prête ; validation utilisateur non commencée ; Gate non clôturée**.
 
-Le run `#633` teste le head fonctionnel exact. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. Une CI verte ne répond pas à la question de compréhension préenregistrée.
+Le run `#639` teste le head fonctionnel exact. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. Une CI verte ne répond pas à la question de compréhension préenregistrée.
 
 ## Ordre de préenregistrement
 
@@ -116,13 +116,13 @@ Safari et iPad réels ne sont pas testés et ne sont pas revendiqués.
 Les logs du checkout montrent explicitement :
 
 ```text
-ref = 7ce11bde2195fdb5c95cb184263072b2314e4b6e
-HEAD = 7ce11bde2195fdb5c95cb184263072b2314e4b6e
+ref = 7177da36e3c8473e275c4455e23aa3a27e00dc89
+HEAD = 7177da36e3c8473e275c4455e23aa3a27e00dc89
 ```
 
 Le workflow refuse désormais un écart entre le head attendu et le checkout. Le build refuse aussi un `source_commit` différent de `HEAD` et sa régression vérifie ce refus.
 
-Le package contient huit fichiers, manifeste inclus, pour 156 555 octets. Le manifeste déclare le head exact, les versions, les hashes des moteurs, chaque fichier, le navigateur cible et les limites. L'archive a été téléchargée, son digest externe réconcilié, son SHA-256 interne recalculé et ses huit entrées ouvertes sans erreur.
+Le package contient huit fichiers, manifeste inclus, pour 156 551 octets. Le manifeste déclare le head exact, les versions, les hashes des moteurs, chaque fichier, le navigateur cible et les limites. L'archive a été téléchargée, son digest externe réconcilié, son SHA-256 interne recalculé et ses huit entrées ouvertes sans erreur.
 
 Le build déterministe reconstruit la même archive avec les mêmes entrées et ne supprime plus les fichiers voisins du dossier de sortie ; un fichier sentinelle protège ce comportement.
 
@@ -154,7 +154,8 @@ La revue a produit des corrections et régressions, sans modification des formul
 2. le build supprimait tout le dossier de sortie ; il ne nettoie plus que son package et son ZIP ;
 3. une exception interne du moteur était attribuée au champ nominal ; elle est maintenant présentée comme erreur technique générale ;
 4. le défilement JavaScript restait explicitement doux malgré une préférence de mouvement réduit ; le comportement est maintenant conditionnel et testé ;
-5. le constat rare d'échec de sérialisation du snapshot n'avait pas de libellé explicite ; le mapping et sa régression sont ajoutés.
+5. le constat rare d'échec de sérialisation du snapshot n'avait pas de libellé explicite ; le mapping et sa régression sont ajoutés ;
+6. les runs exacts `#635` et `#637` ont montré qu'une durée globale de `0,01 ms` créait encore une transition du lien d'évitement en mode mouvement réduit. Les transitions sont maintenant réellement nulles, et la régression vérifie que le document est actif, que le premier `Tab` cible le lien, que `:focus` s'applique et que le lien est dans le viewport. Le run exact `#639` valide la correction sans changement de formule.
 
 ## Ce qui est réellement validé
 

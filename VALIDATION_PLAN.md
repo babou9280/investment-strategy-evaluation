@@ -2,7 +2,7 @@
 
 - Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
 - Test actif : **Gate 1 Cost Gate hors ligne**, autorisé le 15 juillet 2026 et préenregistré avant observation
-- Statut : Gate 0 fusionnée ; prototype Gate 1 techniquement exécuté sur le head exact `7ce11bde` ; cinq observations qualifiées non commencées ; publication, données externes et paiement suspendus
+- Statut : Gate 0 fusionnée ; prototype Gate 1 techniquement exécuté sur le head exact `7177da36` ; cinq observations qualifiées non commencées ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
 ## 1. Question décisive de Gate 1
@@ -11,7 +11,7 @@
 
 Le test ne vise pas les compliments, inscriptions gratuites ou intentions abstraites.
 
-Le package technique exact est validé par le run `#633` et documenté dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette preuve autorise l'observation ; elle ne compte pour aucun des seuils utilisateur.
+Le package technique exact est validé par le run `#639` et documenté dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette preuve autorise l'observation ; elle ne compte pour aucun des seuils utilisateur.
 
 ## 2. Hypothèses Capital Efficiency à valider
 
@@ -244,7 +244,7 @@ Mesurer auprès d'utilisateurs qualifiés :
 
 Critères d'arrêt : problème rare, usage uniquement curieux, saisie plus coûteuse que la décision ou confusion persistante avec une recommandation.
 
-Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le head `7ce11bde` et le run `#633` satisfont le prérequis technique ; aucun résultat utilisateur n'est consigné avant exécution réelle.
+Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le head `7177da36` et le run `#639` satisfont le prérequis technique ; aucun résultat utilisateur n'est consigné avant exécution réelle.
 
 ### Capacité à fournir les entrées et faisabilité générale — non validées
 

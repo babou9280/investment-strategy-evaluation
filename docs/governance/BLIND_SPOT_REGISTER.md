@@ -164,6 +164,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-074 | P1 | Accessibilité | Défilement JavaScript doux malgré la préférence de mouvement réduit | Inconfort ou désorientation | validated | `matchMedia` pilote le défilement et la régression Chromium émule `reduce` ; head `7ce11bde`, run `#633` |
 | BS-075 | P1 | Cost Gate / confiance | Exception interne présentée comme erreur du nominal utilisateur | Fausse attribution et correction financière inutile | validated | Erreur technique générale, résultat masqué, aucun champ financier invalidé ; régression navigateur, head `7ce11bde`, run `#633` |
 | BS-076 | P2 | Livraison / sûreté | Build supprimant des fichiers sans rapport dans le dossier de sortie | Perte d'artefacts ou de travail | validated | Nettoyage limité au package et à son ZIP ; fichier sentinelle conservé par la régression, head `7ce11bde`, run `#633` |
+| BS-077 | P1 | Accessibilité / preuve | Mode mouvement réduit créant une micro-transition globale et laissant temporairement le lien d'évitement hors viewport au premier `Tab` | Accès clavier non visible et test exact-head instable | validated | Transitions réellement nulles sous `reduce` ; document actif, `:focus` et géométrie du lien vérifiés ; head `7177da36`, run `#639` |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -217,6 +218,7 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 46. Les mouvements déclenchés par script respectent-ils aussi la préférence de mouvement réduit ?
 47. Une erreur interne peut-elle être attribuée à tort à une entrée financière de l'utilisateur ?
 48. Un build peut-il supprimer un fichier voisin qui ne lui appartient pas ?
+49. Le mode mouvement réduit supprime-t-il réellement toute transition résiduelle sur le premier focus clavier ?
 
 ## 7. Règle de clôture
 

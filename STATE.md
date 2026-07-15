@@ -49,7 +49,7 @@ artifact = 8342414560
 digest = sha256:f81f47fb6e4252d4afa230f84e8fedba56f3ed8eb53d66d1ae43e5d18ca12afa
 ```
 
-Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Le protocole a été poussé avant le code. La PR `#26` reste ouverte en brouillon. Son head fonctionnel `7ce11bde2195fdb5c95cb184263072b2314e4b6e` a réussi le run exact `29417944829` (`#633`). L'artefact `8343971281`, digest `sha256:b4b2259ca3fda6cbb4bef2135d7e7d4c1a5ec011f791036a3e36a4bf17b80778`, son package et ses six captures ont été téléchargés et inspectés. Aucun participant n'a encore été observé.
+Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Le protocole a été poussé avant le code. La PR `#26` reste ouverte en brouillon. Son head fonctionnel `7177da36e3c8473e275c4455e23aa3a27e00dc89` a réussi le run exact `29419443905` (`#639`). L'artefact `8344601740`, digest `sha256:5fca497e1b85e4ca019bb4f7ccdca62cab03f0fdb6c97d52ecf78766ac768d68`, son package et ses six captures ont été téléchargés et inspectés. Aucun participant n'a encore été observé.
 
 `main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
@@ -223,7 +223,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
 - Cost Gate foundation version `3`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `753152d9` dans le périmètre cash long déclaré ;
-- prototype Gate 1 hors ligne, package exact, parité moteur, fraîcheur, provenance, accessibilité Chromium, responsive et captures, exécutés sur `7ce11bde` dans le run `#633` ;
+- prototype Gate 1 hors ligne, package exact, parité moteur, fraîcheur, provenance, accessibilité Chromium, responsive et captures, exécutés sur `7177da36` dans le run `#639` ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé

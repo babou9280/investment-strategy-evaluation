@@ -143,8 +143,8 @@ Une appréciation positive, une CI verte ou cinq parcours terminés ne remplace 
 Cette section est postérieure au préenregistrement et ne modifie aucun seuil, aucune question ni aucune règle de codage.
 
 - Prototype `internal_review` construit et poussé.
-- Head fonctionnel exact : `7ce11bde2195fdb5c95cb184263072b2314e4b6e`.
-- GitHub Actions : run `29417944829` (`#633`), `success`.
+- Head fonctionnel exact : `7177da36e3c8473e275c4455e23aa3a27e00dc89`.
+- GitHub Actions : run `29419443905` (`#639`), `success`.
 - Artefact, package ZIP et six captures 390/1 440 px téléchargés et inspectés.
 - Matrice technique, parité moteur, `file://`, fraîcheur, provenance, accessibilité et responsive réussis dans le périmètre documenté.
 - Participants observés : **0 sur 5**.

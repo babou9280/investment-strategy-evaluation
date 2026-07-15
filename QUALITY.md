@@ -311,6 +311,7 @@ Le livrable de critique Gate 1 respecte `docs/delivery/OFFLINE_HTML_DELIVERABLE_
 - méthode, preuve et limites ;
 - manifeste et SHA-256 ;
 - test du package exact ;
+- préférence de mouvement réduit sans transition résiduelle, avec premier `Tab` vérifié dans un document navigateur actif ;
 - aucun besoin de serveur lourd lorsque techniquement évitable.
 
 Les captures sont des preuves de revue, pas le livrable principal.

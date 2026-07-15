@@ -194,7 +194,7 @@ Ayman a autorisé cette Gate sur `strategy/cost-gate-offline-critique`. Elle exi
 - test de compréhension, effort de saisie et confusion avec une recommandation ;
 - aucune donnée externe, connexion ou publication.
 
-Le protocole, les seuils et les cas d'abandon sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Le package exact est techniquement prouvé au head `7ce11bde2195fdb5c95cb184263072b2314e4b6e`, run `#633`, et documenté dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette construction et cette CI verte ne valent pas réussite de Gate 1 ; cinq observations qualifiées réelles restent requises.
+Le protocole, les seuils et les cas d'abandon sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Le package exact est techniquement prouvé au head `7177da36e3c8473e275c4455e23aa3a27e00dc89`, run `#639`, et documenté dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette construction et cette CI verte ne valent pas réussite de Gate 1 ; cinq observations qualifiées réelles restent requises.
 
 Les Gates 2 à 8 — capacité à fournir les entrées, frontière réglementaire, économie des données, Data Quality Gate, faisabilité du capital, comparaison ex ante/ex post et demande commerciale — restent conditionnelles et sont définies dans la matrice d'autorité.
 
