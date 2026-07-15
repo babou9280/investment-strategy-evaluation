@@ -78,8 +78,17 @@ with sync_playwright() as playwright:
     assert page.locator("#stale-banner").is_hidden()
     assert all(value == "" for value in page.locator('input[type="text"]').evaluate_all("els => els.map(el => el.value)"))
     assert not page.locator('input[type="radio"]:checked').count()
+    # A real keyboard user tabs inside the active page. Headless Chromium can
+    # intermittently keep the document inactive even though it updates
+    # document.activeElement; in that state :focus styles are not painted.
+    # Activate and verify the page before testing the user's first Tab.
+    page.bring_to_front()
+    page.evaluate("window.focus()")
+    page.wait_for_function("document.hasFocus()")
+    assert page.evaluate("document.activeElement === document.body")
     page.keyboard.press("Tab")
     assert page.evaluate("document.activeElement.classList.contains('skip-link')")
+    assert page.evaluate("document.activeElement.matches(':focus')")
     skip_rect = page.locator(".skip-link").evaluate("""element => {
       const rect = element.getBoundingClientRect();
       return {top: rect.top, bottom: rect.bottom, viewport: window.innerHeight};
