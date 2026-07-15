@@ -81,9 +81,8 @@ a:focus-visible,
 .skip-link {
   position: fixed;
   z-index: 1000;
-  top: 8px;
+  top: -100px;
   left: 12px;
-  transform: translateY(-160%);
   padding: 10px 14px;
   border-radius: 8px;
   background: var(--ink);
@@ -93,7 +92,7 @@ a:focus-visible,
 }
 
 .skip-link:focus {
-  transform: translateY(0);
+  top: 8px;
 }
 
 .site-header {
