@@ -216,6 +216,8 @@ Une frontière mathématique n'établit pas sa faisabilité avec le capital disp
 - Aucun débordement horizontal à 390, 768, 1024 et 1440 px.
 - La barre fixe ne doit pas masquer le résultat après défilement.
 - Safari/iPad doit être vérifié avant livraison à Ayman.
+- Le fichier réellement remis doit être le point d'entrée exact testé ; un ZIP ouvert dans un lecteur iPad ne prouve pas que ses scripts relatifs sont exécutés.
+- Si JavaScript local est bloqué ou échoue au démarrage, le formulaire ne doit ni être soumis ni rechargé, les valeurs saisies doivent rester présentes et un message de limite doit remplacer toute fausse interaction.
 - La compréhension en moins de 90 secondes reste une hypothèse tant qu'elle n'est pas observée.
 
 ## 13. Design
@@ -304,7 +306,7 @@ Avant tout import réel : modèle de menace, XSS, fichiers hostiles, CSV injecti
 
 Le livrable de critique Gate 1 respecte `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` et toute révision doit conserver :
 
-- HTML autonome ou bundle ZIP avec `index.html` ;
+- HTML autonome exact comme remise primaire à Ayman, avec bundle ZIP réservé à l'audit ou au repli ;
 - ressources relatives locales ;
 - interaction réelle ;
 - même moteur que celui validé ;
@@ -312,6 +314,7 @@ Le livrable de critique Gate 1 respecte `docs/delivery/OFFLINE_HTML_DELIVERABLE_
 - manifeste et SHA-256 ;
 - test du package exact ;
 - préférence de mouvement réduit sans transition résiduelle, avec premier `Tab` vérifié dans un document navigateur actif ;
+- démarrage contrôlé et repli sans JavaScript qui conserve les champs sans soumission native ni rechargement ;
 - aucun besoin de serveur lourd lorsque techniquement évitable.
 
 Les captures sont des preuves de revue, pas le livrable principal.

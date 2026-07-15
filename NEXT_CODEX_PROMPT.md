@@ -2,27 +2,33 @@
 
 ## Statut reconstruit
 
-La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le prototype hors ligne de Gate 1 et son package exact sont techniquement prêts ; Gate 1 n'est pas validée par des utilisateurs.
+La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le premier essai fondateur du bundle Gate 1 sur iPad a reproduit un blocage de démarrage et d'effacement des champs. Un HTML autonome exact et un repli sans JavaScript sont maintenant validés techniquement dans Chromium ; leur nouvel essai sur le même iPad reste obligatoire. Gate 1 n'est pas validée par des utilisateurs.
 
 ```text
 pull request = #26, draft
 base = breaktest-bootstrap
 base head = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
 active branch = strategy/cost-gate-offline-critique
-functional head = 7177da36e3c8473e275c4455e23aa3a27e00dc89
-functional tree = d8b7cfe6d7e48036cd285814004df6b66255e872
-exact run = 29419443905 (#639), success
-artifact = 8344601740
-artifact digest = 5fca497e1b85e4ca019bb4f7ccdca62cab03f0fdb6c97d52ecf78766ac768d68
-internal package sha256 = bc7ab780a4bd7d57b9f6ec66ec7a5f296efbe314629fdc4517f61ac78ddcfd63
+functional head = bb50550bde077c19b6966e1715e4f7f31dcfe901
+functional tree = 021d3ec909d21723332fa420c2ca45127ee6fc67
+exact run = 29458950246 (#645), success
+artifact = 8360442727
+artifact digest = 798c36f33c8bebef178cc785af82ed4591230aa70a9b9f68d373da289efe3e33
+standalone html sha256 = 98458817fb59b603955cf5c6c7b309390869b5ab622a314915d0e4bd5e9e3014
+internal package sha256 = 3938acbfea3324ddcc34f938322c2e8eb996f39cbf189bf52a7f7ca52e156263
 current engine = cost-gate-foundation-3-synthetic
 main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
 participants observed = 0/5
+iPad blocker = mitigated technically, real-device retest pending
 ```
 
 Vérifier ces identifiants sur GitHub à chaque reprise. Une preuve historique ou locale ne remplace jamais le head et le run actuels.
 
-## Objectif unique
+## Objectif immédiat
+
+Faire ouvrir à Ayman le fichier exact `Breaktest_Cost_Gate_Gate_1.html` sur le même iPad et vérifier que la démonstration synthétique produit réellement un résultat. Cet essai fondateur ne compte pas parmi les cinq participants. En cas d'échec, conserver le défaut ouvert et consigner l'application utilisée ; ne pas lancer la cohorte.
+
+## Objectif après réussite de l'essai iPad
 
 Observer cinq participants qualifiés selon `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`, sans modifier silencieusement le protocole, puis appliquer exactement les seuils préenregistrés.
 
@@ -53,7 +59,7 @@ Une nouvelle cohorte après correction reste séparée de la première. Aucun r�
 
 ## Travail autorisé
 
-- préparer le package exact pour une session locale ;
+- préparer le fichier HTML autonome exact pour une session locale ;
 - appliquer le script neutre ;
 - chronométrer et consigner seulement les observations réelles minimales ;
 - corriger un défaut technique réellement reproduit, ajouter sa régression et retester un nouveau head exact ;
@@ -66,7 +72,7 @@ Une nouvelle cohorte après correction reste séparée de la première. Aucun r�
 - aucune donnée réelle, réseau, compte, stockage, analytics ou connexion ;
 - aucune recommandation, probabilité, transmission ou exécution ;
 - aucune publication, acquisition, email ou paiement ;
-- aucune revendication Safari/iPad, juridique, commerciale ou utilisateur non démontrée ;
+- aucune revendication Safari/iPad au-delà du comportement réellement réexécuté, ni revendication juridique, commerciale ou utilisateur non démontrée ;
 - aucune fusion de la PR `#26` tant que les cinq observations et la décision Gate 1 ne sont pas documentées.
 
 ## Décision après les cinq observations

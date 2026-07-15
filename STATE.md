@@ -49,7 +49,9 @@ artifact = 8342414560
 digest = sha256:f81f47fb6e4252d4afa230f84e8fedba56f3ed8eb53d66d1ae43e5d18ca12afa
 ```
 
-Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Le protocole a été poussé avant le code. La PR `#26` reste ouverte en brouillon. Son head fonctionnel `7177da36e3c8473e275c4455e23aa3a27e00dc89` a réussi le run exact `29419443905` (`#639`). L'artefact `8344601740`, digest `sha256:5fca497e1b85e4ca019bb4f7ccdca62cab03f0fdb6c97d52ecf78766ac768d68`, son package et ses six captures ont été téléchargés et inspectés. Aucun participant n'a encore été observé.
+Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Le protocole a été poussé avant le code. La PR `#26` reste ouverte en brouillon. Un premier essai fondateur réel sur iPad du bundle multifichier a révélé un défaut bloquant : la page s'ouvrait sans exécuter les scripts relatifs, puis l'action d'analyse rechargeait le formulaire et effaçait les champs. Cet essai est une QA fondateur, pas l'une des cinq observations qualifiées ; le compteur reste **0 sur 5**.
+
+Le défaut est techniquement atténué au head fonctionnel `bb50550bde077c19b6966e1715e4f7f31dcfe901`, tree `021d3ec909d21723332fa420c2ca45127ee6fc67`, par un fichier HTML autonome direct, un bouton qui ne soumet jamais le formulaire, un avertissement de runtime et une régression sans JavaScript qui conserve la valeur saisie et l'URL. Le run exact `29458950246` (`#645`), job `87498198402`, a réussi. L'artefact `8360442727`, 8 865 607 octets, digest `sha256:798c36f33c8bebef178cc785af82ed4591230aa70a9b9f68d373da289efe3e33`, a été téléchargé et ouvert. Le fichier autonome fait 152 525 octets, SHA-256 `98458817fb59b603955cf5c6c7b309390869b5ab622a314915d0e4bd5e9e3014`, et correspond exactement à l'`index.html` du package. L'archive interne fait 74 022 octets, SHA-256 `3938acbfea3324ddcc34f938322c2e8eb996f39cbf189bf52a7f7ca52e156263`. Les six captures 390/1 440 px ont été inspectées. La correction n'est pas encore validée sur iPad réel : Ayman doit ouvrir ce fichier autonome exact sur le même appareil avant toute observation.
 
 `main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
@@ -223,7 +225,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
 - Cost Gate foundation version `3`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `753152d9` dans le périmètre cash long déclaré ;
-- prototype Gate 1 hors ligne, package exact, parité moteur, fraîcheur, provenance, accessibilité Chromium, responsive et captures, exécutés sur `7177da36` dans le run `#639` ;
+- prototype Gate 1 hors ligne, HTML autonome et package exacts, parité moteur, fraîcheur, provenance, accessibilité Chromium, responsive, repli sans JavaScript et captures, exécutés sur `bb50550` dans le run `#645` ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
@@ -241,7 +243,8 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - paiement ;
 - coût et licence des données ;
 - comparaison ex ante/ex post ;
-- Safari/iPad du package de critique.
+- exécution réussie du fichier autonome sur le même iPad que celui ayant reproduit le blocage ;
+- Safari/iPad au-delà de ce nouvel essai ciblé.
 
 ## 9. Angles morts prioritaires
 
@@ -288,7 +291,7 @@ Source : `docs/governance/BLIND_SPOT_REGISTER.md`.
 
 ## 11. Livrable de critique
 
-Le prototype de critique est construit comme ZIP local avec `index.html`, utilisable hors ligne, avec :
+Le prototype de critique est construit comme un HTML autonome direct, doublé d'un ZIP local d'audit avec `index.html`, avec :
 
 - moteur réellement validé ;
 - méthode et preuves ;
@@ -296,12 +299,13 @@ Le prototype de critique est construit comme ZIP local avec `index.html`, utilis
 - versions ;
 - manifeste et SHA-256 ;
 - tests sur le package exact ;
-- vérification Safari/iPad lorsque possible.
+- repli explicite si JavaScript local ne démarre pas, sans effacement des champs ;
+- vérification Safari/iPad réelle encore requise.
 
 Les captures restent des preuves, pas le produit remis.
 
 ## 12. Mission active
 
-Gate 0 est clôturée. Le prérequis technique de Gate 1 est prêt : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
+Gate 0 est clôturée. Le prérequis Chromium de Gate 1 est prêt : un HTML Cost Gate autonome hors ligne, réellement interactif lorsque JavaScript local est autorisé, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final. Le défaut iPad reproduit est techniquement atténué mais reste à revalider sur l'appareil réel.
 
-La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La construction technique ne clôt pas Gate 1 : cinq observations qualifiées réelles sont maintenant le prochain travail indispensable. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.
+La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La prochaine preuve indispensable est le nouvel essai fondateur du fichier autonome exact sur le même iPad ; il ne compte pas dans la cohorte. Après réussite seulement, cinq observations qualifiées réelles deviennent le prochain travail. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.

@@ -138,14 +138,15 @@ La décision consignée doit être l'une de :
 
 Une appréciation positive, une CI verte ou cinq parcours terminés ne remplace pas l'application des seuils.
 
-## 12. État d'exécution technique — 15 juillet 2026
+## 12. État d'exécution technique — 16 juillet 2026
 
 Cette section est postérieure au préenregistrement et ne modifie aucun seuil, aucune question ni aucune règle de codage.
 
-- Prototype `internal_review` construit et poussé.
-- Head fonctionnel exact : `7177da36e3c8473e275c4455e23aa3a27e00dc89`.
-- GitHub Actions : run `29419443905` (`#639`), `success`.
-- Artefact, package ZIP et six captures 390/1 440 px téléchargés et inspectés.
-- Matrice technique, parité moteur, `file://`, fraîcheur, provenance, accessibilité et responsive réussis dans le périmètre documenté.
+- Prototype `internal_review` construit et poussé sous forme de HTML autonome direct et de ZIP d'audit.
+- Un essai fondateur du bundle multifichier sur iPad a révélé avant la cohorte un défaut bloquant : scripts relatifs non exécutés, rechargement du formulaire et effacement des champs au clic. Cet essai ne compte pas parmi les cinq participants.
+- Head fonctionnel corrigé exact : `bb50550bde077c19b6966e1715e4f7f31dcfe901`.
+- GitHub Actions : run `29458950246` (`#645`), `success`.
+- Artefact, fichier autonome, package ZIP et six captures 390/1 440 px téléchargés et inspectés.
+- Matrice technique, parité moteur, fichier autonome sous `file://`, fraîcheur, provenance, accessibilité, responsive et repli sans JavaScript réussis dans le périmètre documenté.
 - Participants observés : **0 sur 5**.
-- Prochaine condition : exécuter les cinq observations réelles sans modifier silencieusement le protocole.
+- Défaut iPad : `mitigated`, pas `validated` ; prochaine condition : faire réussir le fichier autonome exact sur le même iPad, puis exécuter les cinq observations réelles sans modifier silencieusement le protocole.

@@ -5,19 +5,20 @@
 - Pull request : `#26`, ouverte en brouillon vers `breaktest-bootstrap`.
 - Branche : `strategy/cost-gate-offline-critique`.
 - Base : `56fb50954afd7394baf1689e0f1b7220a1fd73fc`.
-- Head fonctionnel exact : `7177da36e3c8473e275c4455e23aa3a27e00dc89`.
-- Tree fonctionnel : `d8b7cfe6d7e48036cd285814004df6b66255e872`.
-- GitHub Actions : run `29419443905` (`#639`), job `87365839681`, `success`.
-- Artefact : `8344601740`, 8 798 213 octets.
-- Digest de l'artefact : `sha256:5fca497e1b85e4ca019bb4f7ccdca62cab03f0fdb6c97d52ecf78766ac768d68`.
-- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 39 371 octets.
-- SHA-256 de l'archive interne : `bc7ab780a4bd7d57b9f6ec66ec7a5f296efbe314629fdc4517f61ac78ddcfd63`.
+- Head fonctionnel exact : `bb50550bde077c19b6966e1715e4f7f31dcfe901`.
+- Tree fonctionnel : `021d3ec909d21723332fa420c2ca45127ee6fc67`.
+- GitHub Actions : run `29458950246` (`#645`), job `87498198402`, `success`.
+- Artefact : `8360442727`, 8 865 607 octets.
+- Digest de l'artefact : `sha256:798c36f33c8bebef178cc785af82ed4591230aa70a9b9f68d373da289efe3e33`.
+- HTML autonome : `Breaktest_Cost_Gate_Gate_1.html`, 152 525 octets, SHA-256 `98458817fb59b603955cf5c6c7b309390869b5ab622a314915d0e4bd5e9e3014`.
+- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 74 022 octets.
+- SHA-256 de l'archive interne : `3938acbfea3324ddcc34f938322c2e8eb996f39cbf189bf52a7f7ca52e156263`.
 - Moteur : `cost-gate-foundation-3-synthetic`.
 - Nature de la preuve : technique, quantitative, synthétique, responsive et interne.
 - Participants réellement observés : **0 sur 5**.
-- Statut de Gate 1 : **preuve technique prête ; validation utilisateur non commencée ; Gate non clôturée**.
+- Statut de Gate 1 : **défaut iPad reproduit puis atténué techniquement ; nouvel essai réel requis ; validation utilisateur non commencée ; Gate non clôturée**.
 
-Le run `#639` teste le head fonctionnel exact. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. Une CI verte ne répond pas à la question de compréhension préenregistrée.
+Le run `#645` teste le head fonctionnel exact. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. Une CI verte ne prouve pas le fonctionnement dans le lecteur iPad qui a reproduit le défaut et ne répond pas à la question de compréhension préenregistrée.
 
 ## Ordre de préenregistrement
 
@@ -94,7 +95,7 @@ Ces nombres sont fictifs. Ils prouvent le calcul du scénario, pas un tarif, une
 
 ## Navigateur, accessibilité et responsive
 
-Le package exact a été ouvert sous `file://` dans Google Chrome for Testing `149.0.7827.55`. La suite a réussi à 390, 768, 1 024 et 1 440 pixels.
+Le fichier autonome exact a été ouvert directement sous `file://` dans Google Chrome for Testing `149.0.7827.55`. La suite a réussi à 390, 768, 1 024 et 1 440 pixels. Une seule requête locale, celle du fichier HTML lui-même, est observée.
 
 Les régressions exécutées couvrent :
 
@@ -107,22 +108,24 @@ Les régressions exécutées couvrent :
 - défilement automatique, et non doux, lorsque le mouvement réduit est demandé ;
 - contrôles nommés, annonces, absence de piège clavier et absence de débordement horizontal ;
 - footer et guide du package accessibles ;
-- aucun appel réseau : toutes les requêtes observées restent `file://`.
+- aucun appel réseau : toutes les requêtes observées restent `file://` ;
+- démarrage du moteur attesté avant interaction ;
+- contexte JavaScript désactivé : avertissement visible, valeur `500` conservée après clic sur l'analyse, URL inchangée, résultat absent et aucune requête supplémentaire.
 
-Safari et iPad réels ne sont pas testés et ne sont pas revendiqués.
+Le bundle multifichier a réellement échoué sur l'iPad d'Ayman. Le fichier autonome corrigé n'y est pas encore revalidé ; aucune revendication Safari/iPad n'est faite.
 
 ## Package et provenance exacts
 
 Les logs du checkout montrent explicitement :
 
 ```text
-ref = 7177da36e3c8473e275c4455e23aa3a27e00dc89
-HEAD = 7177da36e3c8473e275c4455e23aa3a27e00dc89
+ref = bb50550bde077c19b6966e1715e4f7f31dcfe901
+HEAD = bb50550bde077c19b6966e1715e4f7f31dcfe901
 ```
 
 Le workflow refuse désormais un écart entre le head attendu et le checkout. Le build refuse aussi un `source_commit` différent de `HEAD` et sa régression vérifie ce refus.
 
-Le package contient huit fichiers, manifeste inclus, pour 156 551 octets. Le manifeste déclare le head exact, les versions, les hashes des moteurs, chaque fichier, le navigateur cible et les limites. L'archive a été téléchargée, son digest externe réconcilié, son SHA-256 interne recalculé et ses huit entrées ouvertes sans erreur.
+Le package contient huit fichiers, manifeste inclus, pour 311 039 octets. Le manifeste déclare le head exact, les versions, les hashes des moteurs, chaque fichier, le navigateur cible et les limites. L'HTML autonome direct est byte-à-byte identique à l'`index.html` emballé et son hash concorde avec le manifeste. L'artefact a été téléchargé, son digest externe réconcilié, l'archive interne et ses huit entrées ouvertes sans erreur.
 
 Le build déterministe reconstruit la même archive avec les mêmes entrées et ne supprime plus les fichiers voisins du dossier de sortie ; un fichier sentinelle protège ce comportement.
 
@@ -156,15 +159,16 @@ La revue a produit des corrections et régressions, sans modification des formul
 4. le défilement JavaScript restait explicitement doux malgré une préférence de mouvement réduit ; le comportement est maintenant conditionnel et testé ;
 5. le constat rare d'échec de sérialisation du snapshot n'avait pas de libellé explicite ; le mapping et sa régression sont ajoutés ;
 6. les runs exacts `#635` et `#637` ont montré qu'une durée globale de `0,01 ms` créait encore une transition du lien d'évitement en mode mouvement réduit. Les transitions sont maintenant réellement nulles, et la régression vérifie que le document est actif, que le premier `Tab` cible le lien, que `:focus` s'applique et que le lien est dans le viewport. Le run exact `#639` valide la correction sans changement de formule.
+7. l'essai fondateur réel du bundle multifichier sur iPad a montré que le lecteur pouvait afficher l'HTML sans exécuter ses scripts relatifs ; l'action native rechargeait alors le formulaire et effaçait les chiffres. La remise primaire est maintenant un HTML autonome avec tous les styles et scripts incorporés, l'analyse est un bouton non soumetteur, un avertissement apparaît si le moteur ne démarre pas et une régression JavaScript désactivé protège les champs. Le premier run `#643` de cette régression a échoué uniquement parce que le contexte de test n'émulait pas le mouvement réduit avant l'auto-défilement ; le contexte a été stabilisé sans changement du produit et le run exact `#645` réussit. La preuve iPad reste en attente.
 
 ## Ce qui est réellement validé
 
 - calculs synthétiques et oracles déclarés ;
 - parité du moteur navigateur avec le moteur canonique ;
 - provenance, fraîcheur du résultat et conservation des constats ;
-- comportement hors ligne et absence de persistance ou réseau ;
+- comportement du fichier autonome hors ligne, repli sans JavaScript et absence de persistance ou réseau ;
 - clavier, focus, mouvement réduit et responsive Chromium ;
-- package exact, manifeste, hashes, reconstruction et archive ;
+- fichier autonome et package exacts, manifeste, hashes, reconstruction et archive ;
 - non-régressions historiques, Capital Efficiency, Edge Survival et fondation Cost Gate ;
 - captures du head fonctionnel exact à 390 et 1 440 pixels.
 
@@ -175,8 +179,9 @@ La revue a produit des corrections et régressions, sans modification des formul
 - disponibilité réelle des entrées ;
 - usage réel, répétition, demande ou paiement ;
 - donnée, compte, cash, liquidité, spread, slippage ou exécution réels ;
-- Safari/iPad ;
+- fonctionnement du fichier autonome dans le même lecteur iPad que celui ayant reproduit le blocage ;
+- Safari/iPad au-delà de ce nouvel essai ciblé ;
 - conformité juridique ou réglementaire ;
 - marché, prix, distribution ou viabilité commerciale.
 
-La prochaine preuve indispensable est humaine : cinq observations qualifiées selon le protocole préenregistré. Aucun résultat ne doit être ajouté avant une observation réelle.
+La prochaine preuve indispensable est d'abord l'essai fondateur du fichier autonome exact sur le même iPad ; il ne compte pas comme participant. Après réussite seulement viennent cinq observations qualifiées selon le protocole préenregistré. Aucun résultat utilisateur ne doit être ajouté avant une observation réelle.

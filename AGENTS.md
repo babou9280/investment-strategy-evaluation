@@ -62,7 +62,7 @@ Les pull requests `#23`, `#24` et `#25` sont fusionnées dans `breaktest-bootstr
 
 La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026. Son prototype `internal_review` est techniquement exécuté ; cinq observations qualifiées réelles restent nécessaires avant toute clôture de Gate 1.
 
-La mission fonctionnelle active est l'**observation de cinq participants qualifiés** avec le prototype HTML hors ligne de critique de la PR `#26`, sur `strategy/cost-gate-offline-critique`. Elle doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
+La mission fonctionnelle active est la **revalidation fondateur sur iPad du fichier HTML autonome**, puis l'observation de cinq participants qualifiés avec le prototype hors ligne de critique de la PR `#26`, sur `strategy/cost-gate-offline-critique`. Le premier essai fondateur du bundle multifichier a reproduit un blocage : le lecteur ouvrait la page sans exécuter ses scripts relatifs, puis le bouton rechargeait le formulaire et effaçait les champs. Le fichier autonome et son repli sans JavaScript sont techniquement testés, mais le défaut reste seulement `mitigated` jusqu'au nouvel essai sur le même appareil. Cet essai fondateur ne compte pas parmi les cinq participants. Les observations doivent tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
 
 Le travail autorisé se limite à :
 
@@ -341,6 +341,8 @@ Priorité :
 
 1. HTML autonome interactif ;
 2. sinon ZIP local avec `index.html` et ressources relatives.
+
+Pour une remise à Ayman, le fichier primaire est l'HTML autonome exact testé. Le ZIP multifichier sert à l'audit ou au repli, jamais de preuve implicite qu'un lecteur iPad exécutera des scripts relatifs. Si le moteur ne démarre pas, aucune action ne doit soumettre ou recharger le formulaire, les champs doivent rester présents et la limite doit être visible.
 
 Le package inclut calculs réels, vue produit, méthode, preuves, limites, versions, manifeste, SHA-256 et appareils testés.
 

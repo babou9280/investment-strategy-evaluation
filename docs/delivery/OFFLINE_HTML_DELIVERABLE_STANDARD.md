@@ -25,6 +25,8 @@ Le choix entre fichier unique et bundle local est technique. Il doit privilégie
 - reproductibilité du comportement ;
 - portabilité iPad, mobile et desktop.
 
+Pour une remise directe à Ayman, le fichier primaire doit être le HTML autonome exact testé. Un ZIP multifichier reste utile comme paquet d'audit ou solution de repli, mais son ouverture dans un lecteur mobile ne démontre pas que les scripts relatifs seront exécutés. Le nom, le hash et le comportement du fichier directement remis doivent appartenir aux preuves du run exact.
+
 ## 3. Livrables attendus à terme
 
 La livraison critique finale du prochain jalon devra comprendre plusieurs objets cohérents, sans duplication trompeuse :
@@ -114,6 +116,13 @@ Un livrable HTML n'est recevable que si :
 - les préférences de réduction des animations sont respectées ;
 - les interactions sont réelles et non simulées visuellement.
 
+Le démarrage fait partie du contrat fonctionnel. Si JavaScript local est désactivé, bloqué ou échoue avant l'initialisation :
+
+- aucun bouton d'analyse ne doit provoquer la soumission native ou le rechargement du formulaire ;
+- les valeurs déjà saisies doivent rester présentes ;
+- aucun résultat ne doit être fabriqué ;
+- une limite visible doit expliquer qu'il faut ouvrir le fichier autonome dans une application autorisant JavaScript local.
+
 ## 6. Exigences d'expérience et de design
 
 Le livrable doit conserver le langage visuel financier épuré déjà retenu :
@@ -159,6 +168,8 @@ Le pipeline devra vérifier au minimum :
 - syntaxe JavaScript ;
 - poids total déclaré ;
 - absence de secrets et de données personnelles.
+
+Il doit aussi ouvrir le fichier autonome direct comme point d'entrée réel, vérifier qu'il n'émet qu'une requête locale sous `file://`, puis exécuter un scénario JavaScript désactivé qui prouve l'absence de rechargement et la conservation d'une valeur saisie.
 
 Une vérification Safari/iPad reste requise avant d'appeler le package « testé iPad ». Chromium seul ne suffit pas à cette revendication.
 

@@ -165,6 +165,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-075 | P1 | Cost Gate / confiance | Exception interne présentée comme erreur du nominal utilisateur | Fausse attribution et correction financière inutile | validated | Erreur technique générale, résultat masqué, aucun champ financier invalidé ; régression navigateur, head `7ce11bde`, run `#633` |
 | BS-076 | P2 | Livraison / sûreté | Build supprimant des fichiers sans rapport dans le dossier de sortie | Perte d'artefacts ou de travail | validated | Nettoyage limité au package et à son ZIP ; fichier sentinelle conservé par la régression, head `7ce11bde`, run `#633` |
 | BS-077 | P1 | Accessibilité / preuve | Mode mouvement réduit créant une micro-transition globale et laissant temporairement le lien d'évitement hors viewport au premier `Tab` | Accès clavier non visible et test exact-head instable | validated | Transitions réellement nulles sous `reduce` ; document actif, `:focus` et géométrie du lien vérifiés ; head `7177da36`, run `#639` |
+| BS-078 | P0 | Livraison / iPad | Le lecteur ouvre le bundle multifichier sans exécuter ses scripts relatifs ; le bouton soumet alors le formulaire, recharge la page et efface les champs | Prototype inutilisable et observation faussée | mitigated | Défaut reproduit par Ayman sur iPad ; HTML autonome, bouton non soumetteur, avertissement de runtime et régression sans JavaScript validés au head `bb50550`, run `#645` ; nouvel essai réel sur le même appareil requis avant `validated` |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -219,6 +220,7 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 47. Une erreur interne peut-elle être attribuée à tort à une entrée financière de l'utilisateur ?
 48. Un build peut-il supprimer un fichier voisin qui ne lui appartient pas ?
 49. Le mode mouvement réduit supprime-t-il réellement toute transition résiduelle sur le premier focus clavier ?
+50. Le fichier exact remis à l'utilisateur est-il autonome, testé directement et incapable d'effacer les champs si son moteur ne démarre pas ?
 
 ## 7. Règle de clôture
 
