@@ -1,77 +1,74 @@
-# Prochaine mission Codex — Gate 1 Cost Gate hors ligne
+# Prochaine mission Codex — observations Gate 1 Cost Gate
 
 ## Statut reconstruit
 
-La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée et la fondation synthétique interne est fusionnée. Ayman a explicitement validé Gate 1 le 15 juillet 2026.
+La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le prototype hors ligne de Gate 1 et son package exact sont techniquement prêts ; Gate 1 n'est pas validée par des utilisateurs.
 
 ```text
-foundation pull request = #24, merged
-foundation merge = e61d166d81da54a7d4ee596db2c2447fcb418eb2
-documentation pull request = #25, merged
-breaktest-bootstrap base = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
+pull request = #26, draft
+base = breaktest-bootstrap
+base head = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
 active branch = strategy/cost-gate-offline-critique
+functional head = 7ce11bde2195fdb5c95cb184263072b2314e4b6e
+functional tree = 7046eb366a62aa5b12b55414367fe7e116c341e2
+exact run = 29417944829 (#633), success
+artifact = 8343971281
+artifact digest = b4b2259ca3fda6cbb4bef2135d7e7d4c1a5ec011f791036a3e36a4bf17b80778
+internal package sha256 = 6464cfac98b56705bbb8a66a2c6a323120498578fb2fb2e80e6fcbd955400e6e
 current engine = cost-gate-foundation-3-synthetic
 main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
+participants observed = 0/5
 ```
 
-Vérifier ces identifiants sur GitHub à chaque reprise. Une affirmation locale n'est pas une preuve distante.
+Vérifier ces identifiants sur GitHub à chaque reprise. Une preuve historique ou locale ne remplace jamais le head et le run actuels.
 
 ## Objectif unique
 
-Construire et falsifier un prototype HTML hors ligne `internal_review` qui permet à un investisseur autonome de :
+Observer cinq participants qualifiés selon `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`, sans modifier silencieusement le protocole, puis appliquer exactement les seuils préenregistrés.
 
-- saisir des hypothèses sans valeur financière préremplie ;
-- charger volontairement une démonstration `synthetic_demo` clairement marquée ;
-- distinguer seuil, avantage brut, cash et qualité des données ;
-- identifier le facteur principal ;
-- voir tous les constats et les couches non évaluées ;
-- comprendre qu'un état favorable n'est ni une recommandation ni une autorisation.
+La question est :
 
-La réussite technique ne clôt pas Gate 1.
+> Un investisseur autonome comprend-il sans coaching le facteur principal, les couches non évaluées et la limite non prescriptive du résultat, tout en obtenant un premier résultat en trois minutes ou moins ?
 
-## Autorité de validation
+## Autorité
 
-Lire les sources exigées par `AGENTS.md`, puis utiliser :
+- protocole et seuils : `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md` ;
+- matrice technique : `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md` ;
+- preuve technique : `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md` ;
+- gates : `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
+- formules : moteurs et contrats Cost Gate fusionnés.
 
-- `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md` pour le protocole utilisateur préenregistré ;
-- `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md` pour les scénarios techniques ;
-- `docs/product/COST_GATE_MVP_GATE_MATRIX.md` comme autorité unique des gates ;
-- les contrats Cost Gate et le moteur fusionné comme autorités financières.
+## Seuils inchangés
 
-Les seuils préenregistrés ne peuvent pas être modifiés silencieusement après observation.
+Gate 1 réussit seulement avec cinq observations réelles et si :
 
-## Exigences techniques
+- au moins 4 sur 5 identifient le facteur principal sans coaching ;
+- 0 sur 5 prennent l'état favorable pour une recommandation, une autorisation ou un feu vert ;
+- au moins 3 sur 5 identifient un cas d'usage réel ;
+- au moins 3 sur 5 distinguent les entrées disponibles de celles qui leur manquent ;
+- au moins 4 sur 5 obtiennent un premier résultat en 180 secondes ou moins ;
+- aucun défaut technique bloquant ne fausse une observation.
 
-- moteur navigateur dérivé automatiquement du moteur fusionné, avec parité prouvée ;
-- aucune formule financière recopiée dans la présentation ;
-- résultat obsolète masqué dès toute modification ;
-- distinction persistante entre saisie vide, `synthetic_demo` et démo modifiée ;
-- point, fourchette et mode seuil sans performance inventée ;
-- tous les `findings[]`, dépendances, limites et `unassessedLayers` accessibles ;
-- provenance, version, snapshot et expiration visibles ;
-- erreurs explicites, aucun fallback silencieux ;
-- aucun `NaN`, `Infinity` ou `-0` ;
-- clavier, focus, annonces et mouvement réduit ;
-- responsive à 390, 768, 1 024 et 1 440 px ;
-- ouverture réelle sous `file://` ;
-- package exact, manifeste et SHA-256 vérifiés ;
-- CI et artefacts inspectés sur le head distant exact.
+Une nouvelle cohorte après correction reste séparée de la première. Aucun résultat, verbatim, abandon, paiement ou utilisateur ne peut être inventé.
+
+## Travail autorisé
+
+- préparer le package exact pour une session locale ;
+- appliquer le script neutre ;
+- chronométrer et consigner seulement les observations réelles minimales ;
+- corriger un défaut technique réellement reproduit, ajouter sa régression et retester un nouveau head exact ;
+- maintenir preuves et angles morts.
 
 ## Interdictions
 
 - aucune modification de `main` ;
-- aucune donnée ou tarification réelle ;
-- aucun réseau, fournisseur, broker ou Alpaca ;
-- aucun compte, import, stockage ou analytics ;
-- aucun profil de risque ou suitability ;
-- aucune recommandation, transmission ou exécution ;
-- aucune probabilité d'exécution ;
-- aucun levier, marge, short ou dérivé ;
-- aucune publication ;
-- aucun package qualifié de final, prêt à produire ou commercialement validé.
+- aucune nouvelle fonctionnalité Cost Gate avant les observations ;
+- aucune donnée réelle, réseau, compte, stockage, analytics ou connexion ;
+- aucune recommandation, probabilité, transmission ou exécution ;
+- aucune publication, acquisition, email ou paiement ;
+- aucune revendication Safari/iPad, juridique, commerciale ou utilisateur non démontrée ;
+- aucune fusion de la PR `#26` tant que les cinq observations et la décision Gate 1 ne sont pas documentées.
 
-## Clôture de Gate 1
+## Décision après les cinq observations
 
-Après preuve technique du package exact, observer cinq participants qualifiés selon le protocole préenregistré. Consigner résultats, aides, abandons, confusions et limites sans invention, puis décider de continuer, corriger, réduire, réorienter ou abandonner.
-
-Ne demander l'aide d'Ayman que lorsqu'un recrutement ou une observation humaine devient réellement indispensable.
+Documenter l'une des décisions prévues : continuer vers Gate 2, corriger puis retester Gate 1, réduire au seuil et au cash, réorienter ou abandonner. Ne demander l'aide d'Ayman que pour le recrutement ou l'observation humaine réellement indispensable.

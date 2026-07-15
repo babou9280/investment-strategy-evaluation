@@ -3,10 +3,10 @@
 ## 1. Statut
 
 - Validation fondateur : **direction le 14 juillet 2026 ; Gate 1 le 15 juillet 2026**
-- Statut : **direction stratégique active ; fondation synthétique implémentée ; prototype hors ligne Gate 1 autorisé ; produit et marché non validés**
+- Statut : **direction stratégique active ; fondation synthétique implémentée ; prototype hors ligne Gate 1 techniquement exécuté ; compréhension, produit et marché non validés**
 - Nom de travail : **Breaktest Cost Gate**
 - Relation avec l'existant : extension future de Breaktest Cost Intelligence, Capital Efficiency et Edge Survival Envelope
-- Autorisation immédiate : prototype HTML hors ligne `internal_review`, hypothèses manuelles ou `synthetic_demo`, tests et protocole préenregistré sur une branche séparée
+- Autorisation immédiate : cinq observations qualifiées avec le prototype HTML hors ligne `internal_review`, correction d'un défaut reproduit et maintien des preuves sur la branche séparée
 - Non autorisé à ce stade : données réelles, réseau, compte, stockage, connexion courtier, exécution, recommandation personnalisée ou vocabulaire prescriptif
 
 ## 2. Problème visé
@@ -184,7 +184,7 @@ La PR `#24` a fusionné dans `breaktest-bootstrap` :
 
 Cette preuve reste interne, technique et synthétique.
 
-### Gate 1 — valeur compréhensible sans donnée réelle — autorisée le 15 juillet 2026
+### Gate 1 — valeur compréhensible sans donnée réelle — prérequis technique prêt, validation utilisateur ouverte
 
 Ayman a autorisé cette Gate sur `strategy/cost-gate-offline-critique`. Elle exige :
 
@@ -194,7 +194,7 @@ Ayman a autorisé cette Gate sur `strategy/cost-gate-offline-critique`. Elle exi
 - test de compréhension, effort de saisie et confusion avec une recommandation ;
 - aucune donnée externe, connexion ou publication.
 
-Le protocole, les seuils et les cas d'abandon sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La construction et une CI verte ne valent pas réussite de Gate 1 ; cinq observations qualifiées réelles restent requises.
+Le protocole, les seuils et les cas d'abandon sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Le package exact est techniquement prouvé au head `7ce11bde2195fdb5c95cb184263072b2314e4b6e`, run `#633`, et documenté dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette construction et cette CI verte ne valent pas réussite de Gate 1 ; cinq observations qualifiées réelles restent requises.
 
 Les Gates 2 à 8 — capacité à fournir les entrées, frontière réglementaire, économie des données, Data Quality Gate, faisabilité du capital, comparaison ex ante/ex post et demande commerciale — restent conditionnelles et sont définies dans la matrice d'autorité.
 

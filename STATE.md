@@ -11,7 +11,7 @@ Ayman a validé :
 
 Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestrer avec la faisabilité du cash, la qualité des données, le risque de coût d'exécution et les contraintes explicitement fournies par l'utilisateur.
 
-Cost Gate est validé stratégiquement. Sa fondation synthétique est fonctionnelle dans un domaine technique restreint ; le produit connecté, l'interface, les données réelles, le droit et le marché ne sont pas validés.
+Cost Gate est validé stratégiquement. Sa fondation synthétique est fonctionnelle dans un domaine technique restreint. Une interface de critique hors ligne est maintenant exécutée techniquement ; sa compréhension par des personnes réelles, le produit connecté, les données réelles, le droit et le marché ne sont pas validés.
 
 ## 2. État GitHub
 
@@ -49,7 +49,7 @@ artifact = 8342414560
 digest = sha256:f81f47fb6e4252d4afa230f84e8fedba56f3ed8eb53d66d1ae43e5d18ca12afa
 ```
 
-Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Au moment du préenregistrement, aucun prototype ni résultat utilisateur n'existe encore.
+Le travail Gate 1 part exactement de ce commit sur `strategy/cost-gate-offline-critique`. Le protocole a été poussé avant le code. La PR `#26` reste ouverte en brouillon. Son head fonctionnel `7ce11bde2195fdb5c95cb184263072b2314e4b6e` a réussi le run exact `29417944829` (`#633`). L'artefact `8343971281`, digest `sha256:b4b2259ca3fda6cbb4bef2135d7e7d4c1a5ec011f791036a3e36a4bf17b80778`, son package et ses six captures ont été téléchargés et inspectés. Aucun participant n'a encore été observé.
 
 `main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
@@ -70,7 +70,7 @@ digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 
 Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` a ensuite réussi sur son head exact `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, avant la fusion.
 
-La phase reste synthétique et hors ligne : moteur local isolé, contrats, revue hostile et préparation d'une interface de critique. Aucune donnée externe, connexion ou publication.
+La phase reste synthétique et hors ligne : moteur local isolé, contrats, interface de critique `internal_review` et préparation des cinq observations préenregistrées. Aucune donnée externe, connexion ou publication.
 
 ## 3. Actifs validés techniquement
 
@@ -146,7 +146,8 @@ Documents déjà présents ou ajoutés :
 - `docs/standards/GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `docs/scenarios/COST_GATE_FOUNDATION_MATRIX.md` ;
 - `docs/tasks/COST_GATE_FOUNDATION.md` ;
-- `docs/validation/COST_GATE_FOUNDATION.md`.
+- `docs/validation/COST_GATE_FOUNDATION.md` ;
+- `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`.
 
 La fondation impose notamment :
 
@@ -222,11 +223,12 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - Capital Efficiency ;
 - Edge Survival Envelope fusionné ;
 - Cost Gate foundation version `3`, CG-01 à CG-18 et régressions rétrospectives, exécutée sur le head fonctionnel exact `753152d9` dans le périmètre cash long déclaré ;
+- prototype Gate 1 hors ligne, package exact, parité moteur, fraîcheur, provenance, accessibilité Chromium, responsive et captures, exécutés sur `7ce11bde` dans le run `#633` ;
 - absence de réseau et persistance dans les prototypes contrôlés.
 
 ## 8. Ce qui n'est pas validé
 
-- produit ou interface Cost Gate ;
+- compréhension, utilité et usage réel de l'interface Cost Gate ;
 - moteur Cost Gate sur donnée, compte ou ordre réels ;
 - données de marché ;
 - Data Quality Gate exécuté ;
@@ -239,8 +241,7 @@ Ces scénarios sont exécutés par `cost_gate_foundation/tests/scenario_matrix.t
 - paiement ;
 - coût et licence des données ;
 - comparaison ex ante/ex post ;
-- Safari/iPad du futur package ;
-- package HTML de critique.
+- Safari/iPad du package de critique.
 
 ## 9. Angles morts prioritaires
 
@@ -285,9 +286,9 @@ Source : `docs/governance/BLIND_SPOT_REGISTER.md`.
 - probabilité d'exécution ;
 - interface Cost Gate finale.
 
-## 11. Livrable futur
+## 11. Livrable de critique
 
-Le prochain livrable de critique sera un HTML autonome interactif ou un ZIP local avec `index.html`, utilisable hors ligne, avec :
+Le prototype de critique est construit comme ZIP local avec `index.html`, utilisable hors ligne, avec :
 
 - moteur réellement validé ;
 - méthode et preuves ;
@@ -301,6 +302,6 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Mission active
 
-Gate 0 est clôturée. Gate 1 est explicitement autorisée : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
+Gate 0 est clôturée. Le prérequis technique de Gate 1 est prêt : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
 
-La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La construction technique ne clôt pas Gate 1 : cinq observations qualifiées réelles restent nécessaires. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.
+La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La construction technique ne clôt pas Gate 1 : cinq observations qualifiées réelles sont maintenant le prochain travail indispensable. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.

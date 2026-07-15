@@ -8,7 +8,7 @@ Breaktest conserve cinq niveaux méthodologiques séparés :
 2. **calculateur Q0** : coût descriptif pré-transaction, techniquement validé mais non publié ;
 3. **Capital Efficiency** : seuil, plancher, survie ponctuelle et contraintes inverses ;
 4. **Edge Survival Envelope** : sensibilité déterministe basse / centrale / haute, fusionnée après validation technique interne ;
-5. **Cost Gate foundation** : orchestration synthétique de snapshots, cash, alignement de l'avantage et constats multiples ; moteur isolé techniquement démontré par CG-01 à CG-18, sans donnée réelle ni interface.
+5. **Cost Gate foundation et critique** : orchestration synthétique de snapshots, cash, alignement de l'avantage et constats multiples ; moteur isolé démontré par CG-01 à CG-18 puis interface hors ligne techniquement exécutée, sans donnée réelle ni validation utilisateur.
 
 Aucune couche n'est commercialement validée. La preuve Cost Gate couvre seulement le domaine cash long synthétique déclaré.
 

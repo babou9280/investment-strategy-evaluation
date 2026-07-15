@@ -32,6 +32,7 @@ Avant toute modification matérielle, lire intégralement :
 - `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
 - `docs/governance/BLIND_SPOT_REGISTER.md` ;
 - `docs/validation/COST_GATE_FOUNDATION.md` lorsqu'il existe ;
+- `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md` lorsqu'il existe ;
 - `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
 - la mission, les scénarios, validations, revues, code et tests concernés.
 
@@ -59,17 +60,17 @@ L'incertitude est déclarée, jamais comblée par invention.
 
 Les pull requests `#23`, `#24` et `#25` sont fusionnées dans `breaktest-bootstrap`.
 
-La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026.
+La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026. Son prototype `internal_review` est techniquement exécuté ; cinq observations qualifiées réelles restent nécessaires avant toute clôture de Gate 1.
 
-La mission fonctionnelle active est un **prototype HTML hors ligne de critique** sur `strategy/cost-gate-offline-critique`, destiné à une nouvelle pull request vers `breaktest-bootstrap`. Il doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
+La mission fonctionnelle active est l'**observation de cinq participants qualifiés** avec le prototype HTML hors ligne de critique de la PR `#26`, sur `strategy/cost-gate-offline-critique`. Elle doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
 
 Le travail autorisé se limite à :
 
 - corriger un défaut démontré dans les actifs fusionnés ;
 - maintenir les contrats, preuves et fichiers canoniques ;
 - rechercher et enregistrer les angles morts ;
-- préenregistrer puis exécuter le protocole de Gate 1 ;
-- construire, tester et inspecter le prototype `internal_review` et son package exact.
+- exécuter les cinq observations préenregistrées de Gate 1 ;
+- corriger uniquement un défaut réellement reproduit dans le prototype `internal_review` et maintenir son package exact.
 
 Travail suspendu :
 

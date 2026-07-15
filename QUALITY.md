@@ -282,7 +282,7 @@ La preuve synthétique respecte :
 - anciennes conclusions inactives après mutation ;
 - aucune donnée réelle, génération libre par IA ou phrase prescriptive dans le moteur canonique.
 
-La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiques. Elle ne valide ni donnée actuelle, interface, compréhension, conseil, exécution, droit ou marché.
+La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiques. L'interface Gate 1 est techniquement exécutée séparément sur son package exact ; aucune de ces preuves ne valide donnée actuelle, compréhension réelle, conseil, exécution, droit ou marché.
 
 ## 16. Sécurité et confidentialité
 
@@ -302,7 +302,7 @@ Avant tout import réel : modèle de menace, XSS, fichiers hostiles, CSV injecti
 
 ## 17. Livraison hors ligne
 
-Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
+Le livrable de critique Gate 1 respecte `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` et toute révision doit conserver :
 
 - HTML autonome ou bundle ZIP avec `index.html` ;
 - ressources relatives locales ;

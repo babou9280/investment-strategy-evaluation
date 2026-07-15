@@ -3,7 +3,7 @@
 - Direction validée : 13 juillet 2026
 - Raffinement actif : Capital Efficiency et Edge Survival
 - Extension stratégique validée : Breaktest Cost Gate, 14 juillet 2026
-- Phase : Gate 1 Cost Gate, prototype de critique hors ligne avant tout test commercial externe
+- Phase : Gate 1 Cost Gate, prototype de critique techniquement prêt et cinq observations qualifiées à exécuter avant tout test commercial externe
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail futur : **Breaktest Cost Gate**
 
@@ -48,7 +48,7 @@ Une grille tarifaire ou un total de frais ne répond pas directement à ces ques
 
 La faisabilité immédiate du cash est démontrée dans le moteur synthétique isolé fusionné par la PR `#24`. La faisabilité générale du portefeuille, des positions simultanées et des comptes réels reste non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
-La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée. Une interface hors ligne limitée à la critique de Gate 1 est autorisée ; le produit connecté, ses données réelles et son marché ne le sont pas.
+La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée. Une interface hors ligne limitée à la critique de Gate 1 est techniquement exécutée ; sa compréhension réelle, le produit connecté, ses données réelles et son marché ne le sont pas.
 
 ## 4. Architecture de valeur
 
@@ -225,7 +225,7 @@ La version moteur en cours de validation est `capital-efficiency-lab-4-optional-
 
 Cost Gate reste une direction stratégique non commercialement validée. Un moteur de fondation isolé, `cost_gate_foundation/`, orchestre désormais des hypothèses manuelles ou `synthetic_demo` dans le seul périmètre compte cash, achat long, action/ETF au comptant.
 
-Cette preuve technique produit des `findings[]`, réconcilie cash immédiat et coût du cycle, plafonne la faisabilité par l'allocation de stratégie et invalide les snapshots modifiés. Gate 1 peut l'exposer dans un prototype `internal_review` hors ligne ; cela ne constitue ni un produit validé, ni un moteur de données de marché, ni une lecture de compte réel.
+Cette preuve technique produit des `findings[]`, réconcilie cash immédiat et coût du cycle, plafonne la faisabilité par l'allocation de stratégie et invalide les snapshots modifiés. Gate 1 l'expose maintenant dans un prototype `internal_review` hors ligne techniquement validé sur son head exact ; cela ne constitue ni une compréhension utilisateur démontrée, ni un produit validé, ni un moteur de données de marché, ni une lecture de compte réel.
 
 Aucun compte utilisateur, stockage, réseau, donnée réelle, connexion courtier, recommandation ou exécution n'est implémenté.
 

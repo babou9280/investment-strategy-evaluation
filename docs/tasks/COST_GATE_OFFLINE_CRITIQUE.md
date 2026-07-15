@@ -137,3 +137,15 @@ La décision consignée doit être l'une de :
 - abandonner cette proposition.
 
 Une appréciation positive, une CI verte ou cinq parcours terminés ne remplace pas l'application des seuils.
+
+## 12. État d'exécution technique — 15 juillet 2026
+
+Cette section est postérieure au préenregistrement et ne modifie aucun seuil, aucune question ni aucune règle de codage.
+
+- Prototype `internal_review` construit et poussé.
+- Head fonctionnel exact : `7ce11bde2195fdb5c95cb184263072b2314e4b6e`.
+- GitHub Actions : run `29417944829` (`#633`), `success`.
+- Artefact, package ZIP et six captures 390/1 440 px téléchargés et inspectés.
+- Matrice technique, parité moteur, `file://`, fraîcheur, provenance, accessibilité et responsive réussis dans le périmètre documenté.
+- Participants observés : **0 sur 5**.
+- Prochaine condition : exécuter les cinq observations réelles sans modifier silencieusement le protocole.

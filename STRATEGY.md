@@ -6,7 +6,7 @@
 - Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail de la couche pré-trade : **Breaktest Cost Gate**
-- Phase actuelle : Gate 1 autorisée ; prototype utilisateur hors ligne en construction contrôlée, sans donnée réelle ni validation externe acquise
+- Phase actuelle : prototype Gate 1 hors ligne techniquement prêt ; cinq observations qualifiées à exécuter, sans donnée réelle ni validation externe acquise
 
 ## 1. Direction
 
@@ -135,7 +135,7 @@ Breaktest est une couche indépendante de **capital-efficiency intelligence** : 
 2. **Prototype utilisateur contrôlé** — vérifier que le seuil, le plancher variable et la part d'avantage conservée révèlent une information réellement utile.
 3. **Cost Tracker** — valider l'import, la récurrence et le paiement annuel.
 4. **Capital Feasibility synthétique** — distinguer capital de référence, capital alloué, cash disponible et nominal réservé ; fondation immédiate exécutée, portefeuille encore futur.
-5. **Cost Gate synthétique** — moteur interne exécuté sans données externes ni recommandation ; interface utilisateur encore future.
+5. **Cost Gate synthétique** — moteur interne et interface de critique hors ligne exécutés sans données externes ni recommandation ; compréhension utilisateur encore à tester.
 6. **Base de barèmes et parseurs** — réduire la saisie manuelle.
 7. **Data Quality Gate et donnée externe limitée** — une source et un univers restreints, après décision explicite.
 8. **Benchmarks anonymisés** — comparer les coûts réellement observés, sous consentement.
@@ -223,4 +223,4 @@ Aucun état ne peut être produit à partir d'une donnée externe sans **Data Qu
 
 Le vocabulaire « exécuter », « rejeter », « ordre limite conseillé », « taille optimale » ou tout équivalent prescriptif reste interdit avant validation juridique, réglementaire et produit distincte.
 
-La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement, sa fondation seulement techniquement dans un domaine synthétique et Gate 1 seulement autorisée comme expérience de compréhension. Rien n'est encore validé commercialement, juridiquement, par des utilisateurs ou sur donnée réelle.
+La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement, sa fondation et le prototype hors ligne seulement techniquement dans un domaine synthétique. Gate 1 reste une expérience de compréhension non exécutée auprès d'utilisateurs. Rien n'est encore validé commercialement, juridiquement, par des utilisateurs ou sur donnée réelle.

@@ -99,14 +99,14 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-009 | P1 | Business | Calcul utile sans usage répété | Faible rétention | open | Deuxième usage non sollicité et demande d'import |
 | BS-010 | P1 | Données | Hypothèses de coûts difficiles à saisir | Garbage in, garbage out | open | Test sans assistance et sources documentées |
 | BS-011 | P1 | Validation | Testeurs proches surévaluent le produit | Faux signal | mitigated | Protocole neutre et proximité consignée dans `COST_GATE_OFFLINE_CRITIQUE.md` ; recrutement et observations réels encore requis |
-| BS-012 | P1 | Livraison | Bundle offline divergeant du moteur | Démo fausse | open | Moteur unique, manifeste, hashes et tests du package exact |
+| BS-012 | P1 | Livraison | Bundle offline divergeant du moteur | Démo fausse | validated | Bundle généré depuis les moteurs canoniques, parité Node/navigateur, hashes et package exact ; head `7ce11bde`, run `#633` |
 | BS-013 | P1 | Sécurité | Imports futurs : XSS, CSV injection, fichiers hostiles | Atteinte locale | deferred | Modèle de menace avant import |
 | BS-014 | P1 | Gouvernance | CI verte prise pour validation produit | Surconfiance | mitigated | Séparation technique, UX, marché et droit |
 | BS-015 | P2 | Opérations | Barèmes obsolètes | Coûts contractuels faux | deferred | Source, version, date, expiration et procédure de mise à jour |
 | BS-016 | P2 | Marché | Courtier intégrant gratuitement une fonction similaire | Faible défensibilité | open | Valider historique, multi-courtiers, benchmarks et neutralité |
 | BS-017 | P2 | Réputation | Assistance IA réduisant la crédibilité | Faible valeur académique | open | Dossier de preuves et capacité d'explication orale |
 | BS-018 | P2 | International | Frais, devise, fiscalité et droit varient | Généralisation abusive | deferred | Périmètre pays/instrument explicite |
-| BS-019 | P3 | Supply chain | Runtime CI évolutif | Pipeline interrompu | deferred | Surveiller dépréciations et versions |
+| BS-019 | P3 | Supply chain | Runtime CI évolutif | Pipeline interrompu | deferred | Le run `#633` réussit mais signale la dépréciation Node 20 des actions ; réévaluer les versions avant enforcement du runner |
 | BS-020 | P0 | Cost Gate / données | Donnée de marché stale utilisée comme actuelle | Diagnostic pré-trade faux | open | Data Quality Gate avec timestamp, fraîcheur, kill switch et tests |
 | BS-021 | P0 | Cost Gate / réglementation | `compatible` interprété comme autorisation d'exécuter | Recommandation implicite | open | Findings explicites, revue juridique et test utilisateur |
 | BS-022 | P0 | Cost Gate / capital | Capital de référence confondu avec cash disponible | Faisabilité fausse | open | Cash réglé, réservations et invariants C1/C4 |
@@ -156,11 +156,14 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-066 | P0 | Cost Gate / temps | Heure d'évaluation absente ou invalide laissant les anciens constats actifs à hash identique | Ancien diagnostic réutilisé sans instant de contrôle valide | validated | Snapshot incomplet et anciens constats inutilisables à hash identique ; head `753152d`, run `#616` |
 | BS-067 | P1 | Cost Gate / explication | Régression pouvant faire coexister une source non critique stale et « toutes les sources actuelles » | Explication contradictoire et confiance dégradée | validated | Régression explicite sans expiration des constats indépendants ; head `753152d`, run `#616` |
 | BS-068 | P1 | Gouvernance / gates | Numérotation parallèle entre la direction Cost Gate et la matrice MVP | Mauvaise phase lancée ou preuve attribuée au mauvais gate | validated | `COST_GATE_MVP_GATE_MATRIX.md` devient l'autorité unique ; `AGENTS.md` et la direction imposent sa réutilisation sans renumérotation |
-| BS-069 | P0 | Cost Gate / fraîcheur UX | Résultat Cost Gate restant visible après modification d'une hypothèse | Snapshot affiché avec des entrées différentes | open | Masquage immédiat, message de recalcul et régression navigateur CGU-09 |
-| BS-070 | P0 | Cost Gate / explication | Synthèse d'interface cachant un constat matériel ou une couche non évaluée | Faux sentiment de compatibilité complète | open | Tous les `findings[]` et `unassessedLayers` accessibles ; parité et régression CGU-11/CGU-13 |
-| BS-071 | P1 | Cost Gate / provenance | Démonstration synthétique modifiée requalifiée en donnée utilisateur ou réelle | Provenance fausse et ancrage masqué | open | Étiquette persistante « démonstration synthétique modifiée », saisie vide distincte et CGU-01/CGU-10 |
-| BS-072 | P1 | Livraison / preuve | Package construit depuis un commit ou moteur différent de celui déclaré | Prototype exact non reproductible | open | Build déterministe, commit source explicite, hashes du moteur, manifeste et contrôle CGU-13/CGU-17 |
+| BS-069 | P0 | Cost Gate / fraîcheur UX | Résultat Cost Gate restant visible après modification d'une hypothèse | Snapshot affiché avec des entrées différentes | validated | Résultat retiré du DOM immédiatement, message de recalcul et régression navigateur CGU-09 ; head `7ce11bde`, run `#633` |
+| BS-070 | P0 | Cost Gate / explication | Synthèse d'interface cachant un constat matériel ou une couche non évaluée | Faux sentiment de compatibilité complète | validated | Tous les `findings[]` et `unassessedLayers` rendus, comptés et inspectés ; parité CGU-11/CGU-13, head `7ce11bde`, run `#633` |
+| BS-071 | P1 | Cost Gate / provenance | Démonstration synthétique modifiée requalifiée en donnée utilisateur ou réelle | Provenance fausse et ancrage masqué | validated | Étiquette persistante « démonstration synthétique modifiée », saisie vide distincte, navigateur et captures ; head `7ce11bde`, run `#633` |
+| BS-072 | P1 | Livraison / preuve | Package construit depuis un commit ou moteur différent de celui déclaré | Prototype exact non reproductible | validated | Checkout forcé et vérifié, build refusant un commit divergent, hashes, manifeste, reconstruction et archive inspectée ; head `7ce11bde`, run `#633` |
 | BS-073 | P1 | Cost Gate / UX | Parcours sous trois minutes obtenu en cachant des hypothèses financières matérielles | Rapidité trompeuse et conclusion sur une base invisible | open | Hypothèses fixées visibles, couches non évaluées proches du résultat et observation CGU-12 + protocole Gate 1 |
+| BS-074 | P1 | Accessibilité | Défilement JavaScript doux malgré la préférence de mouvement réduit | Inconfort ou désorientation | validated | `matchMedia` pilote le défilement et la régression Chromium émule `reduce` ; head `7ce11bde`, run `#633` |
+| BS-075 | P1 | Cost Gate / confiance | Exception interne présentée comme erreur du nominal utilisateur | Fausse attribution et correction financière inutile | validated | Erreur technique générale, résultat masqué, aucun champ financier invalidé ; régression navigateur, head `7ce11bde`, run `#633` |
+| BS-076 | P2 | Livraison / sûreté | Build supprimant des fichiers sans rapport dans le dossier de sortie | Perte d'artefacts ou de travail | validated | Nettoyage limité au package et à son ZIP ; fichier sentinelle conservé par la régression, head `7ce11bde`, run `#633` |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -211,6 +214,9 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 43. Une démonstration modifiée conserve-t-elle sa provenance synthétique ?
 44. Le package prouve-t-il le moteur et le commit exacts qu'il déclare ?
 45. La rapidité du parcours repose-t-elle sur des simplifications visibles plutôt que sur des hypothèses cachées ?
+46. Les mouvements déclenchés par script respectent-ils aussi la préférence de mouvement réduit ?
+47. Une erreur interne peut-elle être attribuée à tort à une entrée financière de l'utilisateur ?
+48. Un build peut-il supprimer un fichier voisin qui ne lui appartient pas ?
 
 ## 7. Règle de clôture
 
