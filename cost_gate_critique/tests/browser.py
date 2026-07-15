@@ -241,6 +241,7 @@ with sync_playwright() as playwright:
         viewport={"width": 390, "height": 1000},
     )
     disabled_page = disabled_context.new_page()
+    disabled_page.emulate_media(reduced_motion="reduce")
     disabled_requests: list[str] = []
     disabled_page.on("request", lambda request: disabled_requests.append(request.url))
     disabled_page.goto(INDEX.as_uri(), wait_until="load")
