@@ -15,7 +15,8 @@ from playwright.sync_api import Page, sync_playwright
 PROJECT = Path(__file__).resolve().parents[1]
 ROOT = PROJECT.parent
 PACKAGE = PROJECT / "dist" / "breaktest-cost-gate-gate1"
-INDEX = PACKAGE / "index.html"
+PACKAGE_INDEX = PACKAGE / "index.html"
+INDEX = PROJECT / "dist" / "Breaktest_Cost_Gate_Gate_1.html"
 VIEWPORTS = [390, 768, 1024, 1440]
 
 
@@ -66,6 +67,7 @@ process.stdout.write(JSON.stringify(engine.compute(built.input)));
 
 
 assert INDEX.is_file(), "Build the offline package before browser tests"
+assert INDEX.read_bytes() == PACKAGE_INDEX.read_bytes(), "Standalone HTML differs from the package entrypoint"
 
 with sync_playwright() as playwright:
     browser = playwright.chromium.launch(
@@ -74,6 +76,10 @@ with sync_playwright() as playwright:
     )
 
     page, console_errors, page_errors, requests = open_page(browser)
+    assert page.evaluate("Boolean(window.BreaktestCostGateAppReady)")
+    assert page.evaluate("document.documentElement.classList.contains('js-ready')")
+    assert page.locator("#runtime-warning").is_hidden()
+    assert set(requests) == {INDEX.as_uri()}, requests
     assert page.locator("#results").is_hidden()
     assert page.locator("#stale-banner").is_hidden()
     assert all(value == "" for value in page.locator('input[type="text"]').evaluate_all("els => els.map(el => el.value)"))
@@ -225,12 +231,28 @@ with sync_playwright() as playwright:
 
     page, console_errors, page_errors, requests = open_page(browser, 1024)
     page.locator("footer a").click()
-    page.wait_for_load_state("load")
-    assert page.title() == "Guide du package — Breaktest Cost Gate"
-    assert page.get_by_role("heading", name="Guide de la critique Gate 1").is_visible()
-    assert page.locator('a[href="index.html"]').count() >= 1
+    assert page.url.endswith("#method-title")
+    assert page.get_by_role("heading", name="Ce que ce prototype calcule — et ce qu’il laisse ouvert").is_visible()
     assert_clean_runtime(console_errors, page_errors, requests)
     page.close()
+
+    disabled_context = browser.new_context(
+        java_script_enabled=False,
+        viewport={"width": 390, "height": 1000},
+    )
+    disabled_page = disabled_context.new_page()
+    disabled_requests: list[str] = []
+    disabled_page.on("request", lambda request: disabled_requests.append(request.url))
+    disabled_page.goto(INDEX.as_uri(), wait_until="load")
+    assert disabled_page.locator("#runtime-warning").is_visible()
+    disabled_page.locator("#orderNotionalEur").fill("500")
+    initial_url = disabled_page.url
+    disabled_page.get_by_role("button", name="Analyser ce scénario").click()
+    assert disabled_page.locator("#orderNotionalEur").input_value() == "500"
+    assert disabled_page.url == initial_url
+    assert disabled_page.locator("#results").is_hidden()
+    assert set(disabled_requests) == {INDEX.as_uri()}, disabled_requests
+    disabled_context.close()
 
     browser.close()
 

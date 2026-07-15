@@ -15,6 +15,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 DIST = PROJECT / "dist"
 PACKAGE = DIST / "breaktest-cost-gate-gate1"
 ARCHIVE = DIST / "breaktest-cost-gate-gate1-internal-review.zip"
+STANDALONE = DIST / "Breaktest_Cost_Gate_Gate_1.html"
 
 
 def sha256(path: Path) -> str:
@@ -24,7 +25,14 @@ def sha256(path: Path) -> str:
 manifest_path = PACKAGE / "MANIFEST.json"
 assert manifest_path.is_file()
 assert ARCHIVE.is_file()
+assert STANDALONE.is_file()
 manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+assert STANDALONE.read_bytes() == (PACKAGE / "index.html").read_bytes()
+assert manifest["standalone_artifact"] == {
+    "path": STANDALONE.name,
+    "identical_to": "index.html",
+    "sha256": sha256(STANDALONE),
+}
 
 declared = {item["path"]: item for item in manifest["files"]}
 actual = {
@@ -68,6 +76,8 @@ with tempfile.TemporaryDirectory() as temporary:
     assert sentinel.read_text(encoding="utf-8") == "preserve me\n", "Build deleted an unrelated output file"
     rebuilt = output / ARCHIVE.name
     assert sha256(rebuilt) == sha256(ARCHIVE), "Archive build is not deterministic"
+    rebuilt_standalone = output / STANDALONE.name
+    assert rebuilt_standalone.read_bytes() == STANDALONE.read_bytes(), "Standalone build is not deterministic"
 
     mismatch = subprocess.run(
         [

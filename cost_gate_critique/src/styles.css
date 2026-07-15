@@ -545,6 +545,32 @@ select[aria-invalid="true"] {
   background: #fff;
 }
 
+.runtime-warning {
+  display: none;
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  border: 1px solid #d99a93;
+  border-radius: var(--radius-small);
+  background: var(--red-soft);
+  color: var(--red);
+}
+
+.runtime-warning strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.no-js .runtime-warning,
+.js-failed .runtime-warning {
+  display: block;
+}
+
+.no-js #analyze-button,
+.js-failed #analyze-button {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
 .error-summary,
 .stale-banner {
   margin-bottom: 22px;

@@ -150,8 +150,15 @@ jobs:
           if not scripts:
               raise SystemExit('No JavaScript block found in Breaktest_Studio.html')
           Path('/tmp/breaktest-built.js').write_text('\n'.join(scripts), encoding='utf-8')
+
+          standalone = Path('cost_gate_critique/dist/Breaktest_Cost_Gate_Gate_1.html').read_text(encoding='utf-8')
+          standalone_scripts = re.findall(r'<script(?:\s[^>]*)?>(.*?)</script>', standalone, flags=re.S | re.I)
+          if len(standalone_scripts) < 5:
+              raise SystemExit('Standalone Cost Gate HTML is missing inline JavaScript blocks')
+          Path('/tmp/breaktest-cost-gate-standalone.js').write_text('\n;\n'.join(standalone_scripts), encoding='utf-8')
           PY
             node --check /tmp/breaktest-built.js
+            node --check /tmp/breaktest-cost-gate-standalone.js
             node --check validation_site/config.js
             node --check validation_site/calculator.js
             node --check validation_site/app.js
@@ -191,6 +198,7 @@ jobs:
             javascript-syntax.log
             capital_efficiency_lab/review_artifacts/*.png
             cost_gate_critique/review_artifacts/*.png
+            cost_gate_critique/dist/Breaktest_Cost_Gate_Gate_1.html
             cost_gate_critique/dist/breaktest-cost-gate-gate1/MANIFEST.json
             cost_gate_critique/dist/breaktest-cost-gate-gate1-internal-review.zip
           if-no-files-found: warn

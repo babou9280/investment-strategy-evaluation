@@ -18,6 +18,7 @@
   const provenanceText = document.getElementById('provenance-text');
   const manualButton = document.getElementById('manual-button');
   const demoButton = document.getElementById('demo-button');
+  const analyzeButton = document.getElementById('analyze-button');
   const pointPanel = document.getElementById('point-edge-panel');
   const rangePanel = document.getElementById('range-edge-panel');
   let mode = 'neutral';
@@ -387,25 +388,7 @@
     liveRegion.textContent = `Nouveau résultat : ${view.summary.title}`;
   }
 
-  manualButton.addEventListener('click', clearForm);
-  demoButton.addEventListener('click', loadDemo);
-  form.addEventListener('input', (event) => {
-    if (programmaticChange) return;
-    if (mode === 'neutral') setProvenance('manual', false);
-    else if (mode === 'demo') setProvenance('demo', true);
-    if (hasActiveResult) hideResult(true);
-    const target = event.target;
-    if (target && target.name) {
-      const error = document.getElementById(`${target.name}-error`);
-      if (error) error.textContent = '';
-      target.removeAttribute('aria-invalid');
-      target.removeAttribute('aria-describedby');
-    }
-    toggleEdgePanels();
-  });
-  form.addEventListener('change', toggleEdgePanels);
-  form.addEventListener('submit', (event) => {
-    event.preventDefault();
+  function analyzeScenario() {
     clearErrors();
     if (mode === 'neutral') setProvenance('manual', false);
     instanceCounter += 1;
@@ -424,8 +407,34 @@
     } catch (error) {
       renderRuntimeError();
     }
+  }
+
+  manualButton.addEventListener('click', clearForm);
+  demoButton.addEventListener('click', loadDemo);
+  analyzeButton.addEventListener('click', analyzeScenario);
+  form.addEventListener('input', (event) => {
+    if (programmaticChange) return;
+    if (mode === 'neutral') setProvenance('manual', false);
+    else if (mode === 'demo') setProvenance('demo', true);
+    if (hasActiveResult) hideResult(true);
+    const target = event.target;
+    if (target && target.name) {
+      const error = document.getElementById(`${target.name}-error`);
+      if (error) error.textContent = '';
+      target.removeAttribute('aria-invalid');
+      target.removeAttribute('aria-describedby');
+    }
+    toggleEdgePanels();
+  });
+  form.addEventListener('change', toggleEdgePanels);
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    analyzeScenario();
   });
 
   setProvenance('neutral', false);
   toggleEdgePanels();
+  globalThis.BreaktestCostGateAppReady = true;
+  document.documentElement.classList.remove('no-js', 'js-loading', 'js-failed');
+  document.documentElement.classList.add('js-ready');
 })();

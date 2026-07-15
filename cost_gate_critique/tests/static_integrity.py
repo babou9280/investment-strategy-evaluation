@@ -13,6 +13,7 @@ PROJECT = Path(__file__).resolve().parents[1]
 ROOT = PROJECT.parent
 SOURCE = PROJECT / "src"
 PACKAGE = PROJECT / "dist" / "breaktest-cost-gate-gate1"
+STANDALONE = PROJECT / "dist" / "Breaktest_Cost_Gate_Gate_1.html"
 
 
 def sha256(path: Path) -> str:
@@ -33,6 +34,7 @@ for path in required_sources:
     assert path.is_file(), f"Missing source: {path}"
 
 assert PACKAGE.is_dir(), "Build the package before static integrity checks"
+assert STANDALONE.is_file(), "Build the standalone HTML before static integrity checks"
 manifest = json.loads((PACKAGE / "MANIFEST.json").read_text(encoding="utf-8"))
 assert manifest["status"] == "internal_review"
 assert manifest["validated_capabilities"] == []
@@ -63,7 +65,11 @@ for pattern in [
 ]:
     assert not re.search(pattern, runtime_text, flags=re.I), f"Forbidden offline capability: {pattern}"
 
-index = (PACKAGE / "index.html").read_text(encoding="utf-8")
+assert STANDALONE.read_bytes() == (PACKAGE / "index.html").read_bytes()
+index = STANDALONE.read_text(encoding="utf-8")
+assert not re.search(r"<(?:script|link)\b[^>]*(?:src|href)=", index, flags=re.I), "Standalone entrypoint has an external asset dependency"
+assert 'type="button" id="analyze-button"' in index
+assert "Le moteur d’analyse n’est pas actif dans ce lecteur." in index
 for asset in re.findall(r"(?:src|href)=\"([^\"]+)\"", index):
     if asset.startswith("#"):
         continue
@@ -91,4 +97,4 @@ assert "cost-gate-foundation-3-synthetic" in (PACKAGE / "assets" / "engine-bundl
 assert "@@" not in runtime_text
 assert "NaN" not in (PACKAGE / "index.html").read_text(encoding="utf-8")
 
-print(f"Cost Gate critique static integrity passed: {len(runtime_files) + 1} package files, offline and source-bound")
+print(f"Cost Gate critique static integrity passed: {len(runtime_files) + 1} package files plus standalone HTML, offline and source-bound")

@@ -12,7 +12,7 @@ from playwright.sync_api import sync_playwright
 
 PROJECT = Path(__file__).resolve().parents[1]
 PACKAGE = PROJECT / "dist" / "breaktest-cost-gate-gate1"
-INDEX = PACKAGE / "index.html"
+INDEX = PROJECT / "dist" / "Breaktest_Cost_Gate_Gate_1.html"
 ARTIFACTS = PROJECT / "review_artifacts"
 
 

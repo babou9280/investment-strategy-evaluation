@@ -1,11 +1,25 @@
 <!doctype html>
-<html lang="fr">
+<html lang="fr" class="no-js">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <title>Breaktest Cost Gate — critique hors ligne</title>
-  <link rel="stylesheet" href="assets/styles.css">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.classList.remove('no-js');
+      root.classList.add('js-loading');
+      function showRuntimeFailure() {
+        if (window.BreaktestCostGateAppReady) return;
+        root.classList.remove('js-loading');
+        root.classList.add('js-failed');
+      }
+      window.addEventListener('error', showRuntimeFailure);
+      window.setTimeout(showRuntimeFailure, 1500);
+    })();
+  </script>
+  <style>@@INLINE_STYLES@@</style>
 </head>
 <body>
   <a class="skip-link" href="#main-content">Aller au contenu principal</a>
@@ -57,6 +71,11 @@
             <h2 id="scenario-title">Décrire le scénario</h2>
           </div>
           <p class="required-note"><span aria-hidden="true">*</span> Tous les choix et nombres visibles sont requis, sauf l’avantage brut si « seuil seulement » est choisi.</p>
+        </div>
+
+        <div class="runtime-warning" id="runtime-warning" role="alert">
+          <strong>Le moteur d’analyse n’est pas actif dans ce lecteur.</strong>
+          Les champs resteront conservés. Ouvrez ce fichier HTML autonome dans une application qui autorise JavaScript local pour lancer l’analyse.
         </div>
 
         <div class="error-summary" id="error-summary" role="alert" tabindex="-1" hidden>
@@ -218,7 +237,7 @@
             <p class="submit-title">Le calcul crée un nouveau snapshot local.</p>
             <p>Il ne sauvegarde ni ne transmet les hypothèses.</p>
           </div>
-          <button class="button button-primary button-large" type="submit">Analyser ce scénario</button>
+          <button class="button button-primary button-large" type="button" id="analyze-button">Analyser ce scénario</button>
         </div>
       </form>
 
@@ -272,13 +291,13 @@
   <footer class="site-footer">
     <div class="shell footer-inner">
       <p>Breaktest Cost Gate · critique technique synthétique, pas un produit publié.</p>
-      <a href="README.html">Lire le guide du package</a>
+      <a href="#method-title">Lire les limites du prototype</a>
     </div>
   </footer>
 
-  <script src="assets/engine-bundle.js"></script>
-  <script src="assets/scenario.js"></script>
-  <script src="assets/presenter.js"></script>
-  <script src="assets/app.js"></script>
+  <script>@@INLINE_ENGINE_BUNDLE@@</script>
+  <script>@@INLINE_SCENARIO@@</script>
+  <script>@@INLINE_PRESENTER@@</script>
+  <script>@@INLINE_APP@@</script>
 </body>
 </html>

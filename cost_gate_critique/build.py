@@ -16,6 +16,7 @@ from pathlib import Path
 
 DELIVERABLE_VERSION = "cost-gate-gate1-internal-review-1"
 PACKAGE_NAME = "breaktest-cost-gate-gate1"
+STANDALONE_NAME = "Breaktest_Cost_Gate_Gate_1.html"
 
 
 def sha256_bytes(value: bytes) -> str:
@@ -98,6 +99,10 @@ def replace_tokens(value: str, tokens: dict[str, str]) -> str:
     return value
 
 
+def safe_inline_script(value: str) -> str:
+    return re.sub(r"</script", r"<\\/script", value, flags=re.IGNORECASE)
+
+
 def deterministic_zip(package_dir: Path, zip_path: Path) -> None:
     with zipfile.ZipFile(zip_path, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in sorted(item for item in package_dir.rglob("*") if item.is_file()):
@@ -134,13 +139,15 @@ def validate_source_commit(repo_root: Path, source_commit: str) -> None:
         raise SystemExit(f"--source-commit {source_commit} does not match checked-out HEAD {actual}")
 
 
-def clear_previous_package(package_dir: Path, zip_path: Path) -> None:
+def clear_previous_package(package_dir: Path, zip_path: Path, standalone_path: Path) -> None:
     if package_dir.is_symlink() or package_dir.is_file():
         package_dir.unlink()
     elif package_dir.is_dir():
         shutil.rmtree(package_dir)
     if zip_path.exists() or zip_path.is_symlink():
         zip_path.unlink()
+    if standalone_path.exists() or standalone_path.is_symlink():
+        standalone_path.unlink()
 
 
 def main() -> int:
@@ -158,8 +165,9 @@ def main() -> int:
     dist_dir = (args.output or (project_dir / "dist")).resolve()
     package_dir = dist_dir / PACKAGE_NAME
     zip_path = dist_dir / f"{PACKAGE_NAME}-internal-review.zip"
+    standalone_path = dist_dir / STANDALONE_NAME
     validate_source_commit(repo_root, args.source_commit)
-    clear_previous_package(package_dir, zip_path)
+    clear_previous_package(package_dir, zip_path, standalone_path)
     (package_dir / "assets").mkdir(parents=True)
 
     tokens = {
@@ -170,10 +178,21 @@ def main() -> int:
     }
 
     engine_bundle, component_hashes = build_engine_bundle(repo_root, source_dir)
+    tokens.update(
+        {
+            "INLINE_STYLES": read_utf8(source_dir / "styles.css"),
+            "INLINE_ENGINE_BUNDLE": safe_inline_script(engine_bundle),
+            "INLINE_SCENARIO": safe_inline_script(read_utf8(source_dir / "scenario.js")),
+            "INLINE_PRESENTER": safe_inline_script(read_utf8(source_dir / "presenter.js")),
+            "INLINE_APP": safe_inline_script(read_utf8(source_dir / "app.js")),
+        }
+    )
     write_utf8(package_dir / "assets" / "engine-bundle.js", engine_bundle)
     for name in ["scenario.js", "presenter.js", "app.js", "styles.css"]:
         write_utf8(package_dir / "assets" / name, read_utf8(source_dir / name))
-    write_utf8(package_dir / "index.html", replace_tokens(read_utf8(source_dir / "index.html"), tokens))
+    built_index = replace_tokens(read_utf8(source_dir / "index.html"), tokens)
+    write_utf8(package_dir / "index.html", built_index)
+    write_utf8(standalone_path, built_index)
     write_utf8(package_dir / "README.html", replace_tokens(read_utf8(source_dir / "README.html"), tokens))
 
     package_files = []
@@ -194,6 +213,11 @@ def main() -> int:
         "source_commit": args.source_commit,
         "generated_at_utc": args.generated_at,
         "entrypoint": "index.html",
+        "standalone_artifact": {
+            "path": STANDALONE_NAME,
+            "identical_to": "index.html",
+            "sha256": sha256_file(standalone_path),
+        },
         "browser_under_test": args.browser_under_test.strip(),
         "browser_claim": "Target recorded; success requires the external exact-run evidence that tested this unchanged package.",
         "viewport_targets_px": [390, 768, 1024, 1440],
@@ -226,6 +250,8 @@ def main() -> int:
     print(f"Package bytes: {total_bytes}")
     print(f"Archive: {zip_path}")
     print(f"Archive SHA-256: {sha256_file(zip_path)}")
+    print(f"Standalone: {standalone_path}")
+    print(f"Standalone SHA-256: {sha256_file(standalone_path)}")
     return 0
 
 
