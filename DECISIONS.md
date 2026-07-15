@@ -257,4 +257,13 @@
 - Explication : une source non critique stale peut laisser actifs les constats indépendants, mais ne peut jamais coexister avec un constat affirmant que toutes les sources sont actuelles.
 - Versionnement : snapshot `4`, politique de synthèse `4` et catalogue de constats `4` ; les preuves des versions antérieures ne valident pas ces garde-fous.
 - Preuve : head fonctionnel exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07`, tree `574ec387391a995cec167149cc099e87c1f92c02`, run GitHub Actions `29345208179` (`#616`), artefact `8315786779` inspecté, digest `sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614`.
-- Gate : la synchronisation documentaire doit réussir sur son propre head exact. La revue automatisée finale demandée sur la version `2` n'a pas été exécutée faute de quota ; la revue hostile indépendante a produit cette correction. Aucune donnée externe, interface ou fusion n'est autorisée par cette décision.
+- Gate : la synchronisation documentaire a réussi sur le head exact `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`. La revue automatisée finale demandée sur la version `2` n'a pas été exécutée faute de quota ; la revue hostile indépendante a produit cette correction. Aucune donnée externe ou interface n'est autorisée par cette décision.
+
+## D039 — La fondation Cost Gate est fusionnée, Gate 1 reste une décision séparée
+
+- Statut : **active comme clôture de gouvernance, 15 juillet 2026**
+- Décision : Ayman a autorisé la fusion en squash de la PR `#24` dans `breaktest-bootstrap`. Le commit fusionné est `e61d166d81da54a7d4ee596db2c2447fcb418eb2` et son tree `62ad8094cfee5aff31e2d65fdd56da2ba057f5dc` est identique au tree du head final validé.
+- Preuve : head final `3fb6341d51ff46b70dd774546955fbb1c66a400e`, run GitHub Actions `29346211285` (`#618`), artefact `8316213225`, digest inspecté `sha256:50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996`, 24 captures contrôlées et neuf fils inline résolus.
+- Portée : Gate 0 est clôturée techniquement dans le domaine synthétique déclaré. Cette clôture ne valide ni interface, ni compréhension, ni donnée réelle, ni droit, ni marché.
+- Suite : Gate 1 peut être un prototype HTML hors ligne de critique, sur une branche et une PR distinctes, uniquement après validation explicite d'Ayman. La fusion de la fondation ne vaut pas autorisation implicite de construire ce prototype.
+- Protection : `main` reste exactement au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee`.

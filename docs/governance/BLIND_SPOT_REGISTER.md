@@ -155,6 +155,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-065 | P0 | Cost Gate / provenance | Source sans instrument, place, devise ou caractère critique explicite classée actuelle | Donnée non attribuable ou expiration arbitraire | validated | Identité non vide et booléen `critical` obligatoires ; snapshot incomplet, aucun constat positif ; head `753152d`, run `#616` |
 | BS-066 | P0 | Cost Gate / temps | Heure d'évaluation absente ou invalide laissant les anciens constats actifs à hash identique | Ancien diagnostic réutilisé sans instant de contrôle valide | validated | Snapshot incomplet et anciens constats inutilisables à hash identique ; head `753152d`, run `#616` |
 | BS-067 | P1 | Cost Gate / explication | Régression pouvant faire coexister une source non critique stale et « toutes les sources actuelles » | Explication contradictoire et confiance dégradée | validated | Régression explicite sans expiration des constats indépendants ; head `753152d`, run `#616` |
+| BS-068 | P1 | Gouvernance / gates | Numérotation parallèle entre la direction Cost Gate et la matrice MVP | Mauvaise phase lancée ou preuve attribuée au mauvais gate | validated | `COST_GATE_MVP_GATE_MATRIX.md` devient l'autorité unique ; `AGENTS.md` et la direction imposent sa réutilisation sans renumérotation |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -199,6 +200,7 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 37. Chaque source possède-t-elle une identité complète et un caractère critique explicite ?
 38. L'heure d'évaluation est-elle valide avant d'activer ou de réactiver des constats ?
 39. Un constat positif d'actualité contredit-il une source stale encore visible ?
+40. Les identifiants de gate correspondent-ils à la matrice d'autorité sans numérotation parallèle ?
 
 ## 7. Règle de clôture
 

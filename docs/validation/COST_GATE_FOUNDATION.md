@@ -2,7 +2,7 @@
 
 ## Statut
 
-- Branche : `strategy/cost-gate-foundation`
+- Branche réalisée : `strategy/cost-gate-foundation`
 - Head fonctionnel version `0` : `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4`
 - Head documentaire version `0` : `be6aa09d2b87bb07bd19258f393b496e522580a1`
 - Pull request : `#24`
@@ -22,11 +22,15 @@
 - GitHub Actions version `3` : run `29345208179` (`#616`), `success`
 - Moteur prouvé à distance : `cost-gate-foundation-3-synthetic`
 - Artefact fonctionnel version `3` : `8315786779`, digest `sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614`
+- Head documentaire version `3` : `3fb6341d51ff46b70dd774546955fbb1c66a400e`
+- GitHub Actions documentaire version `3` : run `29346211285` (`#618`), `success`
+- Artefact documentaire version `3` : `8316213225`, digest `sha256:50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996`
+- Fusion : squash commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`, tree `62ad8094cfee5aff31e2d65fdd56da2ba057f5dc`
 - Nature de la preuve : technique, quantitative, synthétique et interne
 - Interface Cost Gate : aucune dans ce run
 - Publication, donnée réelle et connexion : interdites
 
-Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Les runs `#608`/`#610` et `#612`/`#614` valident respectivement les versions `1` et `2`, puis leur synchronisation. Le run `#616` valide la version `3` sur son head fonctionnel exact. La présente synchronisation documentaire doit elle-même réussir sur son futur head exact avant clôture de la revue.
+Le run `#604` valide le head fonctionnel de la version `0` et le run `#606` sa synchronisation documentaire. Les runs `#608`/`#610` et `#612`/`#614` valident respectivement les versions `1` et `2`, puis leur synchronisation. Le run `#616` valide la version `3` sur son head fonctionnel exact et le run `#618` sa synchronisation documentaire. La fondation est clôturée par la fusion en squash de la PR `#24`.
 
 ## Revue rétrospective de la version `0`
 
@@ -395,6 +399,19 @@ Le workflow de pull request a testé le merge commit `eaf069558b191fde3c80740858
 Les logs téléchargés prouvent : moteur, CG-01 à CG-18, propriétés, intégrité `94 064` octets, build historique, H1–H2/C1–C4, Q0, Capital Efficiency, Edge Survival, navigateurs 390/768/1 024/1 440, captures et syntaxes réussis.
 
 Les 24 captures sont bit à bit identiques à celles du run documentaire `#614`. Les captures dégénérée mobile, traversantes complètes 390/1 440 et formulaires neutres 390/1 440 ont été réellement ouvertes. Le texte exact, les trois marges nulles, l'égalité au seuil, le responsive, le footer, le header unique et l'absence de lien d'évitement parasite ou de débordement restent conformes. Les empreintes principales restent `4462b0ca5e1dbe15b6dd5fe56e5bc5b7122d390ce630333cb634f5aa0459c06d` et `3a6c060ae296dd6c621d77ba41ee29b9ea27db203d80128001b0edc71daff08b`.
+
+### Synchronisation documentaire et fusion de la version `3`
+
+- Run : `29346211285` (`#618`), `success` ;
+- Head : `3fb6341d51ff46b70dd774546955fbb1c66a400e` ;
+- tree : `62ad8094cfee5aff31e2d65fdd56da2ba057f5dc` ;
+- job : `87130470167`, toutes les étapes réussies ;
+- Artifact ID : `8316213225` ;
+- digest GitHub et archive téléchargée : `sha256:50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996`.
+
+Les contenus extraits des artefacts `#616` et `#618` sont bit à bit identiques. Les 24 captures ont été confirmées et les vues 390 et 1 440 px ont été ouvertes à nouveau. Les neuf fils inline sont résolus.
+
+La PR `#24` a été fusionnée par squash le 15 juillet 2026. `breaktest-bootstrap` pointe exactement sur `e61d166d81da54a7d4ee596db2c2447fcb418eb2`, dont le tree est identique au head final validé. `main` reste exactement à `6e8c8e801e9821fe212651d684c8fad75dc6abee`.
 
 ## Limites restantes
 

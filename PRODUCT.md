@@ -46,7 +46,7 @@ Une grille tarifaire ou un total de frais ne répond pas directement à ces ques
 - une frontière mathématique dépasse-t-elle potentiellement le capital réellement disponible ?
 - un trade envisagé reste-t-il cohérent avec le cash libre, la liquidité et les données disponibles ?
 
-La faisabilité immédiate du cash est démontrée dans le moteur synthétique isolé de la PR `#24`. La faisabilité générale du portefeuille, des positions simultanées et des comptes réels reste non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+La faisabilité immédiate du cash est démontrée dans le moteur synthétique isolé fusionné par la PR `#24`. La faisabilité générale du portefeuille, des positions simultanées et des comptes réels reste non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
 La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée ; le produit Cost Gate, ses données et son interface ne le sont pas.
 
@@ -308,7 +308,7 @@ Les images restent des preuves visuelles, jamais le livrable principal.
 
 ## 12. Gates
 
-### Avant fusion technique de la PR active
+### Avant fusion technique d'une PR
 
 - contrats réconciliés ;
 - oracles et invariants réussis ;

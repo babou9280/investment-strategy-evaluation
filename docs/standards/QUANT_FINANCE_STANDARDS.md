@@ -373,7 +373,7 @@ Les formulations interdites promettent une décision :
 - « conforme MiFID II » ;
 - « certifié par Breaktest ».
 
-## 12. Conséquence pour la pull request active
+## 12. Conséquence pour toute pull request concernée
 
 Le site de validation doit respecter immédiatement :
 

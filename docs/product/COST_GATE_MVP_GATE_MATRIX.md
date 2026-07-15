@@ -45,6 +45,8 @@ Ce resserrement protège la précision et la compréhension. Il n'est pas une d�
 
 ## 3. Séquence de gates
 
+Les identifiants ci-dessous font autorité pour toute la documentation Cost Gate. Un autre document peut détailler une étape, mais ne doit pas créer une numérotation parallèle.
+
 ### Gate 0 — cohérence interne
 
 Preuves requises :
@@ -61,13 +63,13 @@ Sortie : autorise uniquement un moteur synthétique interne.
 
 Statut de la version `0` : contrats corrigés et moteur synthétique CG-01 à CG-18 réussis au head fonctionnel `cfa88e861c2ad0715b183af2bac2368a2d7bbdb4` dans GitHub Actions `#604`, puis documentation synchronisée au head `be6aa09d2b87bb07bd19258f393b496e522580a1` dans le run `#606`.
 
-Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'audit adjacent trois incohérences supplémentaires. La version `1` les corrige au head `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, validé par les runs exacts `#608` et `#610`. La revue suivante a ouvert quatre défauts de nominal, temps, expiration et collections ; la version `2` les corrige et a été validée par les runs `#612` et `#614`, puis les fils ont été résolus. La revue automatisée finale n'a pas pu s'exécuter faute de quota ; la revue hostile indépendante a révélé quatre défauts adjacents de complétude et provenance. La version `3` est validée techniquement au head `753152d9cce1feabba48e54b32b4eed2ce3f5e07` par le run `#616` et son artefact inspecté. Gate 0 reste ouverte jusqu'à sa synchronisation documentaire exact-head et la décision explicite de fusion.
+Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'audit adjacent trois incohérences supplémentaires. La version `1` les corrige au head `2ebf0e3e37852e4f3252e54149e147aa0d5712c3`, validé par les runs exacts `#608` et `#610`. La revue suivante a ouvert quatre défauts de nominal, temps, expiration et collections ; la version `2` les corrige et a été validée par les runs `#612` et `#614`, puis les fils ont été résolus. La revue automatisée finale n'a pas pu s'exécuter faute de quota ; la revue hostile indépendante a révélé quatre défauts adjacents de complétude et provenance. La version `3` est validée techniquement au head `753152d9cce1feabba48e54b32b4eed2ce3f5e07` par le run `#616`, puis synchronisée au head `3fb6341d51ff46b70dd774546955fbb1c66a400e` par le run `#618`. La PR `#24` a été fusionnée par squash dans `breaktest-bootstrap` au commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`, dont le tree est identique au head final. **Gate 0 est clôturée.**
 
 ### Gate 1 — valeur compréhensible sans donnée réelle
 
 Prototype : HTML hors ligne, hypothèses manuelles et scénarios synthétiques.
 
-Statut : non commencé. Aucun HTML Cost Gate n'est présent dans la PR `#24`.
+Statut : non commencé et soumis à une validation explicite d'Ayman. Aucun HTML Cost Gate n'est présent dans la fondation fusionnée.
 
 Questions :
 
@@ -243,6 +245,6 @@ Après Gate 0 :
 - aucun état ne déclenche ou recommande un ordre ;
 - aucune intégration externe n'est activée.
 
-Un HTML offline n'est autorisé qu'après réussite des oracles CG-01 à CG-18, des non-régressions et d'une exécution exact-head. Il sert alors à la critique de Gate 1 ; les captures seules ne constituent pas ce prototype.
+Un HTML offline n'est autorisé qu'après réussite des oracles CG-01 à CG-18, des non-régressions, d'une exécution exact-head, de la clôture de Gate 0 et d'une validation explicite d'Ayman. Il sert alors à la critique de Gate 1 ; les captures seules ne constituent pas ce prototype.
 
 Après Gate 1 et Gate 2 seulement, décider si la saisie manuelle mérite d'être approfondie ou si la valeur dépend d'une dérivation depuis données réelles.

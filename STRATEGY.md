@@ -6,7 +6,7 @@
 - Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail de la couche pré-trade : **Breaktest Cost Gate**
-- Phase actuelle : fondation synthétique interne avant prototype utilisateur et validation commerciale externe
+- Phase actuelle : fondation synthétique interne fusionnée ; prototype utilisateur hors ligne soumis à une décision distincte avant toute validation externe
 
 ## 1. Direction
 

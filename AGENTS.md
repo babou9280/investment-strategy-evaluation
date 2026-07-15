@@ -57,27 +57,18 @@ L'incertitude est déclarée, jamais comblée par invention.
 
 ## 2. Phase active
 
-La pull request `#23` est fusionnée dans `breaktest-bootstrap`.
+Les pull requests `#23` et `#24` sont fusionnées dans `breaktest-bootstrap`.
 
-La phase active est la **fondation Cost Gate**, sur :
+La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Aucune mission fonctionnelle suivante n'est active tant qu'Ayman n'a pas explicitement validé Gate 1.
 
-```text
-strategy/cost-gate-foundation
-```
+Le prochain travail fonctionnel possible est un **prototype HTML hors ligne de critique**, sur une nouvelle branche et une nouvelle pull request. Il doit tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
 
-Objectif autorisé : stabiliser les contrats et le moteur synthétique interne `cost_gate_foundation-1-synthetic`, sans donnée externe ni interface Cost Gate dans la PR `#24`.
+Avant cette décision, le travail autorisé se limite à :
 
-Travail autorisé :
-
-- corriger les contrats et angles morts ;
-- préciser unités, bases, dépendances et domaines ;
-- séparer cash immédiat et coût du cycle ;
-- définir snapshot, invalidation et provenance ;
-- définir constats multiples et synthèse non prescriptive ;
-- maintenir et falsifier la preuve synthétique locale ;
-- ajouter oracles, invariants et non-régressions ;
-- préparer sans livrer prématurément le futur HTML hors ligne ;
-- synchroniser les fichiers canoniques avec les preuves exécutées.
+- corriger un défaut démontré dans les actifs fusionnés ;
+- maintenir les contrats, preuves et fichiers canoniques ;
+- rechercher et enregistrer les angles morts ;
+- préparer le protocole de Gate 1 sans construire le prototype.
 
 Travail suspendu :
 
@@ -212,6 +203,8 @@ Références obligatoires :
 - `GROSS_EDGE_ALIGNMENT_KEY.md` ;
 - `COST_GATE_MVP_GATE_MATRIX.md` ;
 - `COST_GATE_FOUNDATION_MATRIX.md`.
+
+Les identifiants de gate de `COST_GATE_MVP_GATE_MATRIX.md` font autorité. Les autres documents doivent les citer sans créer une numérotation parallèle.
 
 ### Périmètre initial
 
