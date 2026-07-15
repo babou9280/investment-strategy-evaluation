@@ -23,15 +23,21 @@ GitHub Actions = 29331537069 (#556)
 conclusion = success
 ```
 
-`main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
-
-Nouvelle branche active :
+La pull request `#24` — fondation Cost Gate — a été fusionnée par squash dans `breaktest-bootstrap` le 15 juillet 2026 :
 
 ```text
-strategy/cost-gate-foundation
+merge commit = e61d166d81da54a7d4ee596db2c2447fcb418eb2
+merge tree = 62ad8094cfee5aff31e2d65fdd56da2ba057f5dc
+exact final head = 3fb6341d51ff46b70dd774546955fbb1c66a400e
+GitHub Actions = 29346211285 (#618)
+conclusion = success
+artifact = 8316213225
+digest = sha256:50096ccdf90c9bd5d190151f41e24f7f52d972f7cc3878a2c20f1e920ab7a996
 ```
 
-Pull request active : `#24`, ouverte, fusionnable et laissée en brouillon. Sa base est `breaktest-bootstrap` au commit `5f1281b49fde9363dcb38e0225a5d48d34589475`.
+Le tree du commit fusionné est identique au tree du head final validé. `breaktest-bootstrap` pointe exactement sur ce commit.
+
+`main` reste inchangé au commit `6e8c8e801e9821fe212651d684c8fad75dc6abee` et hors périmètre.
 
 Les versions `1` et `2` restent historiquement prouvées par les runs `#608` à `#614`. Les neuf fils de revue inline ont été résolus après vérification des corrections, des heads exacts et des artefacts. Une dernière revue automatisée a été demandée sur `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, mais n'a pas été exécutée faute de quota.
 
@@ -48,7 +54,7 @@ artifact = 8315786779
 digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 ```
 
-Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` doit encore réussir sur son propre head exact.
+Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` a ensuite réussi sur son head exact `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, avant la fusion.
 
 La phase reste synthétique : moteur local isolé, contrats, revue hostile et preuves. Aucune donnée externe, interface Cost Gate ou publication.
 
@@ -110,7 +116,7 @@ La fusion de la PR `#23` valide techniquement ce périmètre. Elle ne prouve ni 
 
 Chaque correction possède un test ou une preuve correspondante.
 
-## 5. Fondation Cost Gate en cours
+## 5. Fondation Cost Gate fusionnée
 
 Documents déjà présents ou ajoutés :
 
@@ -279,12 +285,8 @@ Le prochain livrable de critique sera un HTML autonome interactif ou un ZIP loca
 
 Les captures restent des preuves, pas le produit remis.
 
-## 12. Prochaine séquence
+## 12. Prochaine décision
 
-1. pousser la synchronisation documentaire de la version `3` dans la PR `#24` ;
-2. exécuter et inspecter la validation exact-head de cette synchronisation ;
-3. mettre à jour la preuve de PR et vérifier qu'aucun fil de revue n'est rouvert ;
-4. conserver la PR en brouillon, sans fusion ni publication, jusqu'à l'accord explicite d'Ayman ;
-5. après clôture séparée de la fondation, ouvrir une mission distincte pour le HTML hors ligne de critique ; aucune donnée externe avant les gates utilisateur, juridique, économique et qualité.
+Gate 0 est clôturée. Le prochain travail fonctionnel possible est Gate 1 : un HTML Cost Gate hors ligne, réellement interactif, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final.
 
-Aucune action d'Ayman n'est requise actuellement.
+Cette mission exige une validation explicite d'Ayman et une branche séparée. Elle n'autorise toujours aucune donnée externe, connexion, recommandation, exécution ou publication.

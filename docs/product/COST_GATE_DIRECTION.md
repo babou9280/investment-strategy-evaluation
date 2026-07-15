@@ -137,7 +137,7 @@ Une donnée manquante dans une couche ne masque pas un fait indépendant démont
 
 Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
 
-Les preuves `#604` à `#614` concernent les versions `0` à `2`. La version `3` empêche une friction faussement complète, refuse le change entre devises identiques sans dépendre du cash, exige une identité de source et une heure d'évaluation valides, et inactive les anciens constats lorsque cette heure est invalide. Elle a réussi au head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` dans le run exact `#616`. Son artefact et ses captures ont été inspectés. Sa synchronisation documentaire reste requise avant toute clôture de la fondation.
+Les preuves `#604` à `#614` concernent les versions `0` à `2`. La version `3` empêche une friction faussement complète, refuse le change entre devises identiques sans dépendre du cash, exige une identité de source et une heure d'évaluation valides, et inactive les anciens constats lorsque cette heure est invalide. Elle a réussi au head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` dans le run exact `#616`, puis sa synchronisation documentaire a réussi sur `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`. La fondation a été fusionnée dans `breaktest-bootstrap` au commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :
@@ -167,62 +167,37 @@ Le produit peut expliquer qu'une hypothèse est compatible, qu'une contrainte n'
 
 ## 10. Séquence de développement conditionnelle
 
-### Gate 0 — réconcilier la fondation — exécuté dans la PR `#24`
+Les identifiants de gate suivent exclusivement `COST_GATE_MVP_GATE_MATRIX.md`.
 
-- Edge Survival Envelope fusionné et conservé comme non-régression ;
-- revue hostile des contrats Cost Gate ;
+### Gate 0 — cohérence interne — clôturée
+
+La PR `#24` a fusionné dans `breaktest-bootstrap` :
+
+- contrats réconciliés et registre des angles morts ;
+- moteur `cost-gate-foundation-3-synthetic` sans réseau ni donnée réelle ;
 - cash immédiat séparé du coût de cycle ;
 - allocation de stratégie distincte du cash total ;
 - clé d'alignement de l'avantage brut ;
 - snapshot déterministe et constats multiples ;
-- matrice synthétique corrigée avant code.
+- CG-01 à CG-18, propriétés et non-régressions réussis ;
+- head final `3fb6341d51ff46b70dd774546955fbb1c66a400e`, run `#618`, commit de fusion `e61d166d81da54a7d4ee596db2c2447fcb418eb2`.
 
-### Gate 1 — moteur Cost Gate synthétique isolé — preuve fonctionnelle exécutée
+Cette preuve reste interne, technique et synthétique.
 
-Sans réseau ni données réelles :
+### Gate 1 — valeur compréhensible sans donnée réelle — décision requise
 
-- scénario pré-trade manuel ou `synthetic_demo` ;
-- périmètre strict `cash_account`, achat long cash, action/ETF au comptant ;
-- calculs et constats CG-01 à CG-18 par oracles indépendants ;
-- refus explicite de marge, short, dérivés et bases inconnues ;
-- invalidation des snapshots et non-régressions historiques.
+Après validation explicite d'Ayman seulement :
 
-Preuve fonctionnelle courante : head `753152d9cce1feabba48e54b32b4eed2ce3f5e07`, run `29345208179` (`#616`), scénarios CG-01 à CG-18, propriétés, intégrité et non-régressions. Cette preuve reste interne et synthétique ; la synchronisation documentaire exacte doit encore clôturer la stabilisation avant toute décision de fusion.
+- HTML local, hors ligne et réellement navigable ;
+- hypothèses manuelles ou scénarios `synthetic_demo` ;
+- parcours progressif et états descriptifs non prescriptifs ;
+- test de compréhension, effort de saisie et confusion avec une recommandation ;
+- aucune donnée externe, connexion ou publication.
 
-### Gate 2 — prototype utilisateur contrôlé
+Les Gates 2 à 8 — capacité à fournir les entrées, frontière réglementaire, économie des données, Data Quality Gate, faisabilité du capital, comparaison ex ante/ex post et demande commerciale — restent conditionnelles et sont définies dans la matrice d'autorité.
 
-Seulement après preuve moteur exacte :
+Toute intégration ou exécution reste hors périmètre tant qu'une décision stratégique, juridique, technique et économique distincte n'est pas validée.
 
-- HTML local et navigable, pas une capture ;
-- parcours manuel progressif ;
-- états descriptifs non prescriptifs ;
-- test de compréhension, effort de saisie et confusion réglementaire ;
-- aucune donnée externe.
-
-### Gate 3 — première donnée externe limitée
-
-Seulement après décision explicite :
-
-- une source ;
-- un univers restreint ;
-- fraîcheur visible ;
-- coût connu ;
-- licence vérifiée ;
-- comparaison avec scénario utilisateur ;
-- kill switch si source indisponible.
-
-### Gate 4 — validation juridique, commerciale et opérationnelle
-
-- revue de la frontière information / recommandation ;
-- test de volonté de payer ;
-- mesure de répétition d'usage ;
-- taux de faux blocage et de faux sentiment de sécurité ;
-- absence de dépendance à un support humain non scalable ;
-- politique d'erreur et de responsabilité.
-
-### Gate 5 — intégration ou exécution éventuelle
-
-Hors périmètre tant qu'une décision stratégique, juridique, technique et économique distincte n'est pas validée.
 ## 11. Différenciation potentielle
 
 La différenciation ne vient pas d'un feu vert ou rouge. Elle peut venir de :

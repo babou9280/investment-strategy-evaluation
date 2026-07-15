@@ -2,9 +2,10 @@
 
 ## Statut
 
-- Branche : `strategy/cost-gate-foundation`
+- Branche réalisée : `strategy/cost-gate-foundation`
 - Base : `breaktest-bootstrap`
-- Phase : preuve fonctionnelle version `3` exécutée ; synchronisation documentaire exact-head requise
+- Phase : **terminée et fusionnée**
+- Pull request : `#24`, squash commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`
 - Publication : interdite
 - Données externes : interdites
 - `main` : hors périmètre
@@ -120,7 +121,7 @@ La revue exacte du head documentaire `be6aa09d2b87bb07bd19258f393b496e522580a1` 
 
 La revue automatisée finale du head exact `9d38ce31e33b41159d0c6180205c3747c3bb6f1d` a ensuite révélé quatre défauts supplémentaires : nominal économique non réconcilié avec quantité × prix, source observée après l'évaluation, expiration agrégée pilotée par une source non critique et collections mal formées assimilées à des listes vides. L'audit adjacent a reproduit une contradiction base brute/nette contre holds inclus, puis les incohérences devise/FX et coûts d'entrée/cycle. La révision `cost-gate-foundation-2-synthetic` corrige ces causes sur le head `faafd348da55217e96ba67efd9f9434be62725ca` ; le run exact-head `#612`, la synchronisation `#614` et leurs artefacts les valident techniquement. Les quatre fils associés, et les neuf fils inline de la PR, ont été résolus avec ces preuves.
 
-La revue hostile indépendante du head documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, engagée après l'indisponibilité du quota de revue automatisée, a ensuite trouvé quatre défauts adjacents : conflit même devise/FX dépendant à tort de la présence du cash ; taxe ou frais contractuel laissant la friction et Edge Survival paraître complets ; heure d'évaluation invalide laissant un snapshot paraître actuel ; identité ou caractère critique de source incomplets. Pendant la correction, un cinquième risque de régression a aussi été verrouillé : une source non critique stale ne doit jamais coexister avec un constat positif affirmant que toutes les sources sont actuelles. La révision `cost-gate-foundation-3-synthetic` ajoute les garde-fous et régressions correspondants. Le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run `#616` (`29345208179`) ; jobs, logs, artefact, digest et captures ont été inspectés. Sa synchronisation documentaire doit encore réussir sur son propre head.
+La revue hostile indépendante du head documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897`, engagée après l'indisponibilité du quota de revue automatisée, a ensuite trouvé quatre défauts adjacents : conflit même devise/FX dépendant à tort de la présence du cash ; taxe ou frais contractuel laissant la friction et Edge Survival paraître complets ; heure d'évaluation invalide laissant un snapshot paraître actuel ; identité ou caractère critique de source incomplets. Pendant la correction, un cinquième risque de régression a aussi été verrouillé : une source non critique stale ne doit jamais coexister avec un constat positif affirmant que toutes les sources sont actuelles. La révision `cost-gate-foundation-3-synthetic` ajoute les garde-fous et régressions correspondants. Le head exact `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run `#616` (`29345208179`) ; jobs, logs, artefact, digest et captures ont été inspectés. Sa synchronisation documentaire a ensuite réussi sur `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, avant la fusion en squash.
 
 Le moteur est isolé sous `cost_gate_foundation/`. Il réutilise Capital Efficiency sans modifier `capital_efficiency_lab/`.
 

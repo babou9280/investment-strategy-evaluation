@@ -1,13 +1,13 @@
 # Breaktest — plan de validation
 
-- Produit actuellement testé : **Breaktest Capital Efficiency / Edge Survival**
-- Direction future validée : **Breaktest Cost Gate**
-- Statut : prototype interne ; publication, données externes et paiement suspendus
+- Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
+- Prochain test proposé : **Gate 1 Cost Gate hors ligne**, non commencé et soumis à validation explicite
+- Statut : Gate 0 fusionnée ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
-## 1. Question actuelle décisive
+## 1. Prochaine question décisive si Gate 1 est validée
 
-> Des investisseurs autonomes trouvent-ils plus utile de connaître le seuil brut, la part de leur avantage qui survit aux frictions et les contraintes économiques associées que de simplement connaître le montant des frais ?
+> Des investisseurs autonomes comprennent-ils, sans coaching, la valeur d'un contrôle qui sépare seuil, avantage, cash et qualité des données, sans le prendre pour une recommandation ?
 
 Le test ne vise pas les compliments, inscriptions gratuites ou intentions abstraites.
 
@@ -41,11 +41,11 @@ Un participant est qualifié s'il possède au moins trois caractéristiques :
 
 Les personnes sans avantage brut utilisent le mode seuil. Elles ne doivent jamais inventer une performance.
 
-## 4. Gate interne de la PR active
+## 4. Gate interne de la fondation fusionnée
 
 Edge Survival a satisfait son gate interne dans la PR `#23` fusionnée.
 
-La PR active `#24` porte la fondation Cost Gate. Avant toute interface ou critique externe :
+La PR `#24` a satisfait puis fusionné la fondation Cost Gate. Les conditions vérifiées avant fusion étaient :
 
 - contrats cash, snapshot, findings, méthode et alignement de `G` réconciliés ;
 - périmètre strict compte cash, achat long, action/ETF au comptant ;
@@ -67,7 +67,7 @@ La PR active `#24` porte la fondation Cost Gate. Avant toute interface ou critiq
 - threads de revue traités ;
 - package HTML Cost Gate non fabriqué dans cette PR.
 
-Une CI verte prouve seulement les comportements testés.
+Preuve finale : head `3fb6341d51ff46b70dd774546955fbb1c66a400e`, run `#618` réussi, artefact `8316213225` inspecté, puis squash commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2` dans `breaktest-bootstrap`. Une CI verte prouve seulement les comportements testés.
 
 ## 5. Revue interne de compréhension
 
@@ -217,7 +217,7 @@ La version `1` corrige ces causes et ajoute les régressions correspondantes. Le
 
 La revue exacte de ce dernier head a révélé quatre défauts supplémentaires de nominal, temps, expiration et collections. La version `2` y ajoute les réconciliations de base de cash, devise et coûts entrée/cycle. Le head fonctionnel `faafd348da55217e96ba67efd9f9434be62725ca` a réussi le run exact `29342135098` (`#612`) ; sa synchronisation documentaire `6cfc43e4bbb015c8512c0ae26aad02d04503c897` a réussi le run `#614` et les fils associés ont été résolus.
 
-La relecture automatisée finale de la version `2` n'a pas été exécutée faute de quota. La revue hostile indépendante a trouvé quatre défauts adjacents de complétude FX/coûts et d'intégrité temporelle/provenance. La version `3` les corrige et ajoute une régression contre les constats d'actualité contradictoires. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `29345208179` (`#616`) ; jobs, logs, artefact, digest et captures ont été inspectés. Cette preuve reste technique et synthétique. La synchronisation documentaire exact-head reste nécessaire avant toute décision de fusion.
+La relecture automatisée finale de la version `2` n'a pas été exécutée faute de quota. La revue hostile indépendante a trouvé quatre défauts adjacents de complétude FX/coûts et d'intégrité temporelle/provenance. La version `3` les corrige et ajoute une régression contre les constats d'actualité contradictoires. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `29345208179` (`#616`) ; jobs, logs, artefact, digest et captures ont été inspectés. Sa synchronisation documentaire a réussi sur `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, puis la PR `#24` a été fusionnée par squash au commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`. Cette preuve reste technique et synthétique.
 
 ### Prototype utilisateur hors ligne — non commencé
 
@@ -290,12 +290,10 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 ## 13. Développement autorisé actuellement
 
-Uniquement :
+La fondation est clôturée. Aucun développement fonctionnel suivant n'est autorisé implicitement par sa fusion.
 
-- stabilisation du moteur synthétique Cost Gate et de ses contrats dans la PR `#24` ;
-- tests, oracles, revue hostile et non-régressions ;
-- synchronisation documentaire avec les preuves exact-head ;
-- préparation documentaire du futur protocole utilisateur ;
-- package HTML hors ligne seulement dans une mission séparée après clôture de la fondation.
+Avant décision d'Ayman, seuls la maintenance démontrée, la synchronisation des preuves, la recherche d'angles morts et la préparation documentaire du protocole utilisateur sont autorisés.
+
+Après validation explicite, Gate 1 pourra construire un package HTML hors ligne dans une mission séparée, uniquement pour critique de compréhension et avec des hypothèses manuelles ou synthétiques.
 
 Restent interdits : données externes, import réel, compte, stockage, réseau applicatif, analytics actif, email, paiement, connexion courtier, recommandation, ordre limite conseillé, transmission et exécution.
