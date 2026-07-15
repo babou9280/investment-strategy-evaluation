@@ -80,8 +80,11 @@ with sync_playwright() as playwright:
     assert not page.locator('input[type="radio"]:checked').count()
     page.keyboard.press("Tab")
     assert page.evaluate("document.activeElement.classList.contains('skip-link')")
-    skip_box = page.locator(".skip-link").bounding_box()
-    assert skip_box and skip_box["y"] >= 0 and skip_box["y"] < 100
+    skip_rect = page.locator(".skip-link").evaluate("""element => {
+      const rect = element.getBoundingClientRect();
+      return {top: rect.top, bottom: rect.bottom, viewport: window.innerHeight};
+    }""")
+    assert skip_rect["top"] >= 0 and skip_rect["bottom"] <= skip_rect["viewport"], skip_rect
     page.keyboard.press("Enter")
     assert page.evaluate("document.activeElement.id") == "main-content"
     assert page.evaluate("getComputedStyle(document.documentElement).scrollBehavior") == "auto"

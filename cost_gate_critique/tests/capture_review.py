@@ -53,8 +53,11 @@ with sync_playwright() as playwright:
         page.emulate_media(reduced_motion="reduce")
         page.goto(INDEX.as_uri(), wait_until="load")
         neutralize_capture_focus(page)
-        skip_box = page.locator(".skip-link").bounding_box()
-        assert skip_box is None or skip_box["y"] < 0, f"Skip link visible before neutral capture at {width}px"
+        skip_rect = page.locator(".skip-link").evaluate("""element => {
+          const rect = element.getBoundingClientRect();
+          return {top: rect.top, bottom: rect.bottom};
+        }""")
+        assert skip_rect["bottom"] <= 0, f"Skip link visible before neutral capture at {width}px: {skip_rect}"
         page.screenshot(path=ARTIFACTS / f"gate1-neutral-{width}.png", full_page=False)
 
         submit_demo(page)
