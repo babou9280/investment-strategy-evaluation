@@ -3,10 +3,10 @@
 ## 1. Statut
 
 - Validation fondateur : **14 juillet 2026**
-- Statut : **direction stratégique active, non implémentée et non commercialement validée**
+- Statut : **direction stratégique active ; fondation synthétique implémentée, produit et marché non validés**
 - Nom de travail : **Breaktest Cost Gate**
 - Relation avec l'existant : extension future de Breaktest Cost Intelligence, Capital Efficiency et Edge Survival Envelope
-- Autorisation immédiate : documentation, contrats, recherche d'angles morts et validation conceptuelle
+- Autorisation immédiate : documentation, contrats, recherche d'angles morts et moteur synthétique isolé sans interface
 - Non autorisé à ce stade : données réelles, réseau, compte, stockage, connexion courtier, exécution, recommandation personnalisée ou vocabulaire prescriptif
 
 ## 2. Problème visé
@@ -110,19 +110,34 @@ data_unavailable
 
 Un état différent de `data_ready` doit limiter ou empêcher les conclusions dépendantes de la donnée concernée.
 
-## 7. Sorties analytiques envisagées
+## 7. Sortie analytique envisagée
 
-Tant que la frontière réglementaire n'est pas validée, les sorties restent descriptives :
+La sortie canonique est un tableau de constats `findings[]`. Chaque constat porte sa couche, son état, ses valeurs, sa base, sa provenance, ses dépendances et ses limites.
 
-- `compatible_under_assumptions` : les contraintes renseignées sont satisfaites ;
-- `adjustment_required` : au moins une contrainte n'est pas satisfaite mais une frontière mathématique existe ;
-- `structurally_non_viable` : le plancher variable ou une autre contrainte rend le scénario non viable dans le modèle ;
-- `capital_not_feasible` : la frontière calculée dépasse le capital ou le cash autorisé ;
-- `execution_cost_risk` : les hypothèses de liquidité ou de coût implicite sont insuffisantes ou défavorables ;
-- `insufficient_data` : la qualité, la fraîcheur ou la couverture des données ne permettent pas de conclure.
+Une synthèse interne peut choisir un premier facteur descriptif parmi :
 
-Ces états ne sont ni des ordres, ni des recommandations, ni des prévisions.
+```text
+invalid_input
+unsupported_scope
+snapshot_unusable
+structurally_non_viable
+edge_not_surviving_modelled_friction
+capital_not_feasible
+execution_cost_risk
+constraint_breach
+insufficient_data
+no_incompatibility_detected_under_assumptions
+```
 
+`edge_not_surviving_modelled_friction` signifie que l'avantage aligné fourni ne produit pas de marge positive dans le scénario, sans prétendre à une impossibilité structurelle. `constraint_breach` reste réservé à une contrainte utilisateur explicite.
+
+`no_incompatibility_detected_under_assumptions` remplace l'ancien vocabulaire trop proche d'un feu vert. Il signifie seulement qu'aucune incompatibilité n'a été détectée dans les couches effectivement couvertes par le snapshot. Les couches non évaluées restent visibles.
+
+Une donnée manquante dans une couche ne masque pas un fait indépendant démontré ailleurs. La politique versionnée choisit le premier message, mais conserve tous les constats.
+
+Ces identifiants sont internes : l'interface grand public utilise des phrases descriptives. Ils ne sont ni des ordres, ni des recommandations, ni des prévisions.
+
+Les preuves `#604` à `#614` concernent les versions `0` à `2`. La version `3` empêche une friction faussement complète, refuse le change entre devises identiques sans dépendre du cash, exige une identité de source et une heure d'évaluation valides, et inactive les anciens constats lorsque cette heure est invalide. Elle a réussi au head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` dans le run exact `#616`. Son artefact et ses captures ont été inspectés. Sa synchronisation documentaire reste requise avant toute clôture de la fondation.
 ## 8. Explication attendue
 
 Chaque résultat doit répondre en langage concret :
@@ -152,32 +167,37 @@ Le produit peut expliquer qu'une hypothèse est compatible, qu'une contrainte n'
 
 ## 10. Séquence de développement conditionnelle
 
-### Gate 0 — stabiliser le noyau actuel
+### Gate 0 — réconcilier la fondation — exécuté dans la PR `#24`
 
-- terminer Edge Survival Envelope ;
-- réconcilier tous les états et tolérances ;
-- conserver l'expérience progressive ;
-- valider le package HTML hors ligne ;
-- effectuer les premières revues utilisateurs.
+- Edge Survival Envelope fusionné et conservé comme non-régression ;
+- revue hostile des contrats Cost Gate ;
+- cash immédiat séparé du coût de cycle ;
+- allocation de stratégie distincte du cash total ;
+- clé d'alignement de l'avantage brut ;
+- snapshot déterministe et constats multiples ;
+- matrice synthétique corrigée avant code.
 
-### Gate 1 — prototype Cost Gate synthétique
+### Gate 1 — moteur Cost Gate synthétique isolé — preuve fonctionnelle exécutée
 
 Sans réseau ni données réelles :
 
-- scénario pré-trade saisi manuellement ;
-- capital libre explicite ;
-- coût et avantage sous hypothèses ;
-- Data Quality Gate simulé mais clairement marqué synthétique ;
+- scénario pré-trade manuel ou `synthetic_demo` ;
+- périmètre strict `cash_account`, achat long cash, action/ETF au comptant ;
+- calculs et constats CG-01 à CG-18 par oracles indépendants ;
+- refus explicite de marge, short, dérivés et bases inconnues ;
+- invalidation des snapshots et non-régressions historiques.
+
+Preuve fonctionnelle courante : head `753152d9cce1feabba48e54b32b4eed2ce3f5e07`, run `29345208179` (`#616`), scénarios CG-01 à CG-18, propriétés, intégrité et non-régressions. Cette preuve reste interne et synthétique ; la synchronisation documentaire exacte doit encore clôturer la stabilisation avant toute décision de fusion.
+
+### Gate 2 — prototype utilisateur contrôlé
+
+Seulement après preuve moteur exacte :
+
+- HTML local et navigable, pas une capture ;
+- parcours manuel progressif ;
 - états descriptifs non prescriptifs ;
-- tests de compréhension et de confusion réglementaire.
-
-### Gate 2 — faisabilité du capital
-
-- contrat de cash disponible et nominal réservé ;
-- positions simultanées ;
-- réutilisation des invariants C1/C4 ;
-- aucun levier implicite ;
-- oracles et scénarios de concurrence du capital.
+- test de compréhension, effort de saisie et confusion réglementaire ;
+- aucune donnée externe.
 
 ### Gate 3 — première donnée externe limitée
 
@@ -191,18 +211,18 @@ Seulement après décision explicite :
 - comparaison avec scénario utilisateur ;
 - kill switch si source indisponible.
 
-### Gate 4 — validation juridique et commerciale
+### Gate 4 — validation juridique, commerciale et opérationnelle
 
 - revue de la frontière information / recommandation ;
 - test de volonté de payer ;
 - mesure de répétition d'usage ;
+- taux de faux blocage et de faux sentiment de sécurité ;
 - absence de dépendance à un support humain non scalable ;
 - politique d'erreur et de responsabilité.
 
 ### Gate 5 — intégration ou exécution éventuelle
 
 Hors périmètre tant qu'une décision stratégique, juridique, technique et économique distincte n'est pas validée.
-
 ## 11. Différenciation potentielle
 
 La différenciation ne vient pas d'un feu vert ou rouge. Elle peut venir de :
@@ -249,4 +269,4 @@ La différenciation ne vient pas d'un feu vert ou rouge. Elle peut venir de :
 
 ## 14. Règle d'autorité
 
-La validation de Cost Gate est stratégique : elle fixe la trajectoire future. Elle ne transforme aucune hypothèse en fonctionnalité, aucune source en donnée disponible, aucun état en recommandation autorisée et aucune ambition en preuve commerciale.
+La validation de Cost Gate est stratégique ; la fondation synthétique possède en plus une preuve technique restreinte. Ni l'une ni l'autre ne transforme une hypothèse en donnée disponible, un constat en recommandation autorisée ou une ambition en preuve commerciale.

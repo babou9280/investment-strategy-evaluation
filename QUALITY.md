@@ -68,6 +68,7 @@ Règles :
 - ne jamais remplacer silencieusement une valeur invalide ;
 - conserver tout fallback et sa provenance ;
 - pouvoir réconcilier un agrégat avec ses lignes sources ;
+- exiger une identité, une place, une devise, un caractère critique et une heure d'évaluation explicites avant de qualifier une source d'actuelle ;
 - ne jamais préremplir une hypothèse synthétique en la qualifiant de saisie utilisateur.
 
 ## 5. Validation numérique stricte
@@ -97,8 +98,11 @@ break_even_gross_rate = total_cost_eur / N
 Exigences :
 
 - commission et change sont par côté ;
+- un achat simple / `entry_leg` possède un côté et un aller-retour / `complete_round_trip` deux côtés ; toute contradiction invalide l'entrée ;
 - spread et slippage couvrent le scénario complet ;
 - aucune friction n'est comptée deux fois ;
+- une friction déclarée complète couvre toutes les composantes connues ; une taxe ou un frais d'entrée sans contrepartie de cycle la rend incomplète et bloque Edge Survival ;
+- des devises compte/cotation identiques imposent un coût FX nul, indépendamment de la présence d'une vue cash ;
 - le seuil reste supérieur ou égal au plancher variable ;
 - la fréquence ne modifie pas le seuil par opération ;
 - la sensibilité à la taille converge vers le plancher variable lorsque le coût fixe existe ;
@@ -185,7 +189,7 @@ Une frontière ne peut être affichée que si :
 - une contrainte impossible produit `structurally_unreachable`, jamais `Infinity` ;
 - la formulation reste descriptive et non prescriptive.
 
-Une frontière mathématique n'établit pas encore sa faisabilité avec le capital disponible. Cette couche future suit `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
+Une frontière mathématique n'établit pas sa faisabilité avec le capital disponible. Le moteur Cost Gate synthétique peut la comparer au cash déclaré et à l'allocation libre dans son domaine cash long ; la faisabilité générale du portefeuille reste régie par `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
 ## 11. Résultats et fraîcheur
 
@@ -255,7 +259,32 @@ Le moteur historique conserve :
 
 Toute évolution du nouveau produit doit préserver ces non-régressions lorsque les composants sont partagés.
 
-## 15. Sécurité et confidentialité
+## 15. Fondation Cost Gate
+
+La preuve synthétique respecte :
+
+- domaine explicite `cash_account`, achat long, action/ETF au comptant ;
+- `unsupported_scope` pour marge, short, dérivés et domaines non modélisés ;
+- cash réglé réconcilié avec la base d'inclusion de chaque `hold_id` ;
+- base brute/nette, liste des holds inclus par la source et indicateurs du ledger réconciliés sans fallback ;
+- plafond de faisabilité égal au minimum entre cash libre du compte et allocation libre de stratégie ;
+- engagement cash d'entrée distinct de la friction économique du cycle ;
+- coûts communs d'entrée et de cycle réconciliés ; même devise implique un coût FX nul ; toute taxe ou frais d'entrée absent du cycle bloque la synthèse favorable ;
+- spread/slippage incorporés au prix non ajoutés une seconde fois ;
+- quantité, prix, devise et nominal réconciliés ;
+- clé d'alignement complète avant toute conclusion dépendante de `G` ;
+- hash de contenu déterministe distinct de l'identifiant d'instance ;
+- expiration temporelle possible sans mutation du hash ;
+- source future refusée et expiration agrégée pilotée uniquement par les sources critiques ;
+- collections contractuelles obligatoirement fournies comme tableaux ; élément mal formé ou identifiant stable dupliqué invalide la couche concernée ;
+- `findings[]` complets, ordonnés et attachés au snapshot ;
+- synthèse dépendante des preuves, sans perte d'un fait indépendant ;
+- anciennes conclusions inactives après mutation ;
+- aucune donnée réelle, génération libre par IA ou phrase prescriptive dans le moteur canonique.
+
+La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiques. Elle ne valide ni donnée actuelle, interface, compréhension, conseil, exécution, droit ou marché.
+
+## 16. Sécurité et confidentialité
 
 Le prototype interne reste local-only :
 
@@ -271,7 +300,7 @@ Le prototype interne reste local-only :
 
 Avant tout import réel : modèle de menace, XSS, fichiers hostiles, CSV injection, limites de taille et confidentialité doivent être traités.
 
-## 16. Livraison hors ligne
+## 17. Livraison hors ligne
 
 Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` :
 
@@ -286,7 +315,7 @@ Le futur livrable de critique doit respecter `docs/delivery/OFFLINE_HTML_DELIVER
 
 Les captures sont des preuves de revue, pas le livrable principal.
 
-## 17. Recherche d'angles morts
+## 18. Recherche d'angles morts
 
 Toute tâche matérielle applique `docs/governance/BLIND_SPOT_REGISTER.md`.
 
@@ -306,7 +335,7 @@ Chercher au minimum :
 
 Une CI verte est une preuve technique partielle, jamais une preuve d'exhaustivité, d'utilité, de conformité ou de demande.
 
-## 18. Validation commerciale
+## 19. Validation commerciale
 
 - Un compliment n'est pas une activation.
 - Une activation n'est pas une seconde utilisation.
@@ -317,7 +346,7 @@ Une CI verte est une preuve technique partielle, jamais une preuve d'exhaustivit
 - Ne jamais fabriquer avis, compteurs, partenaires ou rareté.
 - Le protocole doit pouvoir conclure à l'abandon.
 
-## 19. Gate de fusion
+## 20. Gate de fusion
 
 Avant fusion d'une évolution :
 

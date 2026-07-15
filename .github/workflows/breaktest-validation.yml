@@ -63,6 +63,9 @@ jobs:
             node capital_efficiency_lab/tests/edge_range.test.js
             node capital_efficiency_lab/tests/point_range_consistency.test.js
             node capital_efficiency_lab/tests/optional_annual_inputs.test.js
+            node cost_gate_foundation/tests/engine.test.js
+            node cost_gate_foundation/tests/scenario_matrix.test.js
+            node cost_gate_foundation/tests/properties.test.js
           } 2>&1 | tee numeric-tests.log
 
       - name: Static privacy and integrity
@@ -71,6 +74,7 @@ jobs:
           {
             python3 tests/validation_static_integrity.py
             python3 capital_efficiency_lab/tests/static_integrity.py
+            python3 cost_gate_foundation/tests/static_integrity.py
           } 2>&1 | tee static-integrity.log
 
       - name: Browser regression suites
@@ -110,7 +114,8 @@ jobs:
               tests/validation_static_integrity.py \
               capital_efficiency_lab/tests/browser.py \
               capital_efficiency_lab/tests/capture_review.py \
-              capital_efficiency_lab/tests/static_integrity.py
+              capital_efficiency_lab/tests/static_integrity.py \
+              cost_gate_foundation/tests/static_integrity.py
             python3 - <<'PY'
           from pathlib import Path
           import re
@@ -132,6 +137,11 @@ jobs:
             node --check capital_efficiency_lab/tests/edge_range.test.js
             node --check capital_efficiency_lab/tests/point_range_consistency.test.js
             node --check capital_efficiency_lab/tests/optional_annual_inputs.test.js
+            node --check cost_gate_foundation/engine.js
+            node --check cost_gate_foundation/tests/fixtures.js
+            node --check cost_gate_foundation/tests/engine.test.js
+            node --check cost_gate_foundation/tests/scenario_matrix.test.js
+            node --check cost_gate_foundation/tests/properties.test.js
           } 2>&1 | tee javascript-syntax.log
 
       - name: Upload validation and review artifacts

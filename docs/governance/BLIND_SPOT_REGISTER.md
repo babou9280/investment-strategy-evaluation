@@ -20,8 +20,7 @@ Pour toute modification matérielle :
 6. créer une règle permanente si le défaut peut revenir ;
 7. ajouter un test ou une preuve ;
 8. propager aux calculs, interface, documents et livrables ;
-9. ne jamais confondre absence de défaut détecté et exhaustivité ;
-10. pour toute capture pleine page, ne jamais prendre une assertion DOM avant capture pour preuve du rendu assemblé : inspecter l'image exacte de l'artefact final aux largeurs cibles.
+9. ne jamais confondre absence de défaut détecté et exhaustivité.
 
 ## 3. Classification
 
@@ -93,9 +92,9 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-002 | P0 | Produit | L'utilisateur peut ne pas disposer d'un avantage brut défendable | Edge Survival inutilisable | open | Tester seuil, point et fourchette ; mesurer source réelle de G |
 | BS-003 | P0 | Finance | Certaines frictions réelles restent hors modèle | Seuil sous-estimé | open | Inventaire par instrument et juridiction avant donnée réelle |
 | BS-004 | P0 | UX / réglementation | Une frontière mathématique peut être comprise comme recommandation | Mauvais usage et risque juridique | mitigated | Revue de langage et observation sans coaching |
-| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | validated | `result_freshness.js`, tests navigateur exact-head et run `29331116076` |
-| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | validated | Oracles point/range, égalité exacte et voisinage des seuils dans le run `29331116076` |
-| BS-007 | P1 | UX | Densité mobile trop élevée | Abandon | open | Inspection 390/768 et compréhension en moins de 90 secondes |
+| BS-005 | P0 | Ingénierie | Résultat ancien visible après modification ou erreur | Résultat trompeur | validated | `result_freshness.js`, tests navigateur exact-head et fusion PR `#23` |
+| BS-006 | P0 | Quantitatif | Tolérance différente entre modes ou frontières | Classification incohérente | validated | Oracles point/range, égalité exacte et voisinage des seuils, PR `#23` |
+| BS-007 | P1 | UX | Densité mobile trop élevée | Abandon | open | Inspection et compréhension en moins de 90 secondes |
 | BS-008 | P1 | Navigateur | Safari/iPad non prouvé | Livrable inutilisable par Ayman | open | Exécution réelle avant livraison |
 | BS-009 | P1 | Business | Calcul utile sans usage répété | Faible rétention | open | Deuxième usage non sollicité et demande d'import |
 | BS-010 | P1 | Données | Hypothèses de coûts difficiles à saisir | Garbage in, garbage out | open | Test sans assistance et sources documentées |
@@ -109,25 +108,53 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-018 | P2 | International | Frais, devise, fiscalité et droit varient | Généralisation abusive | deferred | Périmètre pays/instrument explicite |
 | BS-019 | P3 | Supply chain | Runtime CI évolutif | Pipeline interrompu | deferred | Surveiller dépréciations et versions |
 | BS-020 | P0 | Cost Gate / données | Donnée de marché stale utilisée comme actuelle | Diagnostic pré-trade faux | open | Data Quality Gate avec timestamp, fraîcheur, kill switch et tests |
-| BS-021 | P0 | Cost Gate / réglementation | `compatible` interprété comme autorisation d'exécuter | Recommandation implicite | open | État interne non affiché brut, revue juridique, test utilisateur et langage non prescriptif |
-| BS-022 | P0 | Cost Gate / capital | Capital de référence confondu avec cash disponible | Trade déclaré faisable à tort | open | Capital Feasibility, positions simultanées et invariants C1/C4 |
-| BS-023 | P0 | Cost Gate / microstructure | Profondeur visible ou spread ne garantit pas l'exécution | Coût réel supérieur au diagnostic | open | Domaine de validité, hypothèses de taille et comparaison ex post |
+| BS-021 | P0 | Cost Gate / réglementation | `compatible` interprété comme autorisation d'exécuter | Recommandation implicite | open | Findings explicites, revue juridique et test utilisateur |
+| BS-022 | P0 | Cost Gate / capital | Capital de référence confondu avec cash disponible | Faisabilité fausse | open | Cash réglé, réservations et invariants C1/C4 |
+| BS-023 | P0 | Cost Gate / microstructure | Profondeur visible ou spread ne garantit pas l'exécution | Coût réel supérieur au diagnostic | open | Domaine de validité et comparaison ex post |
 | BS-024 | P0 | Cost Gate / données | Instrument, place ou devise mal réconciliés | Mauvaise donnée appliquée | open | Identifiants canoniques, mapping testé et refus des conflits |
 | BS-025 | P1 | Cost Gate / produit | Saisie pré-trade trop lourde | Absence d'usage récurrent | open | Prototype synthétique manuel et mesure de l'abandon |
 | BS-026 | P1 | Cost Gate / économie | Coût des flux, licences et support supérieur au revenu | Marge négative | open | Modèle de coût par utilisateur avant achat de données |
-| BS-027 | P1 | Cost Gate / UX | Trop de prudence produit uniquement `insufficient_data` | Produit inutilisable | open | Mesurer taux d'indisponibilité et information minimale utile |
-| BS-028 | P1 | Cost Gate / risque | État favorable créant un faux sentiment de sécurité | Mauvaise décision | open | Explication des limites, absence de feu vert et test de compréhension |
-| BS-029 | P1 | Cost Gate / ordre | Ordre limite non exécuté ou marché déplacé après analyse | Diagnostic non réalisé | open | Ne pas promettre exécution ; séparer coût, faisabilité et probabilité |
-| BS-030 | P1 | Cost Gate / responsabilité | Erreur de source ou calcul sans processus d'incident | Perte de confiance et risque juridique | open | Version, journal d'incident, rollback et communication |
-| BS-031 | P2 | Cost Gate / concurrence | Courtier reproduisant un simple contrôle de frais | Fonction banalisée | open | Différenciation par provenance, capital, sensibilité et réconciliation ex post |
+| BS-027 | P1 | Cost Gate / UX | Trop de prudence produit uniquement `insufficient_data` | Produit inutilisable | open | Mesurer indisponibilité et sous-calculs utiles |
+| BS-028 | P1 | Cost Gate / risque | État favorable créant un faux sentiment de sécurité | Mauvaise décision | open | Absence de feu vert et test de compréhension |
+| BS-029 | P1 | Cost Gate / ordre | Ordre limite non exécuté ou marché déplacé après analyse | Diagnostic non réalisé | open | Séparer coût, faisabilité et exécution |
+| BS-030 | P1 | Cost Gate / responsabilité | Erreur de source ou calcul sans processus d'incident | Perte de confiance et risque juridique | open | Version, incident, rollback et communication |
+| BS-031 | P2 | Cost Gate / concurrence | Courtier reproduisant un simple contrôle de frais | Fonction banalisée | open | Provenance, capital, sensibilité et réconciliation ex post |
 | BS-032 | P2 | Cost Gate / confidentialité | Portefeuille et intentions d'ordre exposés | Risque utilisateur | open | Local-first, minimisation, modèle de menace et consentement |
-| BS-033 | P1 | Validation visuelle | Une assertion DOM avant capture ne prouve pas le rendu final pleine page assemblé | CI verte mais preuve visuelle encore fausse | validated | Géométrie vérifiée avant masquage, `display: none` capture-only, styles restaurés, premier `Tab` préservé et images exactes 390/1 440 du head `7b6f608231aa2e9ef6a2f8071ff32c2067808d9a`, run `29331116076`, inspectées (`sha256:3109774af4802345abc4a32c4bdf0034db1adf9f970059eb1c5f5daab2c8c9fc`) |
-| BS-034 | P0 | Cost Gate / personnalisation | Contraintes personnalisées glissant vers suitability ou conseil | Changement de régime réglementaire | open | Contrat de personnalisation limité aux paramètres explicites, revue juridique avant données/utilisateurs réels |
-| BS-035 | P0 | Cost Gate / coûts | Tarif dépendant du plan, palier, volume, juridiction ou statut fiscal mal appliqué | Seuil pré-trade faux | open | Barème versionné avec conditions d'éligibilité et refus si contexte incomplet |
-| BS-036 | P0 | Cost Gate / capital | Ordres en attente, cash non réglé, marge ou emprunt de titres ignorés | Faisabilité fausse | open | Snapshot de capital avec statuts de règlement et périmètre instruments explicite |
-| BS-037 | P1 | Cost Gate / portefeuille | Corrélation, netting et marge portefeuille non modélisés | Risque sous-estimé | deferred | Interdire la généralisation avant moteur portefeuille dédié |
-| BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | open | Contrat d'alignement de G : unité, horizon, côté, instrument, univers et provenance |
-| BS-039 | P1 | Cost Gate / exécution | Exécution partielle, annulation ou multi-venue changeant les frictions | Écart ex ante/ex post | open | Scénarios d'exécution explicites et réconciliation ultérieure, sans probabilité inventée |
+| BS-033 | P1 | Validation visuelle | Assertion DOM différente du rendu full-page assemblé | Preuve visuelle fausse | validated | Capture-only overrides restaurés, vrai clavier testé, artefacts PR `#23` inspectés |
+| BS-034 | P0 | Cost Gate / personnalisation | Contraintes personnalisées glissant vers suitability ou conseil | Changement de régime réglementaire | mitigated | Contrat de personnalisation ; revue juridique avant usage réel |
+| BS-035 | P0 | Cost Gate / coûts | Tarif dépendant du plan, palier, volume, juridiction ou statut fiscal mal appliqué | Seuil faux | open | Barème versionné avec conditions d'éligibilité |
+| BS-036 | P0 | Cost Gate / capital | Ordres en attente, cash non réglé, marge ou emprunt ignorés | Faisabilité fausse | mitigated | Contrat cash/cycle ; moteur et source encore à tester |
+| BS-037 | P1 | Cost Gate / portefeuille | Corrélation, netting et marge portefeuille non modélisés | Généralisation abusive | accepted_limit | Premier périmètre cash long ; moteur portefeuille futur séparé |
+| BS-038 | P0 | Cost Gate / quantitatif | Avantage brut d'un autre horizon, instrument ou type d'ordre appliqué au trade | Comparaison incohérente | mitigated | `GROSS_EDGE_ALIGNMENT_KEY.md` ; moteur et tests d'alignement requis |
+| BS-039 | P1 | Cost Gate / exécution | Exécution partielle, annulation ou multi-venue changeant les frictions | Écart ex ante/ex post | open | Scénarios et réconciliation ultérieure sans probabilité inventée |
+| BS-040 | P0 | Cost Gate / capital | Coût complet aller-retour utilisé comme besoin de cash immédiat | Faisabilité surestimée ou double comptage | validated | 502,25 EUR contre 5,50 EUR, CG-06/CG-07, run `#604` ; données réelles restent hors scope |
+| BS-041 | P0 | Cost Gate / prix | Spread ou slippage déjà incorporé au prix puis ajouté à nouveau | Cash et coût faux | validated | Conflit et double ajout testés dans le moteur synthétique, run `#604` |
+| BS-042 | P0 | Cost Gate / temps | Snapshot valide au calcul mais obsolète au moment d'usage | Faux sentiment d'actualité | validated | `compareSnapshots` inactive les anciens constats après expiration à hash inchangé ; transition fraîche→stale testée, head `2ebf0e3`, run `#608` |
+| BS-043 | P1 | Cost Gate / orchestration | Synthèse unique supprimant plusieurs constats matériels | Diagnostic incomplet | validated | Stale et conflit de source sont émis indépendamment et testés ensemble, head `2ebf0e3`, run `#608` |
+| BS-044 | P1 | Cost Gate / scope | Modèle cash long appliqué silencieusement à marge, short ou dérivé | Résultat invalide | validated | `unsupported_scope` démontré par CG-15, run `#604` |
+| BS-045 | P1 | Cost Gate / règlement | Produit de vente futur supposé disponible pour financer l'entrée | Faisabilité fausse | mitigated | Contrat cash/cycle ; aucun financement par sortie future |
+| BS-046 | P1 | Cost Gate / texte | Catalogue de constats généré librement par IA | Explication variable ou prescriptive | mitigated | Catalogue versionné déterministe ; IA non canonique |
+| BS-047 | P0 | Cost Gate / cash | Hold déjà retranché par la source puis soustrait une seconde fois | Faux cash insuffisant | validated | Sources brute/nette, hold dupliqué et réserve testés, CG-14 + propriétés, run `#604` |
+| BS-048 | P0 | Cost Gate / capital | Cash total du compte utilisé malgré une allocation de stratégie plus basse | Faux diagnostic de faisabilité | validated | Plafond `min(cash réconcilié, allocation libre)` et CG-14C, run `#604` |
+| BS-049 | P1 | Cost Gate / preuve | Hash du snapshot circulaire ou dépendant de l'heure du recalcul | Reproduction impossible ou faux changement | validated | Hash de contenu, instance séparée et ordre des clés testés, run `#604` |
+| BS-050 | P0 | Cost Gate / avantage | Performance issue de prix exécutés traitée comme brute puis spread/slippage soustraits de nouveau | Marge nette sous-estimée | validated | Prix exécuté rejeté sans reconstruction versionnée ; seuil indépendant conservé, run `#604` |
+| BS-051 | P1 | Cost Gate / orchestration | Donnée manquante reléguant un fait dur indépendant | Facteur principal trompeur | validated | Politique dépendante des preuves et CG-12, run `#604` |
+| BS-052 | P1 | Cost Gate / provenance | Quote stale synthétique présentée comme donnée externe réellement observée | Preuve et capacité exagérées | validated | CG-09 limité à `synthetic_demo` + intégrité sans réseau, run `#604` |
+| BS-053 | P0 | Cost Gate / unités | Quantité, prix, devise et nominal incohérents mais acceptés | Cash et seuil calculés sur deux bases | validated | Quantité × prix réconciliée avec cash et nominal économique ; régression exact-head, head `faafd3`, run `#612` |
+| BS-054 | P0 | Cost Gate / unités | `operation_scope` incohérent avec `side_count` mais synthèse favorable produite | Frictions sous- ou surévaluées | validated | Mapping strict achat simple = 1, aller-retour = 2 ; sortie seule non supportée ; régressions exact-head, head `2ebf0e3`, run `#608` |
+| BS-055 | P1 | Cost Gate / preuve | Ordre arbitraire des holds, sources, contraintes ou exclusions changeant le `snapshot_id` ou les constats | Faux changement et audit instable | validated | Ensembles triés avant hash et évaluation ; snapshot et constats invariants par permutation, changement matériel distinct, head `2ebf0e3`, run `#608` |
+| BS-056 | P1 | Cost Gate / orchestration | Erreur de friction empêchant un constat de cash indépendant | Diagnostic incomplet | validated | Validation cash isolée des erreurs de friction ; constat cash conservé sous coût invalide, head `2ebf0e3`, run `#608` |
+| BS-057 | P1 | Cost Gate / vocabulaire | Avantage absorbé résumé comme contrainte utilisateur dépassée sans contrainte saisie | Provenance de la limite fausse | validated | `edge_not_surviving_modelled_friction` distinct ; `constraint_breach` réservé aux limites explicites, head `2ebf0e3`, run `#608` |
+| BS-058 | P0 | Cost Gate / cash | Base globale brute/nette en contradiction avec les holds déclarés inclus | Cash libre surestimé ou sous-estimé | validated | `source_included_hold_ids[]`, ledger et base brute/nette réconciliés ; contradictions et réserve déjà nette bloquées, head `faafd3`, run `#612` |
+| BS-059 | P0 | Cost Gate / temps | Source observée après l'heure d'évaluation classée actuelle | Utilisation d'une donnée qui n'existait pas encore | validated | `snapshot_temporally_inconsistent` et constat bloquant ; régression exact-head, head `faafd3`, run `#612` |
+| BS-060 | P1 | Cost Gate / temps | Source non critique raccourcissant l'expiration de tout le snapshot | Constats indépendants invalidés trop tôt | validated | `expires_at_utc` limité aux sources critiques et comparaison temporelle testée, head `faafd3`, run `#612` |
+| BS-061 | P0 | Cost Gate / entrées | Ledger, sources ou contraintes fournis comme objet puis assimilés à une liste vide | Hold, provenance ou contrainte matérielle supprimés silencieusement | validated | Non-tableaux, éléments mal formés et identifiants de source/contrainte dupliqués rejetés ; holds, sources, contraintes et exclusions testés, head `faafd3`, run `#612` |
+| BS-062 | P0 | Cost Gate / devise | Frais FX non nuls malgré une devise de compte identique à la devise de cotation | Friction et cash sans événement de change réel | validated | Friction bloquée même sans vue cash et cas FX nul valide ; head `753152d`, run `#616` |
+| BS-063 | P0 | Cost Gate / coûts | Commission ou change d'entrée différents des hypothèses par côté du cycle | Cash immédiat et seuil décrivent deux économies incompatibles | validated | Commission et change d'entrée réconciliés avec le modèle de cycle, head `faafd3`, run `#612` |
+| BS-064 | P0 | Cost Gate / coûts | Taxe ou frais contractuel d'entrée présent mais absent du seuil du cycle | Avantage net surestimé | validated | Cash conflictuel, friction incomplète et Edge Survival indisponible jusqu'à contrepartie de cycle ; head `753152d`, run `#616` |
+| BS-065 | P0 | Cost Gate / provenance | Source sans instrument, place, devise ou caractère critique explicite classée actuelle | Donnée non attribuable ou expiration arbitraire | validated | Identité non vide et booléen `critical` obligatoires ; snapshot incomplet, aucun constat positif ; head `753152d`, run `#616` |
+| BS-066 | P0 | Cost Gate / temps | Heure d'évaluation absente ou invalide laissant les anciens constats actifs à hash identique | Ancien diagnostic réutilisé sans instant de contrôle valide | validated | Snapshot incomplet et anciens constats inutilisables à hash identique ; head `753152d`, run `#616` |
+| BS-067 | P1 | Cost Gate / explication | Régression pouvant faire coexister une source non critique stale et « toutes les sources actuelles » | Explication contradictoire et confiance dégradée | validated | Régression explicite sans expiration des constats indépendants ; head `753152d`, run `#616` |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -145,13 +172,33 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 10. Quelle fonction supprimer si elle n'améliore ni diagnostic, ni preuve, ni décision ?
 11. Le livrable exact fonctionne-t-il hors ligne sur les appareils cibles ?
 12. Un évaluateur peut-il reproduire résultats et limites ?
-13. Pour Cost Gate, les données sont-elles fraîches, licenciées et correctement réconciliées ?
-14. Un état peut-il être compris comme autorisation d'ordre ?
-15. Le cash libre et les positions simultanées sont-ils réellement modélisés ?
-16. L'avantage brut est-il aligné avec l'instrument, l'horizon et le scénario d'exécution ?
-17. La personnalisation reste-t-elle une application de contraintes explicites, sans profilage de suitability ?
-18. Les coûts conditionnels au plan, au volume et à la juridiction sont-ils correctement identifiés ?
-19. Les images pleine page exactes ont-elles été inspectées, au-delà des seules assertions DOM et du statut CI ?
+13. Les données sont-elles fraîches, licenciées et réconciliées ?
+14. Un état peut-il être compris comme autorisation ?
+15. Le cash libre et les positions simultanées sont-ils modélisés ?
+16. L'avantage brut est-il aligné ?
+17. La personnalisation reste-t-elle une application de contraintes explicites ?
+18. Les tarifs conditionnels sont-ils correctement identifiés ?
+19. Le cash immédiat est-il séparé du coût du cycle ?
+20. Le nominal précise-t-il si spread et slippage sont incorporés ?
+21. Le snapshot est-il encore valide au moment affiché ?
+22. Tous les constats matériels restent-ils visibles ?
+23. Le domaine cash long est-il empêché de s'étendre silencieusement ?
+24. La source a-t-elle déjà retranché chaque hold ?
+25. L'allocation de stratégie plafonne-t-elle le cash du compte ?
+26. Les hashes identifient-ils le contenu sans se hasher eux-mêmes ?
+27. La base de prix de `G` contient-elle déjà des frictions ?
+28. Une donnée manquante masque-t-elle un fait indépendant ?
+29. Quantité, prix, devise et nominal se réconcilient-ils ?
+30. La base brute ou nette concorde-t-elle avec chaque hold inclus par la source ?
+31. Une donnée a-t-elle été observée après l'heure d'évaluation ?
+32. Seules les sources critiques pilotent-elles l'expiration agrégée ?
+33. Une collection mal formée peut-elle être assimilée silencieusement à une liste vide ?
+34. Un coût FX existe-t-il alors que compte et cotation ont la même devise ?
+35. Les coûts immédiats communs se réconcilient-ils avec les hypothèses du cycle ?
+36. Une taxe ou un frais d'entrée manque-t-il au seuil économique complet ?
+37. Chaque source possède-t-elle une identité complète et un caractère critique explicite ?
+38. L'heure d'évaluation est-elle valide avant d'activer ou de réactiver des constats ?
+39. Un constat positif d'actualité contredit-il une source stale encore visible ?
 
 ## 7. Règle de clôture
 
@@ -160,7 +207,7 @@ Un angle mort n'est pas `validated` parce qu'il est discuté. La preuve peut êt
 Une limite devient `accepted_limit` uniquement si :
 
 - visible ;
-- non trompeuse pour la promesse centrale ;
+- non trompeuse ;
 - conséquence comprise ;
 - gate de réexamen défini.
 
