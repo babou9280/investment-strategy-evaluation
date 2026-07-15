@@ -47,9 +47,17 @@ jobs:
           /usr/bin/chromium --version
 
       - name: Deterministic build
+        env:
+          BREAKTEST_SOURCE_COMMIT: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           set -o pipefail
-          python3 scripts/build_breaktest.py 2>&1 | tee build.log
+          {
+            python3 scripts/build_breaktest.py
+            python3 cost_gate_critique/build.py \
+              --source-commit "$BREAKTEST_SOURCE_COMMIT" \
+              --generated-at "$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
+              --browser-under-test "$(/usr/bin/chromium --version)"
+          } 2>&1 | tee build.log
 
       - name: Numeric and result-basis validation
         run: |
@@ -66,6 +74,9 @@ jobs:
             node cost_gate_foundation/tests/engine.test.js
             node cost_gate_foundation/tests/scenario_matrix.test.js
             node cost_gate_foundation/tests/properties.test.js
+            node cost_gate_critique/tests/crypto_shim.test.js
+            node cost_gate_critique/tests/scenario.test.js
+            node cost_gate_critique/tests/presenter.test.js
           } 2>&1 | tee numeric-tests.log
 
       - name: Static privacy and integrity
@@ -75,6 +86,8 @@ jobs:
             python3 tests/validation_static_integrity.py
             python3 capital_efficiency_lab/tests/static_integrity.py
             python3 cost_gate_foundation/tests/static_integrity.py
+            python3 cost_gate_critique/tests/static_integrity.py
+            python3 cost_gate_critique/tests/package_integrity.py
           } 2>&1 | tee static-integrity.log
 
       - name: Browser regression suites
@@ -98,12 +111,16 @@ jobs:
             fi
             python3 tests/validation_browser.py
             python3 capital_efficiency_lab/tests/browser.py
+            python3 cost_gate_critique/tests/browser.py
           } 2>&1 | tee browser-tests.log
 
       - name: Capture internal review screens
         run: |
           set -o pipefail
-          python3 capital_efficiency_lab/tests/capture_review.py 2>&1 | tee review-capture.log
+          {
+            python3 capital_efficiency_lab/tests/capture_review.py
+            python3 cost_gate_critique/tests/capture_review.py
+          } 2>&1 | tee review-capture.log
 
       - name: Syntax validation
         run: |
@@ -115,7 +132,12 @@ jobs:
               capital_efficiency_lab/tests/browser.py \
               capital_efficiency_lab/tests/capture_review.py \
               capital_efficiency_lab/tests/static_integrity.py \
-              cost_gate_foundation/tests/static_integrity.py
+              cost_gate_foundation/tests/static_integrity.py \
+              cost_gate_critique/build.py \
+              cost_gate_critique/tests/static_integrity.py \
+              cost_gate_critique/tests/package_integrity.py \
+              cost_gate_critique/tests/browser.py \
+              cost_gate_critique/tests/capture_review.py
             python3 - <<'PY'
           from pathlib import Path
           import re
@@ -142,6 +164,14 @@ jobs:
             node --check cost_gate_foundation/tests/engine.test.js
             node --check cost_gate_foundation/tests/scenario_matrix.test.js
             node --check cost_gate_foundation/tests/properties.test.js
+            node --check cost_gate_critique/src/crypto-shim.js
+            node --check cost_gate_critique/src/scenario.js
+            node --check cost_gate_critique/src/presenter.js
+            node --check cost_gate_critique/src/app.js
+            node --check cost_gate_critique/tests/crypto_shim.test.js
+            node --check cost_gate_critique/tests/scenario.test.js
+            node --check cost_gate_critique/tests/presenter.test.js
+            node --check cost_gate_critique/dist/breaktest-cost-gate-gate1/assets/engine-bundle.js
           } 2>&1 | tee javascript-syntax.log
 
       - name: Upload validation and review artifacts
@@ -157,5 +187,8 @@ jobs:
             review-capture.log
             javascript-syntax.log
             capital_efficiency_lab/review_artifacts/*.png
+            cost_gate_critique/review_artifacts/*.png
+            cost_gate_critique/dist/breaktest-cost-gate-gate1/MANIFEST.json
+            cost_gate_critique/dist/breaktest-cost-gate-gate1-internal-review.zip
           if-no-files-found: warn
           retention-days: 3

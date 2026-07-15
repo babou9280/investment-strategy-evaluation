@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>Breaktest Cost Gate — critique hors ligne</title>
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Aller au contenu principal</a>
+
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="#top" aria-label="Breaktest Cost Gate, retour au début">
+        <span class="brand-mark" aria-hidden="true">B</span>
+        <span>Breaktest <strong>Cost Gate</strong></span>
+      </a>
+      <span class="review-badge">Critique interne · hors ligne</span>
+    </div>
+  </header>
+
+  <main id="main-content" tabindex="-1">
+    <section class="hero shell" id="top" aria-labelledby="page-title">
+      <p class="eyebrow">Gate 1 · valeur compréhensible sans donnée réelle</p>
+      <h1 id="page-title">Ce scénario résiste-t-il aux frictions et au cash déclaré&nbsp;?</h1>
+      <p class="hero-copy">Breaktest confronte des hypothèses explicites. Il ne choisit aucun investissement, ne lit aucun compte et n’utilise aucune donnée de marché actuelle.</p>
+      <ul class="scope-strip" aria-label="Périmètre de cette critique">
+        <li>Compte cash</li>
+        <li>Achat long</li>
+        <li>Action ou ETF au comptant</li>
+        <li>Aucun ordre transmis</li>
+      </ul>
+    </section>
+
+    <section class="shell origin-panel" aria-labelledby="origin-title">
+      <div>
+        <p class="step-label">Étape 1</p>
+        <h2 id="origin-title">Choisir l’origine des hypothèses</h2>
+        <p>La saisie vide ne contient aucun nombre financier. La démonstration doit être chargée volontairement et reste synthétique après modification.</p>
+      </div>
+      <div class="origin-actions">
+        <button class="button button-primary" type="button" id="manual-button">Saisir des hypothèses vides</button>
+        <button class="button button-secondary" type="button" id="demo-button">Charger la démonstration synthétique</button>
+      </div>
+      <p class="provenance-banner provenance-neutral" id="provenance-banner" role="status">
+        <span class="status-dot" aria-hidden="true"></span>
+        <span id="provenance-text">Aucune provenance choisie · aucun résultat actif</span>
+      </p>
+    </section>
+
+    <section class="shell workspace" aria-labelledby="scenario-title">
+      <form id="scenario-form" novalidate>
+        <div class="form-heading">
+          <div>
+            <p class="step-label">Étape 2</p>
+            <h2 id="scenario-title">Décrire le scénario</h2>
+          </div>
+          <p class="required-note"><span aria-hidden="true">*</span> Tous les choix et nombres visibles sont requis, sauf l’avantage brut si « seuil seulement » est choisi.</p>
+        </div>
+
+        <div class="error-summary" id="error-summary" role="alert" tabindex="-1" hidden>
+          <h3>Le scénario contient des entrées à corriger</h3>
+          <ul id="error-list"></ul>
+        </div>
+
+        <fieldset class="form-card">
+          <legend><span>1</span> Portée économique</legend>
+          <div class="field-grid field-grid-three">
+            <div class="field-group" id="instrumentType-group">
+              <span class="field-label">Instrument <span aria-hidden="true">*</span></span>
+              <div class="segmented">
+                <label><input type="radio" name="instrumentType" value="spot_equity"> Action</label>
+                <label><input type="radio" name="instrumentType" value="spot_etf"> ETF</label>
+              </div>
+              <span class="field-error" id="instrumentType-error"></span>
+            </div>
+
+            <div class="field-group" id="operationScope-group">
+              <span class="field-label">Portée des frictions <span aria-hidden="true">*</span></span>
+              <div class="segmented">
+                <label><input type="radio" name="operationScope" value="entry_leg"> Achat simple</label>
+                <label><input type="radio" name="operationScope" value="complete_round_trip"> Aller-retour</label>
+              </div>
+              <span class="field-error" id="operationScope-error"></span>
+            </div>
+
+            <label class="field-group" for="quoteCurrency">
+              <span class="field-label">Devise de cotation <span aria-hidden="true">*</span></span>
+              <select id="quoteCurrency" name="quoteCurrency">
+                <option value="" selected>Choisir</option>
+                <option value="EUR">EUR · même devise que le compte</option>
+                <option value="USD">USD · change explicite</option>
+              </select>
+              <span class="field-help">Devise du compte fixée à EUR pour ce prototype.</span>
+              <span class="field-error" id="quoteCurrency-error"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-card">
+          <legend><span>2</span> Frictions déclarées</legend>
+          <p class="fieldset-intro">Le spread et le slippage sont des taux totaux pour la portée choisie. Le change et la commission sont saisis par côté.</p>
+          <div class="field-grid">
+            <label class="field-group" for="orderNotionalEur">
+              <span class="field-label">Nominal proposé <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="orderNotionalEur" name="orderNotionalEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 500"><span>EUR</span></span>
+              <span class="field-error" id="orderNotionalEur-error"></span>
+            </label>
+            <label class="field-group" for="commissionPerSideEur">
+              <span class="field-label">Commission par côté <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="commissionPerSideEur" name="commissionPerSideEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 1"><span>EUR</span></span>
+              <span class="field-error" id="commissionPerSideEur-error"></span>
+            </label>
+            <label class="field-group" for="fxRatePerSidePct">
+              <span class="field-label">Change par côté <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="fxRatePerSidePct" name="fxRatePerSidePct" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0,25"><span>%</span></span>
+              <span class="field-error" id="fxRatePerSidePct-error"></span>
+            </label>
+            <label class="field-group" for="spreadTotalPct">
+              <span class="field-label">Spread total <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="spreadTotalPct" name="spreadTotalPct" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0,10"><span>%</span></span>
+              <span class="field-error" id="spreadTotalPct-error"></span>
+            </label>
+            <label class="field-group" for="slippageTotalPct">
+              <span class="field-label">Slippage total <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="slippageTotalPct" name="slippageTotalPct" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0,10"><span>%</span></span>
+              <span class="field-error" id="slippageTotalPct-error"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-card">
+          <legend><span>3</span> Cash déclaré</legend>
+          <p class="fieldset-intro">Le cash doit déjà exclure tout ordre en attente non représenté ici. Ce prototype ne lit pas un compte et ne modélise pas les positions simultanées.</p>
+          <div class="field-grid">
+            <label class="field-group" for="cashSettledBeforeReserveEur">
+              <span class="field-label">Cash réglé avant réserve <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="cashSettledBeforeReserveEur" name="cashSettledBeforeReserveEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 1000"><span>EUR</span></span>
+              <span class="field-error" id="cashSettledBeforeReserveEur-error"></span>
+            </label>
+            <label class="field-group" for="strategyHeadroomEur">
+              <span class="field-label">Allocation libre de stratégie <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="strategyHeadroomEur" name="strategyHeadroomEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 1000"><span>EUR</span></span>
+              <span class="field-error" id="strategyHeadroomEur-error"></span>
+            </label>
+            <label class="field-group" for="cashReserveEur">
+              <span class="field-label">Réserve de cash déclarée <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="cashReserveEur" name="cashReserveEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0"><span>EUR</span></span>
+              <span class="field-error" id="cashReserveEur-error"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-card">
+          <legend><span>4</span> Avantage brut</legend>
+          <p class="fieldset-intro">L’avantage est fourni par vous ou par la démonstration. Breaktest ne l’invente pas, ne le prédit pas et ne vérifie pas sa qualité statistique.</p>
+          <div class="field-group" id="edgeMode-group">
+            <span class="field-label">Mode d’évaluation <span aria-hidden="true">*</span></span>
+            <div class="segmented segmented-wide">
+              <label><input type="radio" name="edgeMode" value="none"> Seuil seulement</label>
+              <label><input type="radio" name="edgeMode" value="point"> Valeur ponctuelle</label>
+              <label><input type="radio" name="edgeMode" value="range"> Fourchette basse, centrale, haute</label>
+            </div>
+            <span class="field-error" id="edgeMode-error"></span>
+          </div>
+          <div class="edge-panel" id="point-edge-panel" hidden>
+            <label class="field-group" for="grossEdgePct">
+              <span class="field-label">Avantage brut par portée choisie</span>
+              <span class="input-with-unit"><input id="grossEdgePct" name="grossEdgePct" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 2"><span>%</span></span>
+              <span class="field-help">Avant commission, change, spread et slippage, sur le même nominal.</span>
+              <span class="field-error" id="grossEdgePct-error"></span>
+            </label>
+          </div>
+          <div class="edge-panel field-grid field-grid-three" id="range-edge-panel" hidden>
+            <label class="field-group" for="grossEdgeLowPct">
+              <span class="field-label">Hypothèse basse</span>
+              <span class="input-with-unit"><input id="grossEdgeLowPct" name="grossEdgeLowPct" type="text" inputmode="decimal" autocomplete="off"><span>%</span></span>
+              <span class="field-error" id="grossEdgeLowPct-error"></span>
+            </label>
+            <label class="field-group" for="grossEdgeBasePct">
+              <span class="field-label">Hypothèse centrale</span>
+              <span class="input-with-unit"><input id="grossEdgeBasePct" name="grossEdgeBasePct" type="text" inputmode="decimal" autocomplete="off"><span>%</span></span>
+              <span class="field-error" id="grossEdgeBasePct-error"></span>
+            </label>
+            <label class="field-group" for="grossEdgeHighPct">
+              <span class="field-label">Hypothèse haute</span>
+              <span class="input-with-unit"><input id="grossEdgeHighPct" name="grossEdgeHighPct" type="text" inputmode="decimal" autocomplete="off"><span>%</span></span>
+              <span class="field-error" id="grossEdgeHighPct-error"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-card completeness-card">
+          <legend><span>5</span> Vérifications de complétude</legend>
+          <p class="fieldset-intro">Saisir explicitement zéro lorsque le composant ne s’applique pas. Une valeur non nulle bloque la friction complète tant que sa contrepartie de cycle n’est pas modélisée.</p>
+          <div class="field-grid field-grid-three">
+            <label class="field-group" for="entryContractualFeesEur">
+              <span class="field-label">Autres frais contractuels d’entrée <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="entryContractualFeesEur" name="entryContractualFeesEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0"><span>EUR</span></span>
+              <span class="field-error" id="entryContractualFeesEur-error"></span>
+            </label>
+            <label class="field-group" for="entryTaxEur">
+              <span class="field-label">Taxe d’entrée <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="entryTaxEur" name="entryTaxEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0"><span>EUR</span></span>
+              <span class="field-error" id="entryTaxEur-error"></span>
+            </label>
+            <label class="field-group" for="executionCashBufferEur">
+              <span class="field-label">Buffer cash d’exécution déclaré <span aria-hidden="true">*</span></span>
+              <span class="input-with-unit"><input id="executionCashBufferEur" name="executionCashBufferEur" type="text" inputmode="decimal" autocomplete="off" placeholder="ex. 0"><span>EUR</span></span>
+              <span class="field-error" id="executionCashBufferEur-error"></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="submit-row">
+          <div>
+            <p class="submit-title">Le calcul crée un nouveau snapshot local.</p>
+            <p>Il ne sauvegarde ni ne transmet les hypothèses.</p>
+          </div>
+          <button class="button button-primary button-large" type="submit">Analyser ce scénario</button>
+        </div>
+      </form>
+
+      <div class="stale-banner" id="stale-banner" role="status" hidden>
+        L’ancien résultat a été masqué parce qu’une hypothèse a changé. Relancez l’analyse pour créer un nouveau snapshot.
+      </div>
+
+      <section class="results" id="results" aria-labelledby="result-title" hidden>
+        <div id="result-content"></div>
+      </section>
+      <div class="sr-only" id="live-region" aria-live="polite" aria-atomic="true"></div>
+    </section>
+
+    <section class="shell evidence-section" aria-labelledby="method-title">
+      <div>
+        <p class="step-label">Méthode et limites</p>
+        <h2 id="method-title">Ce que ce prototype calcule — et ce qu’il laisse ouvert</h2>
+      </div>
+      <div class="evidence-grid">
+        <article>
+          <h3>Calculé localement</h3>
+          <ul>
+            <li>friction du cycle et seuil brut ;</li>
+            <li>plancher variable ;</li>
+            <li>marge nette si un avantage compatible est fourni ;</li>
+            <li>engagement d’entrée contre cash et allocation libres déclarés.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Non évalué ici</h3>
+          <ul>
+            <li>cours, spread, profondeur ou liquidité actuels ;</li>
+            <li>probabilité, délai ou qualité d’exécution ;</li>
+            <li>positions simultanées, fiscalité complète ou règlement réel ;</li>
+            <li>qualité statistique de l’avantage fourni.</li>
+          </ul>
+        </article>
+        <article>
+          <h3>Preuve du package</h3>
+          <dl class="package-meta">
+            <div><dt>Statut</dt><dd>internal_review</dd></div>
+            <div><dt>Version</dt><dd>@@DELIVERABLE_VERSION@@</dd></div>
+            <div><dt>Commit source</dt><dd><code>@@SOURCE_COMMIT@@</code></dd></div>
+            <div><dt>Généré</dt><dd>@@GENERATED_AT@@</dd></div>
+          </dl>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <p>Breaktest Cost Gate · critique technique synthétique, pas un produit publié.</p>
+      <a href="README.html">Lire le guide du package</a>
+    </div>
+  </footer>
+
+  <script src="assets/engine-bundle.js"></script>
+  <script src="assets/scenario.js"></script>
+  <script src="assets/presenter.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
