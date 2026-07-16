@@ -23,6 +23,8 @@ for token in (
     "edge_capacity_not_modelled",
     "component_cost_scenarios_not_joint_distribution",
     "discrete_profile_no_interpolation",
+    "assessAlignment",
+    "projectedLedgerHash",
 ):
     if token not in engine:
         raise SystemExit(f"Surface engine is missing guardrail: {token}")
@@ -40,11 +42,12 @@ for token in (
     "Produit cartésien obligatoire",
     "Aucune interpolation",
     "notional_only_not_executable",
+    "Un simple statut `edge_aligned` déclaré par l'appelant n'est pas accepté",
 ):
     if token not in contract:
         raise SystemExit(f"Surface contract is missing guardrail: {token}")
 
-for index in range(1, 31):
+for index in range(1, 33):
     code = f"CSS-{index:02d}"
     if matrix.count(f"### {code} —") != 1:
         raise SystemExit(f"Frozen surface scenario missing or duplicated: {code}")

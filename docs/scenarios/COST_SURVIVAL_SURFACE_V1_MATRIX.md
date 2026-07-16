@@ -119,7 +119,7 @@ Valeur non finie ou `low > base > high` : aucune cellule dépendante.
 
 ### CSS-20 — alignement insuffisant
 
-Tout état autre que `edge_aligned` ou tout hash de clé absent bloque la surface sans proposer une valeur de remplacement.
+Un champ d'alignement incomplet, une clé invalide ou un hash qui ne correspond pas au contexte complet bloque la surface sans proposer une valeur de remplacement. Le moteur recalcule l'alignement ; il n'accepte pas un statut libre.
 
 ## 6. Frontières
 
@@ -177,8 +177,16 @@ Quantité/lot/tick, liquidité/impact/fill, capital/règlement/fréquence et don
 
 L'ordre des composants source n'affecte ni hash ni cellules. Toute mutation économique change le hash. Aucun `NaN`, `Infinity` ou `-0` n'apparaît.
 
+### CSS-31 — contexte ledger et avantage incompatible
+
+Un avantage aligné avec lui-même mais portant un autre instrument, une autre place, direction, portée, horizon ou devise que `sourceLedger.scenarioContext` produit `edge_ledger_scenario_context_mismatch` et zéro cellule.
+
+### CSS-32 — reçus des projections
+
+Chaque taille publie le hash du ledger réellement projeté, son hash de contexte, sa couverture, son enveloppe de coût et ses seuils. Chaque cellule référence exactement le hash de sa taille. La surface reste reconstructible sans faire confiance à une formule d'affichage.
+
 ## 8. Condition de réussite
 
-Les trente scénarios doivent être enregistrés. CSS-03 à CSS-08 et CSS-21 à CSS-24 utilisent des oracles indépendants. La suite de propriétés doit vérifier le produit cartésien, les frontières, l'ordre, le déterminisme et l'absence de valeurs non finies.
+Les trente-deux scénarios doivent être enregistrés. CSS-03 à CSS-08 et CSS-21 à CSS-24 utilisent des oracles indépendants. La suite de propriétés doit vérifier le produit cartésien, les frontières, l'ordre, le déterminisme et l'absence de valeurs non finies.
 
 Une CI verte ne valide ni domaine réel, ni capacité, ni exécution, ni utilité.

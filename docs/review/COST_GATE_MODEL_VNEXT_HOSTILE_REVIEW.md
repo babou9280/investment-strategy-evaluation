@@ -31,6 +31,7 @@ Les constats portent sur les fichiers et tests réellement présents au head fon
 | P0 | le ledger ne possède aucun domaine de taille | extrapolation silencieuse d'un taux, minimum ou barème | snapshot et projection séparés ; domaine explicite requis |
 | P0 | l'avantage peut diminuer avec la capacité | surface favorable obtenue en supposant silencieusement `G` constant | profil constant qualifié d'hypothèse ou profil explicite par taille |
 | P0 | trois coûts et trois avantages peuvent être appariés en diagonale par erreur | six combinaisons hostiles invisibles | produit cartésien coût × avantage obligatoire |
+| P0 | le ledger ne conservait pas instrument, place et horizon, tandis que l'alignement pouvait être seulement déclaré | coûts et avantage de deux scénarios différents confrontés | contexte hashé dans le ledger et alignement canonique recalculé |
 | P1 | le nominal de sortie legacy égale le nominal d'entrée | frais de sortie insensibles au rendement et au chemin du trade | convention maintenue uniquement comme sensibilité nommée |
 | P1 | un notional continu n'est pas nécessairement un ordre exécutable | tailles incompatibles avec quantité, prix, lot ou minimum | surface v1 `notional_only`, exécutabilité non évaluée |
 | P1 | les bornes des composants sont additionnées comme si elles coïncidaient | enveloppe interprétée comme conjointe ou probabiliste | scénario coordonné explicitement non joint et non probabiliste |

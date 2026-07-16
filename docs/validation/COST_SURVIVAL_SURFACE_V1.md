@@ -23,10 +23,10 @@
 
 ```text
 Cost Ledger v1 contract tests: PASS
-Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-35 registered)
+Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-38 registered)
 Cost Ledger v1 property tests: PASS (10 parity cases)
 Cost Ledger v1 static integrity: PASS
-Cost Survival Surface v1 contract tests: PASS (CSS-01 to CSS-30)
+Cost Survival Surface v1 contract tests: PASS (CSS-01 to CSS-32)
 Cost Survival Surface v1 property tests: PASS
 Cost Survival Surface v1 static integrity: PASS
 ```
@@ -66,6 +66,8 @@ marge positive strictement au-dessus
 - frontière exacte cohérente avec les cellules seulement sous géométrie linéaire ;
 - profil explicite par taille sans interpolation ;
 - composant, base, domaine, hash ou alignement invalide refusé ;
+- contexte instrument/place/horizon du ledger et de l'avantage réconcilié ;
+- hash de chaque ledger projeté rattaché à ses cellules ;
 - ratio indisponible pour avantage non positif ;
 - ordre des composants source sans effet ;
 - aucun `NaN`, `Infinity` ou `-0`.

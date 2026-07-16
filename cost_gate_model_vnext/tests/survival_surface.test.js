@@ -24,6 +24,13 @@ assert.equal(result.version, 'cost-survival-surface-engine-1-synthetic');
 assert.equal(result.status, 'computed_synthetic_sensitivity');
 assert.equal(result.cells.length, 27);
 assert.equal(result.invariants.cartesianCellCount, true);
+assert.equal(result.projectedLedgers.length, 3);
+assert.equal(result.sourceScenarioContextHash, ledgerEngine.evaluate(request.sourceLedger).scenarioContextHash);
+result.cells.forEach((cell) => {
+  const receipt = result.projectedLedgers.find((item) => item.sizeEur === cell.sizeEur);
+  assert.ok(receipt);
+  assert.equal(cell.projectedLedgerHash, receipt.ledgerHash);
+});
 [250, 500, 1000].forEach((size) => {
   const pairs = new Set(result.cells.filter((cell) => cell.sizeEur === size).map((cell) => `${cell.costScenario}|${cell.edgeScenario}`));
   assert.equal(pairs.size, 9);
@@ -143,8 +150,14 @@ const unorderedEdge = fixtures.baseRequest();
 unorderedEdge.edgeProfile.constantRates = { low: 0.02, base: 0.011, high: 0.009 };
 assert.ok(codes(surfaceEngine.evaluate(unorderedEdge)).includes('invalid_edge_range_order'));
 const misaligned = fixtures.baseRequest();
-misaligned.edgeProfile.alignmentStatus = 'edge_alignment_incomplete';
+misaligned.edgeProfile.alignmentContext.grossEdgeAlignment.fieldStatuses.instrument_scope = 'mismatched';
+fixtures.refreshAlignmentHash(misaligned);
 assert.ok(codes(surfaceEngine.evaluate(misaligned)).includes('edge_alignment_required'));
+
+const mismatchedContext = fixtures.baseRequest();
+mismatchedContext.edgeProfile.alignmentContext.instrumentId = 'SYNTH:OTHER';
+fixtures.refreshAlignmentHash(mismatchedContext);
+assert.ok(codes(surfaceEngine.evaluate(mismatchedContext)).includes('edge_ledger_scenario_context_mismatch'));
 
 // CSS-21 and CSS-22 — exact boundaries only under declared linear projection.
 const highBoundary = fixtures.boundary(result, 'base', 'high');
@@ -226,4 +239,4 @@ assert.notEqual(mutated.sourceLedgerHash, oldHash);
 assert.notEqual(surfaceEngine.evaluate(mutated).requestHash, result.requestHash);
 ledgerEngine.assertFiniteTree(result);
 
-console.log('Cost Survival Surface v1 contract tests: PASS (CSS-01 to CSS-30)');
+console.log('Cost Survival Surface v1 contract tests: PASS (CSS-01 to CSS-32)');

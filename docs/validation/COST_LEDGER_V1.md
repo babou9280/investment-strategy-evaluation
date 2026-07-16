@@ -29,7 +29,7 @@ Le 16 juillet 2026 :
 
 ```text
 Cost Ledger v1 contract tests: PASS
-Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-35 registered)
+Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-38 registered)
 Cost Ledger v1 property tests: PASS (10 parity cases)
 Cost Ledger v1 static integrity: PASS
 ```
@@ -76,6 +76,7 @@ La fourchette est explicitement non probabiliste.
 - dénominateur réconcilié à sa base, y compris avec coûts fixes seuls ;
 - dépendances non vides refusées tant que leur sémantique n'existe pas ;
 - `edgeInclusion = not_applicable` refusé pour un coût ;
+- contexte instrument/place/horizon conservé et hashé ;
 - parité des sous-totaux lorsque chaque composante legacy est retirée tour à tour ;
 - ordre des composants sans effet sur le hash ou l'agrégat ;
 - zéro explicite distinct d'une absence ;

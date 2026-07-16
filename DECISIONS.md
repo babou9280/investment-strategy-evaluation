@@ -305,8 +305,9 @@
 - Statut : **active, décision technique réversible du 16 juillet 2026**
 - Problème : `notionalScaling` décrit une relation algébrique locale, mais ne prouve ni domaine de taille, ni stabilité des paramètres, ni capacité de l'avantage.
 - Décision : la Cost Survival Surface v1 enveloppe le ledger dans une politique de projection séparée avec domaine explicite, règles de base, stabilité supposée et profil d'avantage.
+- Liaison : le ledger conserve et hashe instrument, place, direction, portée, horizon et devises ; la surface recalcule l'alignement complet de l'avantage et exige le même contexte.
 - Croisement : chaque taille produit le produit cartésien des trois coûts et des trois avantages, soit neuf cellules ; l'appariement diagonal est interdit.
 - Frontière : formule exacte seulement sous projection linéaire prouvée et avantage constant déclaré ; sinon changements discrets sans interpolation.
 - Exécutabilité : la surface reste `notional_only_not_executable`. Quantité, prix, lot, tick, liquidité, fill, fréquence et capital temporel sont non évalués.
 - Langage : aucun optimum, classement, taille proposée, approbation ou ordre.
-- Preuve : contrat, revue hostile, matrice CSS-01 à CSS-30, moteur et oracles locaux ; validation GitHub exact-head encore requise.
+- Preuve : contrat, revue hostile, matrice CSS-01 à CSS-32, moteur et oracles locaux ; validation GitHub exact-head encore requise.

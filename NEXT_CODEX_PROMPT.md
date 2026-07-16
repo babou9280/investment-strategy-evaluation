@@ -45,8 +45,8 @@ La matrice MVP reste l'unique numérotation de gate.
 
 ## Tranche active
 
-1. vérifier CL-32 à CL-35 : dénominateur, dépendances, inclusion edge et qualification du plancher ;
-2. vérifier CSS-01 à CSS-30 et leurs oracles indépendants ;
+1. vérifier CL-32 à CL-38 : dénominateur, dépendances, inclusion edge, plancher et contexte économique ;
+2. vérifier CSS-01 à CSS-32 et leurs oracles indépendants ;
 3. confirmer que chaque cellule appelle le ledger et que coût × avantage est cartésien ;
 4. confirmer les trois états stricts : sous le seuil, égalité, marge positive ;
 5. refuser toute géométrie, base, domaine ou profil non supporté ;

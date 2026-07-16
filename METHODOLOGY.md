@@ -445,6 +445,8 @@ Chaque composant déclare :
 - incertitude et version ;
 - dépendances réservées et statut ; v1 refuse toute dépendance non vide tant que sa propagation n'est pas définie.
 
+Le ledger racine conserve aussi instrument, place, direction, portée, horizon et devises dans un contexte hashé. Une surface ou une couche Edge Survival doit réconcilier sa clé d'alignement avec ce contexte ; un statut déclaré seul ne suffit pas.
+
 Le coût total est la somme des seuls composants valides, applicables, réconciliés et convertis sur une base commune. Une somme partielle reste un `known_cost_floor` uniquement sous l'ontologie déclarée de coûts adverses non négatifs. Elle n'est pas qualifiée de friction complète. Même une collection sans erreur n'est déclarée `complete_under_declared_policy` que si chaque événement attendu par une politique nommée est présent exactement une fois.
 
 Le modèle distingue trois familles :

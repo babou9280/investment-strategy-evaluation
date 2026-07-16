@@ -1,6 +1,7 @@
 'use strict';
 
 const ledgerEngine = require('./ledger.js');
+const foundationEngine = require('../cost_gate_foundation/engine.js');
 
 const VERSION = 'cost-survival-surface-engine-1-synthetic';
 const SCHEMA_VERSION = 'cost-survival-surface-1';
@@ -30,7 +31,7 @@ const DOMAIN_KEYS = new Set(['minNotionalEur', 'maxNotionalEur', 'currency', 'st
 const EDGE_KEYS = new Set([
   'mode',
   'provenance',
-  'alignmentStatus',
+  'alignmentContext',
   'alignmentKeyHash',
   'constantRates',
   'bySize',
@@ -38,6 +39,15 @@ const EDGE_KEYS = new Set([
 ]);
 const RATE_KEYS = new Set(SCENARIOS);
 const BY_SIZE_KEYS = new Set(['sizeEur', 'rates']);
+const ALIGNMENT_CONTEXT_KEYS = new Set([
+  'instrumentId',
+  'venueId',
+  'side',
+  'operationScope',
+  'holdingHorizonDefinition',
+  'accountCurrency',
+  'grossEdgeAlignment'
+]);
 
 function normalizeNumber(value) {
   return Object.is(value, -0) ? 0 : value;
@@ -270,7 +280,7 @@ function validateProjection(projection, sourceLedger, issues) {
   };
 }
 
-function validateEdgeProfile(edgeProfile, sizes, issues) {
+function validateEdgeProfile(edgeProfile, sizes, sourceLedger, issues) {
   if (!exactKeys(edgeProfile, EDGE_KEYS, 'request.edgeProfile', issues)) return null;
   if (!['constant_across_size', 'explicit_by_size'].includes(edgeProfile.mode)) {
     issues.push(issue('unsupported_edge_profile_mode', 'request.edgeProfile.mode'));
@@ -278,11 +288,52 @@ function validateEdgeProfile(edgeProfile, sizes, issues) {
   if (!['user_assumption', 'synthetic_demo'].includes(edgeProfile.provenance)) {
     issues.push(issue('unsupported_edge_provenance', 'request.edgeProfile.provenance'));
   }
-  if (edgeProfile.alignmentStatus !== 'edge_aligned') {
-    issues.push(issue('edge_alignment_required', 'request.edgeProfile.alignmentStatus'));
-  }
   nonEmptyString(edgeProfile.alignmentKeyHash, 'request.edgeProfile.alignmentKeyHash', issues);
   const limitations = stringArray(edgeProfile.limitations, 'request.edgeProfile.limitations', issues);
+
+  let alignmentContext = null;
+  if (exactKeys(edgeProfile.alignmentContext, ALIGNMENT_CONTEXT_KEYS, 'request.edgeProfile.alignmentContext', issues)) {
+    alignmentContext = edgeProfile.alignmentContext;
+    ['instrumentId', 'venueId', 'holdingHorizonDefinition', 'accountCurrency'].forEach((key) => {
+      nonEmptyString(alignmentContext[key], `request.edgeProfile.alignmentContext.${key}`, issues);
+    });
+    if (alignmentContext.side !== 'long') {
+      issues.push(issue('unsupported_edge_direction', 'request.edgeProfile.alignmentContext.side'));
+    }
+    if (!isObject(alignmentContext.grossEdgeAlignment)) {
+      issues.push(issue('object_required', 'request.edgeProfile.alignmentContext.grossEdgeAlignment'));
+    }
+    const ledgerContext = sourceLedger && sourceLedger.scenarioContext;
+    if (
+      !ledgerContext ||
+      alignmentContext.instrumentId !== ledgerContext.instrumentId ||
+      alignmentContext.venueId !== ledgerContext.venueId ||
+      alignmentContext.side !== ledgerContext.direction ||
+      alignmentContext.operationScope !== ledgerContext.operationScope ||
+      alignmentContext.holdingHorizonDefinition !== ledgerContext.holdingHorizonDefinition ||
+      alignmentContext.accountCurrency !== ledgerContext.accountCurrency
+    ) {
+      issues.push(issue('edge_ledger_scenario_context_mismatch', 'request.edgeProfile.alignmentContext'));
+    }
+    let computedAlignmentHash = null;
+    try {
+      computedAlignmentHash = foundationEngine.sha256(alignmentContext);
+    } catch (error) {
+      issues.push(issue('edge_alignment_hash_failed', 'request.edgeProfile.alignmentContext', [error.message]));
+    }
+    if (computedAlignmentHash !== edgeProfile.alignmentKeyHash) {
+      issues.push(issue('edge_alignment_hash_mismatch', 'request.edgeProfile.alignmentKeyHash'));
+    }
+    const assessed = foundationEngine.assessAlignment(Object.assign({}, alignmentContext, {
+      grossEdgeRate: 0,
+      grossEdgeLowRate: null,
+      grossEdgeBaseRate: null,
+      grossEdgeHighRate: null
+    }));
+    if (assessed.state !== 'edge_aligned') {
+      issues.push(issue('edge_alignment_required', 'request.edgeProfile.alignmentContext', assessed.reasons));
+    }
+  }
 
   let constantRates = null;
   const rows = [];
@@ -313,7 +364,7 @@ function validateEdgeProfile(edgeProfile, sizes, issues) {
     }
   }
 
-  return { mode: edgeProfile.mode, constantRates, rows, limitations };
+  return { mode: edgeProfile.mode, constantRates, rows, limitations, alignmentContext };
 }
 
 function projectLedger(sourceLedger, projection, sizeEur) {
@@ -440,6 +491,7 @@ function invalidOutput(issues, sourceResult, requestHash) {
     sourceLedgerHash: sourceResult && sourceResult.ledgerHash || null,
     status: 'invalid_or_unsupported',
     sizesEur: [],
+    projectedLedgers: [],
     cells: [],
     boundaries: {
       method: 'unavailable',
@@ -495,7 +547,12 @@ function evaluate(requestValue) {
   }
 
   const projection = validateProjection(request.projection, request.sourceLedger, issues);
-  const edge = validateEdgeProfile(request.edgeProfile, projection ? projection.sizes : [], issues);
+  const edge = validateEdgeProfile(
+    request.edgeProfile,
+    projection ? projection.sizes : [],
+    request.sourceLedger,
+    issues
+  );
 
   let requestHash = null;
   try {
@@ -547,6 +604,7 @@ function evaluate(requestValue) {
         const ratiosAvailable = grossEdgeEur > TOLERANCE * Math.max(1, Math.abs(costEur));
         cells.push({
           cellId: `${row.sizeEur}|${costScenario}|${edgeScenario}`,
+          projectedLedgerHash: row.result.ledgerHash,
           sizeEur: row.sizeEur,
           costScenario,
           edgeScenario,
@@ -602,8 +660,28 @@ function evaluate(requestValue) {
     schemaVersion: SCHEMA_VERSION,
     requestHash,
     sourceLedgerHash: sourceResult.ledgerHash,
+    sourceScenarioContextHash: sourceResult.scenarioContextHash,
     status: 'computed_synthetic_sensitivity',
     sizesEur: projection.sizes.slice(),
+    projectionPolicy: {
+      policyId: request.projection.policyId,
+      domain: deepClone(request.projection.domain),
+      parameterStability: request.projection.parameterStability,
+      quantityTreatment: request.projection.quantityTreatment
+    },
+    edgeProfileReceipt: {
+      mode: request.edgeProfile.mode,
+      provenance: request.edgeProfile.provenance,
+      alignmentKeyHash: request.edgeProfile.alignmentKeyHash
+    },
+    projectedLedgers: projectedRows.map((row) => ({
+      sizeEur: row.sizeEur,
+      ledgerHash: row.result.ledgerHash,
+      scenarioContextHash: row.result.scenarioContextHash,
+      coverageStatus: row.result.coverage.status,
+      totalCostEur: deepClone(row.result.totalCostEur),
+      breakEvenGrossRate: deepClone(row.result.breakEvenGrossRate)
+    })),
     costScenarios: SCENARIOS.slice(),
     edgeScenarios: SCENARIOS.slice(),
     cells,

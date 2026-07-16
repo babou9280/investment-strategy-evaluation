@@ -312,4 +312,55 @@ assert.ok(base.limitations.includes('known_floor_requires_nonnegative_cost_ontol
 assert.ok(base.limitations.includes('component_sensitivities_co_moved_without_joint_model'));
 assert.ok(base.limitations.includes('scaling_domain_not_assessed'));
 
+// CL-36 — the cost snapshot remains bound to its economic context.
+assert.deepEqual(adapted.ledger.scenarioContext, {
+  instrumentId: 'SYNTH:ABC',
+  venueId: 'SYNTH-X',
+  direction: 'long',
+  operationScope: 'complete_round_trip',
+  holdingHorizonDefinition: 'user_defined',
+  accountCurrency: 'EUR',
+  quoteCurrency: 'USD'
+});
+assert.equal(typeof base.scenarioContextHash, 'string');
+assert.equal(base.scenarioContextHash.length, 64);
+
+// CL-37 — a missing or contradictory context never yields a complete threshold.
+const missingContext = fixtures.deepClone(adapted.ledger);
+delete missingContext.scenarioContext;
+const missingContextResult = resultFor(missingContext);
+assert.ok(issueCodes(missingContextResult).includes('object_required'));
+assert.equal(missingContextResult.totalCostEur, null);
+
+const contradictoryContext = fixtures.deepClone(adapted.ledger);
+contradictoryContext.scenarioContext.operationScope = 'entry_leg';
+const contradictoryContextResult = resultFor(contradictoryContext);
+assert.ok(issueCodes(contradictoryContextResult).includes('scenario_context_root_mismatch'));
+assert.equal(contradictoryContextResult.breakEvenGrossRate, null);
+
+const missingInstrumentInput = fixtures.baseLegacy();
+delete missingInstrumentInput.instrumentId;
+assert.equal(engine.adaptLegacy(missingInstrumentInput).errors.instrumentId, 'non_empty_string_required');
+
+// CL-38 — context mutation changes both identities; key order does not.
+const changedVenue = fixtures.deepClone(adapted.ledger);
+changedVenue.scenarioContext.venueId = 'SYNTH-Y';
+const changedVenueResult = resultFor(changedVenue);
+assert.notEqual(changedVenueResult.ledgerHash, base.ledgerHash);
+assert.notEqual(changedVenueResult.scenarioContextHash, base.scenarioContextHash);
+
+const reorderedContext = fixtures.deepClone(adapted.ledger);
+reorderedContext.scenarioContext = {
+  quoteCurrency: reorderedContext.scenarioContext.quoteCurrency,
+  accountCurrency: reorderedContext.scenarioContext.accountCurrency,
+  holdingHorizonDefinition: reorderedContext.scenarioContext.holdingHorizonDefinition,
+  operationScope: reorderedContext.scenarioContext.operationScope,
+  direction: reorderedContext.scenarioContext.direction,
+  venueId: reorderedContext.scenarioContext.venueId,
+  instrumentId: reorderedContext.scenarioContext.instrumentId
+};
+const reorderedContextResult = resultFor(reorderedContext);
+assert.equal(reorderedContextResult.ledgerHash, base.ledgerHash);
+assert.equal(reorderedContextResult.scenarioContextHash, base.scenarioContextHash);
+
 console.log('Cost Ledger v1 contract tests: PASS');

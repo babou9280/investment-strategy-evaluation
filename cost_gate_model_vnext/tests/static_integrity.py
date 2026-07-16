@@ -24,6 +24,7 @@ required_engine_tokens = (
     "user_assumption_without_market_benchmark",
     "sensitivity_cannot_claim_coverage",
     "economic_event_identity_source_dependent",
+    "scenarioContextHash",
 )
 for token in required_engine_tokens:
     if token not in engine:
@@ -43,12 +44,13 @@ for token in (
     "calculationStatus",
     "evidenceStatus",
     "temporalStatus",
+    "scenarioContext",
     "Une fourchette de sensibilité n'est ni une distribution ni un intervalle de confiance",
 ):
     if token not in contract:
         raise SystemExit(f"Cost Ledger contract is missing guardrail: {token}")
 
-for index in range(1, 36):
+for index in range(1, 39):
     code = f"CL-{index:02d}"
     if matrix.count(f"### {code} —") != 1:
         raise SystemExit(f"Frozen scenario missing or duplicated: {code}")

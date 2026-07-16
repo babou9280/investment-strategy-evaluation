@@ -13,7 +13,7 @@ Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestre
 
 Cost Gate est validé stratégiquement. Sa fondation synthétique est fonctionnelle dans un domaine technique restreint. Une interface de critique hors ligne est maintenant exécutée techniquement ; sa compréhension par des personnes réelles, le produit connecté, les données réelles, le droit et le marché ne sont pas validés.
 
-Le 16 juillet 2026, Ayman a suspendu la cohorte Gate 1 : le prototype actuel est un début utile mais le modèle doit aller plus loin avant observation. La mission active devient la conception Cost Gate vNext. Le Cost Ledger v1 est validé techniquement sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, run `#650`. Une revue hostile a ensuite séparé snapshot, projection et domaine de taille ; les renforcements CL-32 à CL-35 et une Cost Survival Surface v1 de trente scénarios sont implémentés localement et attendent leur preuve distante. Le protocole préenregistré reste intact ; le compteur reste `0/5`.
+Le 16 juillet 2026, Ayman a suspendu la cohorte Gate 1 : le prototype actuel est un début utile mais le modèle doit aller plus loin avant observation. La mission active devient la conception Cost Gate vNext. Le Cost Ledger v1 est validé techniquement sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, run `#650`. Une revue hostile a ensuite séparé snapshot, projection et domaine de taille. Les renforcements CL-32 à CL-38 lient aussi instrument, place et horizon ; la Cost Survival Surface v1 compte 32 scénarios et des reçus par taille. Cette révision locale attend sa preuve distante. Le protocole préenregistré reste intact ; le compteur reste `0/5`.
 
 ## 2. État GitHub
 

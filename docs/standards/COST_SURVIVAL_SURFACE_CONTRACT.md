@@ -90,7 +90,7 @@ Cette politique conserve notamment `exit_notional / entry_notional` du snapshot.
 edgeProfile = {
   mode,
   provenance,
-  alignmentStatus,
+  alignmentContext,
   alignmentKeyHash,
   constantRates,
   bySize,
@@ -99,10 +99,17 @@ edgeProfile = {
 
 mode = constant_across_size | explicit_by_size
 provenance = user_assumption | synthetic_demo
-alignmentStatus = edge_aligned
 
 edgeRates = { low, base, high }
 ```
+
+`alignmentContext` contient l'instrument, la place, la direction, la portée, l'horizon, la devise du compte et la clé complète `grossEdgeAlignment`. Le moteur :
+
+1. recalcule son hash et le compare à `alignmentKeyHash` ;
+2. réexécute l'évaluateur canonique d'alignement de la fondation ;
+3. exige la correspondance avec `sourceLedger.scenarioContext`.
+
+Un simple statut `edge_aligned` déclaré par l'appelant n'est pas accepté.
 
 Les trois taux sont finis et ordonnés. Ils peuvent être nuls ou négatifs. Ils restent des hypothèses non probabilistes.
 
@@ -130,6 +137,7 @@ La surface n'est calculée que si :
 - le dénominateur est `entry_notional` en EUR ;
 - les composants et bases sont projetables sous la politique v1 ;
 - le profil d'avantage est aligné et complet.
+- le contexte instrument/place/horizon de l'avantage correspond au contexte hashé du ledger.
 
 Un sous-total connu peut rester visible dans le ledger, mais ne devient jamais une surface de survie complète.
 
@@ -196,6 +204,7 @@ La sortie contient :
 
 - hash et version de la requête ;
 - hash du ledger source ;
+- hash du contexte source et hash du ledger projeté pour chaque taille ;
 - tailles et hypothèses évaluées ;
 - neuf cellules par taille ;
 - coûts, seuils, marges, ratios éventuellement disponibles et états ;

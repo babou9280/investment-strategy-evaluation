@@ -13,6 +13,7 @@ const ROOT_KEYS = new Set([
   'operationScope',
   'accountCurrency',
   'quoteCurrency',
+  'scenarioContext',
   'returnDenominator',
   'basisValues',
   'coverage',
@@ -47,6 +48,15 @@ const COMPONENT_KEYS = new Set([
   'limitations'
 ]);
 const RETURN_DENOMINATOR_KEYS = new Set(['basis', 'amount', 'currency']);
+const SCENARIO_CONTEXT_KEYS = new Set([
+  'instrumentId',
+  'venueId',
+  'direction',
+  'operationScope',
+  'holdingHorizonDefinition',
+  'accountCurrency',
+  'quoteCurrency'
+]);
 const BASIS_VALUE_KEYS = new Set(['amount', 'currency']);
 const COVERAGE_KEYS = new Set([
   'declaration',
@@ -312,6 +322,25 @@ function rootContext(ledger, issues) {
   if (ledger.accountCurrency !== 'EUR') issues.push(issue('unsupported_scope', 'blocking', 'ledger.accountCurrency'));
   nonEmptyString(ledger.quoteCurrency, 'ledger.quoteCurrency', issues);
 
+  let scenarioContext = null;
+  if (exactKeys(ledger.scenarioContext, SCENARIO_CONTEXT_KEYS, 'ledger.scenarioContext', issues)) {
+    ['instrumentId', 'venueId', 'holdingHorizonDefinition'].forEach((key) => {
+      nonEmptyString(ledger.scenarioContext[key], `ledger.scenarioContext.${key}`, issues);
+    });
+    if (ledger.scenarioContext.direction !== 'long') {
+      issues.push(issue('unsupported_scenario_direction', 'blocking', 'ledger.scenarioContext.direction'));
+    }
+    const contextMatches = (
+      ledger.scenarioContext.operationScope === ledger.operationScope &&
+      ledger.scenarioContext.accountCurrency === ledger.accountCurrency &&
+      ledger.scenarioContext.quoteCurrency === ledger.quoteCurrency
+    );
+    if (!contextMatches) {
+      issues.push(issue('scenario_context_root_mismatch', 'blocking', 'ledger.scenarioContext'));
+    }
+    scenarioContext = ledger.scenarioContext;
+  }
+
   let denominator = null;
   let denominatorBasis = null;
   if (exactKeys(ledger.returnDenominator, RETURN_DENOMINATOR_KEYS, 'ledger.returnDenominator', issues)) {
@@ -381,7 +410,7 @@ function rootContext(ledger, issues) {
   }
 
   if (!Array.isArray(ledger.components)) issues.push(issue('array_required', 'blocking', 'ledger.components'));
-  return { denominator, bases, coverage };
+  return { denominator, bases, coverage, scenarioContext };
 }
 
 function validateBenchmark(component, path, issues) {
@@ -859,11 +888,13 @@ function evaluate(ledgerValue) {
   const invalid = orderedIssues.some((item) => item.severity === 'blocking');
   const conflicted = results.some((result) => result.calculationStatus === 'conflicted');
   const status = invalid ? 'invalid' : conflicted ? 'conflicted' : coverageStatus;
+  const scenarioContextHash = context.scenarioContext ? sha256(context.scenarioContext) : null;
   const output = {
     ok: !invalid && !conflicted,
     version: VERSION,
     schemaVersion: ledger.schemaVersion || null,
     ledgerHash,
+    scenarioContextHash,
     status,
     coverage: {
       declaration: ledger.coverage && ledger.coverage.declaration || null,
@@ -1009,6 +1040,12 @@ function adaptLegacy(inputValue) {
   if (!OPERATION_SCOPES.has(input.operationScope)) errors.operationScope = 'unsupported_operation_scope';
   if (input.accountCurrency !== 'EUR') errors.accountCurrency = 'unsupported_scope';
   if (typeof input.quoteCurrency !== 'string' || !input.quoteCurrency) errors.quoteCurrency = 'non_empty_string_required';
+  if (typeof input.instrumentId !== 'string' || !input.instrumentId) errors.instrumentId = 'non_empty_string_required';
+  if (typeof input.venueId !== 'string' || !input.venueId) errors.venueId = 'non_empty_string_required';
+  if (input.side !== 'long') errors.side = 'unsupported_scenario_direction';
+  if (typeof input.holdingHorizonDefinition !== 'string' || !input.holdingHorizonDefinition) {
+    errors.holdingHorizonDefinition = 'non_empty_string_required';
+  }
   if (!['user_assumption', 'synthetic_demo'].includes(input.provenance)) errors.provenance = 'unsupported_provenance';
   const notional = classifyLegacyNumber(input.orderNotionalEur, { required: true, min: Number.MIN_VALUE });
   if (!notional.ok) errors.orderNotionalEur = notional.reason;
@@ -1163,6 +1200,15 @@ function adaptLegacy(inputValue) {
     operationScope: input.operationScope,
     accountCurrency: input.accountCurrency,
     quoteCurrency: input.quoteCurrency,
+    scenarioContext: {
+      instrumentId: input.instrumentId,
+      venueId: input.venueId,
+      direction: input.side,
+      operationScope: input.operationScope,
+      holdingHorizonDefinition: input.holdingHorizonDefinition,
+      accountCurrency: input.accountCurrency,
+      quoteCurrency: input.quoteCurrency
+    },
     returnDenominator: { basis: 'entry_notional', amount: N, currency: 'EUR' },
     basisValues: Object.assign(
       { entry_notional: { amount: N, currency: 'EUR' } },

@@ -2,6 +2,8 @@
 
 const ledgerEngine = require('../ledger.js');
 const ledgerFixtures = require('./fixtures.js');
+const foundationEngine = require('../../cost_gate_foundation/engine.js');
+const foundationFixtures = require('../../cost_gate_foundation/tests/fixtures.js');
 
 function deepClone(value) {
   return ledgerFixtures.deepClone(value);
@@ -30,6 +32,15 @@ function baseSourceLedger() {
 function baseRequest() {
   const sourceLedger = baseSourceLedger();
   const sourceLedgerHash = ledgerEngine.evaluate(sourceLedger).ledgerHash;
+  const alignmentContext = {
+    instrumentId: 'SYNTH:ABC',
+    venueId: 'SYNTH-X',
+    side: 'long',
+    operationScope: 'complete_round_trip',
+    holdingHorizonDefinition: 'user_defined',
+    accountCurrency: 'EUR',
+    grossEdgeAlignment: foundationFixtures.alignedGrossEdge()
+  };
   return {
     schemaVersion: 'cost-survival-surface-1',
     surfaceId: 'synthetic-cost-survival-surface',
@@ -56,8 +67,8 @@ function baseRequest() {
     edgeProfile: {
       mode: 'constant_across_size',
       provenance: 'synthetic_demo',
-      alignmentStatus: 'edge_aligned',
-      alignmentKeyHash: 'synthetic-alignment-key-v1',
+      alignmentContext,
+      alignmentKeyHash: foundationEngine.sha256(alignmentContext),
       constantRates: { low: 0.009, base: 0.011, high: 0.02 },
       bySize: [],
       limitations: ['not_probabilistic', 'capacity_not_evidenced']
@@ -67,6 +78,11 @@ function baseRequest() {
 
 function refreshHash(request) {
   request.sourceLedgerHash = ledgerEngine.evaluate(request.sourceLedger).ledgerHash;
+  return request;
+}
+
+function refreshAlignmentHash(request) {
+  request.edgeProfile.alignmentKeyHash = foundationEngine.sha256(request.edgeProfile.alignmentContext);
   return request;
 }
 
@@ -93,6 +109,7 @@ module.exports = {
   baseSourceLedger,
   baseRequest,
   refreshHash,
+  refreshAlignmentHash,
   cell,
   boundary
 };

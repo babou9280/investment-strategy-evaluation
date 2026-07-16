@@ -350,6 +350,8 @@ La revue hostile impose une séparation supplémentaire : le Cost Ledger est un 
 
 La première surface reste `notional_only_not_executable`. Quantité, prix, lot, tick, minimum d'ordre, liquidité, impact, fill, fréquence et trajectoire de capital demeurent non évalués. Une frontière exacte n'est publiée que sous une géométrie linéaire démontrée ; un profil d'avantage fourni par taille produit seulement des changements discrets sans interpolation.
 
+Le ledger lie maintenant instrument, place, direction, portée, horizon et devises dans un `scenarioContext` hashé. La surface ne fait pas confiance à un statut d'alignement fourni : elle réexécute l'évaluateur canonique de la fondation et exige la correspondance avec ce contexte.
+
 ## 7. Premier noyau implémenté — Cost Ledger v1
 
 Le premier code vNext n'est pas un modèle de market impact. Il est le **Cost Ledger v1**, isolé et techniquement validé sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`. Cette réussite prouve le contrat synthétique et la rétrocompatibilité, pas la justesse de coûts de marché non calibrés.

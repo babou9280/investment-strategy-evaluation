@@ -1052,6 +1052,7 @@ module.exports = {
   canonicalStringify,
   sha256,
   close,
+  assessAlignment,
   compute,
   compareSnapshots,
   assertFiniteTree

@@ -349,6 +349,18 @@ scaling_domain_not_assessed
 
 Aucune de ces limites ne modifie l'oracle legacy ; elles empêchent son extrapolation commerciale ou quantitative.
 
+### CL-36 — contexte économique lié par l'adaptateur
+
+L'adaptateur conserve instrument, place, direction, portée, horizon et devises dans `scenarioContext`. Le résultat publie un `scenarioContextHash` déterministe non vide.
+
+### CL-37 — contexte absent ou contradictoire
+
+`scenarioContext` absent, direction non supportée, portée ou devise différente de la racine : ledger invalide, aucune couverture complète et aucun seuil.
+
+### CL-38 — mutation de contexte
+
+Changer l'instrument, la place ou l'horizon sans modifier les coûts change `ledgerHash` et `scenarioContextHash`. L'ordre des clés du contexte n'a aucun effet.
+
 ## 10. Condition de réussite de la tranche
 
 La tranche Cost Ledger v1 n'est techniquement réussie que si :

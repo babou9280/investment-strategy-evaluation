@@ -30,6 +30,7 @@ costLedger = {
   operationScope,
   accountCurrency,
   quoteCurrency,
+  scenarioContext,
   returnDenominator,
   basisValues,
   coverage,
@@ -50,6 +51,24 @@ instrument_type = spot_equity | spot_etf
 ```
 
 Ces trois limites restent contrôlées par la fondation Cost Gate. Toute autre devise de compte ou portée retourne un état explicite `unsupported_scope`.
+
+Le snapshot reste lié à son contexte économique :
+
+```text
+scenarioContext = {
+  instrumentId,
+  venueId,
+  direction,
+  operationScope,
+  holdingHorizonDefinition,
+  accountCurrency,
+  quoteCurrency
+}
+```
+
+Instrument, place et horizon sont non vides. La direction initiale est `long`. Portée et devises correspondent exactement à la racine. Le résultat publie `scenarioContextHash`. Une mutation de contexte change ce hash et `ledgerHash`, même si les nombres de coût restent identiques.
+
+Ce lien ne prouve pas que la source a choisi le bon instrument ou la bonne place. Il empêche toutefois de réutiliser silencieusement un ledger identifié sur un autre contexte.
 
 Les clés inconnues sont refusées dans v1. Une extension future devra être placée dans un espace explicitement versionné avant d'être acceptée.
 

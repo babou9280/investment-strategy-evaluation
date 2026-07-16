@@ -6,7 +6,7 @@ Ayman a décidé le 16 juillet 2026 de ne pas lancer la cohorte Gate 1 avec le p
 
 Cette décision ne nie aucune preuve technique de la PR `#26`. Elle requalifie son HTML comme sonde technique et empêche de confondre « fonctionne » avec « modèle suffisamment bon ».
 
-Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont techniquement validés sur `df3ff7fc`, run `#650`. La revue hostile est exécutée. Les renforcements CL-32 à CL-35 et la Cost Survival Surface v1 CSS-01 à CSS-30 sont implémentés localement et attendent leur preuve distante. Aucune migration de la fondation ou de l'interface n'est engagée.
+Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont techniquement validés sur `df3ff7fc`, run `#650`. La revue hostile est exécutée. Les renforcements CL-32 à CL-38 et la Cost Survival Surface v1 CSS-01 à CSS-32 sont implémentés localement et attendent leur preuve distante. Aucune migration de la fondation ou de l'interface n'est engagée.
 
 ## 2. Objectif de la première tranche — atteint techniquement
 

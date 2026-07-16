@@ -296,7 +296,7 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026, puis suspendu sa cohorte le 16 juillet pour approfondir le modèle.
 
-Sont autorisés : Cost Ledger v1, contrat, scénarios, adaptateur rétrocompatible, oracles, enveloppe entièrement synthétique, revue hostile, Cost Survival Surface v1 et maintien des preuves. Le ledger jusqu'à CL-31 est validé sur `df3ff7fc`, run `#650`. Les renforcements CL-32 à CL-35 et CSS-01 à CSS-30 réussissent localement et attendent une preuve GitHub exact-head. L'observation des cinq participants reste suspendue. Une donnée externe, une nouvelle interface grand public ou un modèle de microstructure non calibré ne sont pas autorisés.
+Sont autorisés : Cost Ledger v1, contrat, scénarios, adaptateur rétrocompatible, oracles, enveloppe entièrement synthétique, revue hostile, Cost Survival Surface v1 et maintien des preuves. Le ledger jusqu'à CL-31 est validé sur `df3ff7fc`, run `#650`. Les renforcements CL-32 à CL-38 et CSS-01 à CSS-32 réussissent localement et attendent une preuve GitHub exact-head. L'observation des cinq participants reste suspendue. Une donnée externe, une nouvelle interface grand public ou un modèle de microstructure non calibré ne sont pas autorisés.
 
 Gate 1 ne sera pas déclarée réussie avant décision de rouvrir une cohorte, cinq observations qualifiées réelles et application des seuils préenregistrés.
 

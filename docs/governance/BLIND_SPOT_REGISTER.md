@@ -187,6 +187,7 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-097 | P0 | Cost Gate / égalité | L'arrondi flottant transforme l'égalité au seuil en marge positive | État économique faux à la frontière | mitigated | Tolérance relative versionnée, état `at_threshold_no_positive_margin`, CSS-03/04 et propriété dédiée |
 | BS-098 | P1 | Cost Gate / UX | Une grille ou frontière devient implicitement un optimiseur de taille | Conseil ou approbation perçue | mitigated | Aucun optimum, score, classement ou taille proposée dans le contrat et CSS-28 |
 | BS-099 | P0 | Cost Gate / fréquence et capital | Une surface par trade est multipliée en fréquence sans durée, règlement ou chevauchement | Faisabilité annuelle et capital disponibles faux | open | Couche `capital_timeline_settlement_and_frequency` toujours non évaluée ; traitement reporté à une tranche temporelle distincte |
+| BS-100 | P0 | Cost Gate / alignement | Le ledger perd instrument, place et horizon puis est confronté à un avantage seulement auto-déclaré aligné | Coûts d'un scénario comparés à l'avantage d'un autre | mitigated | `scenarioContext` et hash dans le ledger ; évaluateur canonique d'alignement réexécuté par la surface ; correspondance stricte et CSS-20/31/32 ; preuve distante requise |
 
 ## 6. Gate de revue multidisciplinaire
 
