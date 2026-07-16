@@ -277,3 +277,25 @@
 - Seuils : 4/5 identifient le facteur principal ; 0/5 interprètent l'état favorable comme recommandation ou autorisation ; 3/5 identifient un usage réel ; 3/5 distinguent les entrées disponibles et manquantes ; 4/5 obtiennent un premier résultat en 180 secondes ou moins.
 - Limites : aucune donnée externe, connexion, compte, stockage, analytics, recommandation, probabilité, exécution ou publication. Les résultats de cinq personnes ne prouvent ni marché, ni droit, ni volonté de payer.
 - Protection : nouvelle pull request vers `breaktest-bootstrap` ; `main` reste strictement hors périmètre.
+
+## D041 — La cohorte Gate 1 est suspendue pour approfondir le modèle
+
+- Statut : **active, décidée par Ayman le 16 juillet 2026**
+- Décision : ne pas recruter les cinq participants avec le prototype actuel. L'HTML validé reste une sonde technique utile, mais Ayman considère que Breaktest peut et doit aller sensiblement plus loin dans la conception du modèle avant une observation humaine.
+- Conséquence : le protocole et les seuils préenregistrés restent intacts, le compteur reste `0/5`, aucune observation n'est lancée et aucune donnée utilisateur n'est inventée.
+- Mission : concevoir Cost Gate vNext selon `docs/product/COST_GATE_MODEL_ARCHITECTURE_VNEXT.md`, en commençant par le Cost Ledger v1 de `docs/standards/COST_LEDGER_CONTRACT.md`.
+- Principe : séparer coûts contractuels, estimations ex ante et mesures ex post ; identifier côté, portée, base, devise, benchmark, inclusion, provenance, temps et incertitude de chaque composant ; conserver une compatibilité exacte avec les résultats validés.
+- Garde-fou : aucun modèle de market impact, probabilité d'exécution, donnée externe, recommandation ou nouvelle interface grand public n'est autorisé par cette décision.
+- Gate : la numérotation de `COST_GATE_MVP_GATE_MATRIX.md` reste inchangée. Ayman décidera plus tard quel prototype mérite la cohorte Gate 1.
+- Protection : PR `#26` maintenue en brouillon ; `breaktest-bootstrap` et `main` restent inchangées.
+
+## D042 — Le Cost Ledger sépare couverture, événement économique et qualité de preuve
+
+- Statut : **active, décision technique réversible du 16 juillet 2026**
+- Problème : une liste de lignes ne prouve pas qu'aucun coût n'a été oublié ; un identifiant technique ne suffit pas à détecter un même coût répété ; une valeur calculable ne prouve ni fiabilité ni actualité.
+- Décision : chaque politique nomme ses événements attendus ; chaque composant possède `componentId` et `economicEventId` ; `calculationStatus`, `evidenceStatus` et `temporalStatus` restent séparés.
+- Langage : la seule complétude autorisée est `complete_under_declared_policy` avec la limite de politique visible.
+- Compatibilité : `legacy-four-costs-1` reproduit les résultats actuels, y compris les sous-totaux incomplets et l'hypothèse de nominal constant sur l'aller-retour.
+- Incertitude : basse, centrale et haute sont des sensibilités coordonnées non probabilistes.
+- Garde-fou : les doublons d'événement sont exclus ; deux sources ayant attribué à tort deux identifiants différents restent un risque déclaré, pas une déduplication prétendue.
+- Preuve : matrice CL-01 à CL-31 et oracles indépendants ; validation GitHub exact-head encore requise avant clôture technique de la tranche.

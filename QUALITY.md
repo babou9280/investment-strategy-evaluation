@@ -286,6 +286,10 @@ La preuve synthétique respecte :
 
 La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiques. L'interface Gate 1 est techniquement exécutée séparément sur son package exact ; aucune de ces preuves ne valide donnée actuelle, compréhension réelle, conseil, exécution, droit ou marché.
 
+La cohorte Gate 1 est suspendue par décision d'Ayman du 16 juillet 2026. Le prochain standard matériel est `COST_LEDGER_CONTRACT.md` : tout nouveau coût doit déclarer identité de représentation, identité d'événement économique, catégorie, côté, portée, base, devise, benchmark, inclusion, provenance, temps, incertitude et version. Une forme non supportée reste non évaluée ; elle n'est jamais ramenée silencieusement à un taux proportionnel.
+
+Les estimations ex ante, coûts contractuels et mesures ex post ne peuvent pas être agrégés sans réconciliation explicite. Une liste de composants ne s'auto-déclare pas complète : une politique doit nommer les événements attendus et la sortie reste `complete_under_declared_policy`. Calculabilité, qualité de preuve et actualité sont séparées. Une fourchette de sensibilité n'est ni une distribution ni un intervalle de confiance. Un modèle de market impact exige une calibration et un domaine propres avant tout usage.
+
 ## 16. Sécurité et confidentialité
 
 Le prototype interne reste local-only :

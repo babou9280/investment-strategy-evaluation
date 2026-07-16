@@ -19,6 +19,7 @@ Avant toute modification matérielle, lire intégralement :
 - `docs/product/EDGE_SURVIVAL_ENVELOPE.md` ;
 - `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md` ;
 - `docs/product/COST_GATE_DIRECTION.md` ;
+- `docs/product/COST_GATE_MODEL_ARCHITECTURE_VNEXT.md` lorsqu'il existe ;
 - `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
 - `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
 - `docs/standards/EDGE_SURVIVAL_CONTRACT.md` ;
@@ -30,9 +31,12 @@ Avant toute modification matérielle, lire intégralement :
 - `docs/standards/COST_GATE_SNAPSHOT_CONTRACT.md` ;
 - `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
 - `docs/standards/COST_GATE_FINDINGS_CONTRACT.md` ;
+- `docs/standards/COST_LEDGER_CONTRACT.md` lorsqu'il existe ;
+- `docs/scenarios/COST_LEDGER_V1_MATRIX.md` lorsqu'il existe ;
 - `docs/governance/BLIND_SPOT_REGISTER.md` ;
 - `docs/validation/COST_GATE_FOUNDATION.md` lorsqu'il existe ;
 - `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md` lorsqu'il existe ;
+- `docs/validation/COST_LEDGER_V1.md` lorsqu'il existe ;
 - `docs/delivery/OFFLINE_HTML_DELIVERABLE_STANDARD.md` ;
 - la mission, les scénarios, validations, revues, code et tests concernés.
 
@@ -60,21 +64,26 @@ L'incertitude est déclarée, jamais comblée par invention.
 
 Les pull requests `#23`, `#24` et `#25` sont fusionnées dans `breaktest-bootstrap`.
 
-La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026. Son prototype `internal_review` est techniquement exécuté ; cinq observations qualifiées réelles restent nécessaires avant toute clôture de Gate 1.
+La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`, est techniquement validée dans son périmètre cash long restreint. Gate 0 est clôturée. Ayman a explicitement validé Gate 1 le 15 juillet 2026. Son prototype `internal_review` est techniquement exécuté et son défaut iPad ciblé est retesté avec succès.
 
-La mission fonctionnelle active est l'**observation de cinq participants qualifiés** avec le prototype hors ligne de critique de la PR `#26`, sur `strategy/cost-gate-offline-critique`. Le premier essai fondateur du bundle multifichier a reproduit un blocage : le lecteur ouvrait la page sans exécuter ses scripts relatifs, puis le bouton rechargeait le formulaire et effaçait les champs. Ayman a ensuite confirmé le 16 juillet 2026 que le fichier HTML autonome exact charge la démonstration et produit le résultat sur le même iPad. Ce contrôle fondateur valide le défaut ciblé mais ne compte pas parmi les cinq participants et ne prouve pas tous les lecteurs Safari/iPad. Les observations doivent tester la compréhension, l'effort de saisie et la confusion avec une recommandation, sans donnée externe.
+Le 16 juillet 2026, Ayman a refusé de lancer la cohorte avec ce prototype et a demandé d'approfondir intelligemment la conception du modèle. Cette décision ne ferme ni ne renumérote Gate 1 : elle suspend ses observations et requalifie l'HTML actuel comme **sonde technique**, pas comme candidat actuel à la cohorte.
+
+La mission active est la **conception Cost Gate vNext** sur la PR `#26`, en commençant par un Cost Ledger v1 rétrocompatible. L'architecture d'autorité est `docs/product/COST_GATE_MODEL_ARCHITECTURE_VNEXT.md`, le contrat est `docs/standards/COST_LEDGER_CONTRACT.md`, la matrice pré-code est `docs/scenarios/COST_LEDGER_V1_MATRIX.md` et la mission est `docs/tasks/COST_GATE_MODEL_VNEXT.md`. Le moteur isolé existe localement mais ne devient une preuve distante qu'après push, CI exact-head et inspection d'artefact.
 
 Le travail autorisé se limite à :
 
 - corriger un défaut démontré dans les actifs fusionnés ;
 - maintenir les contrats, preuves et fichiers canoniques ;
 - rechercher et enregistrer les angles morts ;
-- exécuter les cinq observations préenregistrées de Gate 1 ;
-- corriger uniquement un défaut réellement reproduit dans le prototype `internal_review` et maintenir son package exact.
+- concevoir le Cost Ledger v1, sa matrice de scénarios et ses oracles ;
+- implémenter un adaptateur rétrocompatible sans changer silencieusement l'économie validée ;
+- préparer une enveloppe de coûts entièrement synthétique et non probabiliste ;
+- corriger uniquement un défaut réellement reproduit dans le prototype `internal_review` et maintenir sa preuve historique.
 
 Travail suspendu :
 
 - publication ou déploiement ;
+- recrutement ou observation Gate 1 tant qu'Ayman n'a pas rouvert la cohorte ;
 - H3 à H6 ;
 - modification fonctionnelle de `app/Breaktest_Studio.html`, `validation_site/` ou `capital_efficiency_lab/` ;
 - import réel ;
@@ -87,6 +96,8 @@ Travail suspendu :
 - marketplace, affiliation ou API ;
 - signaux, allocation, recommandation, conseil ou exécution ;
 - probabilité d'exécution ou ordre limite conseillé ;
+- modèle de market impact non calibré ou loi universelle hardcodée ;
+- fusion des coûts ex ante et des mesures TCA ex post ;
 - levier, marge, vente à découvert ou dérivés ;
 - package présenté comme abouti avant ses gates.
 

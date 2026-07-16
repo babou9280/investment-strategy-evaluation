@@ -150,4 +150,17 @@ Cette section est postérieure au préenregistrement et ne modifie aucun seuil, 
 - Matrice technique, parité moteur, fichier autonome sous `file://`, fraîcheur, provenance, accessibilité, responsive et repli sans JavaScript réussis dans le périmètre documenté.
 - Ayman a confirmé le 16 juillet 2026 que le fichier autonome exact charge la démonstration synthétique et affiche le résultat sur le même iPad. Ce contrôle fondateur ne compte pas dans la cohorte.
 - Participants observés : **0 sur 5**.
-- Défaut d'effacement sur le lecteur iPad fondateur : `validated` ; compatibilité générale Safari/iPad : non validée. Prochaine condition : exécuter les cinq observations réelles sans modifier silencieusement le protocole.
+- Défaut d'effacement sur le lecteur iPad fondateur : `validated` ; compatibilité générale Safari/iPad : non validée.
+
+## 13. Amendement de gouvernance postérieur — cohorte suspendue
+
+Le 16 juillet 2026, avant toute observation, Ayman a refusé de lancer la cohorte avec ce prototype. Il considère que le modèle peut aller sensiblement plus loin et que le temps disponible doit d'abord servir à sa conception.
+
+Cet amendement :
+
+- ne change aucun participant, seuil, script, critère ou règle de codage préenregistré ;
+- conserve le compteur à **0 sur 5** ;
+- requalifie le prototype actuel en sonde technique ;
+- suspend le recrutement et toute observation ;
+- renvoie la mission active vers `docs/tasks/COST_GATE_MODEL_VNEXT.md` ;
+- exige une nouvelle décision explicite d'Ayman avant d'utiliser ce protocole avec un futur prototype.

@@ -1,76 +1,83 @@
-# Prochaine mission Codex — observations Gate 1 Cost Gate
+# Prochaine mission Codex — Cost Gate vNext et Cost Ledger v1
 
 ## Statut reconstruit
 
-La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le premier essai fondateur du bundle Gate 1 sur iPad a reproduit un blocage de démarrage et d'effacement des champs. Le fichier HTML autonome exact a ensuite été validé techniquement et Ayman a confirmé le 16 juillet 2026 qu'il charge la démonstration et produit le résultat sur le même iPad. Ce contrôle ciblé ne compte pas comme observation utilisateur. Gate 1 reste à valider auprès de cinq participants qualifiés.
+La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le prototype hors ligne de la PR `#26` est techniquement exécuté et le défaut iPad ciblé a été retesté avec succès.
+
+Le 16 juillet 2026, Ayman a refusé de passer immédiatement à cinq participants : le prototype est un début utile mais le modèle doit aller plus loin avant toute cohorte. Cette décision remplace l'observation comme mission active sans annuler le protocole préenregistré.
 
 ```text
 pull request = #26, draft
 base = breaktest-bootstrap
 base head = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
 active branch = strategy/cost-gate-offline-critique
-founder-tested head = e42bce2a29589000a95697aa2d7228645fe9b909
-founder-tested tree = 618ce47e5199355a56927ebc15cda3f1c10a2676
-exact run = 29459481762 (#647), success
-artifact = 8360626149
-artifact digest = 27805ed2f698f84a3861b73353bd12524203b1a737c77c13ef8259e3fc8714dc
-standalone html sha256 = 93d0f25d911a102e85847ab7ad884cafdfaf316215b82544a9e80be0a6e6df79
-internal package sha256 = a70a0bac71df4ebe00b479ca86e951947928dc67bc70ce777158189d4f5b7300
+last verified remote head = 6ab3393586583a609a6d4509a39c7e1460f1f177
+last verified remote tree = 9788ca06585db4ff9d40557206561601239ee7c4
+exact run = 29519178960 (#649), success
+artifact = 8383998747
+artifact digest = 7e844f153f094c00ddb79aaea7d2dab2f50c85f97bf10edc7e92796e92a47885
+founder-tested standalone sha256 = 93d0f25d911a102e85847ab7ad884cafdfaf316215b82544a9e80be0a6e6df79
 current engine = cost-gate-foundation-3-synthetic
-main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
 participants observed = 0/5
-iPad blocker = validated on the founder's tested reader; broader Safari/iPad coverage unvalidated
+cohort = suspended by founder
+main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
 ```
 
 Vérifier ces identifiants sur GitHub à chaque reprise. Une preuve historique ou locale ne remplace jamais le head et le run actuels.
 
 ## Objectif unique
 
-Observer cinq participants qualifiés selon `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`, sans modifier silencieusement le protocole, puis appliquer exactement les seuils préenregistrés.
+Concevoir puis implémenter le **Cost Ledger v1** sans modifier silencieusement les formules économiques déjà validées.
 
-La question est :
-
-> Un investisseur autonome comprend-il sans coaching le facteur principal, les couches non évaluées et la limite non prescriptive du résultat, tout en obtenant un premier résultat en trois minutes ou moins ?
+La prochaine valeur vient d'une représentation correcte des coûts, pas d'une nouvelle interface : chaque composant doit déclarer côté, portée, base, devise, benchmark, inclusion, provenance, temps, incertitude et version.
 
 ## Autorité
 
-- protocole et seuils : `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md` ;
-- matrice technique : `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md` ;
-- preuve technique : `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md` ;
-- gates : `docs/product/COST_GATE_MVP_GATE_MATRIX.md` ;
-- formules : moteurs et contrats Cost Gate fusionnés.
+- architecture : `docs/product/COST_GATE_MODEL_ARCHITECTURE_VNEXT.md` ;
+- contrat : `docs/standards/COST_LEDGER_CONTRACT.md` ;
+- tâche : `docs/tasks/COST_GATE_MODEL_VNEXT.md` ;
+- standards quantitatifs : `docs/standards/QUANT_FINANCE_STANDARDS.md` ;
+- cash et cycle : `docs/standards/PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md` ;
+- avantage : `docs/standards/GROSS_EDGE_INPUT_CONTRACT.md` et `GROSS_EDGE_ALIGNMENT_KEY.md` ;
+- gates : `docs/product/COST_GATE_MVP_GATE_MATRIX.md`.
 
-## Seuils inchangés
+La matrice MVP reste l'unique numérotation de gate.
 
-Gate 1 réussit seulement avec cinq observations réelles et si :
+## Première tranche
 
-- au moins 4 sur 5 identifient le facteur principal sans coaching ;
-- 0 sur 5 prennent l'état favorable pour une recommandation, une autorisation ou un feu vert ;
-- au moins 3 sur 5 identifient un cas d'usage réel ;
-- au moins 3 sur 5 distinguent les entrées disponibles de celles qui leur manquent ;
-- au moins 4 sur 5 obtiennent un premier résultat en 180 secondes ou moins ;
-- aucun défaut technique bloquant ne fausse une observation.
+1. figer une matrice de scénarios du ledger avant le code ;
+2. implémenter schéma et validation stricte ;
+3. adapter commission, FX, spread et coût d'exécution hypothétique actuels ;
+4. démontrer la parité exacte des résultats legacy ;
+5. bloquer doublons, conflits d'inclusion, base ou devise manquante et forme non supportée ;
+6. ajouter oracle indépendant et propriétés ;
+7. synchroniser preuves, registre et canonicals sur le head exact.
 
-Une nouvelle cohorte après correction reste séparée de la première. Aucun résultat, verbatim, abandon, paiement ou utilisateur ne peut être inventé.
+## Règles critiques
 
-## Travail autorisé
+- un coût manquant n'est pas zéro ;
+- une somme partielle n'est pas une friction complète ;
+- un taux n'existe pas sans dénominateur ;
+- un slippage n'existe pas sans benchmark ; l'entrée legacy devient une hypothèse de coût d'exécution ;
+- une fourchette synthétique n'est pas probabiliste ;
+- contractuel, estimé ex ante et observé ex post restent séparés ;
+- aucune loi de market impact n'est hardcodée sans calibration et domaine ;
+- aucun type d'ordre, timing, taille ou prix n'est recommandé ;
+- chaque modification invalide l'ancien snapshot ;
+- `main` reste hors périmètre.
 
-- préparer le fichier HTML autonome exact pour une session locale ;
-- appliquer le script neutre ;
-- chronométrer et consigner seulement les observations réelles minimales ;
-- corriger un défaut technique réellement reproduit, ajouter sa régression et retester un nouveau head exact ;
-- maintenir preuves et angles morts.
+## Travail suspendu
 
-## Interdictions
+- cohorte Gate 1 ;
+- nouvelle interface grand public ;
+- donnée de marché ou courtier ;
+- import, compte, stockage ou réseau ;
+- modèle de market impact calibré ;
+- probabilité de fill ou prix limite ;
+- conseil, transmission ou exécution ;
+- publication, acquisition ou paiement ;
+- fusion de la PR `#26` avant une nouvelle décision explicite.
 
-- aucune modification de `main` ;
-- aucune nouvelle fonctionnalité Cost Gate avant les observations ;
-- aucune donnée réelle, réseau, compte, stockage, analytics ou connexion ;
-- aucune recommandation, probabilité, transmission ou exécution ;
-- aucune publication, acquisition, email ou paiement ;
-- aucune revendication Safari/iPad au-delà du comportement réellement réexécuté, ni revendication juridique, commerciale ou utilisateur non démontrée ;
-- aucune fusion de la PR `#26` tant que les cinq observations et la décision Gate 1 ne sont pas documentées.
+## Condition de sortie
 
-## Décision après les cinq observations
-
-Documenter l'une des décisions prévues : continuer vers Gate 2, corriger puis retester Gate 1, réduire au seuil et au cash, réorienter ou abandonner. Ne demander l'aide d'Ayman que pour le recrutement ou l'observation humaine réellement indispensable.
+Le Cost Ledger v1 doit être rétrocompatible, auditable et falsifié par des scénarios hostiles sur un head distant exact. Cette preuve restera technique et synthétique. Elle n'autorisera pas automatiquement la cohorte, une donnée externe ou une revendication commerciale.

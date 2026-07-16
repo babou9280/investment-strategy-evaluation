@@ -1,8 +1,8 @@
 # Breaktest — plan de validation
 
 - Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
-- Test actif : **Gate 1 Cost Gate hors ligne**, autorisé le 15 juillet 2026 et préenregistré avant observation
-- Statut : Gate 0 fusionnée ; défaut bloquant du bundle reproduit puis retesté avec succès par Ayman sur le même iPad avec l'HTML autonome exact du head `e42bce2` ; cinq observations qualifiées non commencées ; publication, données externes et paiement suspendus
+- Test actif : **conception Cost Gate vNext dans Gate 1**, cohorte préenregistrée mais suspendue le 16 juillet 2026
+- Statut : Gate 0 fusionnée ; sonde hors ligne et défaut iPad techniquement validés ; cinq observations qualifiées non commencées ; Cost Ledger v1 implémenté localement et validation exacte distante à établir avant décision sur un nouveau prototype ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
 ## 1. Question décisive de Gate 1
@@ -11,7 +11,7 @@
 
 Le test ne vise pas les compliments, inscriptions gratuites ou intentions abstraites.
 
-Le fichier autonome et le package techniques exacts sont validés dans Chromium par le run `#647` et documentés dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Ayman a confirmé que ce fichier exact fonctionne sur le même iPad ayant reproduit le blocage. Ces preuves n'entrent dans aucun seuil utilisateur ; elles autorisent seulement le démarrage des observations.
+Le fichier autonome et le package techniques exacts sont validés dans Chromium par le run `#647` et documentés dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Ayman a confirmé que ce fichier exact fonctionne sur le même iPad ayant reproduit le blocage. Ces preuves n'entrent dans aucun seuil utilisateur. Ayman a ensuite suspendu les observations : elles prouvent une sonde fonctionnelle, pas que le modèle est suffisamment avancé pour la cohorte.
 
 ## 2. Hypothèses Capital Efficiency à valider
 
@@ -221,7 +221,7 @@ La revue exacte de ce dernier head a révélé quatre défauts supplémentaires 
 
 La relecture automatisée finale de la version `2` n'a pas été exécutée faute de quota. La revue hostile indépendante a trouvé quatre défauts adjacents de complétude FX/coûts et d'intégrité temporelle/provenance. La version `3` les corrige et ajoute une régression contre les constats d'actualité contradictoires. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `29345208179` (`#616`) ; jobs, logs, artefact, digest et captures ont été inspectés. Sa synchronisation documentaire a réussi sur `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, puis la PR `#24` a été fusionnée par squash au commit `e61d166d81da54a7d4ee596db2c2447fcb418eb2`. Cette preuve reste technique et synthétique.
 
-### Prototype utilisateur hors ligne — techniquement prêt, résultats non observés
+### Prototype utilisateur hors ligne — sonde technique, cohorte suspendue
 
 Sur `strategy/cost-gate-offline-critique`, sans réseau ni donnée réelle :
 
@@ -244,7 +244,7 @@ Mesurer auprès d'utilisateurs qualifiés :
 
 Critères d'arrêt : problème rare, usage uniquement curieux, saisie plus coûteuse que la décision ou confusion persistante avec une recommandation.
 
-Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le premier essai fondateur du bundle multifichier sur iPad a échoué avant toute observation : le lecteur n'exécutait pas les scripts relatifs, l'action d'analyse rechargeait la page et effaçait les champs. Il ne compte pas parmi les cinq participants. Le head `e42bce2` et le run `#647` prouvent dans Chromium un HTML autonome direct, une analyse réelle sous `file://` et un repli sans JavaScript qui garde la valeur saisie, l'URL et l'absence de faux résultat. Ayman a ensuite confirmé sur le même iPad que la démonstration se charge et que le résultat apparaît. Le compteur utilisateur reste **0 sur 5**.
+Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le premier essai fondateur du bundle multifichier sur iPad a échoué avant toute observation : le lecteur n'exécutait pas les scripts relatifs, l'action d'analyse rechargeait la page et effaçait les champs. Il ne compte pas parmi les cinq participants. Le head `e42bce2` et le run `#647` prouvent dans Chromium un HTML autonome direct, une analyse réelle sous `file://` et un repli sans JavaScript qui garde la valeur saisie, l'URL et l'absence de faux résultat. Ayman a ensuite confirmé sur le même iPad que la démonstration se charge et que le résultat apparaît. Le compteur utilisateur reste **0 sur 5** et la cohorte reste suspendue jusqu'à une nouvelle décision explicite.
 
 ### Capacité à fournir les entrées et faisabilité générale — non validées
 
@@ -294,10 +294,10 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 ## 13. Développement autorisé actuellement
 
-La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026 ; cette autorisation est limitée au prototype de critique hors ligne.
+La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026, puis suspendu sa cohorte le 16 juillet pour approfondir le modèle.
 
-Sont autorisés : observation des cinq participants selon le protocole, correction d'un défaut réellement reproduit, maintien des preuves et package `internal_review` exact. Une nouvelle fonctionnalité ou une nouvelle donnée n'est pas autorisée par cette Gate.
+Sont autorisés : Cost Ledger v1, contrat, scénarios, adaptateur rétrocompatible, oracles, enveloppe entièrement synthétique, revue hostile et maintien des preuves. Le moteur isolé `cost-ledger-engine-1-synthetic` et les scénarios CL-01 à CL-31 existent localement ; ils ne sont pas encore une preuve GitHub tant que le head distant, la CI et l'artefact ne sont pas inspectés. L'observation des cinq participants reste suspendue. Une donnée externe, une nouvelle interface grand public ou un modèle de microstructure non calibré ne sont pas autorisés.
 
-Gate 1 ne sera pas déclarée réussie avant cinq observations qualifiées réelles et application des seuils préenregistrés.
+Gate 1 ne sera pas déclarée réussie avant décision de rouvrir une cohorte, cinq observations qualifiées réelles et application des seuils préenregistrés.
 
 Restent interdits : données externes, import réel, compte, stockage, réseau applicatif, analytics actif, email, paiement, connexion courtier, recommandation, ordre limite conseillé, transmission et exécution.

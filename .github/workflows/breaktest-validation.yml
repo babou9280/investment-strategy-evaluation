@@ -77,6 +77,9 @@ jobs:
             node cost_gate_foundation/tests/engine.test.js
             node cost_gate_foundation/tests/scenario_matrix.test.js
             node cost_gate_foundation/tests/properties.test.js
+            node cost_gate_model_vnext/tests/ledger.test.js
+            node cost_gate_model_vnext/tests/scenario_matrix.test.js
+            node cost_gate_model_vnext/tests/properties.test.js
             node cost_gate_critique/tests/crypto_shim.test.js
             node cost_gate_critique/tests/scenario.test.js
             node cost_gate_critique/tests/presenter.test.js
@@ -89,6 +92,7 @@ jobs:
             python3 tests/validation_static_integrity.py
             python3 capital_efficiency_lab/tests/static_integrity.py
             python3 cost_gate_foundation/tests/static_integrity.py
+            python3 cost_gate_model_vnext/tests/static_integrity.py
             python3 cost_gate_critique/tests/static_integrity.py
             python3 cost_gate_critique/tests/package_integrity.py
           } 2>&1 | tee static-integrity.log
@@ -136,6 +140,7 @@ jobs:
               capital_efficiency_lab/tests/capture_review.py \
               capital_efficiency_lab/tests/static_integrity.py \
               cost_gate_foundation/tests/static_integrity.py \
+              cost_gate_model_vnext/tests/static_integrity.py \
               cost_gate_critique/build.py \
               cost_gate_critique/tests/static_integrity.py \
               cost_gate_critique/tests/package_integrity.py \
@@ -174,6 +179,11 @@ jobs:
             node --check cost_gate_foundation/tests/engine.test.js
             node --check cost_gate_foundation/tests/scenario_matrix.test.js
             node --check cost_gate_foundation/tests/properties.test.js
+            node --check cost_gate_model_vnext/ledger.js
+            node --check cost_gate_model_vnext/tests/fixtures.js
+            node --check cost_gate_model_vnext/tests/ledger.test.js
+            node --check cost_gate_model_vnext/tests/scenario_matrix.test.js
+            node --check cost_gate_model_vnext/tests/properties.test.js
             node --check cost_gate_critique/src/crypto-shim.js
             node --check cost_gate_critique/src/scenario.js
             node --check cost_gate_critique/src/presenter.js

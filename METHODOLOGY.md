@@ -429,7 +429,37 @@ Les autorités spécifiques sont `PRETRADE_CASH_AND_LIFECYCLE_COST_CONTRACT.md`,
 
 La révision courante utilise `cost-gate-foundation-3-synthetic`, `cost-gate-snapshot-4` et `cost-gate-findings-4`. Le head fonctionnel `753152d9cce1feabba48e54b32b4eed2ce3f5e07` a réussi le run exact `#616` (`29345208179`) ; l'artefact, les logs et les captures ont été inspectés. Cette preuve ne couvre aucun comportement sur compte, donnée ou exécution réels. Aucune règle n'est une recommandation.
 
-## 19. Méthodologie historique conservée
+## 19. Méthodologie Cost Ledger v1
+
+La prochaine architecture représente chaque coût comme un composant versionné plutôt que comme un champ isolé.
+
+Chaque composant déclare :
+
+- identité de représentation, identité d'événement économique et catégorie ;
+- côté et portée de cycle ;
+- forme de calcul et base ;
+- devise et convention de signe ;
+- benchmark ou absence explicite de benchmark ;
+- inclusion dans prix, avantage et cash ;
+- provenance, qualité de preuve et validité temporelle ;
+- incertitude et version ;
+- dépendances et statut.
+
+Le coût total est la somme des seuls composants valides, applicables, réconciliés et convertis sur une base commune. Une somme partielle reste un `known_cost_floor`. Elle n'est pas qualifiée de friction complète. Même une collection sans erreur n'est déclarée `complete_under_declared_policy` que si chaque événement attendu par une politique nommée est présent exactement une fois.
+
+Le modèle distingue trois familles :
+
+```text
+contractuel
+estimé ex ante
+observé ex post
+```
+
+Une fourchette basse, centrale et haute est une sensibilité tant qu'aucune méthode statistique et couverture ne sont validées. Un benchmark absent n'est jamais remplacé par un mid implicite. Une forme non linéaire ou conditionnelle non supportée reste non évaluée.
+
+La calculabilité arithmétique, la qualité de preuve et l'actualité restent trois états distincts. L'adaptateur legacy doit reproduire exactement le coût, le seuil, la marge et les constats actuels avant toute migration. Les règles complètes sont dans `docs/standards/COST_LEDGER_CONTRACT.md` et les falsifications préenregistrées dans `docs/scenarios/COST_LEDGER_V1_MATRIX.md`.
+
+## 20. Méthodologie historique conservée
 
 ### H1 — normalisation
 
@@ -466,7 +496,7 @@ Sorties avant entrées le même jour ; PnL appliqué une fois à la sortie ; ré
 
 L'expression autorisée reste « trésorerie réalisée aux sorties », pas mark-to-market.
 
-## 20. Limites actuelles
+## 21. Limites actuelles
 
 Le prototype ne modélise pas :
 
@@ -486,7 +516,7 @@ Le prototype ne modélise pas :
 
 Les défauts historiques H3 à H6 restent suspendus jusqu'à preuve d'un besoin produit direct.
 
-## 21. Validation
+## 22. Validation
 
 Le moteur et l'interface doivent réussir :
 

@@ -13,6 +13,8 @@ Cost Gate n'annule pas Cost Intelligence ni Edge Survival. Il doit les orchestre
 
 Cost Gate est validé stratégiquement. Sa fondation synthétique est fonctionnelle dans un domaine technique restreint. Une interface de critique hors ligne est maintenant exécutée techniquement ; sa compréhension par des personnes réelles, le produit connecté, les données réelles, le droit et le marché ne sont pas validés.
 
+Le 16 juillet 2026, Ayman a suspendu la cohorte Gate 1 : le prototype actuel est un début utile mais le modèle doit aller plus loin avant observation. La mission active devient la conception Cost Gate vNext. Un premier moteur Cost Ledger v1 isolé, son adaptateur legacy, sa sensibilité synthétique et 31 scénarios pré-code sont implémentés localement ; ils attendent encore push et preuve GitHub exact-head. Le protocole préenregistré reste intact pour une éventuelle cohorte ultérieure ; le compteur reste `0/5`.
+
 ## 2. État GitHub
 
 La pull request `#23` — Edge Survival Envelope — a été fusionnée par squash dans `breaktest-bootstrap` :
@@ -72,7 +74,7 @@ digest = sha256:67b4603cfd95271a4916ee04e36ed229cb352a6526b0a25f40fd1089dcb8b614
 
 Les dix blobs de cette révision correspondent au tree distant. Les jobs, logs et l'archive ont été inspectés. Les 24 captures sont identiques à la preuve précédente ; les vues 390 et 1 440 px ont été réellement ouvertes et restent sans débordement, coupure, header dupliqué ni lien d'évitement parasite. La synchronisation documentaire version `3` a ensuite réussi sur son head exact `3fb6341d51ff46b70dd774546955fbb1c66a400e` dans le run `#618`, avant la fusion.
 
-La phase reste synthétique et hors ligne : moteur local isolé, contrats, interface de critique `internal_review` et préparation des cinq observations préenregistrées. Aucune donnée externe, connexion ou publication.
+La phase reste synthétique et hors ligne : moteur local isolé, contrats, interface de critique `internal_review` conservée comme sonde et conception d'un ledger de coûts extensible. Les cinq observations préenregistrées sont suspendues. Aucune donnée externe, connexion ou publication.
 
 ## 3. Actifs validés techniquement
 
@@ -306,6 +308,6 @@ Les captures restent des preuves, pas le produit remis.
 
 ## 12. Mission active
 
-Gate 0 est clôturée. Le prérequis technique de Gate 1 est prêt : un HTML Cost Gate autonome hors ligne, réellement interactif lorsque JavaScript local est autorisé, alimenté uniquement par des hypothèses manuelles ou synthétiques et destiné à tester la compréhension plutôt qu'à servir de produit final. Le défaut iPad reproduit a été retesté avec succès sur le même appareil.
+Gate 0 est clôturée. Un premier prérequis technique de Gate 1 existe : un HTML Cost Gate autonome hors ligne, réellement interactif lorsque JavaScript local est autorisé, alimenté uniquement par des hypothèses manuelles ou synthétiques. Le défaut iPad reproduit a été retesté avec succès sur le même appareil. Ayman estime néanmoins que le modèle n'est pas assez avancé pour lancer la cohorte ; l'HTML est donc une sonde, pas le candidat actuel à la validation utilisateur.
 
-La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Cinq observations qualifiées réelles constituent maintenant le prochain travail indispensable. Le contrôle fondateur iPad reste séparé et le compteur est **0 sur 5**. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.
+La branche séparée est `strategy/cost-gate-offline-critique`. Le protocole et ses seuils restent préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`, mais aucune observation n'est lancée. Le travail actif défini dans `docs/tasks/COST_GATE_MODEL_VNEXT.md` possède maintenant une implémentation locale du Cost Ledger v1 rétrocompatible et de son enveloppe synthétique ; la validation distante, la revue hostile puis la surface taille × coût × avantage restent à accomplir avant décision sur un nouveau prototype. Le compteur reste **0 sur 5**. Aucune donnée externe, connexion, recommandation, exécution ou publication n'est autorisée.

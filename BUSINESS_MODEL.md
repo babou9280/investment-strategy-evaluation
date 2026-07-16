@@ -2,7 +2,7 @@
 
 - Statut : hypothèses à tester
 - Direction : Breaktest Capital Efficiency
-- Extension stratégique : Breaktest Cost Gate ; fondation et critique hors ligne techniquement implémentées, offre non validée
+- Extension stratégique : Breaktest Cost Gate ; fondation et sonde hors ligne techniquement implémentées, conception vNext active, offre non validée
 - Date initiale : 13 juillet 2026
 - Dernier raffinement : 15 juillet 2026
 

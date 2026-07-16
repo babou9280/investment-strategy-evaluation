@@ -16,9 +16,9 @@
 - Moteur : `cost-gate-foundation-3-synthetic`.
 - Nature de la preuve : technique, quantitative, synthétique, responsive et interne.
 - Participants réellement observés : **0 sur 5**.
-- Statut de Gate 1 : **défaut iPad ciblé reproduit puis retesté avec succès ; validation des cinq participants non commencée ; Gate non clôturée**.
+- Statut de Gate 1 : **défaut iPad ciblé reproduit puis retesté avec succès ; prototype requalifié en sonde ; cohorte suspendue avant toute observation ; Gate non clôturée**.
 
-Le run `#647` teste le head et le fichier exacts remis à Ayman. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. La confirmation fondateur sur un iPad ne répond pas à la question de compréhension préenregistrée et ne prouve pas la compatibilité générale Safari/iPad.
+Le run `#647` teste le head et le fichier exacts remis à Ayman. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. La confirmation fondateur sur un iPad ne répond pas à la question de compréhension préenregistrée et ne prouve pas la compatibilité générale Safari/iPad. Le 16 juillet 2026, Ayman a suspendu la cohorte pour approfondir le modèle ; aucune observation n'a commencé.
 
 ## Ordre de préenregistrement
 
@@ -184,4 +184,4 @@ La revue a produit des corrections et régressions, sans modification des formul
 - conformité juridique ou réglementaire ;
 - marché, prix, distribution ou viabilité commerciale.
 
-La prochaine preuve indispensable est humaine : cinq observations qualifiées selon le protocole préenregistré. Le contrôle fondateur iPad ne compte pas comme participant. Aucun résultat utilisateur ne doit être ajouté avant une observation réelle.
+La prochaine preuve indispensable est d'abord architecturale et quantitative : Cost Ledger v1 rétrocompatible, scénarios hostiles, oracles et revue du modèle selon `COST_GATE_MODEL_ARCHITECTURE_VNEXT.md`. La preuve humaine restera nécessaire si Ayman rouvre ensuite la cohorte. Le contrôle fondateur iPad ne compte pas comme participant et aucun résultat utilisateur ne doit être ajouté avant une observation réelle.

@@ -166,6 +166,14 @@ Preuve personnelle malgré assistance IA, reproductibilité, absence de chiffres
 | BS-076 | P2 | Livraison / sûreté | Build supprimant des fichiers sans rapport dans le dossier de sortie | Perte d'artefacts ou de travail | validated | Nettoyage limité au package et à son ZIP ; fichier sentinelle conservé par la régression, head `7ce11bde`, run `#633` |
 | BS-077 | P1 | Accessibilité / preuve | Mode mouvement réduit créant une micro-transition globale et laissant temporairement le lien d'évitement hors viewport au premier `Tab` | Accès clavier non visible et test exact-head instable | validated | Transitions réellement nulles sous `reduce` ; document actif, `:focus` et géométrie du lien vérifiés ; head `7177da36`, run `#639` |
 | BS-078 | P0 | Livraison / iPad | Le lecteur ouvre le bundle multifichier sans exécuter ses scripts relatifs ; le bouton soumet alors le formulaire, recharge la page et efface les champs | Prototype inutilisable et observation faussée | validated | Défaut reproduit puis fichier autonome exact retesté avec succès par Ayman sur le même iPad le 16 juillet 2026 ; bouton non soumetteur, avertissement et régression sans JavaScript ; head `e42bce2`, run `#647` |
+| BS-079 | P0 | Cost Gate / architecture de coût | La formule fixe + proportionnelle est prise pour un modèle complet alors que barèmes, asymétries, impact, attente et non-exécution peuvent suivre d'autres géométries | Fausse précision et mauvaises frontières de taille | mitigated | Prototype requalifié en sonde ; architecture vNext et Cost Ledger v1 exigés avant cohorte ; parité et formes non supportées à prouver |
+| BS-080 | P0 | Cost Gate / benchmark | Le champ legacy `slippageTotalRate` ne nomme aucun benchmark, prix, instant ou convention de signe | Coût non interprétable et future TCA impossible à réconcilier | open | L'adaptateur vNext doit le qualifier d'hypothèse de coût d'exécution sans benchmark ; toute mesure observée exigera un benchmark nommé |
+| BS-081 | P1 | Cost Gate / incertitude | Un coût implicite ponctuel masque la variabilité du spread, de l'impact et de l'exécution | Conclusion instable présentée avec une précision excessive | open | Enveloppe basse/centrale/haute synthétique, explicitement non probabiliste, puis calibration distincte si des données sont autorisées |
+| BS-082 | P0 | Cost Gate / type de preuve | Coût contractuel, estimation ex ante et mesure ex post agrégés comme s'ils avaient la même nature | Double comptage, fuite temporelle et comparaison trompeuse | mitigated | Séparation imposée par l'architecture et `COST_LEDGER_CONTRACT.md` ; régressions requises avant implémentation |
+| BS-083 | P1 | Cost Gate / modèle d'impact | Une loi de market impact issue de la littérature est hardcodée sans domaine ni calibration Breaktest | Sophistication factice et coûts faux selon instrument, venue ou régime | mitigated | Modèle enfichable seulement avec échantillon, période, paramètres, erreur, preuve hors échantillon et fallback nul ; implémentation suspendue |
+| BS-084 | P0 | Cost Gate / complétude | Une liste de coûts valide est présentée comme complète sans politique nommant les événements attendus | Coût oublié, seuil sous-estimé et faux état favorable | mitigated | `coverage.policyId` et `expectedEconomicEventIds` obligatoires ; sortie limitée à `complete_under_declared_policy` ; scénarios de composante absente |
+| BS-085 | P0 | Cost Gate / double comptage | Le moteur promet de reconnaître une même économie à travers deux lignes sans identité économique distincte de l'identité technique | Déduplication non implémentable ou faux positifs | mitigated | `economicEventId` obligatoire et unique ; doublons exclus ; limite explicite lorsque deux sources attribuent à tort deux identifiants différents |
+| BS-086 | P1 | Cost Gate / preuve | Une hypothèse arithmétiquement calculable est implicitement traitée comme fiable ou actuelle | Précision et actualité inventées | mitigated | `calculationStatus`, `evidenceStatus` et `temporalStatus` séparés ; les conclusions dépendantes respectent chaque axe |
 
 ## 6. Gate de revue multidisciplinaire
 
@@ -221,6 +229,14 @@ Aucune version n'est prête pour critique externe sans réponse explicite :
 48. Un build peut-il supprimer un fichier voisin qui ne lui appartient pas ?
 49. Le mode mouvement réduit supprime-t-il réellement toute transition résiduelle sur le premier focus clavier ?
 50. Le fichier exact remis à l'utilisateur est-il autonome, testé directement et incapable d'effacer les champs si son moteur ne démarre pas ?
+51. Chaque coût déclare-t-il une forme de calcul compatible avec son économie plutôt qu'un taux proportionnel par défaut ?
+52. Tout slippage ou coût d'exécution nomme-t-il son benchmark, son instant, sa devise et sa convention de signe ?
+53. Une fourchette de sensibilité est-elle clairement distincte d'un intervalle statistique ?
+54. Coût contractuel, estimation ex ante et observation ex post restent-ils séparés et réconciliables ?
+55. Tout modèle d'impact déclare-t-il domaine, calibration, erreur, validité et absence de fallback silencieux ?
+56. Une liste de coûts est-elle qualifiée par une politique nommant chaque événement attendu plutôt que déclarée complète par sa seule présence ?
+57. L'identité de représentation reste-t-elle distincte de l'identité de l'événement économique afin de détecter les doubles comptes réellement détectables ?
+58. Calculabilité, qualité de preuve et actualité restent-elles séparées dans le moteur et dans le langage affiché ?
 
 ## 7. Règle de clôture
 

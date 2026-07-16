@@ -143,11 +143,14 @@ Chaque résultat futur doit conserver :
 - contraintes inverses ;
 - états indisponibles explicites ;
 - scénarios synthétiques ;
-- tests de réconciliation et monotonie.
+- tests de réconciliation et monotonie ;
+- Cost Ledger v1 séparant composant, côté, base, benchmark, provenance, inclusion et incertitude ;
+- distinction contractuel / estimé ex ante / observé ex post ;
+- enveloppe de sensibilité synthétique sans probabilité inventée.
 
 ### P1 — test utilisateur sans import
 
-Seulement après critique interne :
+Seulement après Cost Ledger v1, critique interne et nouvelle décision explicite d'Ayman sur le prototype à observer :
 
 - mode seuil seul ;
 - mode avantage brut ;
