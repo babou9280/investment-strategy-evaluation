@@ -6,7 +6,7 @@
 - Statut : **direction Cost Intelligence active ; proposition de valeur approfondie en Capital Efficiency ; trajectoire Cost Gate validée**
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail de la couche pré-trade : **Breaktest Cost Gate**
-- Phase actuelle : prototype Gate 1 requalifié en sonde technique ; conception Cost Gate vNext et Cost Ledger v1 avant toute cohorte, sans donnée réelle ni validation externe acquise
+- Phase actuelle : prototype Gate 1 requalifié en sonde technique ; Cost Ledger v1 techniquement prouvé ; Cost Survival Surface v1 en validation avant toute cohorte, sans donnée réelle ni validation externe acquise
 
 ## 1. Direction
 
@@ -223,4 +223,4 @@ Aucun état ne peut être produit à partir d'une donnée externe sans **Data Qu
 
 Le vocabulaire « exécuter », « rejeter », « ordre limite conseillé », « taille optimale » ou tout équivalent prescriptif reste interdit avant validation juridique, réglementaire et produit distincte.
 
-La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement, sa fondation et le prototype hors ligne seulement techniquement dans un domaine synthétique. Ayman a suspendu l'expérience de compréhension pour construire d'abord un modèle vNext fondé sur un ledger de coûts auditable. Rien n'est encore validé commercialement, juridiquement, par des utilisateurs ou sur donnée réelle.
+La définition détaillée figure dans `docs/product/COST_GATE_DIRECTION.md`. La direction est validée stratégiquement, sa fondation et le prototype hors ligne seulement techniquement dans un domaine synthétique. Ayman a suspendu l'expérience de compréhension pour construire d'abord un modèle vNext fondé sur un ledger de coûts auditable. La revue hostile impose désormais une projection séparée et une surface cartésienne coût × avantage, sans optimum ni exécutabilité prétendue. Rien n'est encore validé commercialement, juridiquement, par des utilisateurs ou sur donnée réelle.

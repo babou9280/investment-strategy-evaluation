@@ -2,7 +2,7 @@
 
 - Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
 - Test actif : **conception Cost Gate vNext dans Gate 1**, cohorte préenregistrée mais suspendue le 16 juillet 2026
-- Statut : Gate 0 fusionnée ; sonde hors ligne et défaut iPad techniquement validés ; cinq observations qualifiées non commencées ; Cost Ledger v1 implémenté localement et validation exacte distante à établir avant décision sur un nouveau prototype ; publication, données externes et paiement suspendus
+- Statut : Gate 0 fusionnée ; sonde hors ligne et défaut iPad techniquement validés ; cinq observations qualifiées non commencées ; Cost Ledger v1 techniquement validé ; revue hostile exécutée ; Cost Survival Surface v1 locale en attente de preuve exacte distante ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
 ## 1. Question décisive de Gate 1
@@ -296,7 +296,7 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026, puis suspendu sa cohorte le 16 juillet pour approfondir le modèle.
 
-Sont autorisés : Cost Ledger v1, contrat, scénarios, adaptateur rétrocompatible, oracles, enveloppe entièrement synthétique, revue hostile et maintien des preuves. Le moteur isolé `cost-ledger-engine-1-synthetic` et les scénarios CL-01 à CL-31 existent localement ; ils ne sont pas encore une preuve GitHub tant que le head distant, la CI et l'artefact ne sont pas inspectés. L'observation des cinq participants reste suspendue. Une donnée externe, une nouvelle interface grand public ou un modèle de microstructure non calibré ne sont pas autorisés.
+Sont autorisés : Cost Ledger v1, contrat, scénarios, adaptateur rétrocompatible, oracles, enveloppe entièrement synthétique, revue hostile, Cost Survival Surface v1 et maintien des preuves. Le ledger jusqu'à CL-31 est validé sur `df3ff7fc`, run `#650`. Les renforcements CL-32 à CL-35 et CSS-01 à CSS-30 réussissent localement et attendent une preuve GitHub exact-head. L'observation des cinq participants reste suspendue. Une donnée externe, une nouvelle interface grand public ou un modèle de microstructure non calibré ne sont pas autorisés.
 
 Gate 1 ne sera pas déclarée réussie avant décision de rouvrir une cohorte, cinq observations qualifiées réelles et application des seuils préenregistrés.
 

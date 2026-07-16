@@ -71,6 +71,8 @@ basisValues = {
 
 Seules les bases réellement disponibles sont présentes. Un composant proportionnel référence une clé existante ; le moteur ne choisit jamais `entry_notional` par défaut.
 
+La clé, le montant et la devise de `returnDenominator` doivent correspondre exactement à une entrée de `basisValues`. Un libellé libre, une base absente ou deux montants différents invalident le seuil. Cette réconciliation est obligatoire même lorsqu'aucun coût proportionnel n'est présent.
+
 Le taux interne est décimal, fini et non négatif. Son dénominateur est donc nommé par `calculationBasis`.
 
 Le premier moteur n'effectue aucune conversion de devise. Un montant ou une base qui n'est pas en EUR reste `unsupported_currency`. Le coût de change lui-même peut être exprimé comme un coût en EUR ; cela ne constitue pas une conversion implicite du ledger.
@@ -142,6 +144,8 @@ provided | not_assessed | unsupported_component
 ```
 
 Le moteur dérive séparément un `calculationStatus` ; l'appelant ne peut pas s'auto-déclarer valide.
+
+Le champ `dependencies` est réservé à de futures formes composées. V1 n'en définit pas encore la propagation, l'ordre ou les cycles : toute liste non vide est donc refusée au lieu d'être acceptée puis ignorée.
 
 ## 7. Identité et double comptage
 
@@ -307,6 +311,8 @@ Le ledger brut peut calculer un montant malgré un axe `unknown`. En revanche :
 - `cashSourceInclusion = unknown` bloque le cash disponible dépendant ;
 - `included` exige une réconciliation avant toute nouvelle déduction.
 
+Pour un composant de coût inclus dans la portée économique, `edgeInclusion = not_applicable` est invalide : le moteur doit savoir si le coût est déjà contenu dans `G`, exclu de `G` ou encore inconnu. Traiter `not_applicable` comme `excluded` créerait une déduction silencieuse.
+
 Une inconnue ne bloque donc jamais une conclusion indépendante.
 
 ## 14. Provenance, preuve et temps
@@ -388,7 +394,7 @@ Pour chaque scénario `s = low | base | high`, le moteur calcule les seuls compo
 
 ```text
 knownCostSubtotalEur(s) = somme des montants calculables
-knownCostFloorEur(s) = knownCostSubtotalEur(s), sous convention de coûts non négatifs
+knownCostFloorEur(s) = knownCostSubtotalEur(s), uniquement sous l'ontologie déclarée de coûts adverses non négatifs
 ```
 
 Seulement sous `complete_under_declared_policy` :
@@ -409,6 +415,10 @@ Le résultat publie aussi :
 - formule, version et `ledgerHash`.
 
 Une sortie partielle ne publie pas de seuil complet.
+
+`knownCostFloorEur` ne prétend pas être une borne universelle lorsque remises, rebates ou améliorations signées ne sont pas modélisées. `variableFloorRate` est un plancher algébrique sous les relations d'échelle déclarées au snapshot ; sans domaine de taille explicite, il ne prouve pas que ces relations restent vraies pour un ordre plus grand ou plus petit.
+
+Lorsque plusieurs composantes ont des sensibilités basse, centrale et haute, v1 additionne les bornes de même nom comme scénarios coordonnés. Il ne démontre ni dépendance, ni corrélation, ni possibilité conjointe. Une future surface doit conserver cette limite et croiser séparément coût et avantage.
 
 ## 17. Adaptateur legacy
 
@@ -443,8 +453,11 @@ L'adaptateur conserve exactement la valeur économique legacy. Il ne qualifie pl
 - portée ou côté incohérent ;
 - devise manquante ou non supportée ;
 - taux sans base ;
+- dénominateur absent, libre ou incohérent avec sa base ;
 - benchmark absent pour spread ou coût d'exécution ;
 - inclusion dans le prix, l'avantage et le cash traitée séparément ;
+- `edgeInclusion = not_applicable` refusé pour un coût ;
+- dépendances non vides refusées tant que leur sémantique n'est pas implémentée ;
 - catégorie et forme réservées non évaluées ;
 - enveloppe basse, centrale et haute ordonnée et non probabiliste ;
 - mutation changeant `ledgerHash` ;
@@ -460,6 +473,8 @@ Le contrat ne démontre pas encore :
 - qu'une hypothèse de spread ou d'exécution est réaliste ;
 - qu'une fourchette couvre une fréquence statistique donnée ;
 - qu'un coût reste stable avec la taille ou dans le temps ;
+- que les sensibilités de plusieurs composants peuvent survenir conjointement ;
+- que le sous-total reste une borne après ajout futur de rebates ou améliorations signées ;
 - qu'une donnée externe est fraîche, licenciée ou complète ;
 - qu'un ordre sera exécuté.
 

@@ -443,9 +443,9 @@ Chaque composant déclare :
 - inclusion dans prix, avantage et cash ;
 - provenance, qualité de preuve et validité temporelle ;
 - incertitude et version ;
-- dépendances et statut.
+- dépendances réservées et statut ; v1 refuse toute dépendance non vide tant que sa propagation n'est pas définie.
 
-Le coût total est la somme des seuls composants valides, applicables, réconciliés et convertis sur une base commune. Une somme partielle reste un `known_cost_floor`. Elle n'est pas qualifiée de friction complète. Même une collection sans erreur n'est déclarée `complete_under_declared_policy` que si chaque événement attendu par une politique nommée est présent exactement une fois.
+Le coût total est la somme des seuls composants valides, applicables, réconciliés et convertis sur une base commune. Une somme partielle reste un `known_cost_floor` uniquement sous l'ontologie déclarée de coûts adverses non négatifs. Elle n'est pas qualifiée de friction complète. Même une collection sans erreur n'est déclarée `complete_under_declared_policy` que si chaque événement attendu par une politique nommée est présent exactement une fois.
 
 Le modèle distingue trois familles :
 
@@ -457,9 +457,19 @@ observé ex post
 
 Une fourchette basse, centrale et haute est une sensibilité tant qu'aucune méthode statistique et couverture ne sont validées. Un benchmark absent n'est jamais remplacé par un mid implicite. Une forme non linéaire ou conditionnelle non supportée reste non évaluée.
 
-La calculabilité arithmétique, la qualité de preuve et l'actualité restent trois états distincts. L'adaptateur legacy doit reproduire exactement le coût, le seuil, la marge et les constats actuels avant toute migration. Les règles complètes sont dans `docs/standards/COST_LEDGER_CONTRACT.md` et les falsifications préenregistrées dans `docs/scenarios/COST_LEDGER_V1_MATRIX.md`.
+La calculabilité arithmétique, la qualité de preuve et l'actualité restent trois états distincts. L'adaptateur legacy reproduit exactement le coût, le seuil, la marge et les constats actuels avant toute migration. Les règles complètes sont dans `docs/standards/COST_LEDGER_CONTRACT.md` et les falsifications dans `docs/scenarios/COST_LEDGER_V1_MATRIX.md`.
 
-## 20. Méthodologie historique conservée
+## 20. Méthodologie Cost Survival Surface v1
+
+Un ledger est un snapshot. Une surface multi-taille exige une politique de projection distincte : tailles explicites, domaine déclaré, transformation de chaque base et stabilité supposée des paramètres.
+
+Pour chaque taille, les trois coûts sont croisés avec les trois avantages par produit cartésien. Les neuf cellules calculent brut, coût, seuil et marge. L'égalité reste `at_threshold_no_positive_margin` ; elle n'est jamais promue en marge positive par arrondi.
+
+Une frontière exacte est permise uniquement si les coûts restent fixes plus proportionnels dans le domaine et si l'avantage est déclaré constant. Un avantage fourni séparément par taille produit uniquement des changements discrets sans interpolation. La surface reste `notional_only_not_executable` : elle ne traite ni quantité, lot, liquidité, impact, fill, fréquence ou capital temporel.
+
+Les règles complètes sont dans `docs/standards/COST_SURVIVAL_SURFACE_CONTRACT.md` et les scénarios CSS-01 à CSS-30 dans `docs/scenarios/COST_SURVIVAL_SURFACE_V1_MATRIX.md`.
+
+## 21. Méthodologie historique conservée
 
 ### H1 — normalisation
 
@@ -496,7 +506,7 @@ Sorties avant entrées le même jour ; PnL appliqué une fois à la sortie ; ré
 
 L'expression autorisée reste « trésorerie réalisée aux sorties », pas mark-to-market.
 
-## 21. Limites actuelles
+## 22. Limites actuelles
 
 Le prototype ne modélise pas :
 

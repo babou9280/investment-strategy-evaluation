@@ -288,6 +288,10 @@ La réussite de CG-01 à CG-18 valide techniquement ces comportements synthétiq
 
 La cohorte Gate 1 est suspendue par décision d'Ayman du 16 juillet 2026. Le prochain standard matériel est `COST_LEDGER_CONTRACT.md` : tout nouveau coût doit déclarer identité de représentation, identité d'événement économique, catégorie, côté, portée, base, devise, benchmark, inclusion, provenance, temps, incertitude et version. Une forme non supportée reste non évaluée ; elle n'est jamais ramenée silencieusement à un taux proportionnel.
 
+Le Cost Ledger v1 respecte ce standard dans son domaine synthétique sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, run `#650` : CL-01 à CL-31, dix propriétés de parité, oracles, intégrité, syntaxe et non-régressions réussissent. Cette validation ne transforme pas les hypothèses de coût en données calibrées.
+
+Toute surface multi-taille doit désormais respecter `COST_SURVIVAL_SURFACE_CONTRACT.md` : domaine explicite, projection séparée du snapshot, profil d'avantage constant qualifié ou fourni par taille, produit cartésien coût × avantage, égalité distincte d'une marge positive et aucune frontière interpolée sans géométrie prouvée. Les suites CSS-01 à CSS-30 existent localement ; elles ne sont pas validées à distance avant preuve exact-head.
+
 Les estimations ex ante, coûts contractuels et mesures ex post ne peuvent pas être agrégés sans réconciliation explicite. Une liste de composants ne s'auto-déclare pas complète : une politique doit nommer les événements attendus et la sortie reste `complete_under_declared_policy`. Calculabilité, qualité de preuve et actualité sont séparées. Une fourchette de sensibilité n'est ni une distribution ni un intervalle de confiance. Un modèle de market impact exige une calibration et un domaine propres avant tout usage.
 
 ## 16. Sécurité et confidentialité

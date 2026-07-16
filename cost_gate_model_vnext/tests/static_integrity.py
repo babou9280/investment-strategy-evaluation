@@ -48,7 +48,7 @@ for token in (
     if token not in contract:
         raise SystemExit(f"Cost Ledger contract is missing guardrail: {token}")
 
-for index in range(1, 32):
+for index in range(1, 36):
     code = f"CL-{index:02d}"
     if matrix.count(f"### {code} —") != 1:
         raise SystemExit(f"Frozen scenario missing or duplicated: {code}")

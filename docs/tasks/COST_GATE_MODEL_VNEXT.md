@@ -6,9 +6,9 @@ Ayman a décidé le 16 juillet 2026 de ne pas lancer la cohorte Gate 1 avec le p
 
 Cette décision ne nie aucune preuve technique de la PR `#26`. Elle requalifie son HTML comme sonde technique et empêche de confondre « fonctionne » avec « modèle suffisamment bon ».
 
-Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont implémentés localement. La validation GitHub exact-head reste requise ; aucune migration de la fondation ou de l'interface n'est engagée.
+Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont techniquement validés sur `df3ff7fc`, run `#650`. La revue hostile est exécutée. Les renforcements CL-32 à CL-35 et la Cost Survival Surface v1 CSS-01 à CSS-30 sont implémentés localement et attendent leur preuve distante. Aucune migration de la fondation ou de l'interface n'est engagée.
 
-## 2. Objectif unique
+## 2. Objectif de la première tranche — atteint techniquement
 
 Concevoir puis prouver un Cost Ledger v1 rétrocompatible qui sépare explicitement composant, côté, portée, base, devise, benchmark, provenance, inclusion et incertitude.
 
@@ -26,7 +26,7 @@ Le ledger doit préparer une future enveloppe de coût et une surface de contrai
 
 La numérotation de cette matrice reste l'unique numérotation de gate.
 
-## 4. Première tranche autorisée
+## 4. Première tranche autorisée — exécutée
 
 - contrat du ledger ;
 - matrice de scénarios avant code ;
@@ -61,6 +61,6 @@ La numérotation de cette matrice reste l'unique numérotation de gate.
 - CI du head exact, artefact et preuves inspectés ;
 - aucune revendication utilisateur, commerciale ou réglementaire.
 
-## 7. Étape suivante après preuve exacte
+## 7. Étape suivante active
 
-Après CI et artefact inspectés : revue hostile du ledger, puis surface descriptive taille × coût × avantage. Cette surface ne choisira pas d'optimum et ne sera pas exposée à une cohorte sans nouvelle décision explicite d'Ayman.
+Valider sur head distant exact les corrections de la revue hostile et la surface descriptive taille × coût × avantage. Cette surface ne choisit pas d'optimum et ne sera pas exposée à une cohorte sans nouvelle décision explicite d'Ayman.

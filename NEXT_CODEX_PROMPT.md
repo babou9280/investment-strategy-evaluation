@@ -1,8 +1,8 @@
-# Prochaine mission Codex — Cost Gate vNext et Cost Ledger v1
+# Prochaine mission Codex — revue hostile et Cost Survival Surface v1
 
 ## Statut reconstruit
 
-La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le prototype hors ligne de la PR `#26` est techniquement exécuté et le défaut iPad ciblé a été retesté avec succès.
+La direction **Breaktest Cost Gate** est validée stratégiquement. Gate 0 est clôturée. Le prototype hors ligne de la PR `#26` est techniquement exécuté et son défaut iPad ciblé a été retesté avec succès. Il reste une sonde, pas le produit à tester.
 
 Le 16 juillet 2026, Ayman a refusé de passer immédiatement à cinq participants : le prototype est un début utile mais le modèle doit aller plus loin avant toute cohorte. Cette décision remplace l'observation comme mission active sans annuler le protocole préenregistré.
 
@@ -11,13 +11,13 @@ pull request = #26, draft
 base = breaktest-bootstrap
 base head = 56fb50954afd7394baf1689e0f1b7220a1fd73fc
 active branch = strategy/cost-gate-offline-critique
-last verified remote head = 6ab3393586583a609a6d4509a39c7e1460f1f177
-last verified remote tree = 9788ca06585db4ff9d40557206561601239ee7c4
-exact run = 29519178960 (#649), success
-artifact = 8383998747
-artifact digest = 7e844f153f094c00ddb79aaea7d2dab2f50c85f97bf10edc7e92796e92a47885
+functional Cost Ledger proof head = df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5
+functional Cost Ledger proof tree = 8f90cedc5bf9918a79c75557311448f5b9aeae12
+functional proof run = 29526270376 (#650), success
+functional proof artifact = 8386829836
+functional proof artifact digest = 113902646e43330d59ea2760a96357e7c05fd40e63610b75dbdee21ed4e4409d
 founder-tested standalone sha256 = 93d0f25d911a102e85847ab7ad884cafdfaf316215b82544a9e80be0a6e6df79
-current engine = cost-gate-foundation-3-synthetic
+Cost Ledger engine = cost-ledger-engine-1-synthetic
 participants observed = 0/5
 cohort = suspended by founder
 main = 6e8c8e801e9821fe212651d684c8fad75dc6abee, unchanged
@@ -27,9 +27,9 @@ Vérifier ces identifiants sur GitHub à chaque reprise. Une preuve historique o
 
 ## Objectif unique
 
-Concevoir puis implémenter le **Cost Ledger v1** sans modifier silencieusement les formules économiques déjà validées.
+Valider à distance les corrections de la **revue hostile** et la **Cost Survival Surface v1** descriptive déjà implémentées localement : pour plusieurs tailles et plusieurs hypothèses de coût et d'avantage explicitement fournies, montrer où l'avantage est absorbé, exactement couvert ou conservé.
 
-La prochaine valeur vient d'une représentation correcte des coûts, pas d'une nouvelle interface : chaque composant doit déclarer côté, portée, base, devise, benchmark, inclusion, provenance, temps, incertitude et version.
+Cette surface décrit des contraintes. Elle ne choisit jamais une taille, un type d'ordre, un prix ou un moment, et ne transforme aucune cellule en recommandation.
 
 ## Autorité
 
@@ -43,15 +43,15 @@ La prochaine valeur vient d'une représentation correcte des coûts, pas d'une n
 
 La matrice MVP reste l'unique numérotation de gate.
 
-## Première tranche
+## Tranche active
 
-1. figer une matrice de scénarios du ledger avant le code ;
-2. implémenter schéma et validation stricte ;
-3. adapter commission, FX, spread et coût d'exécution hypothétique actuels ;
-4. démontrer la parité exacte des résultats legacy ;
-5. bloquer doublons, conflits d'inclusion, base ou devise manquante et forme non supportée ;
-6. ajouter oracle indépendant et propriétés ;
-7. synchroniser preuves, registre et canonicals sur le head exact.
+1. vérifier CL-32 à CL-35 : dénominateur, dépendances, inclusion edge et qualification du plancher ;
+2. vérifier CSS-01 à CSS-30 et leurs oracles indépendants ;
+3. confirmer que chaque cellule appelle le ledger et que coût × avantage est cartésien ;
+4. confirmer les trois états stricts : sous le seuil, égalité, marge positive ;
+5. refuser toute géométrie, base, domaine ou profil non supporté ;
+6. inspecter CI, logs, artefact et captures de non-régression du head exact ;
+7. synchroniser preuves et limites sans autoriser interface, cohorte ou donnée externe.
 
 ## Règles critiques
 
@@ -80,4 +80,4 @@ La matrice MVP reste l'unique numérotation de gate.
 
 ## Condition de sortie
 
-Le Cost Ledger v1 doit être rétrocompatible, auditable et falsifié par des scénarios hostiles sur un head distant exact. Cette preuve restera technique et synthétique. Elle n'autorisera pas automatiquement la cohorte, une donnée externe ou une revendication commerciale.
+La surface doit être rétrocompatible, monotone seulement sous les hypothèses qui rendent cette propriété vraie, explicable cellule par cellule et falsifiée sur un head distant exact. Un seuil ou une frontière non identifiable doit rester `indeterminate`, jamais interpolé ou optimisé silencieusement. Cette preuve restera technique et synthétique. Elle n'autorisera pas automatiquement la cohorte, une donnée externe ou une revendication commerciale.

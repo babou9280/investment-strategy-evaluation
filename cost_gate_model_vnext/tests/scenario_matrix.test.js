@@ -12,11 +12,11 @@ function codes(result) {
 
 const matrixPath = path.join(__dirname, '../../docs/scenarios/COST_LEDGER_V1_MATRIX.md');
 const matrix = fs.readFileSync(matrixPath, 'utf8');
-for (let index = 1; index <= 31; index += 1) {
+for (let index = 1; index <= 35; index += 1) {
   const code = `CL-${String(index).padStart(2, '0')}`;
   assert.ok(matrix.includes(`### ${code} —`), `Missing frozen scenario ${code}`);
 }
-assert.equal((matrix.match(/^### CL-\d{2} —/gm) || []).length, 31);
+assert.equal((matrix.match(/^### CL-\d{2} —/gm) || []).length, 35);
 
 const adapted = engine.adaptLegacy(fixtures.baseLegacy());
 assert.equal(adapted.ok, true);
@@ -70,4 +70,4 @@ assert.equal(directNaNResult.ledgerHash, null);
 assert.ok(codes(directNaNResult).includes('ledger_hash_failed'));
 engine.assertFiniteTree(directNaNResult);
 
-console.log('Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-31 registered)');
+console.log('Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-35 registered)');

@@ -346,9 +346,13 @@ unsupported
 
 Le moteur peut identifier une frontière mathématique. Il ne choisit jamais une cellule optimale.
 
-## 7. Noyau suivant recommandé — Cost Ledger v1
+La revue hostile impose une séparation supplémentaire : le Cost Ledger est un snapshot, pas une fonction de taille. La surface utilise donc une politique de projection distincte qui nomme domaine, transformation des bases, stabilité supposée des paramètres et traitement de l'avantage avec la taille. Les coûts bas, central et haut sont croisés avec les trois avantages par produit cartésien ; une diagonale de trois couples est insuffisante.
 
-Le prochain code ne doit pas être un modèle de market impact. Il doit être le **Cost Ledger v1**.
+La première surface reste `notional_only_not_executable`. Quantité, prix, lot, tick, minimum d'ordre, liquidité, impact, fill, fréquence et trajectoire de capital demeurent non évalués. Une frontière exacte n'est publiée que sous une géométrie linéaire démontrée ; un profil d'avantage fourni par taille produit seulement des changements discrets sans interpolation.
+
+## 7. Premier noyau implémenté — Cost Ledger v1
+
+Le premier code vNext n'est pas un modèle de market impact. Il est le **Cost Ledger v1**, isolé et techniquement validé sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`. Cette réussite prouve le contrat synthétique et la rétrocompatibilité, pas la justesse de coûts de marché non calibrés.
 
 Objectif : représenter les coûts actuels sous une structure extensible sans modifier leur économie.
 
@@ -399,13 +403,12 @@ Il ajoute seulement :
 
 Cet ordre ne crée pas de nouvelle numérotation de gate :
 
-1. figer le contrat `Cost Ledger v1` et ses scénarios hostiles ;
-2. implémenter l'adaptateur rétrocompatible et les oracles ;
-3. produire une enveloppe de coûts entièrement synthétique ;
-4. construire une surface taille × coût × avantage sans optimum ;
-5. réévaluer le parcours et le besoin utilisateur ;
-6. seulement alors décider quel prototype mérite une cohorte ;
-7. toute donnée réelle, TCA observée ou calibration de microstructure reste soumise aux gates ultérieures de la matrice d'autorité.
+1. maintenir le contrat `Cost Ledger v1`, ses scénarios hostiles, son adaptateur et ses oracles ;
+2. maintenir les corrections de la revue hostile, dont la réconciliation du dénominateur ;
+3. valider sur head distant exact la Cost Survival Surface v1 sans optimum ;
+4. réévaluer le parcours et le besoin utilisateur seulement après cette preuve ;
+5. décider ensuite si un prototype supérieur à la sonde actuelle mérite une cohorte ;
+6. toute donnée réelle, TCA observée ou calibration de microstructure reste soumise aux gates ultérieures de la matrice d'autorité.
 
 ## 10. Ce qui reste interdit
 

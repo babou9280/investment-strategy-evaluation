@@ -298,4 +298,15 @@
 - Compatibilité : `legacy-four-costs-1` reproduit les résultats actuels, y compris les sous-totaux incomplets et l'hypothèse de nominal constant sur l'aller-retour.
 - Incertitude : basse, centrale et haute sont des sensibilités coordonnées non probabilistes.
 - Garde-fou : les doublons d'événement sont exclus ; deux sources ayant attribué à tort deux identifiants différents restent un risque déclaré, pas une déduplication prétendue.
-- Preuve : matrice CL-01 à CL-31 et oracles indépendants ; validation GitHub exact-head encore requise avant clôture technique de la tranche.
+- Preuve : matrice CL-01 à CL-31, oracles indépendants et propriétés exécutés sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, run `#650`, artefact inspecté. La tranche est techniquement clôturée dans son domaine synthétique ; elle n'est ni calibrée ni validée comme produit.
+
+## D043 — Un snapshot de coût ne devient jamais silencieusement une fonction de taille
+
+- Statut : **active, décision technique réversible du 16 juillet 2026**
+- Problème : `notionalScaling` décrit une relation algébrique locale, mais ne prouve ni domaine de taille, ni stabilité des paramètres, ni capacité de l'avantage.
+- Décision : la Cost Survival Surface v1 enveloppe le ledger dans une politique de projection séparée avec domaine explicite, règles de base, stabilité supposée et profil d'avantage.
+- Croisement : chaque taille produit le produit cartésien des trois coûts et des trois avantages, soit neuf cellules ; l'appariement diagonal est interdit.
+- Frontière : formule exacte seulement sous projection linéaire prouvée et avantage constant déclaré ; sinon changements discrets sans interpolation.
+- Exécutabilité : la surface reste `notional_only_not_executable`. Quantité, prix, lot, tick, liquidité, fill, fréquence et capital temporel sont non évalués.
+- Langage : aucun optimum, classement, taille proposée, approbation ou ordre.
+- Preuve : contrat, revue hostile, matrice CSS-01 à CSS-30, moteur et oracles locaux ; validation GitHub exact-head encore requise.

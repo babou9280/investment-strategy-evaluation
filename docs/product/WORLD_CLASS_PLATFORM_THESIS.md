@@ -147,10 +147,11 @@ Chaque résultat futur doit conserver :
 - Cost Ledger v1 séparant composant, côté, base, benchmark, provenance, inclusion et incertitude ;
 - distinction contractuel / estimé ex ante / observé ex post ;
 - enveloppe de sensibilité synthétique sans probabilité inventée.
+- Cost Survival Surface séparant snapshot et projection, avec neuf croisements coût × avantage par taille et aucune taille proposée.
 
 ### P1 — test utilisateur sans import
 
-Seulement après Cost Ledger v1, critique interne et nouvelle décision explicite d'Ayman sur le prototype à observer :
+Seulement après Cost Ledger v1, surface descriptive validée techniquement, critique interne et nouvelle décision explicite d'Ayman sur le prototype à observer :
 
 - mode seuil seul ;
 - mode avantage brut ;

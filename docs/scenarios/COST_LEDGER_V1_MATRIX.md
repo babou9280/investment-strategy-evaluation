@@ -315,7 +315,41 @@ L'ordre des clés et des composants n'affecte pas `ledgerHash`. Toute mutation �
 
 `NaN`, `Infinity`, `-Infinity` et `-0` sont refusés ou normalisés conformément au contrat ; aucun ne peut apparaître dans la sortie.
 
-## 9. Condition de réussite de la tranche
+## 9. Scénarios rétrospectifs issus de la revue hostile
+
+Ces scénarios ont été gelés après la première implémentation et avant de considérer leurs corrections comme validées. Ils ne sont pas présentés comme pré-code historique.
+
+### CL-32 — dénominateur non réconcilié
+
+La clé de `returnDenominator` est inconnue, absente de `basisValues`, ou son montant diffère de la base correspondante.
+
+Attendus : `unsupported_return_denominator_basis`, `missing_return_denominator_basis` ou `return_denominator_basis_mismatch` ; aucun total qualifié de complet, aucun seuil et aucun plancher variable publiés. Le cas fixe seul est couvert pour empêcher qu'une absence de composant proportionnel masque le conflit.
+
+### CL-33 — dépendance déclarée mais sans sémantique
+
+Un composant fixe ou proportionnel fournit une liste `dependencies` non vide.
+
+Attendu : `dependency_semantics_unsupported_in_v1`, composant invalide et aucun seuil complet. V1 ne prétend ni propager ni résoudre cette dépendance.
+
+### CL-34 — inclusion dans l'avantage déclarée non applicable
+
+Un composant de coût calculable utilise `edgeInclusion = not_applicable`.
+
+Attendu : `edge_inclusion_required_for_cost_component`, composant invalide et Edge Survival inéligible. L'état n'est jamais assimilé à `excluded`.
+
+### CL-35 — qualification du plancher et des sensibilités
+
+Sur CL-01, la valeur numérique du plancher variable reste `0,70 %`, mais la sortie la qualifie `algebraic_under_declared_scaling_without_size_domain` et conserve les limites :
+
+```text
+known_floor_requires_nonnegative_cost_ontology
+component_sensitivities_co_moved_without_joint_model
+scaling_domain_not_assessed
+```
+
+Aucune de ces limites ne modifie l'oracle legacy ; elles empêchent son extrapolation commerciale ou quantitative.
+
+## 10. Condition de réussite de la tranche
 
 La tranche Cost Ledger v1 n'est techniquement réussie que si :
 

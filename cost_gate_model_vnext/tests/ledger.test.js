@@ -266,4 +266,50 @@ assert.equal(contractualFee.result.coverage.status, 'partial_under_declared_poli
 assert.ok(contractualFee.result.coverage.missingEconomicEventIds.includes('legacy.entry_contractual_fee.entry'));
 assert.equal(contractualFee.result.totalCostEur, null);
 
+// CL-32 — the named return denominator must reconcile to an actual basis,
+// including in a fixed-only ledger.
+const denominatorMismatch = fixtures.deepClone(adapted.ledger);
+denominatorMismatch.returnDenominator.amount = 501;
+const denominatorMismatchResult = resultFor(denominatorMismatch);
+assert.ok(issueCodes(denominatorMismatchResult).includes('return_denominator_basis_mismatch'));
+assert.equal(denominatorMismatchResult.totalCostEur, null);
+assert.equal(denominatorMismatchResult.breakEvenGrossRate, null);
+
+const unknownDenominator = fixtures.deepClone(adapted.ledger);
+unknownDenominator.returnDenominator.basis = 'portfolio_equity';
+const unknownDenominatorResult = resultFor(unknownDenominator);
+assert.ok(issueCodes(unknownDenominatorResult).includes('unsupported_return_denominator_basis'));
+assert.equal(unknownDenominatorResult.breakEvenGrossRate, null);
+
+const fixedOnly = fixtures.deepClone(adapted.ledger);
+fixedOnly.components = fixedOnly.components.filter((component) => component.calculationKind === 'fixed');
+fixedOnly.coverage.expectedEconomicEventIds = fixedOnly.components.map((component) => component.economicEventId).sort();
+fixedOnly.returnDenominator.amount = 499;
+const fixedOnlyMismatchResult = resultFor(fixedOnly);
+assert.ok(issueCodes(fixedOnlyMismatchResult).includes('return_denominator_basis_mismatch'));
+assert.equal(fixedOnlyMismatchResult.breakEvenGrossRate, null);
+
+// CL-33 — dependency graphs are reserved and cannot be silently ignored in v1.
+const dependency = fixtures.deepClone(adapted.ledger);
+fixtures.componentByEvent(dependency, 'legacy.commission.exit').dependencies = [
+  fixtures.componentByEvent(dependency, 'legacy.commission.entry').componentId
+];
+const dependencyResult = resultFor(dependency);
+assert.ok(issueCodes(dependencyResult).includes('dependency_semantics_unsupported_in_v1'));
+assert.equal(dependencyResult.totalCostEur, null);
+
+// CL-34 — every cost must be reconciled explicitly against gross edge.
+const nonApplicableEdge = fixtures.deepClone(adapted.ledger);
+fixtures.componentByEvent(nonApplicableEdge, 'legacy.commission.entry').edgeInclusion = 'not_applicable';
+const nonApplicableEdgeResult = resultFor(nonApplicableEdge);
+assert.ok(issueCodes(nonApplicableEdgeResult).includes('edge_inclusion_required_for_cost_component'));
+assert.equal(nonApplicableEdgeResult.totalCostEur, null);
+assert.notEqual(nonApplicableEdgeResult.downstreamEligibility.edgeSurvival, 'eligible');
+
+// CL-35 — numeric parity is preserved while extrapolation limits stay explicit.
+assert.equal(base.variableFloorQualification, 'algebraic_under_declared_scaling_without_size_domain');
+assert.ok(base.limitations.includes('known_floor_requires_nonnegative_cost_ontology'));
+assert.ok(base.limitations.includes('component_sensitivities_co_moved_without_joint_model'));
+assert.ok(base.limitations.includes('scaling_domain_not_assessed'));
+
 console.log('Cost Ledger v1 contract tests: PASS');

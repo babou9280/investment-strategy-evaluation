@@ -68,7 +68,7 @@ La fondation synthétique Cost Gate, version `cost-gate-foundation-3-synthetic`,
 
 Le 16 juillet 2026, Ayman a refusé de lancer la cohorte avec ce prototype et a demandé d'approfondir intelligemment la conception du modèle. Cette décision ne ferme ni ne renumérote Gate 1 : elle suspend ses observations et requalifie l'HTML actuel comme **sonde technique**, pas comme candidat actuel à la cohorte.
 
-La mission active est la **conception Cost Gate vNext** sur la PR `#26`, en commençant par un Cost Ledger v1 rétrocompatible. L'architecture d'autorité est `docs/product/COST_GATE_MODEL_ARCHITECTURE_VNEXT.md`, le contrat est `docs/standards/COST_LEDGER_CONTRACT.md`, la matrice pré-code est `docs/scenarios/COST_LEDGER_V1_MATRIX.md` et la mission est `docs/tasks/COST_GATE_MODEL_VNEXT.md`. Le moteur isolé existe localement mais ne devient une preuve distante qu'après push, CI exact-head et inspection d'artefact.
+La mission active est la **conception Cost Gate vNext** sur la PR `#26`. Le Cost Ledger v1 est techniquement validé sur `df3ff7fc`, run `#650`. La revue hostile est `docs/review/COST_GATE_MODEL_VNEXT_HOSTILE_REVIEW.md`. La tranche active est la Cost Survival Surface v1 : contrat `docs/standards/COST_SURVIVAL_SURFACE_CONTRACT.md`, matrice `docs/scenarios/COST_SURVIVAL_SURFACE_V1_MATRIX.md`, tâche `docs/tasks/COST_SURVIVAL_SURFACE_V1.md` et validation `docs/validation/COST_SURVIVAL_SURFACE_V1.md`. Son implémentation locale n'est une preuve qu'après push, CI exact-head et inspection d'artefact. Aucune donnée externe ni nouvelle interface grand public.
 
 Le travail autorisé se limite à :
 

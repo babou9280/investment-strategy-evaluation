@@ -8,7 +8,7 @@
 - Politique de compatibilité : `legacy-four-costs-1`.
 - Interface : aucune modification fonctionnelle.
 - Données : manuelles ou synthétiques uniquement.
-- État de preuve : exécution locale réussie pour les tests numériques, contractuels, de propriétés, de syntaxe et d'intégrité ; preuve GitHub exact-head et artefact encore à établir.
+- État de preuve : tranche technique et synthétique validée sur le head fonctionnel distant exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5` ; artefact, logs et captures inspectés.
 
 Cette preuve ne rouvre pas la cohorte Gate 1.
 
@@ -29,16 +29,16 @@ Le 16 juillet 2026 :
 
 ```text
 Cost Ledger v1 contract tests: PASS
-Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-31 registered)
+Cost Ledger v1 frozen scenario matrix: PASS (CL-01 to CL-35 registered)
 Cost Ledger v1 property tests: PASS (10 parity cases)
 Cost Ledger v1 static integrity: PASS
 ```
 
 Les suites numériques et statiques préexistantes ont aussi réussi après ajout du ledger : H1, H2, Cost Intelligence, Capital Efficiency, Cost Gate foundation et Cost Gate critique.
 
-La tentative locale des régressions navigateur n'a pas produit de résultat fonctionnel : Python Playwright a été installé dans un environnement temporaire, mais aucun exécutable Chromium utilisable n'était disponible et son téléchargement a été bloqué par l'environnement. Aucun échec produit n'est déduit de cette limite. Les suites navigateur restent à exécuter dans GitHub Actions sur le head exact.
+La tentative locale des régressions navigateur n'a pas produit de résultat fonctionnel : Python Playwright a été installé dans un environnement temporaire, mais aucun exécutable Chromium utilisable n'était disponible et son téléchargement a été bloqué par l'environnement. Aucun échec produit n'en a été déduit. Les suites navigateur ont ensuite réussi dans GitHub Actions sur le head fonctionnel exact.
 
-Le contrôle local `package_integrity.py` dépend d'un package reconstruit avec le SHA Git exact. Il reste réservé au build GitHub exact-head afin de ne pas commettre un artefact généré depuis un head local différent du head distant.
+Le contrôle local `package_integrity.py` dépend d'un package reconstruit avec le SHA Git exact. Il a donc été réservé au build GitHub exact-head afin de ne pas commettre un artefact généré depuis un head local différent du head distant ; il y a réussi.
 
 ## 4. Oracles numériques indépendants
 
@@ -73,6 +73,9 @@ La fourchette est explicitement non probabiliste.
 ## 5. Propriétés démontrées localement
 
 - parité exacte des coûts fixes, proportionnels, totaux, seuils et planchers sur dix cas legacy ;
+- dénominateur réconcilié à sa base, y compris avec coûts fixes seuls ;
+- dépendances non vides refusées tant que leur sémantique n'existe pas ;
+- `edgeInclusion = not_applicable` refusé pour un coût ;
 - parité des sous-totaux lorsque chaque composante legacy est retirée tour à tour ;
 - ordre des composants sans effet sur le hash ou l'agrégat ;
 - zéro explicite distinct d'une absence ;
@@ -96,13 +99,19 @@ La fourchette est explicitement non probabiliste.
 - aucune surface taille × coût × avantage n'est encore intégrée au produit ;
 - aucune compréhension, utilité, demande, conformité ou volonté de payer n'est validée.
 
-## 7. Preuve distante à compléter
+## 7. Preuve distante exécutée
 
-Avant de considérer cette tranche techniquement validée :
+Preuve fonctionnelle du 16 juillet 2026 :
 
-- pousser réellement les fichiers sur la branche de la PR `#26` ;
-- vérifier le nouveau head distant ;
-- inspecter le run GitHub Actions attaché à ce head exact ;
-- contrôler les logs numériques, statiques, navigateur, build et syntaxe ;
-- inspecter l'artefact et les captures de non-régression ;
-- inscrire ici les identifiants et limites réellement observés.
+- head : `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5` ;
+- tree : `8f90cedc5bf9918a79c75557311448f5b9aeae12` ;
+- run : `29526270376` (`#650`), job `87715371308`, `success` ;
+- artefact : `8386829836`, 8 864 767 octets ;
+- digest GitHub et digest recalculé : `sha256:113902646e43330d59ea2760a96357e7c05fd40e63610b75dbdee21ed4e4409d` ;
+- HTML autonome : 152 525 octets, SHA-256 `2de1dd902768fc25808e70c6b22384120e6290ba2d4951629a7a2505bcd020e2` ;
+- ZIP interne : SHA-256 `5341f88a2e04d58b0af17dbb4e6809c00e287365700f80dd058a1c8e262c9f1f` ;
+- manifeste : source `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, génération `2026-07-16T19:01:35Z`, Chromium `149.0.7827.55`.
+
+Le checkout, le build déterministe, CL-01 à CL-31, les dix propriétés de parité, les suites historiques, l'intégrité du package, la syntaxe et les régressions navigateur ont réussi. Les 24 captures Capital Efficiency et les six captures Cost Gate ont été produites. Les vues Cost Gate neutre, favorable et égalité au seuil ont été réellement ouvertes à 390 et 1 440 px : pas de débordement global, coupure, lien d'évitement parasite, valeur non finie ou contradiction visible. À l'égalité, le texte indique qu'aucune marge positive ne subsiste, les trois marges sont nulles et l'état moteur reste `edge_fully_absorbed`.
+
+L'avertissement GitHub Actions sur le passage futur de certaines actions de Node 20 à Node 24 n'est pas un échec produit. Cette preuve valide l'exécution du contrat synthétique, pas la complétude des coûts réels, la calibration, l'utilité, la demande, le droit ou la cohorte.

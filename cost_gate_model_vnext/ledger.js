@@ -313,8 +313,11 @@ function rootContext(ledger, issues) {
   nonEmptyString(ledger.quoteCurrency, 'ledger.quoteCurrency', issues);
 
   let denominator = null;
+  let denominatorBasis = null;
   if (exactKeys(ledger.returnDenominator, RETURN_DENOMINATOR_KEYS, 'ledger.returnDenominator', issues)) {
-    nonEmptyString(ledger.returnDenominator.basis, 'ledger.returnDenominator.basis', issues);
+    if (nonEmptyString(ledger.returnDenominator.basis, 'ledger.returnDenominator.basis', issues)) {
+      denominatorBasis = ledger.returnDenominator.basis;
+    }
     const amount = finiteNonNegative(ledger.returnDenominator.amount, 'ledger.returnDenominator.amount', issues, { positive: true });
     if (ledger.returnDenominator.currency !== ledger.accountCurrency) {
       issues.push(issue('unsupported_currency', 'blocking', 'ledger.returnDenominator.currency'));
@@ -340,6 +343,19 @@ function rootContext(ledger, issues) {
     });
   } else {
     issues.push(issue('object_required', 'blocking', 'ledger.basisValues'));
+  }
+
+  if (denominatorBasis !== null) {
+    if (!BASIS_NAMES.has(denominatorBasis)) {
+      issues.push(issue('unsupported_return_denominator_basis', 'blocking', 'ledger.returnDenominator.basis'));
+      denominator = null;
+    } else if (!bases[denominatorBasis]) {
+      issues.push(issue('missing_return_denominator_basis', 'blocking', 'ledger.returnDenominator.basis'));
+      denominator = null;
+    } else if (denominator !== null && !close(denominator, bases[denominatorBasis].amount)) {
+      issues.push(issue('return_denominator_basis_mismatch', 'blocking', 'ledger.returnDenominator.amount'));
+      denominator = null;
+    }
   }
 
   let coverage = null;
@@ -502,6 +518,12 @@ function componentResult(component, index, ledger, context, identityCounts, allC
   ['priceInclusion', 'edgeInclusion', 'cashSourceInclusion'].forEach((key) => {
     if (!INCLUSION_STATES.has(component[key])) issues.push(issue('invalid_inclusion_state', 'blocking', `${path}.${key}`));
   });
+  if (component.edgeInclusion === 'not_applicable') {
+    issues.push(issue('edge_inclusion_required_for_cost_component', 'blocking', `${path}.edgeInclusion`, {
+      componentId: component.componentId,
+      economicEventId: component.economicEventId
+    }));
+  }
   if (!SUPPORTED_PROVENANCE.has(component.provenance) && !RESERVED_PROVENANCE.has(component.provenance)) {
     issues.push(issue('unsupported_provenance', 'blocking', `${path}.provenance`));
   }
@@ -528,6 +550,13 @@ function componentResult(component, index, ledger, context, identityCounts, allC
   if (!INPUT_STATUSES.has(component.inputStatus)) issues.push(issue('invalid_input_status', 'blocking', `${path}.inputStatus`));
   const dependencies = stringArray(component.dependencies, `${path}.dependencies`, issues);
   stringArray(component.limitations, `${path}.limitations`, issues);
+  if (dependencies.length > 0) {
+    issues.push(issue('dependency_semantics_unsupported_in_v1', 'blocking', `${path}.dependencies`, {
+      componentId: component.componentId,
+      economicEventId: component.economicEventId,
+      details: dependencies
+    }));
+  }
   dependencies.forEach((dependency) => {
     if (!allComponentIds.has(dependency)) issues.push(issue('missing_dependency', 'blocking', `${path}.dependencies`, { details: [dependency] }));
     if (dependency === component.componentId) issues.push(issue('self_dependency', 'blocking', `${path}.dependencies`, { details: [dependency] }));
@@ -852,6 +881,9 @@ function evaluate(ledgerValue) {
     totalCostEur,
     breakEvenGrossRate,
     variableFloorRate,
+    variableFloorQualification: variableFloorRate === null
+      ? 'not_available'
+      : 'algebraic_under_declared_scaling_without_size_domain',
     downstreamEligibility: {
       edgeSurvival: edgeEligibility,
       entryCash: cashEligibility,
@@ -869,6 +901,9 @@ function evaluate(ledgerValue) {
       'synthetic_or_manual_only',
       'coverage_source_dependent',
       'economic_event_identity_source_dependent',
+      'known_floor_requires_nonnegative_cost_ontology',
+      'component_sensitivities_co_moved_without_joint_model',
+      'scaling_domain_not_assessed',
       'no_currency_conversion',
       'no_market_impact_model',
       'no_execution_probability',

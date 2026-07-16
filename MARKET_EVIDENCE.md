@@ -132,4 +132,4 @@ Il existe :
 - des concurrents qui couvrent déjà le simple suivi des commissions et le breakeven ;
 - une lacune plausible autour de l'Edge Survival, du plancher variable et des contraintes inverses.
 
-Il n'existe pas encore de preuve que cette lacune soit assez douloureuse, fréquente et monétisable. La prochaine étape correcte est un laboratoire interne rigoureux fondé sur le Cost Ledger v1, puis seulement un nouveau prototype et un test utilisateur ciblé si Ayman rouvre la cohorte. Le calculateur Q0 et la sonde actuelle ne sont pas des produits finaux.
+Il n'existe pas encore de preuve que cette lacune soit assez douloureuse, fréquente et monétisable. La prochaine étape correcte reste un laboratoire interne rigoureux : ledger auditable, projection séparée et surface coût × avantage falsifiée, puis seulement un nouveau prototype et un test utilisateur ciblé si Ayman rouvre la cohorte. Le calculateur Q0, la sonde actuelle et la surface analytique ne sont pas des produits finaux.
