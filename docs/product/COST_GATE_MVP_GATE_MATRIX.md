@@ -69,7 +69,7 @@ Une revue exacte de `be6aa09` a révélé trois défauts rétrospectifs et l'aud
 
 Prototype : HTML hors ligne, hypothèses manuelles et scénarios synthétiques.
 
-Statut : **autorisée par Ayman le 15 juillet 2026 et active sur `strategy/cost-gate-offline-critique`**. Le protocole et les seuils sont préenregistrés avant code et avant observation dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Un premier essai fondateur du bundle multifichier sur iPad a révélé un blocage de démarrage et d'effacement des champs ; il ne compte pas comme observation. L'HTML autonome, son package exact et son repli sans JavaScript sont techniquement exécutés au head `bb50550bde077c19b6966e1715e4f7f31dcfe901`, run `#645`. Le défaut reste à revalider sur le même iPad. Aucun résultat utilisateur n'est disponible et Gate 1 n'est pas clôturée.
+Statut : **autorisée par Ayman le 15 juillet 2026 et active sur `strategy/cost-gate-offline-critique`**. Le protocole et les seuils sont préenregistrés avant code et avant observation dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. Un premier essai fondateur du bundle multifichier sur iPad a révélé un blocage de démarrage et d'effacement des champs ; il ne compte pas comme observation. L'HTML autonome, son package exact et son repli sans JavaScript sont techniquement exécutés au head `e42bce2a29589000a95697aa2d7228645fe9b909`, run `#647`. Ayman a confirmé le 16 juillet 2026 que ce fichier exact charge la démonstration et produit le résultat sur le même iPad. Aucun résultat des cinq participants n'est encore disponible et Gate 1 n'est pas clôturée.
 
 Questions :
 

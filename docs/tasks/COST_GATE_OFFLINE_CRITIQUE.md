@@ -144,9 +144,10 @@ Cette section est postérieure au préenregistrement et ne modifie aucun seuil, 
 
 - Prototype `internal_review` construit et poussé sous forme de HTML autonome direct et de ZIP d'audit.
 - Un essai fondateur du bundle multifichier sur iPad a révélé avant la cohorte un défaut bloquant : scripts relatifs non exécutés, rechargement du formulaire et effacement des champs au clic. Cet essai ne compte pas parmi les cinq participants.
-- Head fonctionnel corrigé exact : `bb50550bde077c19b6966e1715e4f7f31dcfe901`.
-- GitHub Actions : run `29458950246` (`#645`), `success`.
+- Head exact remis et retesté : `e42bce2a29589000a95697aa2d7228645fe9b909`.
+- GitHub Actions : run `29459481762` (`#647`), `success`.
 - Artefact, fichier autonome, package ZIP et six captures 390/1 440 px téléchargés et inspectés.
 - Matrice technique, parité moteur, fichier autonome sous `file://`, fraîcheur, provenance, accessibilité, responsive et repli sans JavaScript réussis dans le périmètre documenté.
+- Ayman a confirmé le 16 juillet 2026 que le fichier autonome exact charge la démonstration synthétique et affiche le résultat sur le même iPad. Ce contrôle fondateur ne compte pas dans la cohorte.
 - Participants observés : **0 sur 5**.
-- Défaut iPad : `mitigated`, pas `validated` ; prochaine condition : faire réussir le fichier autonome exact sur le même iPad, puis exécuter les cinq observations réelles sans modifier silencieusement le protocole.
+- Défaut d'effacement sur le lecteur iPad fondateur : `validated` ; compatibilité générale Safari/iPad : non validée. Prochaine condition : exécuter les cinq observations réelles sans modifier silencieusement le protocole.

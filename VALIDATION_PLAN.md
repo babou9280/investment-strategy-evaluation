@@ -2,7 +2,7 @@
 
 - Actifs techniquement stabilisés : **Breaktest Capital Efficiency / Edge Survival** et fondation synthétique **Cost Gate**
 - Test actif : **Gate 1 Cost Gate hors ligne**, autorisé le 15 juillet 2026 et préenregistré avant observation
-- Statut : Gate 0 fusionnée ; défaut bloquant du bundle reproduit par Ayman sur iPad ; HTML autonome et repli sans JavaScript techniquement exécutés sur le head exact `bb50550` ; nouvel essai iPad requis ; cinq observations qualifiées non commencées ; publication, données externes et paiement suspendus
+- Statut : Gate 0 fusionnée ; défaut bloquant du bundle reproduit puis retesté avec succès par Ayman sur le même iPad avec l'HTML autonome exact du head `e42bce2` ; cinq observations qualifiées non commencées ; publication, données externes et paiement suspendus
 - Principe : valider chaque couche séparément et permettre l'abandon
 
 ## 1. Question décisive de Gate 1
@@ -11,7 +11,7 @@
 
 Le test ne vise pas les compliments, inscriptions gratuites ou intentions abstraites.
 
-Le fichier autonome et le package techniques exacts sont validés dans Chromium par le run `#645` et documentés dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Cette preuve ne compte pour aucun seuil utilisateur. Le premier bundle remis ayant échoué sur iPad, le fichier autonome exact doit réussir un nouvel essai fondateur sur le même appareil avant d'autoriser les observations.
+Le fichier autonome et le package techniques exacts sont validés dans Chromium par le run `#647` et documentés dans `docs/validation/COST_GATE_OFFLINE_CRITIQUE.md`. Ayman a confirmé que ce fichier exact fonctionne sur le même iPad ayant reproduit le blocage. Ces preuves n'entrent dans aucun seuil utilisateur ; elles autorisent seulement le démarrage des observations.
 
 ## 2. Hypothèses Capital Efficiency à valider
 
@@ -244,7 +244,7 @@ Mesurer auprès d'utilisateurs qualifiés :
 
 Critères d'arrêt : problème rare, usage uniquement curieux, saisie plus coûteuse que la décision ou confusion persistante avec une recommandation.
 
-Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le premier essai fondateur du bundle multifichier sur iPad a échoué avant toute observation : le lecteur n'exécutait pas les scripts relatifs, l'action d'analyse rechargeait la page et effaçait les champs. Il ne compte pas parmi les cinq participants. Le head `bb50550` et le run `#645` prouvent dans Chromium un HTML autonome direct, une analyse réelle sous `file://` et un repli sans JavaScript qui garde la valeur saisie, l'URL et l'absence de faux résultat. Le défaut reste seulement atténué jusqu'au nouvel essai sur le même iPad ; aucun résultat utilisateur n'est consigné avant une observation réelle.
+Le protocole d'autorité, les cinq participants, le script neutre, les seuils et la règle d'amendement sont préenregistrés dans `docs/tasks/COST_GATE_OFFLINE_CRITIQUE.md`. La matrice technique est `docs/scenarios/COST_GATE_OFFLINE_CRITIQUE_MATRIX.md`. Le premier essai fondateur du bundle multifichier sur iPad a échoué avant toute observation : le lecteur n'exécutait pas les scripts relatifs, l'action d'analyse rechargeait la page et effaçait les champs. Il ne compte pas parmi les cinq participants. Le head `e42bce2` et le run `#647` prouvent dans Chromium un HTML autonome direct, une analyse réelle sous `file://` et un repli sans JavaScript qui garde la valeur saisie, l'URL et l'absence de faux résultat. Ayman a ensuite confirmé sur le même iPad que la démonstration se charge et que le résultat apparaît. Le compteur utilisateur reste **0 sur 5**.
 
 ### Capacité à fournir les entrées et faisabilité générale — non validées
 
@@ -296,7 +296,7 @@ Toute source externe limitée, connexion ou exécution exige ensuite une décisi
 
 La fondation est clôturée. Ayman a explicitement autorisé Gate 1 le 15 juillet 2026 ; cette autorisation est limitée au prototype de critique hors ligne.
 
-Sont autorisés : nouvel essai fondateur du fichier autonome exact sur le même iPad, puis observation des cinq participants selon le protocole, correction d'un défaut réellement reproduit, maintien des preuves et package `internal_review` exact. Une nouvelle fonctionnalité ou une nouvelle donnée n'est pas autorisée par cette Gate.
+Sont autorisés : observation des cinq participants selon le protocole, correction d'un défaut réellement reproduit, maintien des preuves et package `internal_review` exact. Une nouvelle fonctionnalité ou une nouvelle donnée n'est pas autorisée par cette Gate.
 
 Gate 1 ne sera pas déclarée réussie avant cinq observations qualifiées réelles et application des seuils préenregistrés.
 

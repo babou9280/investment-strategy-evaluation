@@ -5,20 +5,20 @@
 - Pull request : `#26`, ouverte en brouillon vers `breaktest-bootstrap`.
 - Branche : `strategy/cost-gate-offline-critique`.
 - Base : `56fb50954afd7394baf1689e0f1b7220a1fd73fc`.
-- Head fonctionnel exact : `bb50550bde077c19b6966e1715e4f7f31dcfe901`.
-- Tree fonctionnel : `021d3ec909d21723332fa420c2ca45127ee6fc67`.
-- GitHub Actions : run `29458950246` (`#645`), job `87498198402`, `success`.
-- Artefact : `8360442727`, 8 865 607 octets.
-- Digest de l'artefact : `sha256:798c36f33c8bebef178cc785af82ed4591230aa70a9b9f68d373da289efe3e33`.
-- HTML autonome : `Breaktest_Cost_Gate_Gate_1.html`, 152 525 octets, SHA-256 `98458817fb59b603955cf5c6c7b309390869b5ab622a314915d0e4bd5e9e3014`.
-- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 74 022 octets.
-- SHA-256 de l'archive interne : `3938acbfea3324ddcc34f938322c2e8eb996f39cbf189bf52a7f7ca52e156263`.
+- Head exact remis et retesté : `e42bce2a29589000a95697aa2d7228645fe9b909`.
+- Tree : `618ce47e5199355a56927ebc15cda3f1c10a2676`.
+- GitHub Actions : run `29459481762` (`#647`), job `87499762713`, `success`.
+- Artefact : `8360626149`, 8 868 397 octets.
+- Digest de l'artefact : `sha256:27805ed2f698f84a3861b73353bd12524203b1a737c77c13ef8259e3fc8714dc`.
+- HTML autonome : `Breaktest_Cost_Gate_Gate_1.html`, 152 525 octets, SHA-256 `93d0f25d911a102e85847ab7ad884cafdfaf316215b82544a9e80be0a6e6df79`.
+- Archive interne : `breaktest-cost-gate-gate1-internal-review.zip`, 74 026 octets.
+- SHA-256 de l'archive interne : `a70a0bac71df4ebe00b479ca86e951947928dc67bc70ce777158189d4f5b7300`.
 - Moteur : `cost-gate-foundation-3-synthetic`.
 - Nature de la preuve : technique, quantitative, synthétique, responsive et interne.
 - Participants réellement observés : **0 sur 5**.
-- Statut de Gate 1 : **défaut iPad reproduit puis atténué techniquement ; nouvel essai réel requis ; validation utilisateur non commencée ; Gate non clôturée**.
+- Statut de Gate 1 : **défaut iPad ciblé reproduit puis retesté avec succès ; validation des cinq participants non commencée ; Gate non clôturée**.
 
-Le run `#645` teste le head fonctionnel exact. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. Une CI verte ne prouve pas le fonctionnement dans le lecteur iPad qui a reproduit le défaut et ne répond pas à la question de compréhension préenregistrée.
+Le run `#647` teste le head et le fichier exacts remis à Ayman. La présente synchronisation documentaire exige à son tour un run exact-head avant toute décision de fusion. La confirmation fondateur sur un iPad ne répond pas à la question de compréhension préenregistrée et ne prouve pas la compatibilité générale Safari/iPad.
 
 ## Ordre de préenregistrement
 
@@ -112,15 +112,15 @@ Les régressions exécutées couvrent :
 - démarrage du moteur attesté avant interaction ;
 - contexte JavaScript désactivé : avertissement visible, valeur `500` conservée après clic sur l'analyse, URL inchangée, résultat absent et aucune requête supplémentaire.
 
-Le bundle multifichier a réellement échoué sur l'iPad d'Ayman. Le fichier autonome corrigé n'y est pas encore revalidé ; aucune revendication Safari/iPad n'est faite.
+Le bundle multifichier a réellement échoué sur l'iPad d'Ayman. Ayman a ensuite confirmé le 16 juillet 2026 que le fichier autonome exact charge la démonstration synthétique et produit le résultat sur le même iPad. Ce contrôle valide le défaut ciblé, sans identifier ni généraliser le comportement à tous les lecteurs ou versions Safari/iPad.
 
 ## Package et provenance exacts
 
 Les logs du checkout montrent explicitement :
 
 ```text
-ref = bb50550bde077c19b6966e1715e4f7f31dcfe901
-HEAD = bb50550bde077c19b6966e1715e4f7f31dcfe901
+ref = e42bce2a29589000a95697aa2d7228645fe9b909
+HEAD = e42bce2a29589000a95697aa2d7228645fe9b909
 ```
 
 Le workflow refuse désormais un écart entre le head attendu et le checkout. Le build refuse aussi un `source_commit` différent de `HEAD` et sa régression vérifie ce refus.
@@ -159,7 +159,7 @@ La revue a produit des corrections et régressions, sans modification des formul
 4. le défilement JavaScript restait explicitement doux malgré une préférence de mouvement réduit ; le comportement est maintenant conditionnel et testé ;
 5. le constat rare d'échec de sérialisation du snapshot n'avait pas de libellé explicite ; le mapping et sa régression sont ajoutés ;
 6. les runs exacts `#635` et `#637` ont montré qu'une durée globale de `0,01 ms` créait encore une transition du lien d'évitement en mode mouvement réduit. Les transitions sont maintenant réellement nulles, et la régression vérifie que le document est actif, que le premier `Tab` cible le lien, que `:focus` s'applique et que le lien est dans le viewport. Le run exact `#639` valide la correction sans changement de formule.
-7. l'essai fondateur réel du bundle multifichier sur iPad a montré que le lecteur pouvait afficher l'HTML sans exécuter ses scripts relatifs ; l'action native rechargeait alors le formulaire et effaçait les chiffres. La remise primaire est maintenant un HTML autonome avec tous les styles et scripts incorporés, l'analyse est un bouton non soumetteur, un avertissement apparaît si le moteur ne démarre pas et une régression JavaScript désactivé protège les champs. Le premier run `#643` de cette régression a échoué uniquement parce que le contexte de test n'émulait pas le mouvement réduit avant l'auto-défilement ; le contexte a été stabilisé sans changement du produit et le run exact `#645` réussit. La preuve iPad reste en attente.
+7. l'essai fondateur réel du bundle multifichier sur iPad a montré que le lecteur pouvait afficher l'HTML sans exécuter ses scripts relatifs ; l'action native rechargeait alors le formulaire et effaçait les chiffres. La remise primaire est maintenant un HTML autonome avec tous les styles et scripts incorporés, l'analyse est un bouton non soumetteur, un avertissement apparaît si le moteur ne démarre pas et une régression JavaScript désactivé protège les champs. Le premier run `#643` de cette régression a échoué uniquement parce que le contexte de test n'émulait pas le mouvement réduit avant l'auto-défilement ; le contexte a été stabilisé sans changement du produit. Le run exact `#647` réussit et Ayman confirme que le fichier correspondant fonctionne sur le même iPad.
 
 ## Ce qui est réellement validé
 
@@ -171,6 +171,7 @@ La revue a produit des corrections et régressions, sans modification des formul
 - fichier autonome et package exacts, manifeste, hashes, reconstruction et archive ;
 - non-régressions historiques, Capital Efficiency, Edge Survival et fondation Cost Gate ;
 - captures du head fonctionnel exact à 390 et 1 440 pixels.
+- chargement de la démonstration et production du résultat par le fichier autonome exact sur l'iPad fondateur, confirmés par Ayman.
 
 ## Ce qui n'est pas validé
 
@@ -179,9 +180,8 @@ La revue a produit des corrections et régressions, sans modification des formul
 - disponibilité réelle des entrées ;
 - usage réel, répétition, demande ou paiement ;
 - donnée, compte, cash, liquidité, spread, slippage ou exécution réels ;
-- fonctionnement du fichier autonome dans le même lecteur iPad que celui ayant reproduit le blocage ;
-- Safari/iPad au-delà de ce nouvel essai ciblé ;
+- Safari/iPad au-delà du lecteur et de l'appareil fondateur retestés ;
 - conformité juridique ou réglementaire ;
 - marché, prix, distribution ou viabilité commerciale.
 
-La prochaine preuve indispensable est d'abord l'essai fondateur du fichier autonome exact sur le même iPad ; il ne compte pas comme participant. Après réussite seulement viennent cinq observations qualifiées selon le protocole préenregistré. Aucun résultat utilisateur ne doit être ajouté avant une observation réelle.
+La prochaine preuve indispensable est humaine : cinq observations qualifiées selon le protocole préenregistré. Le contrôle fondateur iPad ne compte pas comme participant. Aucun résultat utilisateur ne doit être ajouté avant une observation réelle.
