@@ -298,7 +298,7 @@
 - Compatibilité : `legacy-four-costs-1` reproduit les résultats actuels, y compris les sous-totaux incomplets et l'hypothèse de nominal constant sur l'aller-retour.
 - Incertitude : basse, centrale et haute sont des sensibilités coordonnées non probabilistes.
 - Garde-fou : les doublons d'événement sont exclus ; deux sources ayant attribué à tort deux identifiants différents restent un risque déclaré, pas une déduplication prétendue.
-- Preuve : matrice CL-01 à CL-31, oracles indépendants et propriétés exécutés sur le head fonctionnel exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, run `#650`, artefact inspecté. La tranche est techniquement clôturée dans son domaine synthétique ; elle n'est ni calibrée ni validée comme produit.
+- Preuve : matrice CL-01 à CL-31, oracles indépendants et propriétés exécutés sur `df3ff7fc`, run `#650`. Les renforcements CL-32 à CL-38 et la liaison au contexte économique réussissent sur le head fonctionnel exact `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec`, run `#654`, artefact inspecté. La tranche est techniquement clôturée dans son domaine synthétique ; elle n'est ni calibrée ni validée comme produit.
 
 ## D043 — Un snapshot de coût ne devient jamais silencieusement une fonction de taille
 
@@ -310,4 +310,4 @@
 - Frontière : formule exacte seulement sous projection linéaire prouvée et avantage constant déclaré ; sinon changements discrets sans interpolation.
 - Exécutabilité : la surface reste `notional_only_not_executable`. Quantité, prix, lot, tick, liquidité, fill, fréquence et capital temporel sont non évalués.
 - Langage : aucun optimum, classement, taille proposée, approbation ou ordre.
-- Preuve : contrat, revue hostile, matrice CSS-01 à CSS-32, moteur et oracles locaux ; validation GitHub exact-head encore requise.
+- Preuve : contrat, revue hostile, matrice CSS-01 à CSS-32, moteur, oracles et propriétés exécutés sur le head fonctionnel exact `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec`, run `#654`, artefact et captures de non-régression inspectés.

@@ -469,7 +469,9 @@ Pour chaque taille, les trois coûts sont croisés avec les trois avantages par 
 
 Une frontière exacte est permise uniquement si les coûts restent fixes plus proportionnels dans le domaine et si l'avantage est déclaré constant. Un avantage fourni séparément par taille produit uniquement des changements discrets sans interpolation. La surface reste `notional_only_not_executable` : elle ne traite ni quantité, lot, liquidité, impact, fill, fréquence ou capital temporel.
 
-Les règles complètes sont dans `docs/standards/COST_SURVIVAL_SURFACE_CONTRACT.md` et les scénarios CSS-01 à CSS-30 dans `docs/scenarios/COST_SURVIVAL_SURFACE_V1_MATRIX.md`.
+Les règles complètes sont dans `docs/standards/COST_SURVIVAL_SURFACE_CONTRACT.md` et les scénarios CSS-01 à CSS-32 dans `docs/scenarios/COST_SURVIVAL_SURFACE_V1_MATRIX.md`.
+
+Cette méthodologie, les renforcements CL-32 à CL-38, les oracles et les propriétés ont réussi sur le head fonctionnel exact `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec`, run `#654`. Cette preuve est synthétique : elle ne valide ni calibration, ni quantité exécutable, ni trajectoire de capital.
 
 ## 21. Méthodologie historique conservée
 

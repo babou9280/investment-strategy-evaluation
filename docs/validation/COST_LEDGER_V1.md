@@ -8,7 +8,7 @@
 - Politique de compatibilité : `legacy-four-costs-1`.
 - Interface : aucune modification fonctionnelle.
 - Données : manuelles ou synthétiques uniquement.
-- État de preuve : tranche technique et synthétique validée sur le head fonctionnel distant exact `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5` ; artefact, logs et captures inspectés.
+- État de preuve : tranche initiale validée sur `df3ff7fc970c7a2d1030ceea9e7473fcf79fb0f5`, puis contrat renforcé et lié au contexte économique sur le head fonctionnel distant exact `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec` ; artefacts, journaux et captures inspectés.
 
 Cette preuve ne rouvre pas la cohorte Gate 1.
 
@@ -115,4 +115,13 @@ Preuve fonctionnelle du 16 juillet 2026 :
 
 Le checkout, le build déterministe, CL-01 à CL-31, les dix propriétés de parité, les suites historiques, l'intégrité du package, la syntaxe et les régressions navigateur ont réussi. Les 24 captures Capital Efficiency et les six captures Cost Gate ont été produites. Les vues Cost Gate neutre, favorable et égalité au seuil ont été réellement ouvertes à 390 et 1 440 px : pas de débordement global, coupure, lien d'évitement parasite, valeur non finie ou contradiction visible. À l'égalité, le texte indique qu'aucune marge positive ne subsiste, les trois marges sont nulles et l'état moteur reste `edge_fully_absorbed`.
 
-L'avertissement GitHub Actions sur le passage futur de certaines actions de Node 20 à Node 24 n'est pas un échec produit. Cette preuve valide l'exécution du contrat synthétique, pas la complétude des coûts réels, la calibration, l'utilité, la demande, le droit ou la cohorte.
+Renforcement fonctionnel du même jour :
+
+- head : `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec` ;
+- tree : `0f221d07c4c7811aadaf53e0db53381d424122c3` ;
+- run : `29529414199` (`#654`), job `87725842725`, `success` ;
+- artefact : `8388042099`, 8 867 539 octets, digest vérifié `sha256:4f1c10239b9e18b690cea4e4dd3788ea3598e9c9b0b13c81142133c2f00009bd`.
+
+Cette seconde preuve couvre CL-01 à CL-38. Elle ajoute la réconciliation stricte du dénominateur, le refus des dépendances sans sémantique, le refus de l'inclusion d'avantage non applicable pour un coût, les limites de projection et la conservation hashée du contexte instrument/place/horizon. La Cost Survival Surface réexécute l'alignement canonique et lie chaque cellule au ledger projeté correspondant.
+
+Les non-régressions, l'archive et les captures 390/1 440 px ont de nouveau été inspectées. L'avertissement GitHub Actions sur Node 20/24 et l'avertissement `punycode` ne sont pas des échecs produit. Ces preuves valident l'exécution du contrat synthétique, pas la complétude des coûts réels, la calibration, l'utilité, la demande, le droit ou la cohorte.

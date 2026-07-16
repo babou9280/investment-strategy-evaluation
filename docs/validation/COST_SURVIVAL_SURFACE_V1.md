@@ -7,7 +7,7 @@
 - Politique : `linear-ledger-sensitivity-1`.
 - Interface : aucune modification.
 - Données : synthétiques ou hypothèses utilisateur uniquement.
-- État de preuve : suites locales réussies ; preuve GitHub exact-head encore requise avant clôture technique.
+- État de preuve : tranche technique synthétique exécutée sur le head fonctionnel distant exact `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec` ; run, journaux, archive et captures de non-régression inspectés.
 
 ## 2. Actifs
 
@@ -19,7 +19,7 @@
 - `docs/scenarios/COST_SURVIVAL_SURFACE_V1_MATRIX.md` ;
 - `docs/review/COST_GATE_MODEL_VNEXT_HOSTILE_REVIEW.md`.
 
-## 3. Exécution locale du 16 juillet 2026
+## 3. Exécution fonctionnelle du 16 juillet 2026
 
 ```text
 Cost Ledger v1 contract tests: PASS
@@ -31,7 +31,7 @@ Cost Survival Surface v1 property tests: PASS
 Cost Survival Surface v1 static integrity: PASS
 ```
 
-La syntaxe du moteur et de tous ses tests réussit. Cette tranche ne modifie aucune page ; une capture spécifique de surface n'est donc ni produite ni présentée comme preuve.
+Ces suites ont d'abord réussi localement, puis dans GitHub Actions après checkout du head fonctionnel exact. La syntaxe du moteur et de tous ses tests réussit. Cette tranche ne modifie aucune page ; une capture spécifique de surface n'est donc ni produite ni présentée comme preuve.
 
 ## 4. Oracles indépendants
 
@@ -56,7 +56,7 @@ marge positive strictement au-dessus
 
 À trois tailles, trois scénarios de coût et trois hypothèses d'avantage, l'oracle exige `3 × 3 × 3 = 27` cellules.
 
-## 5. Propriétés démontrées localement
+## 5. Propriétés démontrées techniquement
 
 - produit cartésien complet coût × avantage ;
 - somme, seuil, brut et marge réconciliés cellule par cellule ;
@@ -83,11 +83,21 @@ marge positive strictement au-dessus
 - aucune donnée actuelle ;
 - aucune compréhension, utilité, conformité, demande ou volonté de payer validée.
 
-## 7. Preuve distante à compléter
+## 7. Preuve distante exécutée
 
-- pousser les fichiers sur la branche existante de la PR `#26` ;
-- vérifier le nouveau head ;
-- inspecter le run exact-head, ses jobs et logs ;
-- télécharger et contrôler l'artefact ;
-- inspecter les captures de non-régression des interfaces existantes ;
-- synchroniser cette preuve sans présenter la surface comme un produit validé.
+Preuve fonctionnelle exacte :
+
+- head : `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec` ;
+- tree : `0f221d07c4c7811aadaf53e0db53381d424122c3` ;
+- run : `29529414199` (`#654`), job `87725842725`, `success` ;
+- artefact : `8388042099`, 8 867 539 octets ;
+- digest GitHub et digest recalculé : `sha256:4f1c10239b9e18b690cea4e4dd3788ea3598e9c9b0b13c81142133c2f00009bd` ;
+- HTML autonome reconstruit : 152 544 octets, SHA-256 `71f487e139c22e4402e3af2b08ae7050f15b8d93516ffa832ad24f023fd64be7` ;
+- ZIP interne : SHA-256 `a5b7c047f43b0d8fddc06d87c2a93be10eca1af65014d66933d0c6db33d24467` ;
+- manifeste : source `fbc0d545b3ceff69dca9ceda00bc4f30e92c98ec`, génération `2026-07-16T19:48:20Z`, Chrome for Testing `149.0.7827.55`.
+
+Le checkout exact, le build déterministe, CL-01 à CL-38, CSS-01 à CSS-32, les propriétés, les oracles, les suites historiques, l'intégrité locale, la syntaxe et les régressions navigateur ont réussi. L'archive s'ouvre sans erreur et son manifeste lie le package au bon commit.
+
+Les 24 captures Capital Efficiency et les six captures Cost Gate ont été produites. Les vues à 390 et 1 440 px ont été réellement ouvertes : le texte d'égalité est correct, les marges affichées sont nulles, l'ancienne phrase est absente, le lien d'évitement n'apparaît pas, et aucun débordement ou nombre non fini n'est visible. Le test navigateur conserve néanmoins le lien comme premier focus au clavier ; le script de capture neutralise puis restaure uniquement son propre focus et son état temporaire.
+
+Les avertissements Node 20/24 et `punycode` du runner ne sont pas des échecs produit. Cette preuve valide l'exécution du contrat synthétique et sa non-régression, pas la calibration des coûts, l'exécutabilité d'une taille, l'utilité, la demande, le droit ou une cohorte.

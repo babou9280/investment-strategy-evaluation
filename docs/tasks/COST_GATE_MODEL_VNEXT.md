@@ -6,7 +6,7 @@ Ayman a décidé le 16 juillet 2026 de ne pas lancer la cohorte Gate 1 avec le p
 
 Cette décision ne nie aucune preuve technique de la PR `#26`. Elle requalifie son HTML comme sonde technique et empêche de confondre « fonctionne » avec « modèle suffisamment bon ».
 
-Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont techniquement validés sur `df3ff7fc`, run `#650`. La revue hostile est exécutée. Les renforcements CL-32 à CL-38 et la Cost Survival Surface v1 CSS-01 à CSS-32 sont implémentés localement et attendent leur preuve distante. Aucune migration de la fondation ou de l'interface n'est engagée.
+Statut d'exécution : contrat, matrice CL-01 à CL-31, moteur isolé, adaptateur legacy, enveloppe synthétique et oracles sont techniquement validés sur `df3ff7fc`, run `#650`. La revue hostile, les renforcements CL-32 à CL-38 et la Cost Survival Surface v1 CSS-01 à CSS-32 sont techniquement exécutés sur le head fonctionnel exact `fbc0d545`, run `#654`, artefact et captures inspectés. Aucune migration de la fondation ou de l'interface n'est engagée.
 
 ## 2. Objectif de la première tranche — atteint techniquement
 
@@ -63,4 +63,9 @@ La numérotation de cette matrice reste l'unique numérotation de gate.
 
 ## 7. Étape suivante active
 
-Valider sur head distant exact les corrections de la revue hostile et la surface descriptive taille × coût × avantage. Cette surface ne choisit pas d'optimum et ne sera pas exposée à une cohorte sans nouvelle décision explicite d'Ayman.
+Spécifier avant tout code deux couches distinctes que la surface refuse aujourd'hui de simuler :
+
+1. la conversion d'un nominal proposé en quantité réellement admissible sous des règles d'instrument explicitement fournies ;
+2. la trajectoire de cash, règlement, réserves et chevauchement nécessaire pour juger une fréquence ou plusieurs opérations.
+
+La prochaine revue doit décider leurs frontières, leurs données minimales, leurs inconnues et leurs scénarios de falsification. Elle ne doit ni inventer prix, lot, liquidité ou calendrier, ni proposer une taille ou une fréquence.

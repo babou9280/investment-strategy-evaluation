@@ -2,7 +2,7 @@
 
 ## 1. Décision
 
-La revue hostile du Cost Ledger v1 montre qu'un snapshot ne doit pas être extrapolé directement sur plusieurs tailles. La tranche active sépare donc projection, domaine et profil d'avantage avant toute nouvelle interface.
+La revue hostile du Cost Ledger v1 montre qu'un snapshot ne doit pas être extrapolé directement sur plusieurs tailles. La tranche sépare donc projection, domaine et profil d'avantage avant toute nouvelle interface. Elle est techniquement exécutée sur le head fonctionnel exact `fbc0d545`, run `#654`, artefact et captures de non-régression inspectés.
 
 ## 2. Objectif
 
@@ -42,7 +42,7 @@ Chaque taille possède neuf cellules. La sortie distingue sous-seuil, égalité 
 - cohorte utilisateur ;
 - modification de `main`.
 
-## 6. Gate technique
+## 6. Gate technique — atteinte
 
 - ledger renforcé sur dénominateur, dépendances et inclusion edge ;
 - CL-01 à CL-38 réussis ;

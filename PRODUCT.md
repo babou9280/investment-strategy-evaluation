@@ -3,7 +3,7 @@
 - Direction validée : 13 juillet 2026
 - Raffinement actif : Capital Efficiency et Edge Survival
 - Extension stratégique validée : Breaktest Cost Gate, 14 juillet 2026
-- Phase : Gate 1 Cost Gate, prototype initial requalifié en sonde technique ; Cost Ledger v1 techniquement validé ; surface descriptive v1 en validation avant toute cohorte
+- Phase : Gate 1 Cost Gate, prototype initial requalifié en sonde technique ; Cost Ledger v1 renforcé et surface descriptive v1 techniquement exécutés avant toute cohorte
 - Nom de travail actuel : **Breaktest Cost Intelligence**
 - Nom de travail futur : **Breaktest Cost Gate**
 
@@ -48,7 +48,7 @@ Une grille tarifaire ou un total de frais ne répond pas directement à ces ques
 
 La faisabilité immédiate du cash est démontrée dans le moteur synthétique isolé fusionné par la PR `#24`. La faisabilité générale du portefeuille, des positions simultanées et des comptes réels reste non implémentée : `docs/product/CAPITAL_FEASIBILITY_CONTRACT.md`.
 
-La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée. Une interface hors ligne limitée à la critique de Gate 1 est techniquement exécutée, mais Ayman a suspendu sa cohorte pour approfondir le modèle. Le Cost Ledger v1 possède une preuve technique distante. Une Cost Survival Surface v1 sépare maintenant le snapshot de sa projection, croise neuf scénarios coût × avantage par taille et refuse les domaines non déclarés ; elle reste en validation distante et n'est pas intégrée à l'interface. La compréhension réelle, le produit connecté, ses données réelles et son marché ne sont pas validés.
+La direction pré-trade est documentée dans `docs/product/COST_GATE_DIRECTION.md`. Sa fondation analytique synthétique est implémentée. Une interface hors ligne limitée à la critique de Gate 1 est techniquement exécutée, mais Ayman a suspendu sa cohorte pour approfondir le modèle. Le Cost Ledger v1 renforcé et la Cost Survival Surface v1 possèdent une preuve technique distante exacte sur `fbc0d545`, run `#654`. La surface sépare le snapshot de sa projection, croise neuf scénarios coût × avantage par taille et refuse les domaines non déclarés ; elle n'est pas intégrée à l'interface et ne décrit pas une quantité exécutable. La compréhension réelle, le produit connecté, ses données réelles et son marché ne sont pas validés.
 
 ## 4. Architecture de valeur
 
