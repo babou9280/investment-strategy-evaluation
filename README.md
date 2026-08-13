@@ -1,13 +1,13 @@
 # An Evaluation of an Automated Investment Strategy
 
-Author : Ayman BESBAS  
-Date : 2026, March 10th
+Author: Ayman BESBAS  
+Date: March 10, 2026
 
 ## Overview
 
 This repository contains the research project **"An Evaluation of an Automated Investment Strategy"**.
 
-The objective of the project is to evaluate the sustainab and real-world feasibility of an investment strategy based on signals provided by the application *StocksToBuyNowAI*.
+The objective of the project is to evaluate the sustainability and real-world feasibility of an investment strategy based on signals provided by the application *StocksToBuyNowAI*.
 
 The study focuses on whether the strategy can generate **reproducible and economically exploitable performance once real trading frictions are considered**.
 
@@ -58,7 +58,7 @@ The evaluation follows a quantitative scorecard approach based on four dimension
 
 # Benchmark
 
-To provide a reference point, the strategy is compared with the **S&P 500 (SPY ETF)** over the same tests periods.
+To provide a reference point, the strategy is compared with the **S&P 500 (SPY ETF)** over the same test periods.
 
 
 ---
@@ -73,7 +73,7 @@ The project attempts to answer the following question :
 
 # Full Report
 
-The complete academic report can be found in the tab :
+The complete academic report can be found in the repository:
 
 Évaluation Stratégie - Projet Ayman BESBAS.pdf
 
