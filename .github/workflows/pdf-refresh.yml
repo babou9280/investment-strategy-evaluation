@@ -1,0 +1,8 @@
+name: PDF replacement (one-time)
+on:
+  workflow_dispatch:
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo 'Placeholder; no file changes performed'
