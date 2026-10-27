@@ -1,8 +1,23 @@
-name: PDF replacement (one-time)
+name: Exact investment report replacement
 on:
-  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/pdf-refresh.yml'
+permissions:
+  contents: write
 jobs:
-  noop:
+  update_pdf:
+    if: github.event.head_commit.message == 'chore: run one-time PDF replacement'
     runs-on: ubuntu-latest
     steps:
-      - run: echo 'Placeholder; no file changes performed'
+      - uses: actions/checkout@v4
+      - name: Reconstruct exact uploaded PDF and verify SHA-256
+        run: python .pdf_replace_one_time.py
+      - name: Commit report and remove one-time machinery
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -- "Evaluation Strategie - Projet Ayman BESBAS.pdf"
+          git rm -f -- ".pdf_replace_one_time.py" ".pdf_replace_one_time.b85" ".github/workflows/pdf-refresh.yml"
+          git commit -m "docs: replace investment report with exact revised PDF"
+          git push origin HEAD:main
