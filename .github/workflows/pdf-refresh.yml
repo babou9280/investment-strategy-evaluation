@@ -7,7 +7,7 @@ permissions:
   contents: write
 jobs:
   update_pdf:
-    if: github.event.head_commit.message == 'chore: run one-time PDF replacement'
+    if: "${{ github.event.head_commit.message == 'chore: run one-time PDF replacement' }}"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
